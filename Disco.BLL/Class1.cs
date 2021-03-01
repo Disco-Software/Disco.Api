@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Disco.Bussines
+namespace Disco.BLL
 {
     public class Class1
     {
