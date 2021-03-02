@@ -9,8 +9,6 @@ namespace Disco.DAL.EF
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
         public ApplicationDbContext(DbContextOptions option) : base(option) { }
     }
 }

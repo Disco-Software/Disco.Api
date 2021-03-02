@@ -4,5 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Disco.BLL\Disco.BLL.csproj" />
+    <ProjectReference Include="..\Disco.DAL\Disco.DAL.csproj" />
+  </ItemGroup>
+
 
 </Project>
