@@ -44,6 +44,8 @@ namespace Disco.BLL.Services
             {
                 Email = register.Email
             };
+            if (user is null)
+                return new UserDTO { VarificationResult = "User is empty" };
             user.PasswordHash = manager.PasswordHasher.HashPassword(user, register.Password);
             await manager.CreateAsync(user);
             return new UserDTO { User = user };

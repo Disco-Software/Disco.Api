@@ -1,6 +1,7 @@
 ﻿using Disco.BLL.DTO;
 using Disco.BLL.Services;
 using Disco.DAL.EF;
+using Disco.DAL.Entities;
 using Disco.DAL.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -19,15 +20,28 @@ namespace Disco.Server.Controllers
             this.ctx = ctx;
             this.manager = manager;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+        [HttpGet]
         public async Task<IActionResult> Login(LoginDTO dto)
         {
             UserService service = new UserService(manager, ctx);
             var user = await service.Login(dto);
-            return Json(user);
+            return new JsonResult(user);
+        }
+        [HttpPost]
+        [Route("register")]
+        public async Task<IActionResult> Register(RegisterDTO dto)
+        {
+            User user = await manager.FindByEmailAsync(dto.Email);
+            UserService service = new UserService(manager,ctx);
+            if(user is null)
+            {
+               var userResult = await service.Register(dto);
+                return new JsonResult(userResult);
+            }
+            else
+            {
+                return new JsonResult(new { Message = "This user allready created" });
+            }
         }
     }
 }

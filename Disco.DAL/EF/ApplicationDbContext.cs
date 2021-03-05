@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Disco.DAL.EF
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext(DbContextOptions option) : base(option) { }
     }
