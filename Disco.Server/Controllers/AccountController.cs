@@ -21,27 +21,21 @@ namespace Disco.Server.Controllers
             this.manager = manager;
         }
         [HttpGet]
+        [Route("login")]
         public async Task<IActionResult> Login(LoginDTO dto)
         {
             UserService service = new UserService(manager, ctx);
             var user = await service.Login(dto);
             return new JsonResult(user);
         }
-        [HttpPost]
+
+        [HttpGet]
         [Route("register")]
         public async Task<IActionResult> Register(RegisterDTO dto)
         {
-            User user = await manager.FindByEmailAsync(dto.Email);
-            UserService service = new UserService(manager,ctx);
-            if(user is null)
-            {
-               var userResult = await service.Register(dto);
-                return new JsonResult(userResult);
-            }
-            else
-            {
-                return new JsonResult(new { Message = "This user allready created" });
-            }
+            UserService service = new UserService(manager, ctx);
+            var user = await service.Register(dto);
+            return new JsonResult(user);
         }
     }
 }

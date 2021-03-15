@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.DAL", "Disco.DAL\Disco.DAL.csproj", "{E8719869-1848-44F5-AFF0-60EA9D395D84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.DAL", "Disco.DAL\Disco.DAL.csproj", "{E8719869-1848-44F5-AFF0-60EA9D395D84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Server", "Disco.Server\Disco.Server.csproj", "{2A5ED972-48B2-4198-9CD6-3C4929223040}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Server", "Disco.Server\Disco.Server.csproj", "{2A5ED972-48B2-4198-9CD6-3C4929223040}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Mobile.Android", "Disco.Mobile\Disco.Mobile.Android\Disco.Mobile.Android.csproj", "{C0C6C5C3-295A-4758-A200-6738A06A49C8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Mobile.iOS", "Disco.Mobile\Disco.Mobile.iOS\Disco.Mobile.iOS.csproj", "{36D1689F-AF26-4FD7-AE9F-52CE2953DC9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Mobile", "Disco.Mobile\Disco.Mobile\Disco.Mobile.csproj", "{7E1C6495-4882-48CB-8BDC-794D5A63D094}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Mobile", "Disco.Mobile\Disco.Mobile\Disco.Mobile.csproj", "{7E1C6495-4882-48CB-8BDC-794D5A63D094}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.BLL", "Disco.BLL\Disco.BLL.csproj", "{46D3D1E5-2A9C-47F0-B649-F1FB43ABC827}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.BLL", "Disco.BLL\Disco.BLL.csproj", "{46D3D1E5-2A9C-47F0-B649-F1FB43ABC827}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Tests", "Disco.Tests\Disco.Tests.csproj", "{DBC28341-5FB4-4B84-A238-8F9198DE7EAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,6 +103,18 @@ Global
 		{46D3D1E5-2A9C-47F0-B649-F1FB43ABC827}.Release|iPhone.Build.0 = Release|Any CPU
 		{46D3D1E5-2A9C-47F0-B649-F1FB43ABC827}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{46D3D1E5-2A9C-47F0-B649-F1FB43ABC827}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{DBC28341-5FB4-4B84-A238-8F9198DE7EAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBC28341-5FB4-4B84-A238-8F9198DE7EAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBC28341-5FB4-4B84-A238-8F9198DE7EAC}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{DBC28341-5FB4-4B84-A238-8F9198DE7EAC}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{DBC28341-5FB4-4B84-A238-8F9198DE7EAC}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{DBC28341-5FB4-4B84-A238-8F9198DE7EAC}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{DBC28341-5FB4-4B84-A238-8F9198DE7EAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBC28341-5FB4-4B84-A238-8F9198DE7EAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBC28341-5FB4-4B84-A238-8F9198DE7EAC}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{DBC28341-5FB4-4B84-A238-8F9198DE7EAC}.Release|iPhone.Build.0 = Release|Any CPU
+		{DBC28341-5FB4-4B84-A238-8F9198DE7EAC}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{DBC28341-5FB4-4B84-A238-8F9198DE7EAC}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -40,15 +40,20 @@ namespace Disco.BLL.Services
 
         public async Task<UserDTO> Register(RegisterDTO register)
         {
-            var user = new User
+            var userCreate = await manager.FindByEmailAsync(register.Email);
+            if(userCreate == null)
             {
-                Email = register.Email
-            };
-            if (user is null)
-                return new UserDTO { VarificationResult = "User is empty" };
-            user.PasswordHash = manager.PasswordHasher.HashPassword(user, register.Password);
-            await manager.CreateAsync(user);
-            return new UserDTO { User = user };
+                var user = new User
+                {
+                    Email = register.Email,
+                    FirstName = register.FirstName,
+                    UserName = register.UserName,
+                };
+                user.PasswordHash = manager.PasswordHasher.HashPassword(user, register.Password);
+                await manager.CreateAsync(user);
+                return new UserDTO { User = user };
+            }
+            return new UserDTO { User = null, VarificationResult = "Faild" };
         }
     }
 }

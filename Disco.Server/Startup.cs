@@ -1,5 +1,6 @@
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
+using Disco.DAL.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,7 +35,8 @@ namespace Disco.Server
 
             // добавление сервисов Idenity
             services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
-                        .AddEntityFrameworkStores<ApplicationDbContext>();
+                        .AddEntityFrameworkStores<ApplicationDbContext>()
+                        .AddUserManager<ApplicationUserManager>();
             services.AddControllersWithViews();
         }
 

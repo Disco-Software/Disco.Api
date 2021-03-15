@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using Disco.DAL.Interfaces;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Identity;
 
 namespace Disco.DAL.Entities
