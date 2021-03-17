@@ -28,7 +28,7 @@ namespace Disco.BLL.Services
             var user = await manager.FindByEmailAsync(login.Email);
             if(user != null)
             {
-                var hasherResult = manager.PasswordHasher.VerifyHashedPassword((User)user, user.PasswordHash, login.Password);
+                var hasherResult = manager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, login.Password);
                 if(hasherResult == PasswordVerificationResult.Success)
                     return new UserDTO { User = user };
                 else
@@ -51,6 +51,8 @@ namespace Disco.BLL.Services
                 };
                 user.PasswordHash = manager.PasswordHasher.HashPassword(user, register.Password);
                 await manager.CreateAsync(user);
+                EmailService service = new EmailService();
+                service.SendToEmail(register.Email, "", "");
                 return new UserDTO { User = user };
             }
             return new UserDTO { User = null, VarificationResult = "Faild" };

@@ -4,6 +4,7 @@ using Disco.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,8 @@ using System.Threading.Tasks;
 namespace Disco.DAL.Repositories.BaseRepository
 {
     public class BaseRepository<T, Tkey> : IRepository<T, Tkey> 
-        where T : BaseEntity<T>
+        where T : BaseEntity<Tkey>
+        where Tkey : struct
     {
         protected ApplicationDbContext ctx;
         public BaseRepository(ApplicationDbContext ctx)
@@ -37,7 +39,11 @@ namespace Disco.DAL.Repositories.BaseRepository
 
         public virtual async Task<List<T>> GetAll(Expression<Func<T, bool>> predicate)
         {
-            return await ctx.Set<T>().AsNoTracking().ToListAsync();
+            if(predicate == null)
+            {
+                return await ctx.Set<T>().AsQueryable().ToListAsync();
+            }
+            return await ctx.Set<T>().AsQueryable().Where(predicate).ToListAsync();
         }
     }
 }

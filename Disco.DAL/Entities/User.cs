@@ -13,5 +13,6 @@ namespace Disco.DAL.Entities
         public string Photo { get; set; }
         public Role Role { get; set; }
         public string Status { get; set; }
+        public List<Post> Posts { get; set; }
     }
 }

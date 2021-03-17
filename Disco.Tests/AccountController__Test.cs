@@ -85,7 +85,7 @@ namespace Disco.Tests
 
         #region Register Testing
         [Test]
-        public void RegisterSuccessReturned()
+        public async Task RegisterSuccessReturned()
         {
             RegisterDTO register = new RegisterDTO
             {
@@ -97,9 +97,8 @@ namespace Disco.Tests
             };
 
             UserService service = new UserService(userManager, ctx);
-            var result = service.Register(register).IsCompleted;
-
-            Assert.IsTrue(result);
+            var result = await service.Register(register);
+            Assert.True(result.VarificationResult == "");
         }
        
         [Test]

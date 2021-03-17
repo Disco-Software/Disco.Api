@@ -20,6 +20,7 @@ namespace Disco.Server.Controllers
             this.ctx = ctx;
             this.manager = manager;
         }
+
         [HttpGet]
         [Route("login")]
         public async Task<IActionResult> Login(LoginDTO dto)
