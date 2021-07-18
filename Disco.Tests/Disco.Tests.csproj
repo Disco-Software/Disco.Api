@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -15,7 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Disco.BLL\Disco.BLL.csproj" />
     <ProjectReference Include="..\Disco.DAL\Disco.DAL.csproj" />
-    <ProjectReference Include="..\Disco.Server\Disco.Server.csproj" />
   </ItemGroup>
 
 </Project>

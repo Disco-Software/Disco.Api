@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             NavigationPage.HasNavigationBar="False"
+             x:Class="Disco.Mobile.Views.SplashScreenPage">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Image Opacity="0" x:FieldModifier="Public" x:Name="end" Source="EndColor.png" Aspect="AspectFill" Grid.RowSpan="3"/>
+            <Image x:Name="start" x:FieldModifier="Public" Source="StartColor.png" Aspect="AspectFill" Grid.RowSpan="3"/>
+            <StackLayout Grid.Row="1" Grid.RowSpan="2">
+                <Label x:Name="logo" x:FieldModifier="Public" HorizontalTextAlignment="Center" VerticalTextAlignment="End" VerticalOptions="Fill" HorizontalOptions="Fill" TextColor="#E7E5DF" FontSize="64" Text="DISCO" FontFamily="{StaticResource colonna}"/>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

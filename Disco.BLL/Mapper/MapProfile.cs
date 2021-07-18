@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Disco.BLL.DTO;
+using Disco.BLL.Models.DTO;
 using Disco.DAL.Entities;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,7 @@ namespace Disco.BLL.Mapper
         public MapProfile()
         {
             this.CreateMap<User, UserDTO>();
+           // this.CreateMap<User, UserSubscriber>();
         }
     }
 }

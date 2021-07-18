@@ -1,6 +1,9 @@
+using Disco.BLL.Interfaces;
+using Disco.BLL.Services;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
 using Disco.DAL.Identity;
+using Disco.Server.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,15 +32,16 @@ namespace Disco.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<NotificationHubConfiguration>(Configuration.GetSection("NotificationHub"));
             // добавление ApplicationDbContext для взаимодействия с базой данных учетных записей
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
             // добавление сервисов Idenity
             services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
                         .AddEntityFrameworkStores<ApplicationDbContext>()
-                        .AddUserManager<ApplicationUserManager>();
+                                 .AddUserManager<ApplicationUserManager>();
             services.AddControllersWithViews();
+            services.AddScoped<IAccountService, AccountService>();
         }
 
 
@@ -49,12 +53,6 @@ namespace Disco.Server
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -62,7 +60,6 @@ namespace Disco.Server
 
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllerRoute(
                     name: "default",

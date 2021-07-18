@@ -10,7 +10,6 @@ namespace Disco.DAL.Repositories
     {
         public PostRepository(ApplicationDbContext ctx) : base(ctx)
         {
-            
         }
     }
 }

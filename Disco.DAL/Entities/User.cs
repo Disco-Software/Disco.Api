@@ -9,10 +9,10 @@ namespace Disco.DAL.Entities
     public class User : IdentityUser
     {
         public string FirstName { get; set; }
-        public string LastName { get; set; }
         public string Photo { get; set; }
         public Role Role { get; set; }
-        public string Status { get; set; }
         public List<Post> Posts { get; set; }
+        public AdditionalInfo Info { get; set; }
+        public List<UserSubscriber> UserSubscribers { get; set; }
     }
 }

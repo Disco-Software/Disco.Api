@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Disco.Mobile.Views;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -9,8 +10,8 @@ namespace Disco.Mobile
         public App()
         {
             InitializeComponent();
-
-            MainPage = new MainPage();
+            Device.SetFlags(new string[] { "Brush_Experimental" });
+            MainPage = new NavigationPage(new SplashScreenPage());
         }
 
         protected override void OnStart()

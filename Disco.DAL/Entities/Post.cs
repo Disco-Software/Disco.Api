@@ -8,13 +8,29 @@ namespace Disco.DAL.Entities
 {
     public class Post : BaseEntity.BaseEntity<int>
     {
+        /// <summary>
+        /// Задает или возвращает Описание поста
+        /// </summary>
         public string Description { get; set; }
         
-        public Photo Photo { get; set; }
-        public Video Video { get; set; }
-        public Sound Sound { get; set; }
+        /// <summary>
+        /// Задает или возвращает Фото
+        /// </summary>
+        public List<Photo> Photos{ get; set; }
+
+        /// <summary>
+        /// Задает или возвращает Видео
+        /// </summary>
+        public List<Video> Videos { get; set; }
         
-        //[ForeignKey("User")]
+        /// <summary>
+        /// Задает или возвращает музыкальный ресурс
+        /// </summary>
+        public List<Song> Songs { get; set; }
+        
+        /// <summary>
+        /// Задает или возвращает id пользователя
+        /// </summary>
         public string UserId { get; set; }
     }
 }

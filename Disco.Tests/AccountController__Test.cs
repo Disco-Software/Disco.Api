@@ -1,9 +1,10 @@
-using Disco.BLL.DTO;
+using Disco.BLL.Models.DTO;
+using Disco.BLL.Models.DTO;
 using Disco.BLL.Services;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
 using Disco.DAL.Identity;
-using Disco.Server.Controllers;
+using Microsoft.AspNetCore.Identity;
 using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
@@ -12,17 +13,13 @@ namespace Disco.Tests
 {
     public class AccountController__Test
     {
-        private ApplicationUserManager userManager;
-        private ApplicationDbContext ctx;
-        
+        private readonly ApplicationUserManager userManager;
+        private readonly ApplicationDbContext ctx;
+        private readonly SignInManager<DAL.Entities.User> signInManager;
         public AccountController__Test(ApplicationDbContext ctx, ApplicationUserManager manager)
         {
             this.ctx = ctx;
             this.userManager = manager;
-        }
-        public AccountController__Test()
-        {
-
         }
         [SetUp]
         public void Setup()
@@ -43,7 +40,7 @@ namespace Disco.Tests
                 Password = "cJM23H87"
             };
 
-            UserService service = new UserService(userManager, ctx);
+            AccountService service = new AccountService(userManager, signInManager,ctx);
             var result = service.Login(user).IsCompleted;
 
             Assert.IsTrue(result);
@@ -60,7 +57,7 @@ namespace Disco.Tests
                 Email = "stas_1999_nr@gmail.com",
                 Password = "123321"
             };
-            UserService service = new UserService(userManager, ctx);
+            AccountService service = new AccountService(userManager, signInManager,ctx);
             var result = service.Login(user).IsCompletedSuccessfully;
 
             Assert.IsFalse(result);
@@ -76,7 +73,7 @@ namespace Disco.Tests
                 Email = "stas_1999_nr@ukr.net",
                 Password = "1234567"
             };
-            UserService service = new UserService(userManager, ctx);
+            AccountService service = new AccountService(userManager, signInManager,ctx);
             var result = service.Login(dto).IsFaulted;
             Assert.IsTrue(result);
         }
@@ -96,7 +93,7 @@ namespace Disco.Tests
                 ConfirmPassword = "12345"
             };
 
-            UserService service = new UserService(userManager, ctx);
+            AccountService service = new AccountService(userManager, signInManager,ctx);
             var result = await service.Register(register);
             Assert.True(result.VarificationResult == "");
         }
@@ -112,7 +109,7 @@ namespace Disco.Tests
                 Password = "12345",
                 ConfirmPassword = "12345"
             };
-            UserService service = new UserService(userManager, ctx);
+            AccountService service = new AccountService(userManager, signInManager,ctx);
             var result = service.Register(dto).IsCompletedSuccessfully;
             Assert.IsFalse(result, "User allready created");
         }

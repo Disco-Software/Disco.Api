@@ -15,7 +15,12 @@ namespace Disco.DAL.EF
         public DbSet<Post> Posts { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Video> Videos { get; set; }
-        public DbSet<Sound> Sounds { get; set; }
-        public ApplicationDbContext(DbContextOptions option) : base(option) { }
+        public DbSet<AdditionalInfo> Infos { get; set; }
+        public DbSet<UserSubscriber> UserSubscribers { get; set; }
+        public DbSet<NewPostNotification> NewPostNotifications { get; set; }
+        public ApplicationDbContext(DbContextOptions option) : base(option) { 
+            
+        }
+
     }
 }

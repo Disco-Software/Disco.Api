@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Disco.Mobile.App">
     <Application.Resources>
-
+        <OnPlatform x:Key="colonna" x:TypeArguments="x:String">
+            <On Platform="Android" Value="Fonts/Colonna.ttf#Colonna MT"/>
+            <On Platform="iOS" Value=""/>
+        </OnPlatform>
     </Application.Resources>
 </Application>
