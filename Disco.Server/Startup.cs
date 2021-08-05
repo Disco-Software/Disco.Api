@@ -32,16 +32,17 @@ namespace Disco.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSignalRCore();
             services.Configure<NotificationHubConfiguration>(Configuration.GetSection("NotificationHub"));
             // добавление ApplicationDbContext для взаимодействия с базой данных учетных записей
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             // добавление сервисов Idenity
             services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
-                        .AddEntityFrameworkStores<ApplicationDbContext>()
                                  .AddUserManager<ApplicationUserManager>();
             services.AddControllersWithViews();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IEmailService, EmailService>();
         }
 
 

@@ -1,4 +1,5 @@
-﻿using Disco.BLL.Models.DTO;
+﻿using Disco.BLL.Interfaces;
+using Disco.BLL.Models.DTO;
 using Disco.BLL.Services;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
@@ -17,6 +18,7 @@ namespace Disco.Server.Controllers.Authentication
         private readonly ApplicationDbContext context;
         private readonly SignInManager<DAL.Entities.User> signInManager;
         private readonly ApplicationUserManager _manager;
+        private readonly IEmailService emailService;
         public AdminAuthenticationController(ApplicationDbContext ctx, ApplicationUserManager manager)
         {
             context = ctx;
@@ -25,7 +27,7 @@ namespace Disco.Server.Controllers.Authentication
 
         public async Task<IActionResult> Login(LoginDTO dto)
         {
-            AccountService service = new BLL.Services.AccountService(_manager,signInManager ,context);
+            AccountService service = new AccountService(_manager,signInManager ,context, emailService);
             var userDTO = await service.Login(dto);
             return new JsonResult(new { user = userDTO });
         }

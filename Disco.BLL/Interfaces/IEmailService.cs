@@ -7,9 +7,6 @@ namespace Disco.BLL.Interfaces
 {
     public interface IEmailService
     {
-        Task SendToEmailAsync(string to, string subject, string body);
-        void SendToEmail(string to, string subject, string body);
-        void SendToEmail(string to, string subject, string body, bool isHTML);
-        Task SendToEmailAsync(string to, string subject, string body, bool isHTML);
+        Task SendToEmailAsync(string to, string subject, bool isHTML);
     }
 }

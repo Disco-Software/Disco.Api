@@ -12,7 +12,6 @@ namespace Disco.BLL.Mapper
         public MapProfile()
         {
             this.CreateMap<User, UserDTO>();
-           // this.CreateMap<User, UserSubscriber>();
         }
     }
 }

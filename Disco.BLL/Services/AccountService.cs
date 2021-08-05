@@ -17,14 +17,16 @@ namespace Disco.BLL.Services
 {
     public class AccountService : IAccountService
     {
-        private ApplicationDbContext ctx;
-        private ApplicationUserManager manager;
-        private SignInManager<DAL.Entities.User> signInManager;
-        public AccountService(ApplicationUserManager userManager, SignInManager<DAL.Entities.User> signInManager,ApplicationDbContext ctx)
+        private readonly ApplicationDbContext ctx;
+        private readonly ApplicationUserManager manager;
+        private readonly SignInManager<DAL.Entities.User> signInManager;
+        private readonly IEmailService emailService;
+        public AccountService(ApplicationUserManager userManager, SignInManager<DAL.Entities.User> signInManager,ApplicationDbContext ctx, IEmailService emailService)
         {
             this.ctx = ctx;
             this.signInManager = signInManager;
             this.manager = userManager;
+            this.emailService = emailService;
         }
 
 
@@ -83,10 +85,20 @@ namespace Disco.BLL.Services
         public async Task<ForgotPasswordResultDTO> ForgotPassword(ForgotPasswordDTO forgotPassword)
         {
             var user = await manager.FindByEmailAsync(forgotPassword.Email);
-            if (string.IsNullOrEmpty(forgotPassword.Email)) return new ForgotPasswordResultDTO { ResponseMessage = "Email can not be a null" };
-            await manager.RemovePasswordAsync(user);
-            var newPassword = await manager.GeneratePasswordResetTokenAsync(user);
-            return new ForgotPasswordResultDTO { Eamil = forgotPassword.Email, Password = newPassword, ResponseMessage = "Success"};
+            if (user == null)
+                return new ForgotPasswordResultDTO { ResponseMessage = ForgotPasswordResults.UserNotFound.ToString() };
+            var result = await manager.ConfirmEmailAsync(user, forgotPassword.Code);
+            var code = await manager.GenerateEmailConfirmationTokenAsync(user);
+             if (forgotPassword.Code == null)
+            {
+                await emailService.SendToEmailAsync(
+                    user.Email, 
+                    subject: "Confirm email", 
+                    isHTML: true);
+                return new ForgotPasswordResultDTO { ResponseMessage = "Enter your code" };
+            }
+
+            return new ForgotPasswordResultDTO { Eamil = forgotPassword.Email, Password = "", ResponseMessage = ForgotPasswordResults.Ok.ToString()};
         }
     }
 }

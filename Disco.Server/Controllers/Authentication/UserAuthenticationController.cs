@@ -52,7 +52,7 @@ namespace Disco.Server.Controllers.Authorization
         }
 
         [HttpPut("reset-password"), AllowAnonymous]
-        public async Task<IActionResult> ResetPassword([FromQuery] ForgotPasswordDTO forgotPassword)
+        public async Task<IActionResult> ResetPassword([FromBody] ForgotPasswordDTO forgotPassword)
         {
             var password = await accountService.ForgotPassword(forgotPassword);
             return Ok(password);
