@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Disco.DAL.Interfaces
 {
-    public interface IRepository<T,TKey> 
+    public interface IRepository<T,TKey>
     {
-        Task Create(T item);
-        Task Delete(TKey id);
+        Task Add(T item);
+        Task Remove(TKey id);
         Task<T> Get(TKey id);
-        Task<List<T>> GetAll(Expression<Func<T, bool>> predicate);
+        Task<List<T>> GetAll(Expression<Func<T,bool>> expression);
+        Task<T> Update(T newItem);
     }
 }

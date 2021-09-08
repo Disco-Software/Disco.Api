@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Disco.DAL.Entities
 {
-    public class Role : IdentityRole
+    public class Role : IdentityRole<int>
     {
     }
 }

@@ -1,18 +1,14 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Disco.DAL.Interfaces;
-using Microsoft.AspNetCore.Identity;
 
 namespace Disco.DAL.Entities
 {
-    public class User : IdentityUser
+    public class User : IdentityUser<int>
     {
-        public string FirstName { get; set; }
-        public string Photo { get; set; }
-        public Role Role { get; set; }
+        public string FullName { get; set; }
+        //public string Photo { get; set; }
         public List<Post> Posts { get; set; }
-        public AdditionalInfo Info { get; set; }
-        public List<UserSubscriber> UserSubscribers { get; set; }
     }
 }

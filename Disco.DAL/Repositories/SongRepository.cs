@@ -6,11 +6,8 @@ using System.Text;
 
 namespace Disco.DAL.Repositories
 {
-    public class SongRepository : BaseRepository.BaseRepository<Song, int>
+    public class SongRepository : Base.BaseRepository<Song, int>
     {
-        public SongRepository(ApplicationDbContext ef) : base(ef)
-        {
-
-        }
+        public SongRepository(ApiDbContext _ctx) : base(_ctx) { }
     }
 }

@@ -1,17 +1,7 @@
 {
   "dependencies": {
-    "cosmosdb1": {
-      "type": "cosmosdb",
-      "connectionId": "",
-      "suggestion": "true",
-      "ignored": "true"
-    },
-    "apis1": {
-      "type": "apis"
-    },
-    "mssql1": {
-      "type": "mssql",
-      "connectionId": "DefaultConnection"
+    "secrets1": {
+      "type": "secrets"
     }
   }
 }

@@ -3,13 +3,9 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Disco-Web": {
+    "Disco": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:application": {
-          "strict": true
-        }
-      },
+      "schematics": {},
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -17,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/Disco-Web",
+            "outputPath": "dist/Disco",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -50,13 +46,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
                 }
               ]
             }
@@ -65,18 +61,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "Disco-Web:build"
+            "browserTarget": "Disco:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "Disco-Web:build:production"
+              "browserTarget": "Disco:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Disco-Web:build"
+            "browserTarget": "Disco:build"
           }
         },
         "test": {
@@ -113,16 +109,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "Disco-Web:serve"
+            "devServerTarget": "Disco:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "Disco-Web:serve:production"
+              "devServerTarget": "Disco:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "Disco-Web"
+  "defaultProject": "Disco"
 }

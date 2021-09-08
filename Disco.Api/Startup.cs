@@ -2,8 +2,9 @@ using Disco.BLL.Interfaces;
 using Disco.BLL.Services;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
-using Disco.DAL.Identity;
-using Disco.Server.Configuration;
+using Disco.DAL.Interfaces;
+using Disco.DAL.Repositories;
+using Disco.DAL.Repositories.Base;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -18,7 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-namespace Disco.Server
+
+namespace Disco.Api
 {
     public class Startup
     {
@@ -32,41 +34,48 @@ namespace Disco.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSignalRCore();
-            services.Configure<NotificationHubConfiguration>(Configuration.GetSection("NotificationHub"));
-            // добавление ApplicationDbContext для взаимодействия с базой данных учетных записей
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            // добавление сервисов Idenity
-            services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
-                                 .AddUserManager<ApplicationUserManager>();
-            services.AddControllersWithViews();
-            services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IEmailService, EmailService>();
+            services.AddDbContext<ApiDbContext>(o => 
+                o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), 
+                b => b.MigrationsAssembly("../Disco.DAL")));
+            services.AddIdentity<User, Role>()
+                .AddEntityFrameworkStores<ApiDbContext>();
+            services.AddAuthentication()
+                .AddFacebook(facebookOptions =>
+                {
+                    facebookOptions.AppId = "261002815859881";
+                    facebookOptions.AppSecret = "9c4f0fbe6ed89d0c35d1a7cd965de88c";
+                });
+            services.AddHttpContextAccessor();
+            services.AddHttpClient();
+            services.AddSwaggerGen();
+
+            services.AddScoped<IServiceManager, ServiceManager>();
+            // services.AddScoped<IFacebookAuthService, FacebookAuthService>();
+           // services.AddScoped<IPostService, PostService>();
+            
+            services.AddControllers();
         }
-
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(s => s.SwaggerEndpoint("swagger/v1/swagger.json","Disco.Api.v1"));
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.UseAuthentication();
+            app.ApplicationServices.CreateScope();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints => {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            app.UseAuthentication();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
             });
         }
-
     }
 }
