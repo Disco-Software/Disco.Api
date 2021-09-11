@@ -17,9 +17,12 @@ namespace Disco.BLL.Services
         private readonly ApiDbContext ctx;
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
-        private readonly FacebookAuthService facebookAuthService;
+        private readonly IFacebookAuthService facebookAuthService;
 
-        public AuthentificationService(ApiDbContext _ctx, UserManager<User> _userManager, SignInManager<User> _signInManager, FacebookAuthService _facebookAuthService)
+        public AuthentificationService(ApiDbContext _ctx,
+            UserManager<User> _userManager,
+            SignInManager<User> _signInManager,
+            IFacebookAuthService _facebookAuthService)
         {
             ctx = _ctx;
             userManager = _userManager;

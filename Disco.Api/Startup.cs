@@ -42,16 +42,14 @@ namespace Disco.Api
             services.AddAuthentication()
                 .AddFacebook(facebookOptions =>
                 {
-                    facebookOptions.AppId = "261002815859881";
-                    facebookOptions.AppSecret = "9c4f0fbe6ed89d0c35d1a7cd965de88c";
+                    facebookOptions.AppId = Configuration["Facebook:AppId"];
+                    facebookOptions.AppSecret = Configuration["Facebook:SecretKey"];
                 });
             services.AddHttpContextAccessor();
             services.AddHttpClient();
             services.AddSwaggerGen();
 
             services.AddScoped<IServiceManager, ServiceManager>();
-            // services.AddScoped<IFacebookAuthService, FacebookAuthService>();
-           // services.AddScoped<IPostService, PostService>();
             
             services.AddControllers();
         }

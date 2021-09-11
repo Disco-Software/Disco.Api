@@ -3,6 +3,7 @@ using Disco.BLL.Interfaces;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -17,15 +18,17 @@ namespace Disco.BLL.Services
         private readonly Lazy<IPostService> postService;
         private readonly Lazy<IFacebookAuthService> facebookAuthService;
 
-        public ServiceManager(ApiDbContext _ctx, UserManager<User> _userManager, SignInManager<User> _signInManager, FacebookAuthService _facebookAuthService) =>
-            authentificationService = new Lazy<IAuthentificationService>(() => new AuthentificationService(_ctx, _userManager, _signInManager, _facebookAuthService));
-
-        public ServiceManager(FacebookOptions options, IHttpClientFactory httpClientFactory) =>
-            facebookAuthService = new Lazy<IFacebookAuthService>(() => new FacebookAuthService(options, httpClientFactory));
-
-        public ServiceManager(UserManager<User> _userManager, ApiDbContext _ctx, ClaimsPrincipal _claimsPrincipal) =>
-            postService = new Lazy<IPostService>(() => new PostService(_ctx, _claimsPrincipal, _userManager));
-
+        public ServiceManager(ApiDbContext _ctx,
+            UserManager<User> _userManager,
+            SignInManager<User> _signInManager,
+            IConfiguration configuration,
+            IHttpClientFactory httpClientFactory)
+        {
+            facebookAuthService = new Lazy<IFacebookAuthService>(() => new FacebookAuthService(configuration, httpClientFactory));
+            authentificationService = new Lazy<IAuthentificationService>(() => new AuthentificationService(_ctx, _userManager, _signInManager, facebookAuthService.Value));
+            // TODO: Where are from ClaimsPrincipal???
+            postService = new Lazy<IPostService>(() => new PostService(_ctx, null, _userManager));
+        }
         public IAuthentificationService AuthentificationService => authentificationService.Value;
 
         public IFacebookAuthService FacebookAuthService => facebookAuthService.Value;

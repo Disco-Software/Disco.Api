@@ -1,6 +1,7 @@
 ﻿using Disco.BLL.DTO;
 using Disco.BLL.Interfaces;
 using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,13 @@ namespace Disco.BLL.Services
         private readonly BLL.Configurations.FacebookOptions facebookOptions;
         private readonly IHttpClientFactory httpClientFactory;
 
-        public FacebookAuthService(BLL.Configurations.FacebookOptions _facebookOptions, IHttpClientFactory _httpClientFactory)
+        public FacebookAuthService(IConfiguration configuration, IHttpClientFactory _httpClientFactory)
         {
-            facebookOptions = _facebookOptions;
+            facebookOptions = new Configurations.FacebookOptions
+            {
+                AppId = configuration["Facebook:AppId"],
+                AppSecret = configuration["Facebook:SecretKey"]
+            };
             httpClientFactory = _httpClientFactory;
         }
 
