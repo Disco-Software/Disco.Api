@@ -1,6 +1,7 @@
 ﻿using Disco.BLL.DTO;
 using Disco.BLL.Models;
 using Disco.DAL.Entities;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -11,8 +12,8 @@ namespace Disco.BLL.Interfaces
 {
     public interface IPostService
     {
-        Task<PostDTO> CreatePostAsync(PostModel post);
-        Task<List<Post>> GetAllPostsAsync(Expression<Func<Post,bool>> expression);
+        Task<PostDTO> CreatePostAsync(CreatePostModel model);
+        Task<List<Post>> GetAllUserPosts(Expression<Func<Post,bool>> expression);
         Task DeletePostAsync(int postId);
     }
 }

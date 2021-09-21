@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Disco.DAL.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20210905154659_Initial")]
-    partial class Initial
+    [Migration("20210919133508_AddPostImage")]
+    partial class AddPostImage
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,6 +31,12 @@ namespace Disco.DAL.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ImageId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PostImageId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("SongId")
                         .HasColumnType("int");
 
@@ -42,6 +48,8 @@ namespace Disco.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PostImageId");
+
                     b.HasIndex("SongId");
 
                     b.HasIndex("UserId");
@@ -49,6 +57,64 @@ namespace Disco.DAL.Migrations
                     b.HasIndex("VideoId");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("Disco.DAL.Entities.PostImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Source")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PostImages");
+                });
+
+            modelBuilder.Entity("Disco.DAL.Entities.PostSong", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Source")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("PostSongs");
+                });
+
+            modelBuilder.Entity("Disco.DAL.Entities.PostVideo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VideoSource")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("PostVideos");
                 });
 
             modelBuilder.Entity("Disco.DAL.Entities.Role", b =>
@@ -78,24 +144,6 @@ namespace Disco.DAL.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
-                });
-
-            modelBuilder.Entity("Disco.DAL.Entities.Song", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Source")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Songs");
                 });
 
             modelBuilder.Entity("Disco.DAL.Entities.User", b =>
@@ -145,9 +193,6 @@ namespace Disco.DAL.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Photo")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -169,21 +214,6 @@ namespace Disco.DAL.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("Disco.DAL.Entities.Video", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("VideoSource")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Videos");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -289,7 +319,11 @@ namespace Disco.DAL.Migrations
 
             modelBuilder.Entity("Disco.DAL.Entities.Post", b =>
                 {
-                    b.HasOne("Disco.DAL.Entities.Song", "Song")
+                    b.HasOne("Disco.DAL.Entities.PostImage", "PostImage")
+                        .WithMany()
+                        .HasForeignKey("PostImageId");
+
+                    b.HasOne("Disco.DAL.Entities.PostSong", "Song")
                         .WithMany()
                         .HasForeignKey("SongId");
 
@@ -299,15 +333,31 @@ namespace Disco.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Disco.DAL.Entities.Video", "VideoSource")
+                    b.HasOne("Disco.DAL.Entities.PostVideo", "Video")
                         .WithMany()
                         .HasForeignKey("VideoId");
+
+                    b.Navigation("PostImage");
 
                     b.Navigation("Song");
 
                     b.Navigation("User");
 
-                    b.Navigation("VideoSource");
+                    b.Navigation("Video");
+                });
+
+            modelBuilder.Entity("Disco.DAL.Entities.PostSong", b =>
+                {
+                    b.HasOne("Disco.DAL.Entities.Post", null)
+                        .WithMany()
+                        .HasForeignKey("PostId");
+                });
+
+            modelBuilder.Entity("Disco.DAL.Entities.PostVideo", b =>
+                {
+                    b.HasOne("Disco.DAL.Entities.Post", null)
+                        .WithMany()
+                        .HasForeignKey("PostId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

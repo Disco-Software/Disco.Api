@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Disco.DAL.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,7 +29,6 @@ namespace Disco.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Photo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -48,33 +47,6 @@ namespace Disco.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Songs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Source = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Songs", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Videos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    VideoSource = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Videos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -189,7 +161,7 @@ namespace Disco.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SongId = table.Column<int>(type: "int", nullable: true),
                     VideoId = table.Column<int>(type: "int", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false)
@@ -203,16 +175,45 @@ namespace Disco.DAL.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Songs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Source = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PostId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Songs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Posts_Songs_SongId",
-                        column: x => x.SongId,
-                        principalTable: "Songs",
+                        name: "FK_Songs_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Videos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    VideoSource = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PostId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Videos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Posts_Videos_VideoId",
-                        column: x => x.VideoId,
-                        principalTable: "Videos",
+                        name: "FK_Videos_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -270,10 +271,48 @@ namespace Disco.DAL.Migrations
                 name: "IX_Posts_VideoId",
                 table: "Posts",
                 column: "VideoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Songs_PostId",
+                table: "Songs",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Videos_PostId",
+                table: "Videos",
+                column: "PostId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Posts_Songs_SongId",
+                table: "Posts",
+                column: "SongId",
+                principalTable: "Songs",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Posts_Videos_VideoId",
+                table: "Posts",
+                column: "VideoId",
+                principalTable: "Videos",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Posts_AspNetUsers_UserId",
+                table: "Posts");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Posts_Songs_SongId",
+                table: "Posts");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Posts_Videos_VideoId",
+                table: "Posts");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -290,9 +329,6 @@ namespace Disco.DAL.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Posts");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -303,6 +339,9 @@ namespace Disco.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Videos");
+
+            migrationBuilder.DropTable(
+                name: "Posts");
         }
     }
 }

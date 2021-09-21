@@ -1,4 +1,6 @@
+using AutoMapper;
 using Disco.BLL.Interfaces;
+using Disco.BLL.Mapper;
 using Disco.BLL.Services;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
@@ -50,8 +52,19 @@ namespace Disco.Api
             services.AddSwaggerGen();
 
             services.AddScoped<IServiceManager, ServiceManager>();
-            
-            services.AddControllers();
+
+            var mapperConfig = new MapperConfiguration(ms =>
+            {
+                ms.AddProfile(new MapProfile());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,9 +76,7 @@ namespace Disco.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseHttpsRedirection();
-
             app.UseRouting();
             app.ApplicationServices.CreateScope();
             app.UseAuthorization();

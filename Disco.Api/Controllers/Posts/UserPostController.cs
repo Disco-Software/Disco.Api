@@ -1,9 +1,12 @@
-﻿using Disco.BLL.Interfaces;
+﻿using Disco.BLL.DTO;
+using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
 using Disco.BLL.Services;
+using Disco.DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Disco.Api.Controllers.Posts
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/user/posts")]
     public class UserPostController : ControllerBase
@@ -22,24 +25,15 @@ namespace Disco.Api.Controllers.Posts
             serviceManager = _serviceManager;
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create([FromBody] PostModel model)
-        {
-            var post = await serviceManager.PostService.CreatePostAsync(model);
-            return Ok(post);
-        }
+        public async Task<PostDTO> Create([FromBody] CreatePostModel model) =>
+             await serviceManager.PostService.CreatePostAsync(model);
 
         [HttpDelete("{postId:int}")]
-        public async Task<IActionResult> Delete([FromRoute] int postId)
-        {
+        public async Task Delete([FromRoute] int postId) =>
             await serviceManager.PostService.DeletePostAsync(postId);
-            return Ok("This post was removed");
-        }
 
         [HttpGet("{userId:int}")]
-        public async Task<IActionResult> GetAllUserPosts([FromRoute] int userId)
-        {
-            var posts = await serviceManager.PostService.GetAllPostsAsync(e => e.UserId == userId);
-            return Ok(posts);
-        }
+        public async Task<List<Post>> GetAllUserPosts([FromRoute] int userId) =>
+            await serviceManager.PostService.GetAllUserPosts(u => u.Id == userId);
     }
 }

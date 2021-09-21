@@ -1,4 +1,5 @@
-﻿using Disco.BLL.DTO;
+﻿using AutoMapper;
+using Disco.BLL.DTO;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
 using Disco.DAL.EF;
@@ -18,37 +19,34 @@ namespace Disco.BLL.Services
 {
     public class PostService : IPostService
     {
-        private readonly ClaimsPrincipal claimsPrincipal;
+        private readonly IMapper mapper;
         private readonly UserManager<User> userManager;
         private readonly ApiDbContext ctx;
-        public PostService(ApiDbContext _ctx, ClaimsPrincipal _claimsPrincipal, UserManager<User> _userManager)
+        public PostService(ApiDbContext _ctx, IMapper _mapper, UserManager<User> _userManager)
         {
             ctx = _ctx;
-            claimsPrincipal = _claimsPrincipal;
+            mapper = _mapper;
             userManager = _userManager;
         }
 
-        public async Task<PostDTO> CreatePostAsync(PostModel post)
+        public async Task<PostDTO> CreatePostAsync(CreatePostModel model)
         {
-            var user = await userManager.GetUserAsync(claimsPrincipal);
+            var user = await userManager.FindByEmailAsync(model.Email);
             if(user != null)
             {
-               var newPost = ctx.Posts.Add(new Post { 
-                    Description = post.Description,
-                    VideoSource = new Video {
-                        VideoSource = post.VideoSource,
-                    },
-                    Song = new Song {
-                        ImageUrl = post.ImageUrl,
-                        Source = post.VideoSource
-                    },
-                    User = user,
+                var post = new Post
+                {
+                    Description = model.Description,
+                    ImageId = model.ImageId,
+                    SongId = model.SongId,
+                    VideoId = model.VideoId,
                     UserId = user.Id,
-                }).Entity;
-                user.Posts.Add(newPost);
+                    User = user,
+                };
+                ctx.Posts.Add(post);
+                user.Posts.Add(post);
                 await ctx.SaveChangesAsync();
-
-                return new PostDTO { Post = newPost, VarificationResult ="Success" };
+                return new PostDTO { Post = post, VarificationResult ="Success" };
             }
             return null;
         }
@@ -60,9 +58,11 @@ namespace Disco.BLL.Services
                 .Where(p => p.Id == postId)
                 .FirstOrDefaultAsync();
             post.User.Posts.Remove(post);
+            ctx.Posts.Remove(post);
+            ctx.SaveChanges();
         }
 
-        public Task<List<Post>> GetAllPostsAsync(Expression<Func<Post, bool>> expression)
+        public Task<List<Post>> GetAllUserPosts(Expression<Func<Post, bool>> expression)
         {
             if (expression == null)
                 return ctx.Posts.ToListAsync();

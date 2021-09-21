@@ -1,4 +1,5 @@
-﻿using Disco.BLL.Interfaces;
+﻿using Disco.BLL.DTO;
+using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
 using Disco.BLL.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -21,36 +22,23 @@ namespace Disco.Api.Controllers.Authentification
             serviceManager = _serviceManager;
 
         [HttpPost("log-in"), AllowAnonymous]
-        public async Task<IActionResult> Login([FromForm] LoginModel model)
-        {
-            var user = await serviceManager.AuthentificationService.Login(model);
-            return Ok(user);
-        }
+        public async Task<UserDTO> Login([FromForm] LoginModel model) =>
+            await serviceManager.AuthentificationService.Login(model);
 
         [HttpPost("log-in/facebook"), AllowAnonymous]
-        public async Task<IActionResult> Facebook([FromBody] string accessToken)
-        {
-            var user = await serviceManager.AuthentificationService.Facebook(accessToken);
-            return Ok(user);
-        }
+        public async Task<UserDTO> Facebook([FromBody] string accessToken) =>
+            await serviceManager.AuthentificationService.Facebook(accessToken);
 
         [HttpPost("log-in/google"), AllowAnonymous]
-        public async Task<IActionResult> Google([FromBody] string accessToken)
-        {
-             throw new NotImplementedException("Google is not impplimented");
-        }
+        public async Task<IActionResult> Google([FromBody] string accessToken) =>
+            Ok("Google");
 
         [HttpPost("log-in/apple"), AllowAnonymous]
-        public async Task<IActionResult> Apple([FromBody] string accessToken)
-        {
-            throw new NotImplementedException("Apple is not implimented");
-        }
+        public async Task<IActionResult> Apple([FromBody] string accessToken) =>
+            Ok("Apple");
 
         [HttpPost("registration"), AllowAnonymous]
-        public async Task<IActionResult> Registration([FromForm] RegistrationModel model)
-        {
-            var user = await serviceManager.AuthentificationService.Register(model);
-            return Ok(user);
-        }
+        public async Task<UserDTO> Registration([FromForm] RegistrationModel model) =>
+            await serviceManager.AuthentificationService.Register(model);
     }
 }

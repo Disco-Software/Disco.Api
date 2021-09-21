@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Disco.DAL.Entities
 {
-    public class Song : Base.BaseEntity<int>
+    public class PostSong : Base.BaseEntity<int>
     {
         public string ImageUrl { get; set; }
         public string Source { get; set; }
