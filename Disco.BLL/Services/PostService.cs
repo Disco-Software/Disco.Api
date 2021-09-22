@@ -31,29 +31,28 @@ namespace Disco.BLL.Services
 
         public async Task<PostDTO> CreatePostAsync(CreatePostModel model)
         {
-            var user = await userManager.FindByEmailAsync(model.Email);
+            var user = await ctx.Users
+                .Include(p => p.Posts)
+                .Where(p => p.Email == model.Email)
+                .FirstOrDefaultAsync();
             if(user != null)
             {
-                var post = new Post
-                {
-                    Description = model.Description,
-                    ImageId = model.ImageId,
-                    SongId = model.SongId,
-                    VideoId = model.VideoId,
-                    UserId = user.Id,
-                    User = user,
-                };
+                var post = mapper.Map<Post>(model);
+                post.UserId = user.Id;
+                post.User = user;
                 ctx.Posts.Add(post);
                 user.Posts.Add(post);
                 await ctx.SaveChangesAsync();
                 return new PostDTO { Post = post, VarificationResult ="Success" };
             }
-            return null;
+            return new PostDTO { VarificationResult = "Faild"};
         }
-
         public async Task DeletePostAsync(int postId)
         {
-            var post = await ctx.Posts.Include(s => s.Song)
+            var post = await ctx.Posts
+                .Include(s => s.Song)
+                .Include(i => i.PostImage)
+                .Include(v => v.Video)
                 .Include(u => u.User)
                 .Where(p => p.Id == postId)
                 .FirstOrDefaultAsync();
@@ -61,13 +60,13 @@ namespace Disco.BLL.Services
             ctx.Posts.Remove(post);
             ctx.SaveChanges();
         }
-
-        public Task<List<Post>> GetAllUserPosts(Expression<Func<Post, bool>> expression)
+        public async Task<List<Post>> GetAllUserPosts(int userId)
         {
-            if (expression == null)
-                return ctx.Posts.ToListAsync();
-            else
-                return ctx.Posts.Where(expression).ToListAsync();
+            var model = await ctx.Posts
+                .Include(u => u.User)
+                .Where(p => p.UserId == userId)
+                .ToListAsync();
+            return model;
         }
     }
 }

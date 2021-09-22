@@ -25,7 +25,7 @@ namespace Disco.Api.Controllers.Authentification
         public async Task<UserDTO> Login([FromForm] LoginModel model) =>
             await serviceManager.AuthentificationService.Login(model);
 
-        [HttpPost("log-in/facebook"), AllowAnonymous]
+        [HttpGet("log-in/facebook"), AllowAnonymous]
         public async Task<UserDTO> Facebook([FromBody] string accessToken) =>
             await serviceManager.AuthentificationService.Facebook(accessToken);
 

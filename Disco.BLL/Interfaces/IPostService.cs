@@ -13,7 +13,7 @@ namespace Disco.BLL.Interfaces
     public interface IPostService
     {
         Task<PostDTO> CreatePostAsync(CreatePostModel model);
-        Task<List<Post>> GetAllUserPosts(Expression<Func<Post,bool>> expression);
+        Task<List<Post>> GetAllUserPosts(int userId);
         Task DeletePostAsync(int postId);
     }
 }

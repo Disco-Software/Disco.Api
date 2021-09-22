@@ -27,7 +27,7 @@ namespace Disco.BLL.Services
             IHttpClientFactory httpClientFactory)
         {
             facebookAuthService = new Lazy<IFacebookAuthService>(() => new FacebookAuthService(configuration, httpClientFactory));
-            authentificationService = new Lazy<IAuthentificationService>(() => new AuthentificationService(_ctx, _userManager, _signInManager, facebookAuthService.Value));
+            authentificationService = new Lazy<IAuthentificationService>(() => new AuthentificationService(_ctx, _userManager, _signInManager, facebookAuthService.Value, _mapper));
             // TODO: Where are from ClaimsPrincipal???
             postService = new Lazy<IPostService>(() => new PostService(_ctx, _mapper, _userManager));
         }
