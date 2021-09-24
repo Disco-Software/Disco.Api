@@ -1,4 +1,5 @@
 using AutoMapper;
+using Disco.BLL.Configurations;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Mapper;
 using Disco.BLL.Services;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.NotificationHubs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,6 +54,18 @@ namespace Disco.Api
             services.AddSwaggerGen();
 
             services.AddScoped<IServiceManager, ServiceManager>();
+
+            services.AddOptions<PushNotificationOptions>()
+                .Configure(Configuration.GetSection("NotificationHub").Bind)
+                .ValidateDataAnnotations();
+
+            services.AddLogging();
+
+            var pushNotificationOptions = new PushNotificationOptions()
+            {
+                ConnectionString = Configuration.GetConnectionString("AzureNotificationHubConnection"),
+                Name = Configuration["NotificationHub:HubName"]
+            };
 
             var mapperConfig = new MapperConfiguration(ms =>
             {

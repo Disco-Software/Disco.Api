@@ -9,5 +9,6 @@ namespace Disco.BLL.Interfaces
         IAuthentificationService AuthentificationService { get; }
         IFacebookAuthService FacebookAuthService { get; }
         IPostService PostService { get; }
+        IRegisterDeviceService RegisterDeviceService { get; }
     }
 }

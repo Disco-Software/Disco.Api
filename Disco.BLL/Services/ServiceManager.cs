@@ -4,7 +4,10 @@ using Disco.BLL.Interfaces;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Azure.NotificationHubs;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -18,11 +21,12 @@ namespace Disco.BLL.Services
         private readonly Lazy<IAuthentificationService> authentificationService;
         private readonly Lazy<IPostService> postService;
         private readonly Lazy<IFacebookAuthService> facebookAuthService;
-
+        private readonly Lazy<IRegisterDeviceService> registerDeviceService;
         public ServiceManager(ApiDbContext _ctx,
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
             IMapper _mapper,
+            IOptions<PushNotificationOptions> options,
             IConfiguration configuration,
             IHttpClientFactory httpClientFactory)
         {
@@ -30,11 +34,17 @@ namespace Disco.BLL.Services
             authentificationService = new Lazy<IAuthentificationService>(() => new AuthentificationService(_ctx, _userManager, _signInManager, facebookAuthService.Value, _mapper));
             // TODO: Where are from ClaimsPrincipal???
             postService = new Lazy<IPostService>(() => new PostService(_ctx, _mapper, _userManager));
+            var notificationHub = NotificationHubClient.CreateClientFromConnectionString(
+                configuration["ConnectionStrings:AzureNotificationHubConnection"],
+                configuration["NotificationHub:HubName"]);
+            registerDeviceService = new Lazy<IRegisterDeviceService>(() => new RegisterDeviceService(notificationHub));
         }
         public IAuthentificationService AuthentificationService => authentificationService.Value;
 
         public IFacebookAuthService FacebookAuthService => facebookAuthService.Value;
 
         public IPostService PostService => postService.Value;
+
+        public IRegisterDeviceService RegisterDeviceService => registerDeviceService.Value;
     }
 }

@@ -59,7 +59,7 @@ namespace Disco.BLL.Services
             post.User.Posts.Remove(post);
             ctx.Posts.Remove(post);
             ctx.SaveChanges();
-        }
+        }        
         public async Task<List<Post>> GetAllUserPosts(int userId)
         {
             var model = await ctx.Posts
