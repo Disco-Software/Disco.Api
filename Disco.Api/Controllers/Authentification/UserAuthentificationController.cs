@@ -21,6 +21,11 @@ namespace Disco.Api.Controllers.Authentification
         public UserAuthentificationController(IServiceManager _serviceManager) =>
             serviceManager = _serviceManager;
 
+        /// <summary>
+        /// User log in by email and password
+        /// </summary>
+        /// <param name="model">email and password</param>
+        /// <returns>object: UserDto with user and varification result</returns>
         [HttpPost("log-in"), AllowAnonymous]
         public async Task<UserDTO> Login([FromForm] LoginModel model) =>
             await serviceManager.AuthentificationService.Login(model);

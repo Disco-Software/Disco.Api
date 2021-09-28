@@ -21,7 +21,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Disco.Api
@@ -38,6 +40,22 @@ namespace Disco.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c => {
+                
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Contact = new Microsoft.OpenApi.Models.OpenApiContact
+                    {
+                        Email = "stas_1999_nr@ukr.net",
+                        Name = "Станислав",
+                        Url = new Uri("https://www.facebook.com/stas.korchevskyy/")
+                    },
+                    Title = "Disco.Api",
+                    Description = "This Api is for front-end and mobile developers who are developing Disco.",
+                    Version = "v1",
+                });
+            });
+            services.AddSwaggerGen();
             services.AddDbContext<ApiDbContext>(o => 
                 o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), 
                 b => b.MigrationsAssembly("../Disco.DAL")));
@@ -51,7 +69,6 @@ namespace Disco.Api
                 });
             services.AddHttpContextAccessor();
             services.AddHttpClient();
-            services.AddSwaggerGen();
 
             services.AddScoped<IServiceManager, ServiceManager>();
 
@@ -61,11 +78,6 @@ namespace Disco.Api
 
             services.AddLogging();
 
-            var pushNotificationOptions = new PushNotificationOptions()
-            {
-                ConnectionString = Configuration.GetConnectionString("AzureNotificationHubConnection"),
-                Name = Configuration["NotificationHub:HubName"]
-            };
 
             var mapperConfig = new MapperConfiguration(ms =>
             {
@@ -88,6 +100,13 @@ namespace Disco.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseSwagger(c => {
+                c.SerializeAsV2 = true;
+            });
+            app.UseSwaggerUI(u =>
+            {
+                u.SwaggerEndpoint("v1/swagger.json", "Disco.Api");
+            });
             app.UseHttpsRedirection();
             app.UseRouting();
             app.ApplicationServices.CreateScope();

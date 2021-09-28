@@ -14,14 +14,14 @@
     },
     "resourceGroupLocation": {
       "type": "string",
-      "defaultValue": "",
+      "defaultValue": "southcentralus",
       "metadata": {
         "description": "Location of the resource group. Resource groups could have different location than resources, however by default we use API versions from latest hybrid profile which support all locations for resource types we support."
       }
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "Disco2Api",
+      "defaultValue": "dev-disco-api",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }
