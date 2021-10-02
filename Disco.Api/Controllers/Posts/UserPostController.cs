@@ -28,6 +28,10 @@ namespace Disco.Api.Controllers.Posts
         public async Task<PostDTO> Create([FromBody] CreatePostModel model) =>
              await serviceManager.PostService.CreatePostAsync(model);
 
+        [HttpGet("index")]
+        public async Task<IActionResult> Index() =>
+             Ok("hello");
+
         [HttpDelete("{postId:int}")]
         public async Task Delete([FromRoute] int postId) =>
             await serviceManager.PostService.DeletePostAsync(postId);

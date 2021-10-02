@@ -3,6 +3,7 @@ using Disco.BLL.Configurations;
 using Disco.BLL.Interfaces;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
+using Disco.DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Azure.NotificationHubs;
 using Microsoft.Extensions.Configuration;

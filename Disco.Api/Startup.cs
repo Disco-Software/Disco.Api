@@ -5,6 +5,7 @@ using Disco.BLL.Mapper;
 using Disco.BLL.Services;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
+using Disco.DAL.Entities.Base;
 using Disco.DAL.Interfaces;
 using Disco.DAL.Repositories;
 using Disco.DAL.Repositories.Base;
