@@ -12,6 +12,7 @@ namespace Disco.DAL.EF
 {
     public class ApiDbContext : IdentityDbContext<User,Role,int>, IDesignTimeDbContextFactory<ApiDbContext>
     {
+        public DbSet<Profile> Profiles { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<PostSong> PostSongs { get; set; }

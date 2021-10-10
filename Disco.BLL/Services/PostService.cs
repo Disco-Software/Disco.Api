@@ -32,7 +32,7 @@ namespace Disco.BLL.Services
         public async Task<PostDTO> CreatePostAsync(CreatePostModel model)
         {
             var user = await ctx.Users
-                .Include(p => p.Posts)
+                .Include(p => p.Profile)
                 .Where(p => p.Email == model.Email)
                 .FirstOrDefaultAsync();
             if(user != null)
@@ -41,7 +41,7 @@ namespace Disco.BLL.Services
                 post.UserId = user.Id;
                 post.User = user;
                 ctx.Posts.Add(post);
-                user.Posts.Add(post);
+                user.Profile.Posts.Add(post);
                 await ctx.SaveChangesAsync();
                 return new PostDTO { Post = post, VarificationResult ="Success" };
             }
@@ -56,7 +56,7 @@ namespace Disco.BLL.Services
                 .Include(u => u.User)
                 .Where(p => p.Id == postId)
                 .FirstOrDefaultAsync();
-            post.User.Posts.Remove(post);
+            post.User.Profile.Posts.Remove(post);
             ctx.Posts.Remove(post);
             ctx.SaveChanges();
         }        

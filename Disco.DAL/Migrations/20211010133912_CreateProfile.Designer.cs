@@ -4,14 +4,16 @@ using Disco.DAL.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Disco.DAL.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211010133912_CreateProfile")]
+    partial class CreateProfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,13 +135,7 @@ namespace Disco.DAL.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("Profiles");
                 });
@@ -220,6 +216,9 @@ namespace Disco.DAL.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("ProfileId")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -239,6 +238,8 @@ namespace Disco.DAL.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("ProfileId");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -391,15 +392,13 @@ namespace Disco.DAL.Migrations
                         .HasForeignKey("PostId");
                 });
 
-            modelBuilder.Entity("Disco.DAL.Entities.Profile", b =>
+            modelBuilder.Entity("Disco.DAL.Entities.User", b =>
                 {
-                    b.HasOne("Disco.DAL.Entities.User", "User")
-                        .WithOne("Profile")
-                        .HasForeignKey("Disco.DAL.Entities.Profile", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Disco.DAL.Entities.Profile", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileId");
 
-                    b.Navigation("User");
+                    b.Navigation("Profile");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -456,11 +455,6 @@ namespace Disco.DAL.Migrations
             modelBuilder.Entity("Disco.DAL.Entities.Profile", b =>
                 {
                     b.Navigation("Posts");
-                });
-
-            modelBuilder.Entity("Disco.DAL.Entities.User", b =>
-                {
-                    b.Navigation("Profile");
                 });
 #pragma warning restore 612, 618
         }

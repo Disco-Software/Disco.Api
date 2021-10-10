@@ -29,7 +29,7 @@ namespace Disco.DAL.Repositories
         {
             await ctx.Posts
                 .AddAsync(post);
-            user.Posts.Add(post);
+            user.Profile.Posts.Add(post);
             await ctx.SaveChangesAsync();
             return post;
         }

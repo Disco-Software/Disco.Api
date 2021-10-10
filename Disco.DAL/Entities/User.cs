@@ -8,7 +8,7 @@ namespace Disco.DAL.Entities
     public class User : IdentityUser<int>
     {
         public string FullName { get; set; }
-        //public string Photo { get; set; }
-        public List<Post> Posts { get; set; }
+        
+        public Profile Profile { get; set; }
     }
 }

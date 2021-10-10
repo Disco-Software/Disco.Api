@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Disco.BLL.Mapper
 {
-    public class MapProfile : Profile
+    public class MapProfile : AutoMapper.Profile
     {
         public MapProfile()
         {
