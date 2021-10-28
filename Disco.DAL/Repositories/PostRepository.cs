@@ -37,8 +37,8 @@ namespace Disco.DAL.Repositories
         public async override Task Remove(int id)
         {
             var post = await ctx.Posts
-                .Include(v => v.Video)
-                .Include(s => s.Song)
+                .Include(v => v.PostVideos)
+                .Include(s => s.PostSongs)
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
             ctx.Remove(post);

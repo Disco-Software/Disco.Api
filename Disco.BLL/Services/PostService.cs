@@ -38,10 +38,9 @@ namespace Disco.BLL.Services
             if(user != null)
             {
                 var post = mapper.Map<Post>(model);
-                post.UserId = user.Id;
-                post.User = user;
+                post.Profile = user.Profile;
+                post.ProfileId = user.Profile.Id;
                 ctx.Posts.Add(post);
-                user.Profile.Posts.Add(post);
                 await ctx.SaveChangesAsync();
                 return new PostDTO { Post = post, VarificationResult ="Success" };
             }
@@ -50,21 +49,20 @@ namespace Disco.BLL.Services
         public async Task DeletePostAsync(int postId)
         {
             var post = await ctx.Posts
-                .Include(s => s.Song)
-                .Include(i => i.PostImage)
-                .Include(v => v.Video)
-                .Include(u => u.User)
+                .Include(u => u.Profile)
+                .ThenInclude(p => p.User)
                 .Where(p => p.Id == postId)
                 .FirstOrDefaultAsync();
-            post.User.Profile.Posts.Remove(post);
+            post.Profile.Posts.Remove(post);
             ctx.Posts.Remove(post);
             ctx.SaveChanges();
         }        
         public async Task<List<Post>> GetAllUserPosts(int userId)
         {
             var model = await ctx.Posts
-                .Include(u => u.User)
-                .Where(p => p.UserId == userId)
+                .Include(u => u.Profile)
+                .ThenInclude(u => u.User)
+                .Where(p => p.Profile.UserId == userId)
                 .ToListAsync();
             return model;
         }

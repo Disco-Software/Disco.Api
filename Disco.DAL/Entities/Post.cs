@@ -10,17 +10,11 @@ namespace Disco.DAL.Entities
     {
         public string Description { get; set; }
 
+        public List<PostImage> PostImages { get; set; }
+        public List<PostSong> PostSongs { get; set; }
+        public List<PostVideo> PostVideos { get; set; }
 
-        public Nullable<int> ImageId { get; set; }
-        public PostImage PostImage { get; set; }
-
-        public Nullable<int> SongId { get; set; }
-        public PostSong Song { get; set; }
-
-        public Nullable<int> VideoId { get; set; }
-        public PostVideo Video { get; set; }
-
-        public int UserId { get; set; }
-        public User User { get; set; }
+        public int ProfileId { get; set; }
+        public Profile Profile { get; set; }
     }
 }

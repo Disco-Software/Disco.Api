@@ -23,8 +23,11 @@ namespace Disco.DAL.EF
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<Post>().HasMany<PostVideo>();
-            builder.Entity<Post>().HasMany<PostSong>();
+
+            builder.Entity<User>()
+                .HasOne(p => p.Profile)
+                .WithOne(u => u.User)
+                .HasForeignKey<Profile>(p => p.UserId);
         }
 
         public ApiDbContext CreateDbContext(string[] args)

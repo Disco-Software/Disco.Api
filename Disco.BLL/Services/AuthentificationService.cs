@@ -58,38 +58,28 @@ namespace Disco.BLL.Services
 
         public async Task<UserDTO> Register(RegistrationModel userInfo)
         {
-            try
+            var user = await ctx.Users
+                .Where(e => e.Email == userInfo.Email)
+                .FirstOrDefaultAsync();
+            if (user != null)
             {
-                var user = await userManager.FindByEmailAsync(userInfo.Email);
-                if (user == null)
-                {
-                    var model = mapper.Map<User>(userInfo);
-                    model.NormalizedEmail = userManager.NormalizeEmail(model.Email);
-                    model.NormalizedUserName = userManager.NormalizeName(model.UserName);
-                    await userManager.CreateAsync(model);
-                    //await ctx.Users.AddAsync(model);
-                    await signInManager.CanSignInAsync(model);
-                    await ctx.SaveChangesAsync();
-                    return new UserDTO { User = model, VarificationResult = "Success" };
-                }
-                else if(user != null)
-                    return new UserDTO { VarificationResult = "This user already created" };
-                return new UserDTO { VarificationResult = "Network error" };
+                GC.Collect();
+                return new UserDTO { VarificationResult = "this user already created" };
             }
-            catch (Exception ex)
+            var model = mapper.Map<User>(userInfo);
+            model.NormalizedEmail = userManager.NormalizeEmail(userInfo.Email);
+            model.NormalizedUserName = userManager.NormalizeName(userInfo.UserName);
+            model.PasswordHash = userManager.PasswordHasher.HashPassword(model,userInfo.Password);
+            model.Profile = new DAL.Entities.Profile
             {
-                if (userInfo.Email == null)
-                    return new UserDTO { VarificationResult = "Email, mast have" };
-                else if (userInfo.FullName == null)
-                    return new UserDTO { VarificationResult = "Full name, mast have" };
-                else if (userInfo.UserName == null)
-                    return new UserDTO { VarificationResult = "User name, mast have" };
-                else if (userInfo.Password == null)
-                    return new UserDTO { VarificationResult = "Password, mast have" };
-                else if (userInfo.ConfirmPassword == null)
-                    return new UserDTO { VarificationResult = "Confirm your password" };
-                return new UserDTO { VarificationResult = ex.ToString() };
-            }
+                Status = "New artist",
+                UserId = model.Id,
+                User = model
+            };
+            ctx.Profiles.Add(model.Profile);
+            await userManager.CreateAsync(model);
+            ctx.SaveChanges();
+            return new UserDTO { User = model, VarificationResult = "Success"};
         }
 
         public async Task<UserDTO> Facebook(string accessToken)
