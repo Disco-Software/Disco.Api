@@ -1,5 +1,5 @@
-import 'package:disco_app/pages/splash/splash_end_page.dart';
-import 'package:disco_app/pages/splash/splash_page.dart';
+import 'package:disco_app/pages/start/start_page.dart';
+import 'package:disco_app/pages/start/splash_page.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       initialRoute: SplashPage.routeName,
       routes: {
         SplashPage.routeName: (_) => const SplashPage(),
-        SplashEndPage.routeName: (_) => const SplashEndPage(),
+        StartPage.routeName: (_) => const StartPage(),
       },
     );
   }

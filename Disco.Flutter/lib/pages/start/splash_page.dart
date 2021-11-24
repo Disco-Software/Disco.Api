@@ -1,10 +1,10 @@
-import 'package:disco_app/pages/splash/splash_end_page.dart';
+import 'package:disco_app/pages/start/start_page.dart';
 import 'package:flutter/material.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
 
-  static const routeName = '/splash';
+  static const routeName = '/start';
 
   @override
   _SplashPageState createState() => _SplashPageState();
@@ -15,7 +15,7 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(milliseconds: 300)).then((value) {
-      Navigator.of(context).pushReplacementNamed(SplashEndPage.routeName);
+      Navigator.of(context).pushReplacementNamed(StartPage.routeName);
     });
   }
 
