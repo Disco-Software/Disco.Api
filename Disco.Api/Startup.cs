@@ -20,6 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -60,9 +61,26 @@ namespace Disco.Api
             services.AddDbContext<ApiDbContext>(o => 
                 o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), 
                 b => b.MigrationsAssembly("../Disco.DAL")));
-            services.AddIdentity<User, Role>()
+            services.AddIdentityCore<User>()
+                .AddRoles<Role>()
                 .AddEntityFrameworkStores<ApiDbContext>();
+            services.AddIdentity<User, Role>()
+                .AddEntityFrameworkStores<ApiDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddOptions<AuthenticationOptions>();
+
             services.AddAuthentication()
+                .AddJwtBearer("MobileJwt", options =>
+                {
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        ValidIssuer = Configuration["Auth:Jwt:Issuer"],
+                        ValidAudience = Configuration["Auth:Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                        Convert.FromBase64String(Configuration["Auth:Jwt:SigningKey"]))
+                    };
+                })
                 .AddFacebook(facebookOptions =>
                 {
                     facebookOptions.AppId = Configuration["Facebook:AppId"];

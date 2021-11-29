@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
@@ -27,13 +28,13 @@ namespace Disco.BLL.Services
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
             IMapper _mapper,
-            IOptions<PushNotificationOptions> options,
+            IOptions<PushNotificationOptions> pushNotificationOptions,
+            IOptions<AuthenticationOptions> authenticationOptions,
             IConfiguration configuration,
             IHttpClientFactory httpClientFactory)
         {
             facebookAuthService = new Lazy<IFacebookAuthService>(() => new FacebookAuthService(configuration, httpClientFactory));
-            authentificationService = new Lazy<IAuthentificationService>(() => new AuthentificationService(_ctx, _userManager, _signInManager, facebookAuthService.Value, _mapper));
-            // TODO: Where are from ClaimsPrincipal???
+            authentificationService = new Lazy<IAuthentificationService>(() => new AuthentificationService(_ctx, _userManager, _signInManager, facebookAuthService.Value, authenticationOptions,_mapper));
             postService = new Lazy<IPostService>(() => new PostService(_ctx, _mapper, _userManager));
             var notificationHub = NotificationHubClient.CreateClientFromConnectionString(
                 configuration["ConnectionStrings:AzureNotificationHubConnection"],

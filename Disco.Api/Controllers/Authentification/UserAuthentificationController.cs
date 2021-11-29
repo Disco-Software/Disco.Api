@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Disco.Api.Controllers.Authentification
 {
     [ApiController]
-    [Route("api/user/authentification")]
+    [Route("api/user/authentication")]
     public class UserAuthentificationController : ControllerBase
     {
         private readonly IServiceManager serviceManager;
@@ -28,7 +28,7 @@ namespace Disco.Api.Controllers.Authentification
         /// <returns>object: UserDto with user and varification result</returns>
         [HttpPost("log-in"), AllowAnonymous]
         public async Task<UserDTO> Login([FromForm] LoginModel model) =>
-            await serviceManager.AuthentificationService.Login(model);
+            await serviceManager.AuthentificationService.LogIn(model);
 
         [HttpGet("log-in/facebook"), AllowAnonymous]
         public async Task<UserDTO> Facebook([FromBody] string accessToken) =>
