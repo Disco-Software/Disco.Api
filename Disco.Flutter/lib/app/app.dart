@@ -1,6 +1,7 @@
-import 'package:disco_app/pages/start/start_page.dart';
 import 'package:disco_app/pages/start/splash_page.dart';
+import 'package:disco_app/pages/start/start_page.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -9,8 +10,29 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
+      theme: ThemeData.dark().copyWith(
+        textTheme: GoogleFonts.aBeeZeeTextTheme(),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            primary: Colors.white,
+            textStyle: const TextStyle(
+                fontSize: 18, decoration: TextDecoration.underline),
+          ),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            padding: EdgeInsets.zero,
+            textStyle: const TextStyle(fontSize: 24),
+            primary: Colors.white,
+            side: const BorderSide(width: 2, color: Colors.white),
+            minimumSize: const Size(100, 56),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(24),
+              ),
+            ),
+          ),
+        ),
       ),
       initialRoute: SplashPage.routeName,
       routes: {
