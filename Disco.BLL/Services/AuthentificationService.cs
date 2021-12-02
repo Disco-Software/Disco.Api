@@ -57,25 +57,22 @@ namespace Disco.BLL.Services
 
         public async Task<UserDTO> Register(RegistrationModel userInfo)
         {
-            var user = await ctx.Users
-                .Where(e => e.Email == userInfo.Email)
-                .FirstOrDefaultAsync();
+            var user = await userManager.FindByEmailAsync(userInfo.Email);
             if (user != null)
-                return BadRequest("user allready created");
-            var model = mapper.Map<User>(userInfo);
-            model.NormalizedEmail = userManager.NormalizeEmail(userInfo.Email);
-            model.NormalizedUserName = userManager.NormalizeName(userInfo.UserName);
-            model.PasswordHash = userManager.PasswordHasher.HashPassword(model,userInfo.Password);
-            model.Profile = new DAL.Entities.Profile
-            {
-                Status = "New artist",
-                UserId = model.Id,
-                User = model
-            };
-            ctx.Profiles.Add(model.Profile);
-            await userManager.CreateAsync(model);
-            ctx.SaveChanges();
-            return Ok(user, "success");
+                return BadRequest("User already created");
+           
+            var userResult = mapper.Map<User>(userInfo);
+            userResult.PasswordHash = userManager.PasswordHasher.HashPassword(userResult, userInfo.Password);
+            userResult.Profile = new DAL.Entities.Profile { Status = "Music starter" };
+            userResult.NormalizedEmail = userManager.NormalizeEmail(userResult.Email);
+            userResult.NormalizedUserName = userManager.NormalizeName(userResult.UserName);
+
+            await userManager.CreateAsync(userResult);
+            await ctx.SaveChangesAsync();
+
+            var jwt = GenerateJwtToken(userResult);
+
+            return Ok(userResult, jwt);
         }
 
         public async Task<UserDTO> Facebook(string accessToken)
@@ -125,11 +122,11 @@ namespace Disco.BLL.Services
         public string GenerateJwtToken(User user)
         {
             var jwtSecurityToken = new JwtSecurityToken(
-                authenticationOptions.Value.Issure,
+                authenticationOptions.Value.Issuer,
                 authenticationOptions.Value.Audience,
                 new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) },
                 DateTime.UtcNow,
-                DateTime.UtcNow.AddDays(authenticationOptions.Value.ExpiresAfterDays),
+                DateTime.UtcNow.AddHours(authenticationOptions.Value.ExpiresAfterMitutes),
                 new SigningCredentials(
                         new SymmetricSecurityKey(authenticationOptions.Value.SigningKeyBytes),
                         SecurityAlgorithms.HmacSha256));

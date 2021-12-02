@@ -1,4 +1,5 @@
-﻿using Disco.BLL.DTO;
+﻿using Disco.BLL.Constants;
+using Disco.BLL.DTO;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
 using Disco.BLL.Services;
@@ -14,10 +15,10 @@ using System.Threading.Tasks;
 
 namespace Disco.Api.Controllers.Posts
 {
-    //[Authorize]
     [ApiController]
+    [Authorize(AuthenticationSchemes = AuthTheam.UserToken)]
     [Route("api/user/posts")]
-    public class UserPostController : ControllerBase
+    public class UserPostController : Controller
     {
         private readonly IServiceManager serviceManager;
 
@@ -27,10 +28,6 @@ namespace Disco.Api.Controllers.Posts
         [HttpPost("create")]
         public async Task<PostDTO> Create([FromBody] CreatePostModel model) =>
              await serviceManager.PostService.CreatePostAsync(model);
-
-        [HttpGet("index")]
-        public async Task<IActionResult> Index() =>
-             Ok("hello");
 
         [HttpDelete("{postId:int}")]
         public async Task Delete([FromRoute] int postId) =>

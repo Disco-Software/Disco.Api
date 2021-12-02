@@ -14,6 +14,8 @@ namespace Disco.BLL.Mapper
         {
             CreateMap<CreatePostModel, Post>();
             CreateMap<Post, CreatePostModel>();
+            CreateMap<CreatePostModel, PostDTO>();
+            CreateMap<PostDTO, CreatePostModel>();
             CreateMap<Post, PostDTO>();
             CreateMap<PostDTO, Post>();
             CreateMap<User, RegistrationModel>();

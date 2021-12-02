@@ -31,20 +31,18 @@ namespace Disco.BLL.Services
 
         public async Task<PostDTO> CreatePostAsync(CreatePostModel model)
         {
-            var user = await ctx.Users
-                .Include(p => p.Profile)
-                .Where(p => p.Email == model.Email)
-                .FirstOrDefaultAsync();
-            if(user != null)
-            {
-                var post = mapper.Map<Post>(model);
-                post.Profile = user.Profile;
-                post.ProfileId = user.Profile.Id;
-                ctx.Posts.Add(post);
-                await ctx.SaveChangesAsync();
-                return new PostDTO { Post = post, VarificationResult ="Success" };
-            }
-            return new PostDTO { VarificationResult = "Faild"};
+            var user = await userManager.FindByEmailAsync(model.Email);
+
+           await ctx.Entry(user)
+                .Reference(r => r.Profile)
+                .LoadAsync();
+            await ctx.Entry(user.Profile)
+                .Collection(c => c.Posts)
+                .LoadAsync();
+            var post = mapper.Map<PostDTO>(model);
+            await ctx.Posts.AddAsync(post.Post);
+            await ctx.SaveChangesAsync();
+            return post;
         }
         public async Task DeletePostAsync(int postId)
         {

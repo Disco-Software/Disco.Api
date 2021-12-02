@@ -44,7 +44,10 @@ class StartPage extends StatelessWidget {
     );
   }
 
-  void _onLogin() {}
+  void _onLogin() {
+  }
 
-  void _onRegistration() {}
+  void _onRegistration() {
+
+  }
 }

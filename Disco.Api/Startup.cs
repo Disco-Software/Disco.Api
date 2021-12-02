@@ -1,5 +1,6 @@
 using AutoMapper;
 using Disco.BLL.Configurations;
+using Disco.BLL.Constants;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Mapper;
 using Disco.BLL.Services;
@@ -9,6 +10,7 @@ using Disco.DAL.Entities.Base;
 using Disco.DAL.Interfaces;
 using Disco.DAL.Repositories;
 using Disco.DAL.Repositories.Base;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -70,11 +72,22 @@ namespace Disco.Api
 
             services.AddOptions<AuthenticationOptions>();
 
-            services.AddAuthentication()
-                .AddJwtBearer("MobileJwt", options =>
+            services.ConfigureApplicationCookie(s =>
+            {
+                s.Cookie.HttpOnly = true;
+                s.ExpireTimeSpan = TimeSpan.FromMinutes(3000);
+            });
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(AuthTheam.UserToken, options =>
                 {
+                    options.RequireHttpsMetadata = false;
                     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                     {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidateLifetime = true,
                         ValidIssuer = Configuration["Auth:Jwt:Issuer"],
                         ValidAudience = Configuration["Auth:Jwt:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(
@@ -93,6 +106,9 @@ namespace Disco.Api
 
             services.AddOptions<PushNotificationOptions>()
                 .Configure(Configuration.GetSection("NotificationHub").Bind)
+                .ValidateDataAnnotations();
+            services.AddOptions<AuthenticationOptions>()
+                .Configure(Configuration.GetSection("Auth:Jwt").Bind)
                 .ValidateDataAnnotations();
 
             services.AddLogging();
