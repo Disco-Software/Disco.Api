@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Disco.BLL.Models
 {
-    class FacebookModel
+    public class RefreshTokenRequestModel
     {
+        public string Email { get; set; }
     }
 }

@@ -1,10 +1,16 @@
+import 'package:disco_app/pages/start/login/login_page.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/material.dart';
-class StartPage extends StatelessWidget {
+class StartPage extends StatefulWidget {
   const StartPage({Key? key}) : super(key: key);
 
   static const routeName = '/start';
 
+  @override
+  State<StartPage> createState() => _StartPageState();
+}
+
+class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,6 +51,7 @@ class StartPage extends StatelessWidget {
   }
 
   void _onLogin() {
+    Navigator.of(context).pushNamed(LoginPage.routeName);
   }
 
   void _onRegistration() {

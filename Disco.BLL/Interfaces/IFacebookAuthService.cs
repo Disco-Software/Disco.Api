@@ -1,4 +1,6 @@
 ﻿using Disco.BLL.DTO;
+using Disco.BLL.Models;
+using Disco.BLL.Models.Facebook;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +10,7 @@ namespace Disco.BLL.Interfaces
 {
     public interface IFacebookAuthService
     {
-        Task<UserDTO> GetUserInfo(string accessToken);
+        Task<FacebookModel> GetUserInfo(string accessToken);
         Task<TokenValidationDTO> TokenValidation(string accessToken);
     }
 }

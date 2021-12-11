@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Disco.BLL.DTO;
 using Disco.BLL.Models;
+using Disco.BLL.Models.Facebook;
 using Disco.DAL.Entities;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace Disco.BLL.Mapper
             CreateMap<PostDTO, Post>();
             CreateMap<User, RegistrationModel>();
             CreateMap<RegistrationModel, User>();
+            CreateMap<FacebookModel, User>();
         }
     }
 }

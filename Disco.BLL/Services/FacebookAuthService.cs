@@ -1,5 +1,7 @@
 ﻿using Disco.BLL.DTO;
 using Disco.BLL.Interfaces;
+using Disco.BLL.Models;
+using Disco.BLL.Models.Facebook;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -28,7 +30,7 @@ namespace Disco.BLL.Services
             httpClientFactory = _httpClientFactory;
         }
 
-        public async Task<UserDTO> GetUserInfo(string accessToken)
+        public async Task<FacebookModel> GetUserInfo(string accessToken)
         {
             var foratedUrl = string.Format(userInfoUrl, accessToken,
                 facebookOptions.AppId, facebookOptions.AppSecret);
@@ -39,7 +41,7 @@ namespace Disco.BLL.Services
             {
                 var response = await result.Content.ReadAsStringAsync();
 
-                return JsonConvert.DeserializeObject<UserDTO>(response);
+                return JsonConvert.DeserializeObject<FacebookModel>(response);
             }
             else
                 return null;

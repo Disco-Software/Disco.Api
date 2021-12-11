@@ -12,6 +12,7 @@ namespace Disco.BLL.Interfaces
     {
         Task<UserDTO> LogIn(LoginModel model);
         Task<UserDTO> Register(RegistrationModel model);
+        Task<UserDTO> RefreshToken(string email);
         Task<UserDTO> Facebook(string accessToken);
         public string GenerateJwtToken(User user);
     }

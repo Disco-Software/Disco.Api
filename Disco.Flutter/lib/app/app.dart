@@ -1,3 +1,4 @@
+import 'package:disco_app/pages/start/login/login_page.dart';
 import 'package:disco_app/pages/start/splash_page.dart';
 import 'package:disco_app/pages/start/start_page.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
       routes: {
         SplashPage.routeName: (_) => const SplashPage(),
         StartPage.routeName: (_) => const StartPage(),
+        LoginPage.routeName: (_) => const LoginPage(),
       },
     );
   }

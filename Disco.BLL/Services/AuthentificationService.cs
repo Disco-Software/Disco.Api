@@ -84,39 +84,33 @@ namespace Disco.BLL.Services
 
             var userInfo = await facebookAuthService.GetUserInfo(accessToken);
 
-            var user = await userManager.FindByEmailAsync(userInfo.User.Email);
+            var user = await userManager.FindByEmailAsync(userInfo.Email);
 
-            if(user == null)
+            if(user != null)
             {
-                var registration = new RegistrationModel()
-                {
-                    FullName = userInfo.User.FullName,
-                    UserName = userInfo.User.UserName,
-                    Email = userInfo.User.Email,
-                };
-                if (registration.Password == registration.ConfirmPassword)
-                {
-                    user = new User
-                    {
-                        FullName = registration.FullName,
-                        UserName = registration.UserName,
-                        Email = registration.Email,
-                    };
-                    user.PasswordHash = userManager.PasswordHasher.HashPassword(user, registration.Password);
-                    await userManager.CreateAsync(user);
-                    await ctx.Users.AddAsync(user);
-                    await ctx.SaveChangesAsync();
-                    await signInManager.CanSignInAsync(user);
-                    return new UserDTO { User = user, VarificationResult = "Success" };
-                }
-                else
-                    return new UserDTO
-                    {
-                        VarificationResult = "Password and password repeat are not equal"
-                    };
+                var jwt = GenerateJwtToken(user);
+
+                return Ok(user, jwt);
             }
-            else
-                return new UserDTO { User = user, VarificationResult = "Success" };
+
+            user = await userManager.FindByNameAsync(userInfo.Name);
+            if(user != null)
+            {
+                var jwt = GenerateJwtToken(user);
+
+                return Ok(user, jwt);
+            }
+
+            var model = mapper.Map<User>(userInfo);
+
+            model.NormalizedEmail = userManager.NormalizeEmail(model.Email);
+            model.NormalizedUserName = userManager.NormalizeName(model.UserName);
+
+            await userManager.CreateAsync(model);
+
+            var jwtToken = GenerateJwtToken(model);
+
+            return Ok(user, jwtToken);
         }
 
         public string GenerateJwtToken(User user)
@@ -131,6 +125,18 @@ namespace Disco.BLL.Services
                         new SymmetricSecurityKey(authenticationOptions.Value.SigningKeyBytes),
                         SecurityAlgorithms.HmacSha256));
             return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+        }
+
+        public async Task<UserDTO> RefreshToken(string email)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+
+            if (user == null)
+                return BadRequest("User not found");
+
+            var jwt = GenerateJwtToken(user);
+
+            return Ok(user, jwt);
         }
     }
 }

@@ -30,9 +30,9 @@ namespace Disco.Api.Controllers.Authentification
         public async Task<UserDTO> LogIn([FromForm] LoginModel model) =>
             await serviceManager.AuthentificationService.LogIn(model);
 
-        [HttpGet("log-in/facebook"), AllowAnonymous]
-        public async Task<UserDTO> Facebook([FromBody] string accessToken) =>
-            await serviceManager.AuthentificationService.Facebook(accessToken);
+        [HttpPost("log-in/facebook"), AllowAnonymous]
+        public async Task<UserDTO> Facebook([FromBody] FacebookRequestModel model) =>
+            await serviceManager.AuthentificationService.Facebook(model.AccessToken);
 
         [HttpPost("log-in/google"), AllowAnonymous]
         public async Task<IActionResult> Google([FromBody] string accessToken) =>
@@ -41,6 +41,10 @@ namespace Disco.Api.Controllers.Authentification
         [HttpPost("log-in/apple"), AllowAnonymous]
         public async Task<IActionResult> Apple([FromBody] string accessToken) =>
             Ok("Apple");
+
+        [HttpPut("refresh")]
+        public async Task<UserDTO> RefreshToken([FromBody] RefreshTokenRequestModel model) =>
+            await serviceManager.AuthentificationService.RefreshToken(model.Email);
 
         [HttpPost("registration"), AllowAnonymous]
         public async Task<UserDTO> Registration([FromForm] RegistrationModel model) =>
