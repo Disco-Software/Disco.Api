@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 
 namespace Disco.BLL.Interfaces
 {
-    public interface IAuthentificationService
+    public interface IAuthenticationService
     {
         Task<UserDTO> LogIn(LoginModel model);
         Task<UserDTO> Register(RegistrationModel model);
         Task<UserDTO> RefreshToken(string email);
         Task<UserDTO> Facebook(string accessToken);
+        Task<UserDTO> Apple(AppleLogInModel model);
         public string GenerateJwtToken(User user);
     }
 }

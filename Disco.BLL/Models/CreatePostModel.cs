@@ -11,6 +11,6 @@ namespace Disco.BLL.Models
         public Nullable<int> SongId { get; set; }
         public Nullable<int> ImageId { get; set; }
         public Nullable<int> VideoId { get; set; }
-        public string Email { get; set; }
+        public string Name { get; set; }
     }
 }

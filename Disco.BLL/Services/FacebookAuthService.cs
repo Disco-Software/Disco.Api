@@ -32,10 +32,7 @@ namespace Disco.BLL.Services
 
         public async Task<FacebookModel> GetUserInfo(string accessToken)
         {
-            var foratedUrl = string.Format(userInfoUrl, accessToken,
-                facebookOptions.AppId, facebookOptions.AppSecret);
-
-            var result = await httpClientFactory.CreateClient().GetAsync(foratedUrl);
+            var result = await httpClientFactory.CreateClient().GetAsync($"https://graph.facebook.com/v11.0/me?fields=id%2Cname%2Cemail%2Cfirst_name%2Cmiddle_name%2Clast_name%2Cpicture%2Cabout&access_token={accessToken}");
 
             if (result.StatusCode == System.Net.HttpStatusCode.OK)
             {
@@ -49,10 +46,7 @@ namespace Disco.BLL.Services
 
         public async Task<TokenValidationDTO> TokenValidation(string accessToken)
         {
-            var foratedUrl = string.Format(tokenValidationUrl, accessToken,
-                facebookOptions.AppId, facebookOptions.AppSecret);
-
-            var result = await httpClientFactory.CreateClient().GetAsync(foratedUrl);
+            var result = await httpClientFactory.CreateClient().GetAsync($"https://graph.facebook.com/debug_token?input_token={accessToken}&access_token=261002815859881|9c4f0fbe6ed89d0c35d1a7cd965de88c");
 
             if (result.StatusCode == System.Net.HttpStatusCode.OK)
             {

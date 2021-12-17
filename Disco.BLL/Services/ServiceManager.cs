@@ -20,7 +20,7 @@ namespace Disco.BLL.Services
 {
     public class ServiceManager : IServiceManager
     {
-        private readonly Lazy<IAuthentificationService> authentificationService;
+        private readonly Lazy<IAuthenticationService> authentificationService;
         private readonly Lazy<IPostService> postService;
         private readonly Lazy<IFacebookAuthService> facebookAuthService;
         private readonly Lazy<IRegisterDeviceService> registerDeviceService;
@@ -34,14 +34,14 @@ namespace Disco.BLL.Services
             IHttpClientFactory httpClientFactory)
         {
             facebookAuthService = new Lazy<IFacebookAuthService>(() => new FacebookAuthService(configuration, httpClientFactory));
-            authentificationService = new Lazy<IAuthentificationService>(() => new AuthentificationService(_ctx, _userManager, _signInManager, facebookAuthService.Value, authenticationOptions,_mapper));
+            authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, facebookAuthService.Value, authenticationOptions,_mapper));
             postService = new Lazy<IPostService>(() => new PostService(_ctx, _mapper, _userManager));
             var notificationHub = NotificationHubClient.CreateClientFromConnectionString(
                 configuration["ConnectionStrings:AzureNotificationHubConnection"],
                 configuration["NotificationHub:HubName"]);
             registerDeviceService = new Lazy<IRegisterDeviceService>(() => new RegisterDeviceService(notificationHub));
         }
-        public IAuthentificationService AuthentificationService => authentificationService.Value;
+        public IAuthenticationService AuthentificationService => authentificationService.Value;
 
         public IFacebookAuthService FacebookAuthService => facebookAuthService.Value;
 

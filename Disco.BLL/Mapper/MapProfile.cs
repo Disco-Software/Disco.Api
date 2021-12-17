@@ -15,13 +15,14 @@ namespace Disco.BLL.Mapper
         {
             CreateMap<CreatePostModel, Post>();
             CreateMap<Post, CreatePostModel>();
-            CreateMap<CreatePostModel, PostDTO>();
-            CreateMap<PostDTO, CreatePostModel>();
+            CreateMap<CreatePostModel, Post>();
+            CreateMap<Post, CreatePostModel>();
             CreateMap<Post, PostDTO>();
             CreateMap<PostDTO, Post>();
             CreateMap<User, RegistrationModel>();
             CreateMap<RegistrationModel, User>();
             CreateMap<FacebookModel, User>();
+            CreateMap<User, FacebookModel>();
         }
     }
 }

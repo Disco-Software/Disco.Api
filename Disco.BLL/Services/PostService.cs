@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Disco.BLL.DTO;
+using Disco.BLL.Extensions;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
 using Disco.DAL.EF;
@@ -17,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Disco.BLL.Services
 {
-    public class PostService : IPostService
+    public class PostService : PostDTOExtincions,IPostService
     {
         private readonly IMapper mapper;
         private readonly UserManager<User> userManager;
@@ -31,18 +32,19 @@ namespace Disco.BLL.Services
 
         public async Task<PostDTO> CreatePostAsync(CreatePostModel model)
         {
-            var user = await userManager.FindByEmailAsync(model.Email);
+            var user = await userManager.FindByNameAsync(model.Name);
 
            await ctx.Entry(user)
                 .Reference(r => r.Profile)
                 .LoadAsync();
-            await ctx.Entry(user.Profile)
-                .Collection(c => c.Posts)
-                .LoadAsync();
-            var post = mapper.Map<PostDTO>(model);
-            await ctx.Posts.AddAsync(post.Post);
+           
+            var post = mapper.Map<Post>(model);
+            post.ProfileId = user.Profile.Id;
+            post.Profile = user.Profile;
+
+            await ctx.Posts.AddAsync(post);
             await ctx.SaveChangesAsync();
-            return post;
+            return Ok(post);
         }
         public async Task DeletePostAsync(int postId)
         {

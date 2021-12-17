@@ -39,8 +39,8 @@ namespace Disco.Api.Controllers.Authentification
             Ok("Google");
 
         [HttpPost("log-in/apple"), AllowAnonymous]
-        public async Task<IActionResult> Apple([FromBody] string accessToken) =>
-            Ok("Apple");
+        public async Task<UserDTO> Apple([FromBody] AppleLogInModel model) =>
+            await serviceManager.AuthentificationService.Apple(model);
 
         [HttpPut("refresh")]
         public async Task<UserDTO> RefreshToken([FromBody] RefreshTokenRequestModel model) =>

@@ -6,7 +6,7 @@ namespace Disco.BLL.Interfaces
 {
     public interface IServiceManager
     {
-        IAuthentificationService AuthentificationService { get; }
+        IAuthenticationService AuthentificationService { get; }
         IFacebookAuthService FacebookAuthService { get; }
         IPostService PostService { get; }
         IRegisterDeviceService RegisterDeviceService { get; }
