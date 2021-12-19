@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 
@@ -24,12 +25,14 @@ namespace Disco.BLL.Services
         private readonly Lazy<IPostService> postService;
         private readonly Lazy<IFacebookAuthService> facebookAuthService;
         private readonly Lazy<IRegisterDeviceService> registerDeviceService;
+        private readonly Lazy<IEmailService> emailService;
         public ServiceManager(ApiDbContext _ctx,
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
             IMapper _mapper,
             IOptions<PushNotificationOptions> pushNotificationOptions,
             IOptions<AuthenticationOptions> authenticationOptions,
+            IOptions<EmailOptions> _emailOptions,
             IConfiguration configuration,
             IHttpClientFactory httpClientFactory)
         {
@@ -40,6 +43,7 @@ namespace Disco.BLL.Services
                 configuration["ConnectionStrings:AzureNotificationHubConnection"],
                 configuration["NotificationHub:HubName"]);
             registerDeviceService = new Lazy<IRegisterDeviceService>(() => new RegisterDeviceService(notificationHub));
+            emailService = new Lazy<IEmailService>(() => new EmailService(_emailOptions));
         }
         public IAuthenticationService AuthentificationService => authentificationService.Value;
 
@@ -48,5 +52,7 @@ namespace Disco.BLL.Services
         public IPostService PostService => postService.Value;
 
         public IRegisterDeviceService RegisterDeviceService => registerDeviceService.Value;
+
+        public IEmailService EmailService => emailService.Value;
     }
 }

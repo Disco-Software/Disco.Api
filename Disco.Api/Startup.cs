@@ -71,7 +71,7 @@ namespace Disco.Api
                 .AddDefaultTokenProviders();
 
             services.AddOptions<AuthenticationOptions>();
-
+            services.AddOptions<EmailOptions>();
             services.ConfigureApplicationCookie(s =>
             {
                 s.Cookie.HttpOnly = true;
