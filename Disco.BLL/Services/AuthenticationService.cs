@@ -8,15 +8,19 @@ using Disco.BLL.Models;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,10 +34,12 @@ namespace Disco.BLL.Services
         private readonly IMapper mapper;
         private readonly IFacebookAuthService facebookAuthService;
         private readonly IOptions<AuthenticationOptions> authenticationOptions;
+        private readonly IEmailService emailService;
         public AuthenticationService(ApiDbContext _ctx,
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
             IFacebookAuthService _facebookAuthService,
+            IEmailService _emailService,
             IOptions<AuthenticationOptions> _authenticationOptions,
             IMapper _mapper)
         {
@@ -43,6 +49,7 @@ namespace Disco.BLL.Services
             facebookAuthService = _facebookAuthService;
             mapper = _mapper;
             authenticationOptions = _authenticationOptions;
+            emailService = _emailService;
         }
 
         public async Task<UserDTO> LogIn(LoginModel model)
@@ -218,6 +225,36 @@ namespace Disco.BLL.Services
 
             }
             return null;
+        }
+
+        public async Task<string> ForgotPassword(string email)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+
+            if (user == null)
+                return "user not found";
+
+            var html = await File.ReadAllTextAsync("../Disco.BLL/EmailTemplates/ConfirmationEmail/index.html");
+            var passwordToken = await userManager.GeneratePasswordResetTokenAsync(user);
+            string url = $"disco://disco.app/token/{passwordToken}";
+            EmailConfirmationModel model = new EmailConfirmationModel();
+            model.MessageHeader = "Email confirmation";
+            model.MessageBody = html.Replace("[token]", passwordToken);
+            model.ToEmail = email;
+            model.IsHtmlTemplate = true;
+
+            await emailService.EmailConfirmation(model);
+            return passwordToken;
+        }
+
+        public async Task<UserDTO> ResetPassword(ResetPasswordRequestModel model)
+        {
+            var user = await userManager.FindByEmailAsync(model.Email);
+            
+            var identityResult = await userManager.ResetPasswordAsync(user, model.ConfirmationToken, model.Password);
+            if (!identityResult.Succeeded)
+                return new UserDTO { VarificationResult = $"You have sum errors {identityResult.Errors}" };
+            return Ok(user, "");
         }
     }
 }

@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData.dark().copyWith(
+        inputDecorationTheme:  InputDecorationTheme(border:  OutlineInputBorder(borderSide: BorderSide(color: DcColors.white, width: 2), borderRadius: BorderRadius.circular(25))),
         textTheme: GoogleFonts.aBeeZeeTextTheme(),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
@@ -33,7 +34,19 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
+        ), elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.zero,
+          textStyle: const TextStyle(fontSize: 24),
+          primary: DcColors.violet,
+          minimumSize: const Size(100, 56),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(24),
+            ),
+          ),
         ),
+      ),
       ),
       initialRoute: SplashPage.routeName,
       routes: {

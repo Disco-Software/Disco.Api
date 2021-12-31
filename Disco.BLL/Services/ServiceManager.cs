@@ -37,13 +37,13 @@ namespace Disco.BLL.Services
             IHttpClientFactory httpClientFactory)
         {
             facebookAuthService = new Lazy<IFacebookAuthService>(() => new FacebookAuthService(configuration, httpClientFactory));
-            authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, facebookAuthService.Value, authenticationOptions,_mapper));
+            emailService = new Lazy<IEmailService>(() => new EmailService(_emailOptions));
+            authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, facebookAuthService.Value, emailService.Value,authenticationOptions,_mapper));
             postService = new Lazy<IPostService>(() => new PostService(_ctx, _mapper, _userManager));
             var notificationHub = NotificationHubClient.CreateClientFromConnectionString(
                 configuration["ConnectionStrings:AzureNotificationHubConnection"],
                 configuration["NotificationHub:HubName"]);
             registerDeviceService = new Lazy<IRegisterDeviceService>(() => new RegisterDeviceService(notificationHub));
-            emailService = new Lazy<IEmailService>(() => new EmailService(_emailOptions));
         }
         public IAuthenticationService AuthentificationService => authentificationService.Value;
 

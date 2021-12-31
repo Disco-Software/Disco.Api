@@ -15,6 +15,8 @@ namespace Disco.BLL.Interfaces
         Task<UserDTO> RefreshToken(string email);
         Task<UserDTO> Facebook(string accessToken);
         Task<UserDTO> Apple(AppleLogInModel model);
+        Task<string> ForgotPassword(string email);
+        Task<UserDTO> ResetPassword(ResetPasswordRequestModel model);
         public string GenerateJwtToken(User user);
     }
 }

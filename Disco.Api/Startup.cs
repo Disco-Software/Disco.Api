@@ -22,11 +22,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -71,7 +73,7 @@ namespace Disco.Api
                 .AddDefaultTokenProviders();
 
             services.AddOptions<AuthenticationOptions>();
-            services.AddOptions<EmailOptions>();
+            services.Configure<EmailOptions>(Configuration.GetSection("EmailSettings"));
             services.ConfigureApplicationCookie(s =>
             {
                 s.Cookie.HttpOnly = true;
@@ -111,8 +113,6 @@ namespace Disco.Api
                 .Configure(Configuration.GetSection("Auth:Jwt").Bind)
                 .ValidateDataAnnotations();
 
-            services.AddLogging();
-
 
             var mapperConfig = new MapperConfiguration(ms =>
             {
@@ -121,7 +121,6 @@ namespace Disco.Api
 
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
-
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;

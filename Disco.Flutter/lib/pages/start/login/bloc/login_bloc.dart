@@ -1,15 +1,23 @@
 import 'dart:async';
 
+import 'package:disco_app/data/network/api/auth_api.dart';
+import 'package:disco_app/data/network/request-models/login_request.dart';
 import 'package:disco_app/pages/start/login/bloc/login_event.dart';
 import 'package:disco_app/pages/start/login/bloc/login_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginBloc extends Bloc<LoginPageEvent,LoginPageState>{
   LoginBloc(initialState) : super(initialState){
-    on<LoginEvent>(_handleLogin);
+    on<LoginEvent>((event, emit) =>
+      emit.forEach<LoginPageState>(_handleLogin(event), onData: (state) => state)
+    );
   }
 
+  final _authApi = AuthApi();
 
-  FutureOr<void> _handleLogin(LoginEvent event, Emitter<LoginPageState> emit) async {
+  Stream<LoginPageState> _handleLogin(LoginEvent event) async* {
+    yield LoginingState();
+    final authResult = await _authApi.login(LogInRequestModel(email: event.email, password: event.password));
+    yield LoggedInState();
   }
 }

@@ -49,5 +49,13 @@ namespace Disco.Api.Controllers.Authentification
         [HttpPost("registration"), AllowAnonymous]
         public async Task<UserDTO> Registration([FromForm] RegistrationModel model) =>
             await serviceManager.AuthentificationService.Register(model);
+
+        [HttpPost("forgot_password")]
+        public async Task<string> ForgotPassword([FromQuery] string email) =>
+            await serviceManager.AuthentificationService.ForgotPassword(email);
+
+        [HttpPut("reset-password")]
+        public async Task<UserDTO> ResetPassword([FromBody] ResetPasswordRequestModel model) =>
+            await serviceManager.AuthentificationService.ResetPassword(model);
     }
 }

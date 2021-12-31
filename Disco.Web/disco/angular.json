@@ -1,12 +1,12 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
-    "analytics": "22aaab8a-1b3e-4d42-bcbb-c7e55fcf62c1"
+    "analytics": "f3dff6ab-adf7-4a41-ba04-4f89c9d91171"
   },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "DiscoWeb": {
+    "disco": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:application": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/DiscoWeb",
+            "outputPath": "dist/disco",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -30,7 +30,6 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -72,10 +71,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "DiscoWeb:build:production"
+              "browserTarget": "disco:build:production"
             },
             "development": {
-              "browserTarget": "DiscoWeb:build:development"
+              "browserTarget": "disco:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +82,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "DiscoWeb:build"
+            "browserTarget": "disco:build"
           }
         },
         "test": {
@@ -106,5 +105,5 @@
       }
     }
   },
-  "defaultProject": "DiscoWeb"
+  "defaultProject": "disco"
 }
