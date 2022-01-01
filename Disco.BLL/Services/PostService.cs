@@ -21,12 +21,14 @@ namespace Disco.BLL.Services
     public class PostService : PostDTOExtincions,IPostService
     {
         private readonly IMapper mapper;
-        private readonly UserManager<User> userManager;
         private readonly ApiDbContext ctx;
-        public PostService(ApiDbContext _ctx, IMapper _mapper, UserManager<User> _userManager)
+        private readonly PostRepository postRepository;
+        private readonly UserManager<User> userManager;
+        public PostService(IMapper _mapper, PostRepository _postRepository, ApiDbContext _ctx, UserManager<User> _userManager)
         {
-            ctx = _ctx;
             mapper = _mapper;
+            postRepository = _postRepository;
+            ctx = _ctx;
             userManager = _userManager;
         }
 
@@ -42,8 +44,8 @@ namespace Disco.BLL.Services
             post.ProfileId = user.Profile.Id;
             post.Profile = user.Profile;
 
-            await ctx.Posts.AddAsync(post);
-            await ctx.SaveChangesAsync();
+            await postRepository.Add(post);
+
             return Ok(post);
         }
         public async Task DeletePostAsync(int postId)
@@ -53,18 +55,9 @@ namespace Disco.BLL.Services
                 .ThenInclude(p => p.User)
                 .Where(p => p.Id == postId)
                 .FirstOrDefaultAsync();
-            post.Profile.Posts.Remove(post);
-            ctx.Posts.Remove(post);
-            ctx.SaveChanges();
-        }        
-        public async Task<List<Post>> GetAllUserPosts(int userId)
-        {
-            var model = await ctx.Posts
-                .Include(u => u.Profile)
-                .ThenInclude(u => u.User)
-                .Where(p => p.Profile.UserId == userId)
-                .ToListAsync();
-            return model;
+           await postRepository.Remove(postId);
         }
+        public async Task<List<Post>> GetAllUserPosts(int userId) =>
+            await postRepository.GetAll(p => p.Profile.UserId == userId);
     }
 }

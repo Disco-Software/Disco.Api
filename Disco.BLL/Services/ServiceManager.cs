@@ -3,6 +3,7 @@ using Disco.BLL.Configurations;
 using Disco.BLL.Interfaces;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
+using Disco.DAL.Interfaces;
 using Disco.DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Azure.NotificationHubs;
@@ -26,6 +27,7 @@ namespace Disco.BLL.Services
         private readonly Lazy<IFacebookAuthService> facebookAuthService;
         private readonly Lazy<IRegisterDeviceService> registerDeviceService;
         private readonly Lazy<IEmailService> emailService;
+        private readonly Lazy<IRepositoryManager> repositoryManager;
         public ServiceManager(ApiDbContext _ctx,
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
@@ -36,10 +38,11 @@ namespace Disco.BLL.Services
             IConfiguration configuration,
             IHttpClientFactory httpClientFactory)
         {
+            repositoryManager = new Lazy<IRepositoryManager>(() => new RepositoryManager(_ctx));
             facebookAuthService = new Lazy<IFacebookAuthService>(() => new FacebookAuthService(configuration, httpClientFactory));
             emailService = new Lazy<IEmailService>(() => new EmailService(_emailOptions));
             authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, facebookAuthService.Value, emailService.Value,authenticationOptions,_mapper));
-            postService = new Lazy<IPostService>(() => new PostService(_ctx, _mapper, _userManager));
+            postService = new Lazy<IPostService>(() => new PostService(_mapper,repositoryManager.Value.PostRepository, _ctx, _userManager));
             var notificationHub = NotificationHubClient.CreateClientFromConnectionString(
                 configuration["ConnectionStrings:AzureNotificationHubConnection"],
                 configuration["NotificationHub:HubName"]);
@@ -54,5 +57,7 @@ namespace Disco.BLL.Services
         public IRegisterDeviceService RegisterDeviceService => registerDeviceService.Value;
 
         public IEmailService EmailService => emailService.Value;
+
+       public IRepositoryManager RepositoryManager => throw new NotImplementedException();
     }
 }

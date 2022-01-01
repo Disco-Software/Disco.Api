@@ -13,24 +13,25 @@ namespace Disco.DAL.Repositories
 {
     public class PostRepository : Base.BaseRepository<Post, int>
     {
-        private readonly ClaimsPrincipal claimsPrincipal;
         private readonly UserManager<User> userManager;
 
         public PostRepository(ApiDbContext _ctx) : base(_ctx) { }
 
-        public PostRepository(ApiDbContext _ctx, ClaimsPrincipal _claimsPrincipal, UserManager<User> _userManager) : base(_ctx)
+        public PostRepository(ApiDbContext _ctx, UserManager<User> _userManager) : base(_ctx)
         {
             ctx = _ctx;
-            claimsPrincipal = _claimsPrincipal;
             userManager = _userManager;
         }
 
-        public async Task<Post> Add(Post post, User user)
+        public async Task<Post> AddAsync(Post post, User user)
         {
-            await ctx.Posts
-                .AddAsync(post);
+            if(user == null)
+                throw new ArgumentNullException("user");
+            
+            await ctx.Posts.AddAsync(post);
             user.Profile.Posts.Add(post);
             await ctx.SaveChangesAsync();
+
             return post;
         }
 
@@ -39,6 +40,7 @@ namespace Disco.DAL.Repositories
             var post = await ctx.Posts
                 .Include(v => v.PostVideos)
                 .Include(s => s.PostSongs)
+                .Include(i => i.PostImages)
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
             ctx.Remove(post);
