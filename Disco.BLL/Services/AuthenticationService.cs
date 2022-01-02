@@ -5,8 +5,10 @@ using Disco.BLL.Constants;
 using Disco.BLL.DTO;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
+using Disco.BLL.Validatars;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -57,7 +59,12 @@ namespace Disco.BLL.Services
             var user = await userManager.FindByEmailAsync(model.Email);
             if (user == null)
                 return BadRequest("user not found");
+            
+            var passwordVarification = userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password);
+            if (passwordVarification == PasswordVerificationResult.Failed)
+                return BadRequest("Password is not valid");
 
+            await signInManager.SignInAsync(user, true);
             var jwt = GenerateJwtToken(user);
 
             return Ok(user, jwt);
@@ -65,19 +72,27 @@ namespace Disco.BLL.Services
 
         public async Task<UserDTO> Register(RegistrationModel userInfo)
         {
+            var validator = await RegistrationValidator.instance.ValidateAsync(userInfo);
+            if (validator.Errors.Count > 0)
+                return BadRequest(validator.Errors.FirstOrDefault().ErrorMessage);
+
             var user = await userManager.FindByEmailAsync(userInfo.Email);
+
             if (user != null)
-                return BadRequest("User already created");
-           
+                return BadRequest("this user allready created");
+
             var userResult = mapper.Map<User>(userInfo);
             userResult.PasswordHash = userManager.PasswordHasher.HashPassword(userResult, userInfo.Password);
             userResult.Profile = new DAL.Entities.Profile { Status = "Music starter" };
             userResult.NormalizedEmail = userManager.NormalizeEmail(userResult.Email);
             userResult.NormalizedUserName = userManager.NormalizeName(userResult.UserName);
 
-            await userManager.CreateAsync(userResult);
+            var identityResult = await userManager.CreateAsync(userResult);
+            if (!identityResult.Succeeded)
+                return BadRequest("Password mast have a upper case lower case and 6 leters");
             await ctx.SaveChangesAsync();
 
+            await signInManager.SignInAsync(user, true);
             var jwt = GenerateJwtToken(userResult);
 
             return Ok(userResult, jwt);
@@ -216,8 +231,12 @@ namespace Disco.BLL.Services
                 user.NormalizedUserName = userManager.NormalizeName(model.Name);
 
                 var identity = await userManager.CreateAsync(user);
+                if (!identity.Succeeded)
+                    return BadRequest(identity.Errors.FirstOrDefault().Description);
 
                 identity = await userManager.AddLoginAsync(user, new UserLoginInfo(LogInProviders.Apple, model.AppleId, "AppleId"));
+                if (!identity.Succeeded)
+                    return BadRequest(identity.Errors.FirstOrDefault().Description);
 
                 var jwt = GenerateJwtToken(user);
 

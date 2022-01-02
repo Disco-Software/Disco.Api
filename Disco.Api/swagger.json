@@ -1,3 +1,12 @@
 {
-  
+  "info": {
+    "title": "Disco",
+    "version": "1.0",
+    "contact": {
+      "email": "developer.disco@gmail.com",
+      "name": "Stas",
+      "url": "https://www.facebook.com/stas.korchevskyy/"
+    },
+    "description": "This Api is for front-end and mobile developers who are developing Disco.",
+  }
 }

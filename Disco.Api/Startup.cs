@@ -31,7 +31,8 @@ using System.Linq;
 using System.Net.Mail;
 using System.Reflection;
 using System.Threading.Tasks;
-
+using FluentValidation;
+using FluentValidation.AspNetCore;
 namespace Disco.Api
 {
     public class Startup
@@ -46,28 +47,33 @@ namespace Disco.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerGen(c => {
-                
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+            services.AddSwaggerGen(c =>
+            {
+
+                c.SwaggerDoc("1.0", new Microsoft.OpenApi.Models.OpenApiInfo
                 {
                     Contact = new Microsoft.OpenApi.Models.OpenApiContact
                     {
-                        Email = "stas_1999_nr@ukr.net",
+                        Email = "developer.disco@gmail.com",
                         Name = "Станислав",
                         Url = new Uri("https://www.facebook.com/stas.korchevskyy/")
                     },
                     Title = "Disco.Api",
                     Description = "This Api is for front-end and mobile developers who are developing Disco.",
-                    Version = "v1",
+                    Version = "1.0",
                 });
             });
             services.AddSwaggerGen();
             services.AddDbContext<ApiDbContext>(o => 
                 o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), 
                 b => b.MigrationsAssembly("../Disco.DAL")));
-            services.AddIdentityCore<User>()
-                .AddRoles<Role>()
-                .AddEntityFrameworkStores<ApiDbContext>();
+            services.AddIdentityCore<User>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+            }).AddRoles<Role>()
+            .AddEntityFrameworkStores<ApiDbContext>();
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<ApiDbContext>()
                 .AddDefaultTokenProviders();
@@ -121,10 +127,13 @@ namespace Disco.Api
 
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
-            services.AddControllers().AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            });
+            services.AddControllers()
+                .AddControllersAsServices()
+                .AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()))
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -139,7 +148,7 @@ namespace Disco.Api
             });
             app.UseSwaggerUI(u =>
             {
-                u.SwaggerEndpoint("v1/swagger.json", "Disco.Api");
+                u.SwaggerEndpoint("1.0/swagger.json", "Disco.Api");
             });
             app.UseHttpsRedirection();
             app.UseRouting();
