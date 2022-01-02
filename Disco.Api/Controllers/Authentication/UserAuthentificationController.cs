@@ -27,7 +27,7 @@ namespace Disco.Api.Controllers.Authentification
         /// <param name="model">email and password</param>
         /// <returns>object: UserDto with user and varification result</returns>
         [HttpPost("log-in"), AllowAnonymous]
-        public async Task<UserDTO> LogIn([FromForm] LoginModel model) =>
+        public async Task<UserDTO> LogIn([FromBody] LoginModel model) =>
             await serviceManager.AuthentificationService.LogIn(model);
 
         [HttpPost("log-in/facebook"), AllowAnonymous]
