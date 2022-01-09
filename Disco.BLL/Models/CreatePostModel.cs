@@ -1,4 +1,6 @@
-﻿using Disco.DAL.Entities;
+﻿using AutoMapper;
+using Disco.DAL.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,9 +10,9 @@ namespace Disco.BLL.Models
     public class CreatePostModel
     {
         public string Description { get; set; }
-        public Nullable<int> SongId { get; set; }
-        public Nullable<int> ImageId { get; set; }
-        public Nullable<int> VideoId { get; set; }
+        public List<IFormFile> PostImages { get; set; }
+        public List<IFormFile> PostSongs { get; set; }
+        public List<IFormFile> PostVideos { get;set; }
         public string Name { get; set; }
     }
 }

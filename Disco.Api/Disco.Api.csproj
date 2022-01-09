@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot - Копировать\**" />
+    <Content Remove="wwwroot - Копировать\**" />
+    <EmbeddedResource Remove="wwwroot - Копировать\**" />
+    <None Remove="wwwroot - Копировать\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.6" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.17" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.12" />
@@ -17,6 +24,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Disco.BLL\Disco.BLL.csproj" />
     <ProjectReference Include="..\Disco.DAL\Disco.DAL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 

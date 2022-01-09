@@ -1,6 +1,7 @@
 ﻿using Disco.BLL.DTO;
 using Disco.BLL.Models;
 using Disco.DAL.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -15,5 +16,6 @@ namespace Disco.BLL.Interfaces
         Task<PostDTO> CreatePostAsync(CreatePostModel model);
         Task<List<Post>> GetAllUserPosts(int userId);
         Task DeletePostAsync(int postId);
+        Task<PostImage> AddPostImage(IFormFile file, int postId);
     }
 }

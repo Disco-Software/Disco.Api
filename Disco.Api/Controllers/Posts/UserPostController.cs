@@ -26,7 +26,7 @@ namespace Disco.Api.Controllers.Posts
             serviceManager = _serviceManager;
 
         [HttpPost("create")]
-        public async Task<PostDTO> Create([FromBody] CreatePostModel model) =>
+        public async Task<PostDTO> Create([FromForm] CreatePostModel model) =>
              await serviceManager.PostService.CreatePostAsync(model);
 
         [HttpDelete("{postId:int}")]

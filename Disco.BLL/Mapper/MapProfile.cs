@@ -13,7 +13,10 @@ namespace Disco.BLL.Mapper
     {
         public MapProfile()
         {
-            CreateMap<CreatePostModel, Post>();
+            CreateMap<CreatePostModel, Post>()
+                .ForSourceMember(source => source.PostImages, opt => opt.DoNotValidate())
+                .ForSourceMember(source => source.PostSongs, opt => opt.DoNotValidate())
+                .ForSourceMember(source => source.PostVideos, opt => opt.DoNotValidate());
             CreateMap<Post, CreatePostModel>();
             CreateMap<CreatePostModel, Post>();
             CreateMap<Post, CreatePostModel>();
