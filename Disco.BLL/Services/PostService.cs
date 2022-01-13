@@ -85,18 +85,19 @@ namespace Disco.BLL.Services
             if(file.Length == 0)
                 return null;
 
-            var imagePath = $"/images/{file.FileName}";
+            var imagePath = Path.Combine(webHostEnvironment.WebRootPath, "images", file.FileName);
 
             var imageReader = file.OpenReadStream();
-            using (var memoryStream = new FileStream(webHostEnvironment.WebRootPath + imagePath, FileMode.Create))
+            using (var fileStream = new FileStream(imagePath, FileMode.Create))
             {
-                imageReader.CopyTo(memoryStream);               
+                imageReader.CopyTo(fileStream);
+                
+                var postImage = new PostImage { Source = fileStream.Name, Post = post };
+                
+                await ctx.PostImages.AddAsync(postImage);
+                
+                return postImage;
             }
-            var postImage = new PostImage { Source = imagePath, Post = post};
-            
-            await ctx.PostImages.AddAsync(postImage);
-
-            return postImage;
         }
     }
 }

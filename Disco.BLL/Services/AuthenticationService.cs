@@ -57,6 +57,13 @@ namespace Disco.BLL.Services
         public async Task<UserDTO> LogIn(LoginModel model)
         {
             var user = await userManager.FindByEmailAsync(model.Email);
+            await ctx.Entry(user)
+                .Reference(p => p.Profile)
+                .LoadAsync();
+            await ctx.Entry(user.Profile)
+                .Collection(p => p.Posts)
+                .LoadAsync();
+            
             if (user == null)
                 return BadRequest("user not found");
             

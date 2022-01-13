@@ -37,14 +37,14 @@ namespace Disco.BLL.Services
             IOptions<AuthenticationOptions> authenticationOptions,
             IOptions<EmailOptions> _emailOptions,
             IConfiguration configuration,
-            IWebHostEnvironment webHostEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IHttpClientFactory httpClientFactory)
         {
             repositoryManager = new Lazy<IRepositoryManager>(() => new RepositoryManager(_ctx));
             facebookAuthService = new Lazy<IFacebookAuthService>(() => new FacebookAuthService(configuration, httpClientFactory));
             emailService = new Lazy<IEmailService>(() => new EmailService(_emailOptions));
             authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, facebookAuthService.Value, emailService.Value,authenticationOptions,_mapper));
-            postService = new Lazy<IPostService>(() => new PostService(_mapper,repositoryManager.Value.PostRepository, _ctx, _userManager,webHostEnvironment));
+            postService = new Lazy<IPostService>(() => new PostService(_mapper,repositoryManager.Value.PostRepository, _ctx, _userManager,hostingEnvironment));
             var notificationHub = NotificationHubClient.CreateClientFromConnectionString(
                 configuration["ConnectionStrings:AzureNotificationHubConnection"],
                 configuration["NotificationHub:HubName"]);
