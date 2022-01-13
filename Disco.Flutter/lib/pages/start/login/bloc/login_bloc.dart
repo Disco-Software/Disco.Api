@@ -18,6 +18,18 @@ class LoginBloc extends Bloc<LoginPageEvent,LoginPageState>{
   Stream<LoginPageState> _handleLogin(LoginEvent event) async* {
     yield LoginingState();
     final authResult = await _authApi.login(LogInRequestModel(email: event.email, password: event.password));
-    yield LoggedInState();
+    if(authResult?.user != null && authResult?.verificationResult != null) {
+      yield LoggedInState();
+    }
+    else
+      {
+        final errorText = authResult?.verificationResult;
+        if (errorText?.contains("Password is not valid") ?? false) {
+          yield LogInErrorState(passwordError:errorText);
+        }
+        else if (errorText?.contains("user not found") ?? false){
+          yield LogInErrorState(emailError: errorText);
+        }
+      }
   }
 }

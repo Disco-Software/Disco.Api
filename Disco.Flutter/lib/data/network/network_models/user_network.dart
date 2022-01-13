@@ -1,12 +1,12 @@
 class UserTokenResponse {
   User? user;
-  String? varificationResult;
+  String? verificationResult;
 
-  UserTokenResponse({this.user, this.varificationResult});
+  UserTokenResponse({this.user, this.verificationResult});
 
   UserTokenResponse.fromJson(Map<String, dynamic> json) {
     user = json['user'] != null ? User.fromJson(json['user']) : null;
-    varificationResult = json['varificationResult'];
+    verificationResult = json['varificationResult'];
   }
 
   Map<String, dynamic> toJson() {
@@ -14,7 +14,7 @@ class UserTokenResponse {
     if (user != null) {
       data['user'] = user!.toJson();
     }
-    data['varificationResult'] = varificationResult;
+    data['varificationResult'] = verificationResult;
     return data;
   }
 }

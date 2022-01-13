@@ -57,16 +57,15 @@ namespace Disco.BLL.Services
         public async Task<UserDTO> LogIn(LoginModel model)
         {
             var user = await userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return BadRequest("user not found");
             await ctx.Entry(user)
                 .Reference(p => p.Profile)
                 .LoadAsync();
             await ctx.Entry(user.Profile)
                 .Collection(p => p.Posts)
                 .LoadAsync();
-            
-            if (user == null)
-                return BadRequest("user not found");
-            
+                        
             var passwordVarification = userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password);
             if (passwordVarification == PasswordVerificationResult.Failed)
                 return BadRequest("Password is not valid");
@@ -108,6 +107,7 @@ namespace Disco.BLL.Services
         public async Task<UserDTO> Facebook(string accessToken)
         {
             //var validation = await facebookAuthService.TokenValidation(accessToken);
+
 
             //if (!validation.IsValid)
             //    return new UserDTO { VarificationResult = "Facebook token is invalid" };

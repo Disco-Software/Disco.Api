@@ -68,7 +68,9 @@ class _LoginPageState extends State<LoginPage> {
                           padding: EdgeInsets.only(left: 18, bottom: 8,),
                           child:  Text("E-mail", style: TextStyle(fontSize: 16, color: DcColors.darkWhite),),
                         ),
-                        TextFormField(controller: _emailController, style: const TextStyle(color: DcColors.darkWhite)),
+                        TextFormField(controller: _emailController,
+                          style: const TextStyle(color: DcColors.darkWhite),
+                          decoration: InputDecoration(errorText: state is LogInErrorState? state.emailError : null)),
                         const SizedBox(height: 24),
                         const Padding(
                           padding: EdgeInsets.only(left: 18, bottom: 8,),
@@ -77,6 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                           style: const TextStyle(color: DcColors.darkWhite),
                           obscureText: true,
                           controller: _passwordController,
+                          decoration: InputDecoration(errorText: state is LogInErrorState? state.passwordError : null),
                         ),
                         const SizedBox(height: 34),
                         const Text('By continuing, you agree to accept our' +
@@ -89,7 +92,8 @@ class _LoginPageState extends State<LoginPage> {
                             child:
                             state is  LoginingState ? const Center(child: CircularProgressIndicator.adaptive(),) :
                             ElevatedButton(
-                                onPressed: _onLogin, child: const Text('Log In')),
+                                onPressed: _onLogin,
+                                child: const Text('Log In')),
                           ),
                         ),
                         const SizedBox(height: 30,),
