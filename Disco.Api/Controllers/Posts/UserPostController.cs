@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace Disco.Api.Controllers.Posts
 {
     [ApiController]
-    [Authorize(AuthenticationSchemes = AuthTheam.UserToken)]
+    [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
     [Route("api/user/posts")]
     public class UserPostController : Controller
     {

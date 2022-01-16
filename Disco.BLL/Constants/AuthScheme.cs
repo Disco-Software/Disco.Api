@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Disco.BLL.Constants
 {
-    public static class AuthTheam
+    public static class AuthScheme
+
     {
         public const string UserToken = "UserToken";
     }

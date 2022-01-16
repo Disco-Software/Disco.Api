@@ -87,7 +87,7 @@ namespace Disco.Api
             });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(AuthTheam.UserToken, options =>
+                .AddJwtBearer(AuthScheme.UserToken, options =>
                 {
                     options.RequireHttpsMetadata = false;
                     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
