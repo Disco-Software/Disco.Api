@@ -98,7 +98,7 @@ namespace Disco.BLL.Services
                 return BadRequest("Password mast have a upper case lower case and 6 leters");
             await ctx.SaveChangesAsync();
 
-            await signInManager.SignInAsync(user, true);
+            await signInManager.SignInAsync(userResult, true);
             var jwt = GenerateJwtToken(userResult);
 
             return Ok(userResult, jwt);
