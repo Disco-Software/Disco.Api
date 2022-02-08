@@ -1,4 +1,5 @@
-import 'package:disco_app/pages/start/login/login_page.dart';
+
+import 'package:disco_app/pages/authentication/login/login_page.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/material.dart';
 class StartPage extends StatefulWidget {
@@ -55,6 +56,5 @@ class _StartPageState extends State<StartPage> {
   }
 
   void _onRegistration() {
-
   }
 }

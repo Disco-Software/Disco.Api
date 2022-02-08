@@ -1,5 +1,6 @@
 ﻿using Disco.BLL.DTO;
 using Disco.BLL.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
@@ -95,6 +96,23 @@ namespace Disco.Tests
             var userDTO = JsonConvert.DeserializeObject<UserDTO>(result);
 
             Assert.IsTrue(userDTO.VarificationResult == "Log in form can not be a null");
+        }
+
+        [TestMethod]
+        public async Task ForgotPassword_ReturnsSuccessResponse()
+        {
+            var model = new ForgotPasswordModel { Email = "stas_1999_nr@ukr.net" };
+            var json = JsonConvert.SerializeObject(model);
+            var buffer = Encoding.UTF8.GetBytes(json);
+
+            var bytesArry = new ByteArrayContent(buffer);
+            bytesArry.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var response = await httpClient.PostAsync("user/authentication/forgot-password", bytesArry);
+            var result = response.Content.ReadAsStringAsync();
+            var token = JsonConvert.DeserializeObject(json);
+
+            Assert.IsNotNull(token);
         }
     }
 }

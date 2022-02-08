@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:disco_app/data/network/api/auth_api.dart';
-import 'package:disco_app/data/network/request-models/login_request.dart';
-import 'package:disco_app/pages/start/login/bloc/login_event.dart';
-import 'package:disco_app/pages/start/login/bloc/login_state.dart';
+import 'package:disco_app/data/network/request_models/login_request.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'login_event.dart';
+import 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginPageEvent,LoginPageState>{
   LoginBloc(initialState) : super(initialState){

@@ -25,17 +25,7 @@ namespace Disco.BLL.Validatars
 
             RuleFor(m => m.Password)
                 .NotEmpty()
-                .WithMessage("Password is required")
-                .Length(6)
-                .WithMessage("Password mast have 6 leters");
-           
-            RuleFor(m => m.ConfirmPassword)
-                .Equal(s => s.Password)
-                .WithMessage("Password and confirm password will be equal")
-                .Length(6)
-                .WithMessage("Confirm password mast have 6 leters")
-                .NotEmpty()
-                .WithMessage("Confirm password is required");
+                .WithMessage("Password is required");         
         }
     }
 }
