@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ResetPassword extends StatefulWidget {
-  const ResetPassword({Key key}) : super(key: key);
+  const ResetPassword({Key? key}) : super(key: key);
 
   @override
   _ResetPasswordState createState() => _ResetPasswordState();
@@ -10,6 +10,7 @@ class ResetPassword extends StatefulWidget {
 class _ResetPasswordState extends State<ResetPassword> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Dialog(child: Column(
+    ),);
   }
 }

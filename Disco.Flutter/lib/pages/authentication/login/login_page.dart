@@ -1,4 +1,4 @@
-import 'package:disco_app/pages/start/login/bloc/login_event.dart';
+import 'package:disco_app/dialogs/forgot_password/forgot_password.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/login_bloc.dart';
+import 'bloc/login_event.dart';
 import 'bloc/login_state.dart';
 
 class LoginPage extends StatefulWidget {
@@ -102,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                             height: 40,
                             child: TextButton(
                                 onPressed: _onPasswordForgot,
-                                child: const Text("Forgot Password?",
+                                child: const Text("Forgot your password",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         decoration: TextDecoration.underline, color: DcColors.darkWhite,))),
@@ -136,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
 
   }
   void _onPasswordForgot() {
-
+    showDialog(context: context, builder: (_) => const ForgotPassword());
   }
 
   void onBackButtonClick() {

@@ -1,4 +1,4 @@
-import 'package:disco_app/pages/start/login/login_page.dart';
+import 'package:disco_app/pages/authentication/login/login_page.dart';
 import 'package:disco_app/pages/start/splash_page.dart';
 import 'package:disco_app/pages/start/start_page.dart';
 import 'package:flutter/material.dart';

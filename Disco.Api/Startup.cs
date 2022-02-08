@@ -49,7 +49,6 @@ namespace Disco.Api
         {
             services.AddSwaggerGen(c =>
             {
-
                 c.SwaggerDoc("1.0", new Microsoft.OpenApi.Models.OpenApiInfo
                 {
                     Contact = new Microsoft.OpenApi.Models.OpenApiContact
@@ -118,7 +117,9 @@ namespace Disco.Api
             services.AddOptions<AuthenticationOptions>()
                 .Configure(Configuration.GetSection("Auth:Jwt").Bind)
                 .ValidateDataAnnotations();
+            services.AddLogging();
 
+            services.AddCors(cors => cors.AddPolicy(name: "app", builder => builder.WithOrigins("http://discoapi20211205192712.azurewebsites.net/swagger/index.html")));
 
             var mapperConfig = new MapperConfiguration(ms =>
             {
@@ -137,24 +138,27 @@ namespace Disco.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseSwagger(c => {
+            app.UseSwagger(c =>
+            {
                 c.SerializeAsV2 = true;
             });
             app.UseSwaggerUI(u =>
             {
                 u.SwaggerEndpoint("1.0/swagger.json", "Disco.Api");
             });
+            ILogger logger = loggerFactory.CreateLogger("ClientErrorLogger");
             app.UseHttpsRedirection();
             app.UseRouting();
             app.ApplicationServices.CreateScope();
             app.UseAuthorization();
             app.UseAuthentication();
+            app.UseCors(s => s.AllowAnyOrigin());
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -16,6 +16,7 @@ namespace Disco.DAL.EF
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<PostSong> PostSongs { get; set; }
+        public DbSet<ErrorMessage> ErrorMessages { get; set; }
         public DbSet<PostVideo> PostVideos { get; set; }
         public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options) { }
         public ApiDbContext() { }
