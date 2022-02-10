@@ -1,5 +1,6 @@
 
 import 'package:disco_app/pages/authentication/login/login_page.dart';
+import 'package:disco_app/pages/authentication/search_registration/search_registration_page.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/material.dart';
 class StartPage extends StatefulWidget {
@@ -56,5 +57,6 @@ class _StartPageState extends State<StartPage> {
   }
 
   void _onRegistration() {
+    Navigator.of(context).pushNamed(SearchRegistrationPage.routeName);
   }
 }

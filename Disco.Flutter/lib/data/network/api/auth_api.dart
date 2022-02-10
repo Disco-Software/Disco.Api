@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:disco_app/data/network/request_models/access_token_requset_model.dart';
 import 'package:disco_app/data/network/request_models/register_request.dart';
 import 'package:disco_app/data/network/request_models/reset_password_request.dart';
 
@@ -19,6 +20,12 @@ class AuthApi {
           .then((response) {
             return UserTokenResponse.fromJson(response.data);
   });
+
+  Future<UserTokenResponse?> facebook(AccessTokenRequestModel model) =>
+      NetworkClient.instance.dio.post("user/authentication/facebook", data: model)
+          .then((response) {
+        return UserTokenResponse.fromJson(response.data);
+      });
 
   Future<String?> forgotPassword(ForgotPasswordModel model) async =>
        NetworkClient.instance.dio.post<String?>('api/user/authentication/forgot-password/', data: model)

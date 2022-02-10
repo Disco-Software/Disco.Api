@@ -1,4 +1,5 @@
 import 'package:disco_app/pages/authentication/login/login_page.dart';
+import 'package:disco_app/pages/authentication/search_registration/search_registration_page.dart';
 import 'package:disco_app/pages/start/splash_page.dart';
 import 'package:disco_app/pages/start/start_page.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
         SplashPage.routeName: (_) => const SplashPage(),
         StartPage.routeName: (_) => const StartPage(),
         LoginPage.routeName: (_) => const LoginPage(),
+        SearchRegistrationPage.routeName: (_) => const SearchRegistrationPage(),
       },
     );
   }

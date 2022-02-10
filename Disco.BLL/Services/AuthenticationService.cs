@@ -265,7 +265,7 @@ namespace Disco.BLL.Services
             string url = $"disco://disco.app/token/{passwordToken}";
             EmailConfirmationModel model = new EmailConfirmationModel();
             model.MessageHeader = "Email confirmation";
-            model.MessageBody = html.Replace("[token]", passwordToken);
+            model.MessageBody = html.Replace("[token]", passwordToken).Replace("[email]", user.Email);
             model.ToEmail = email;
             model.IsHtmlTemplate = true;
 
