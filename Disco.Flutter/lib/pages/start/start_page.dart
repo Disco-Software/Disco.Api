@@ -21,7 +21,7 @@ class _StartPageState extends State<StartPage> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/main.png"),
-            fit: BoxFit.cover,
+            fit: BoxFit.fill,
           ),
         ),
         height: double.infinity,

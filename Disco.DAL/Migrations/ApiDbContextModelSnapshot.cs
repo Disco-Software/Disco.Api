@@ -19,19 +19,35 @@ namespace Disco.DAL.Migrations
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Disco.DAL.Entities.ErrorMessage", b =>
+            modelBuilder.Entity("Disco.DAL.Entities.Friend", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("FriendProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFriend")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ProfileFriendId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserProfileId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ErrorMessages");
+                    b.HasIndex("ProfileFriendId");
+
+                    b.HasIndex("UserProfileId");
+
+                    b.ToTable("Friends");
                 });
 
             modelBuilder.Entity("Disco.DAL.Entities.Post", b =>
@@ -191,9 +207,6 @@ namespace Disco.DAL.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -341,6 +354,23 @@ namespace Disco.DAL.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Disco.DAL.Entities.Friend", b =>
+                {
+                    b.HasOne("Disco.DAL.Entities.Profile", "ProfileFriend")
+                        .WithMany()
+                        .HasForeignKey("ProfileFriendId");
+
+                    b.HasOne("Disco.DAL.Entities.Profile", "UserProfile")
+                        .WithMany("Friends")
+                        .HasForeignKey("UserProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProfileFriend");
+
+                    b.Navigation("UserProfile");
+                });
+
             modelBuilder.Entity("Disco.DAL.Entities.Post", b =>
                 {
                     b.HasOne("Disco.DAL.Entities.Profile", "Profile")
@@ -458,6 +488,8 @@ namespace Disco.DAL.Migrations
 
             modelBuilder.Entity("Disco.DAL.Entities.Profile", b =>
                 {
+                    b.Navigation("Friends");
+
                     b.Navigation("Posts");
                 });
 

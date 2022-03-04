@@ -1,13 +1,8 @@
-abstract class LoginPageState {
+abstract class LoginPageState {}
 
-}
-class LoggedInState extends LoginPageState{
+class LoggedInState extends LoginPageState {}
 
-}
-
-class InitLoginState extends LoginPageState{
-
-}
+class InitLoginState extends LoginPageState {}
 
 class LogInErrorState extends LoginPageState {
   final String? emailError;
@@ -16,6 +11,4 @@ class LogInErrorState extends LoginPageState {
   LogInErrorState({this.emailError, this.passwordError});
 }
 
-class LoginingState extends LoginPageState{
-
-}
+class LoginingState extends LoginPageState {}

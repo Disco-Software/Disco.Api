@@ -245,7 +245,7 @@
                     padding-bottom: 15px;
                   "
                 >
-                  Адрес <a href="#">example@gmail.com</a> будет использоваться
+                  Адрес <a href="#">[email]</a> будет использоваться
                   для входа в профиль и писем от Disco.
                 </td>
               </tr>
@@ -273,7 +273,8 @@
                       padding-left: 20px;
                       box-shadow: 0px 4px 9px rgba(0, 0, 0, 0.25);
                     "
-                    href="#"
+                     id="submit"
+                     href="{{link}}"
                     >Подтвердить</a
                   >
                 </td>
@@ -322,8 +323,25 @@
     </table>
 
     <script>
-      const http = new XMLHttpRequest();
-      const url = "";
+        const platform = navigator.platform.toLowerCase(),
+            iosPlatforms = ['iphone', 'ipad', 'ipod', 'ipod touch'];
+
+        var link = getLinkByOs();
+
+        function getLinkByOs () {
+            if (platform.includes("mac")) {
+                return "https://disco.com/reset-password?token=[token]";
+            }
+            if (iosPlatforms.includes(platform)) {
+                return "discoapp://disco.app/[token]";
+            }
+            if (/android/.test(navigator.userAgent.toLowerCase())) {
+                return "discoapp://disco.app/token/[token]";
+            }
+            else {
+                return "https://www.facebook.com/stas_korchevskyy";
+            }
+        }
     </script>
   </body>
 </html>

@@ -122,7 +122,6 @@ namespace Disco.BLL.Services
 
             if(user != null)
             {
-                user.FullName = userInfo.Name;
                 user.Email = userInfo.Email;
                 user.UserName = userInfo.FirstName;
                 user.Profile.Photo = userInfo.Picture.Data.Url;
@@ -148,7 +147,6 @@ namespace Disco.BLL.Services
             user = new User
             {
                 UserName = userInfo.FirstName,
-                FullName = userInfo.Name,
                 Email = string.IsNullOrWhiteSpace(userInfo.Email) ? userInfo.Email : userInfo.Name,
                 PasswordHash =  userManager.PasswordHasher.HashPassword(user, userInfo.Id),
                 Profile = new DAL.Entities.Profile
@@ -205,7 +203,6 @@ namespace Disco.BLL.Services
                 if (user != null)
                 {
                     user.UserName = model.Name;
-                    user.FullName = model.Name;
 
                     await userManager.UpdateAsync(user);
 
@@ -217,7 +214,6 @@ namespace Disco.BLL.Services
                 user = await userManager.FindByLoginAsync(LogInProviders.Apple, model.AppleId);
                 if (user != null)
                 {
-                    user.FullName = model.Name;
                     user.UserName = model.Name;
                     user.Email = model.Email;
 
@@ -231,11 +227,19 @@ namespace Disco.BLL.Services
                 user = new User
                 {
                     UserName = model.Name,
-                    FullName = model.Name,
+
                     Email = model.Email
                 };
                 user.NormalizedEmail = userManager.NormalizeEmail(model.Email);
                 user.NormalizedUserName = userManager.NormalizeName(model.Name);
+
+                var profile = new DAL.Entities.Profile
+                {
+                    User = user,
+                    UserId = user.Id,
+                    Status = "New artist"
+                };
+                user.Profile = profile; 
 
                 var identity = await userManager.CreateAsync(user);
                 if (!identity.Succeeded)

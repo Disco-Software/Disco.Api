@@ -10,11 +10,7 @@ namespace Disco.BLL.Validatars
     {
         public static RegistrationValidator instance = new RegistrationValidator();
         private RegistrationValidator()
-        {
-            RuleFor(f => f.FullName)
-                .NotEmpty()
-                .WithMessage("Full name is requared");
-            
+        {            
             RuleFor(f => f.UserName)
                 .NotEmpty()
                 .WithMessage("User name is requared");

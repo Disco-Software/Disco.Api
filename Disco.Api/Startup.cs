@@ -86,6 +86,11 @@ namespace Disco.Api
             });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddGoogle(options =>
+                {
+                    options.ClientId = Configuration["Google:ClientId"];
+                    options.ClientSecret = Configuration["Google:SecretKey"];
+                })
                 .AddJwtBearer(AuthScheme.UserToken, options =>
                 {
                     options.RequireHttpsMetadata = false;

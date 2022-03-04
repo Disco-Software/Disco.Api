@@ -11,25 +11,29 @@ import '../request_models/login_request.dart';
 class AuthApi {
   Future<UserTokenResponse?> login(LogInRequestModel model) =>
       NetworkClient.instance.dio
-          .post("user/authentication/log-in", data: model).then((response) {
-              return UserTokenResponse.fromJson(response.data);
-      });
-
-  Future<UserTokenResponse?> registration(RegisterRequestModel model) =>
-      NetworkClient.instance.dio.post("user/authentication/registration", data: model)
-          .then((response) {
-            return UserTokenResponse.fromJson(response.data);
-  });
-
-  Future<UserTokenResponse?> facebook(AccessTokenRequestModel model) =>
-      NetworkClient.instance.dio.post("user/authentication/facebook", data: model)
+          .post("user/authentication/log-in", data: model)
           .then((response) {
         return UserTokenResponse.fromJson(response.data);
       });
 
-  Future<String?> forgotPassword(ForgotPasswordModel model) async =>
-       NetworkClient.instance.dio.post<String?>('api/user/authentication/forgot-password/', data: model)
-      .then((response) {
+  Future<UserTokenResponse?> registration(RegisterRequestModel model) =>
+      NetworkClient.instance.dio
+          .post("user/authentication/registration", data: model)
+          .then((response) {
+        return UserTokenResponse.fromJson(response.data);
+      });
+
+  Future<UserTokenResponse?> facebook(AccessTokenRequestModel model) =>
+      NetworkClient.instance.dio
+          .post("user/authentication/log-in/facebook", data: model)
+          .then((response) {
+        return UserTokenResponse.fromJson(response.data);
+      });
+
+  Future<String?> forgotPassword(ForgotPasswordModel model) =>
+      NetworkClient.instance.dio
+          .post<String?>('user/authentication/forgot-password', data: model)
+          .then((response) {
         return response.data;
-       });
+      });
 }

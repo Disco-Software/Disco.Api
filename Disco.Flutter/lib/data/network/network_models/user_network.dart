@@ -35,7 +35,6 @@ class User {
   String? lockoutEnd;
   bool? lockoutEnabled;
   int? accessFailedCount;
-  String? fullName;
   Profile? profile;
 
   User(
@@ -54,7 +53,6 @@ class User {
         this.lockoutEnd,
         this.lockoutEnabled,
         this.accessFailedCount,
-        this.fullName,
         this.profile});
 
   User.fromJson(Map<String, dynamic> json) {
@@ -73,7 +71,6 @@ class User {
     lockoutEnd = json['lockoutEnd'];
     lockoutEnabled = json['lockoutEnabled'];
     accessFailedCount = json['accessFailedCount'];
-    fullName = json['fullName'];
     profile =
     json['profile'] != null ? Profile.fromJson(json['profile']) : null;
   }
@@ -95,7 +92,6 @@ class User {
     data['lockoutEnd'] = lockoutEnd;
     data['lockoutEnabled'] = lockoutEnabled;
     data['accessFailedCount'] = accessFailedCount;
-    data['fullName'] = fullName;
     if (profile != null) {
       data['profile'] = profile!.toJson();
     }

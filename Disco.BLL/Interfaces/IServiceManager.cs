@@ -13,6 +13,7 @@ namespace Disco.BLL.Interfaces
         IPostService PostService { get; }
         IRegisterDeviceService RegisterDeviceService { get; }
         IEmailService EmailService { get; }
+        IFriendService FriendService { get; }
         IRepositoryManager RepositoryManager { get; }
     }
 }

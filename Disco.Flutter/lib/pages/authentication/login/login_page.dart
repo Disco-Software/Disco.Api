@@ -1,7 +1,6 @@
 import 'package:disco_app/dialogs/forgot_password/forgot_password.dart';
+import 'package:disco_app/pages/user/main/main_page.dart';
 import 'package:disco_app/res/colors.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -39,7 +38,10 @@ class _LoginPageState extends State<LoginPage> {
           return Scaffold(
             appBar: AppBar(
               backgroundColor: DcColors.darkViolet,
-              leading: IconButton(icon: Image.asset("assets/back_button.png"), onPressed: () => Navigator.of(context).pop(),),
+              leading: IconButton(
+                icon: Image.asset("assets/back_button.png"),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
               title: const Text(
                 "Log in",
                 style: TextStyle(fontSize: 32),
@@ -65,39 +67,67 @@ class _LoginPageState extends State<LoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                       const Padding(
-                          padding: EdgeInsets.only(left: 18, bottom: 8,),
-                          child:  Text("E-mail", style: TextStyle(fontSize: 16, color: DcColors.darkWhite),),
+                        const Padding(
+                          padding: EdgeInsets.only(
+                            left: 18,
+                            bottom: 8,
+                          ),
+                          child: Text(
+                            "E-mail",
+                            style: TextStyle(
+                                fontSize: 16, color: DcColors.darkWhite),
+                          ),
                         ),
-                        TextFormField(controller: _emailController,
-                          style: const TextStyle(color: DcColors.darkWhite),
-                          decoration: InputDecoration(errorText: state is LogInErrorState? state.emailError : null)),
+                        TextFormField(
+                            controller: _emailController,
+                            style: const TextStyle(color: DcColors.darkWhite),
+                            decoration: InputDecoration(
+                                errorText: state is LogInErrorState
+                                    ? state.emailError
+                                    : null)),
                         const SizedBox(height: 24),
                         const Padding(
-                          padding: EdgeInsets.only(left: 18, bottom: 8,),
-                          child:  Text("Password", style: TextStyle(fontSize: 16, color: DcColors.darkWhite),),
-                        ), TextFormField(
+                          padding: EdgeInsets.only(
+                            left: 18,
+                            bottom: 8,
+                          ),
+                          child: Text(
+                            "Password",
+                            style: TextStyle(
+                                fontSize: 16, color: DcColors.darkWhite),
+                          ),
+                        ),
+                        TextFormField(
                           style: const TextStyle(color: DcColors.darkWhite),
                           obscureText: true,
                           controller: _passwordController,
-                          decoration: InputDecoration(errorText: state is LogInErrorState? state.passwordError : null),
+                          decoration: InputDecoration(
+                              errorText: state is LogInErrorState
+                                  ? state.passwordError
+                                  : null),
                         ),
                         const SizedBox(height: 34),
-                        const Text('By continuing, you agree to accept our' +
-                            'Privacy Policy & Terms of Service', textAlign: TextAlign.center,
-                        style: TextStyle(color: DcColors.darkWhite)),
+                        const Text(
+                            'By continuing, you agree to accept our' +
+                                'Privacy Policy & Terms of Service',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: DcColors.darkWhite)),
                         const SizedBox(height: 50),
                         Center(
                           child: SizedBox(
                             width: 192,
-                            child:
-                            state is  LoginingState ? const Center(child: CircularProgressIndicator.adaptive(),) :
-                            ElevatedButton(
-                                onPressed: _onLogin,
-                                child: const Text('Log In')),
+                            child: state is LoginingState
+                                ? const Center(
+                                    child: CircularProgressIndicator.adaptive(),
+                                  )
+                                : ElevatedButton(
+                                    onPressed: _onLogin,
+                                    child: const Text('Log In')),
                           ),
                         ),
-                        const SizedBox(height: 30,),
+                        const SizedBox(
+                          height: 30,
+                        ),
                         Center(
                           child: SizedBox(
                             height: 40,
@@ -106,7 +136,9 @@ class _LoginPageState extends State<LoginPage> {
                                 child: const Text("Forgot your password",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        decoration: TextDecoration.underline, color: DcColors.darkWhite,))),
+                                      decoration: TextDecoration.underline,
+                                      color: DcColors.darkWhite,
+                                    ))),
                           ),
                         )
                       ],
@@ -122,7 +154,9 @@ class _LoginPageState extends State<LoginPage> {
 
   void _blocLisener(BuildContext context, Object? state) {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      Navigator.of(context).pushNamedAndRemoveUntil("newRouteName", (route) => false);
+      if (state is LoggedInState) {
+        Navigator.pushReplacementNamed(context, MainPage.route);
+      }
     });
   }
 
@@ -133,13 +167,8 @@ class _LoginPageState extends State<LoginPage> {
       _bloc.add(LoginEvent(email: email, password: password));
     }
   }
-  void _onBackButton(){
 
-  }
   void _onPasswordForgot() {
     showDialog(context: context, builder: (_) => const ForgotPassword());
-  }
-
-  void onBackButtonClick() {
   }
 }

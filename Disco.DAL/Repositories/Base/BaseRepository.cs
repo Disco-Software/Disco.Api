@@ -12,14 +12,18 @@ namespace Disco.DAL.Repositories.Base
 {
     public class BaseRepository<T, Tkey> : IRepository<T, Tkey>
         where T : Entities.Base.BaseEntity<Tkey>
+        where Tkey : struct
     {
         protected ApiDbContext ctx;
 
         public BaseRepository(ApiDbContext _ctx) =>
             ctx = _ctx;
 
-        public virtual async Task Add(T item) =>
-             await ctx.Set<T>().AddAsync(item);
+        public virtual async Task Add(T item)
+        {
+            await ctx.Set<T>().AddAsync(item);
+            await ctx.SaveChangesAsync();
+        }
 
         public virtual async Task<T> Get(Tkey id)
         {

@@ -1,19 +1,24 @@
-import 'package:disco_app/pages/authentication/login/login_page.dart';
-import 'package:disco_app/pages/authentication/search_registration/search_registration_page.dart';
+import 'package:disco_app/app/router.dart';
 import 'package:disco_app/pages/start/splash_page.dart';
-import 'package:disco_app/pages/start/start_page.dart';
+import 'package:disco_app/res/colors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:disco_app/res/colors.dart';
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateRoute: AppRouter.generateRoute,
+      initialRoute: SplashPage.routeName,
       title: 'Flutter Demo',
       theme: ThemeData.dark().copyWith(
-        inputDecorationTheme:  InputDecorationTheme(border:  OutlineInputBorder(borderSide: BorderSide(color: DcColors.white, width: 2), borderRadius: BorderRadius.circular(25))),
+        inputDecorationTheme: InputDecorationTheme(
+            border: OutlineInputBorder(
+                borderSide: BorderSide(color: DcColors.white, width: 2),
+                borderRadius: BorderRadius.circular(25))),
         textTheme: GoogleFonts.aBeeZeeTextTheme(),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
@@ -21,6 +26,10 @@ class MyApp extends StatelessWidget {
             textStyle: const TextStyle(
                 fontSize: 18, decoration: TextDecoration.underline),
           ),
+        ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          foregroundColor: DcColors.floatingActionButtonColor,
+          splashColor: Colors.transparent,
         ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
@@ -35,27 +44,21 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-        ), elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.zero,
-          textStyle: const TextStyle(fontSize: 24),
-          primary: DcColors.violet,
-          minimumSize: const Size(100, 56),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(24),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.zero,
+            textStyle: const TextStyle(fontSize: 24),
+            primary: DcColors.violet,
+            minimumSize: const Size(100, 56),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(24),
+              ),
             ),
           ),
         ),
       ),
-      ),
-      initialRoute: SplashPage.routeName,
-      routes: {
-        SplashPage.routeName: (_) => const SplashPage(),
-        StartPage.routeName: (_) => const StartPage(),
-        LoginPage.routeName: (_) => const LoginPage(),
-        SearchRegistrationPage.routeName: (_) => const SearchRegistrationPage(),
-      },
     );
   }
 }

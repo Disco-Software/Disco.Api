@@ -3,4 +3,5 @@
     <string name="facebook_app_id">261002815859881</string>
     <string name="fb_login_protocol_scheme">fb261002815859881</string>
     <string name="app_name">Disco</string>
+    <string name="facebook_client_token">47da70388375af37e0696791aac02d81</string>
 </resources>

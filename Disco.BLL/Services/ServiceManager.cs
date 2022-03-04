@@ -29,6 +29,7 @@ namespace Disco.BLL.Services
         private readonly Lazy<IRegisterDeviceService> registerDeviceService;
         private readonly Lazy<IEmailService> emailService;
         private readonly Lazy<IRepositoryManager> repositoryManager;
+        private readonly Lazy<IFriendService> friendService;
         public ServiceManager(ApiDbContext _ctx,
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
@@ -46,6 +47,7 @@ namespace Disco.BLL.Services
             emailService = new Lazy<IEmailService>(() => new EmailService(_emailOptions,_logger));
             authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, facebookAuthService.Value, emailService.Value,authenticationOptions,_mapper));
             postService = new Lazy<IPostService>(() => new PostService(_mapper,repositoryManager.Value.PostRepository, _ctx, _userManager,hostingEnvironment));
+            friendService = new Lazy<IFriendService> (() => new FriendService(repositoryManager.Value.FriendRepository, repositoryManager.Value.ProfileRepository,_userManager, _mapper));
             var notificationHub = NotificationHubClient.CreateClientFromConnectionString(
                 configuration["ConnectionStrings:AzureNotificationHubConnection"],
                 configuration["NotificationHub:HubName"]);
@@ -62,5 +64,7 @@ namespace Disco.BLL.Services
         public IEmailService EmailService => emailService.Value;
 
        public IRepositoryManager RepositoryManager => throw new NotImplementedException();
+
+      public IFriendService FriendService => friendService.Value;
     }
 }

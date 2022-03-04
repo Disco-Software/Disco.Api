@@ -26,6 +26,7 @@ namespace Disco.BLL.Mapper
             CreateMap<RegistrationModel, User>();
             CreateMap<FacebookModel, User>();
             CreateMap<User, FacebookModel>();
+            CreateMap<CreateFriendModel, Friend>();
         }
     }
 }

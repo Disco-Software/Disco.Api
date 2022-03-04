@@ -10,5 +10,7 @@ namespace Disco.DAL.Interfaces
         PostRepository PostRepository { get; }
         SongRepository SongRepository { get; }
         VideoRepository VideoRepository { get; }
+        FriendRepository FriendRepository { get; }
+        ProfileRepository ProfileRepository { get; }
     }
 }
