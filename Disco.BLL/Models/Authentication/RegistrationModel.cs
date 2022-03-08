@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Models
+namespace Disco.BLL.Models.Authentication
 {
     public class RegistrationModel
     {

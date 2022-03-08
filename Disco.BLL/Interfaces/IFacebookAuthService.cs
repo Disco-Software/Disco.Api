@@ -11,6 +11,6 @@ namespace Disco.BLL.Interfaces
     public interface IFacebookAuthService
     {
         Task<FacebookModel> GetUserInfo(string accessToken);
-        Task<TokenValidationDTO> TokenValidation(string accessToken);
+        Task<TokenValidationResponseModel> TokenValidation(string accessToken);
     }
 }

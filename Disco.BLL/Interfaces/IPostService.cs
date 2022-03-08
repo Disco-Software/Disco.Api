@@ -1,5 +1,6 @@
 ﻿using Disco.BLL.DTO;
 using Disco.BLL.Models;
+using Disco.BLL.Models.Posts;
 using Disco.DAL.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ namespace Disco.BLL.Interfaces
 {
     public interface IPostService
     {
-        Task<PostDTO> CreatePostAsync(CreatePostModel model);
+        Task<PostResponseModel> CreatePostAsync(CreatePostModel model);
         Task<List<Post>> GetAllUserPosts(int userId);
         Task DeletePostAsync(int postId);
         Task<PostImage> AddPostImage(IFormFile file, int postId);

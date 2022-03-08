@@ -1,5 +1,6 @@
 ﻿using Disco.BLL.DTO;
 using Disco.BLL.Models;
+using Disco.BLL.Models.Friends;
 using Disco.DAL.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,9 @@ namespace Disco.BLL.Interfaces
 {
     public interface IFriendService
     {
-        Task<FriendDTO> CreateFriend(CreateFriendModel model);
+        Task<FriendResponseModel> CreateFriend(CreateFriendModel model);
         Task DeleteFriend(int id);
-        Task<FriendDTO> GetFriend(int id);
+        Task<FriendResponseModel> GetFriend(int id);
         Task<List<Friend>> GetAllFriends(int id);
     }
 }

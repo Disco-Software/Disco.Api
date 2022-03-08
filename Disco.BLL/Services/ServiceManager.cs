@@ -63,7 +63,7 @@ namespace Disco.BLL.Services
 
         public IEmailService EmailService => emailService.Value;
 
-       public IRepositoryManager RepositoryManager => throw new NotImplementedException();
+        public IRepositoryManager RepositoryManager => repositoryManager.Value;
 
       public IFriendService FriendService => friendService.Value;
     }

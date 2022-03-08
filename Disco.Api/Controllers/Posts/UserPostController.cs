@@ -2,6 +2,7 @@
 using Disco.BLL.DTO;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
+using Disco.BLL.Models.Posts;
 using Disco.BLL.Services;
 using Disco.DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -26,7 +27,7 @@ namespace Disco.Api.Controllers.Posts
             serviceManager = _serviceManager;
 
         [HttpPost("create")]
-        public async Task<PostDTO> Create([FromForm] CreatePostModel model) =>
+        public async Task<PostResponseModel> Create([FromForm] CreatePostModel model) =>
              await serviceManager.PostService.CreatePostAsync(model);
 
         [HttpDelete("{postId:int}")]

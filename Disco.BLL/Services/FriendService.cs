@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Disco.BLL.DTO;
+using Disco.BLL.Handlers;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
+using Disco.BLL.Models.Friends;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
 using Disco.DAL.Repositories;
@@ -15,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Disco.BLL.Services
 {
-    public class FriendService : IFriendService
+    public class FriendService : FriendApiRequestHandlerBase, IFriendService
     {
         private readonly FriendRepository repository;
         private readonly UserManager<User> userManager;
@@ -33,7 +35,7 @@ namespace Disco.BLL.Services
             mapper = _mapper;
         }
 
-        public async Task<FriendDTO> CreateFriend(CreateFriendModel model)
+        public async Task<FriendResponseModel> CreateFriend(CreateFriendModel model)
         {
             var userProfile = await profileRepository.Get(model.UserId);
             var friendProfile = await profileRepository.Get(model.FriendId);
@@ -52,7 +54,10 @@ namespace Disco.BLL.Services
 
             await repository.Add(friendResponse);
 
-            return new FriendDTO { FriendProfile = friendResponse.ProfileFriend, UserProfile = friendResponse.UserProfile = userProfile, IsConfirmed = false };
+            var userProfileModel = await ConvertToProfileModel(userProfile);
+            var friendProfileModel = await ConvertToProfileModel(friendProfile);
+
+            return Ok(friendProfileModel, userProfileModel);
         }
 
         public async Task DeleteFriend(int id) =>
@@ -61,14 +66,32 @@ namespace Disco.BLL.Services
         public async Task<List<Friend>> GetAllFriends(int id) =>
             await repository.GetAll(f => f.UserProfileId == id);
 
-        public async Task<FriendDTO> GetFriend(int id)
+        public async Task<FriendResponseModel> GetFriend(int id)
         {
             var friend = await repository.Get(id);
             
             if (friend == null)
                 throw new Exception("freind not found");
-            
-            return new FriendDTO { UserProfile = friend.UserProfile, FriendProfile = friend.ProfileFriend, IsConfirmed = false };
+
+            var userProfile = await ConvertToProfileModel(friend.UserProfile);
+            var friendPorfile = await ConvertToProfileModel(friend.ProfileFriend);
+
+
+            return Ok(friendPorfile, userProfile);
+        }
+
+        private async Task<ProfileModel> ConvertToProfileModel(DAL.Entities.Profile profile)
+        {
+            var profileModel = new ProfileModel
+            {
+                Posts = profile.Posts.Count,
+                Friends = profile.Friends.Count,
+                Id = profile.Id,
+                Status = profile.Status,
+                User = profile.User,
+                UserId = profile.UserId,
+            };
+           return profileModel;
         }
     }
 }

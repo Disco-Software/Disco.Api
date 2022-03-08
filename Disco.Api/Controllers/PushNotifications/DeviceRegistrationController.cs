@@ -1,5 +1,6 @@
 ﻿using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
+using Disco.BLL.Models.PushNotifications;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;

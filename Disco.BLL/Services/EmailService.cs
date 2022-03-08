@@ -1,6 +1,7 @@
 ﻿using Disco.BLL.Configurations;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
+using Disco.BLL.Models.EmailNotifications;
 using Disco.DAL.EF;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;

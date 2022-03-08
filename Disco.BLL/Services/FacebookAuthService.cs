@@ -44,7 +44,7 @@ namespace Disco.BLL.Services
                 return null;
         }
 
-        public async Task<TokenValidationDTO> TokenValidation(string accessToken)
+        public async Task<TokenValidationResponseModel> TokenValidation(string accessToken)
         {
             var result = await httpClientFactory.CreateClient().GetAsync($"https://graph.facebook.com/debug_token?input_token={accessToken}&access_token=261002815859881|9c4f0fbe6ed89d0c35d1a7cd965de88c");
 
@@ -52,7 +52,7 @@ namespace Disco.BLL.Services
             {
                 var response = await result.Content.ReadAsStringAsync();
 
-                return JsonConvert.DeserializeObject<TokenValidationDTO>(response);
+                return JsonConvert.DeserializeObject<TokenValidationResponseModel>(response);
             }
             else
                 return null;

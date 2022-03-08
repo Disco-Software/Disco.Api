@@ -2,6 +2,7 @@
 using Disco.BLL.DTO;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
+using Disco.BLL.Models.Friends;
 using Disco.BLL.Services;
 using Disco.DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -26,11 +27,11 @@ namespace Disco.Api.Controllers.Friend
             serviceManager = _serviceManager;
 
         [HttpPost("create")]
-        public async Task<FriendDTO> Create([FromBody] CreateFriendModel model) =>
+        public async Task<FriendResponseModel> Create([FromBody] CreateFriendModel model) =>
             await serviceManager.FriendService.CreateFriend(model);
 
         [HttpGet("get/{friendId:int}")]
-        public async Task<FriendDTO> GetFriend([FromRoute] int friendId) =>
+        public async Task<FriendResponseModel> GetFriend([FromRoute] int friendId) =>
             await serviceManager.FriendService.GetFriend(friendId);
 
         [HttpGet("{userId:int}")]

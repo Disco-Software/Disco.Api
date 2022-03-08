@@ -1,6 +1,9 @@
 ﻿using Disco.BLL.DTO;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
+using Disco.BLL.Models.Apple;
+using Disco.BLL.Models.Authentication;
+using Disco.BLL.Models.Facebook;
 using Disco.BLL.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -27,11 +30,11 @@ namespace Disco.Api.Controllers.Authentification
         /// <param name="model">email and password</param>
         /// <returns>object: UserDto with user and varification result</returns>
         [HttpPost("log-in"), AllowAnonymous]
-        public async Task<UserDTO> LogIn([FromBody] LoginModel model) =>
+        public async Task<UserResponseModel> LogIn([FromBody] LoginModel model) =>
             await serviceManager.AuthentificationService.LogIn(model);
 
         [HttpPost("log-in/facebook"), AllowAnonymous]
-        public async Task<UserDTO> Facebook([FromBody] FacebookRequestModel model) =>
+        public async Task<UserResponseModel> Facebook([FromBody] FacebookRequestModel model) =>
             await serviceManager.AuthentificationService.Facebook(model.AccessToken);
 
         [HttpPost("log-in/google"), AllowAnonymous]
@@ -39,15 +42,15 @@ namespace Disco.Api.Controllers.Authentification
             Ok("Google");
 
         [HttpPost("log-in/apple"), AllowAnonymous]
-        public async Task<UserDTO> Apple([FromBody] AppleLogInModel model) =>
+        public async Task<UserResponseModel> Apple([FromBody] AppleLogInModel model) =>
             await serviceManager.AuthentificationService.Apple(model);
 
         [HttpPut("refresh")]
-        public async Task<UserDTO> RefreshToken([FromBody] RefreshTokenRequestModel model) =>
+        public async Task<UserResponseModel> RefreshToken([FromBody] RefreshTokenRequestModel model) =>
             await serviceManager.AuthentificationService.RefreshToken(model.Email);
 
         [HttpPost("registration")]
-        public async Task<UserDTO> Registration([FromBody] RegistrationModel model) =>
+        public async Task<UserResponseModel> Registration([FromBody] RegistrationModel model) =>
             await serviceManager.AuthentificationService.Register(model);
 
         [HttpPost("forgot-password"), AllowAnonymous]
@@ -55,7 +58,7 @@ namespace Disco.Api.Controllers.Authentification
             await serviceManager.AuthentificationService.ForgotPassword(model.Email);
 
         [HttpPut("reset-password")]
-        public async Task<UserDTO> ResetPassword([FromBody] ResetPasswordRequestModel model) =>
+        public async Task<UserResponseModel> ResetPassword([FromBody] ResetPasswordRequestModel model) =>
             await serviceManager.AuthentificationService.ResetPassword(model);
     }
 }

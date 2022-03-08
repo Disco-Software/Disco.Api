@@ -1,5 +1,6 @@
 ﻿using Disco.BLL.DTO;
 using Disco.BLL.Models;
+using Disco.BLL.Models.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
@@ -35,7 +36,7 @@ namespace Disco.Tests
 
             var result = await response.Content.ReadAsStringAsync();
 
-            var userDTO = JsonConvert.DeserializeObject<UserDTO>(result);
+            var userDTO = JsonConvert.DeserializeObject<UserResponseModel>(result);
 
             Assert.IsNotNull(userDTO);
         }
@@ -54,7 +55,7 @@ namespace Disco.Tests
 
             var result = await response.Content.ReadAsStringAsync();
 
-            var userDTO = JsonConvert.DeserializeObject<UserDTO>(result);
+            var userDTO = JsonConvert.DeserializeObject<UserResponseModel>(result);
 
             Assert.IsTrue(userDTO.VarificationResult == "user not found");
         }
@@ -74,7 +75,7 @@ namespace Disco.Tests
 
             var result = await response.Content.ReadAsStringAsync();
 
-            var userDTO = JsonConvert.DeserializeObject<UserDTO>(result);
+            var userDTO = JsonConvert.DeserializeObject<UserResponseModel>(result);
 
             Assert.IsTrue(userDTO.VarificationResult == "Password is not valid");
         }
@@ -93,7 +94,7 @@ namespace Disco.Tests
 
             var result = await response.Content.ReadAsStringAsync();
 
-            var userDTO = JsonConvert.DeserializeObject<UserDTO>(result);
+            var userDTO = JsonConvert.DeserializeObject<UserResponseModel>(result);
 
             Assert.IsTrue(userDTO.VarificationResult == "Log in form can not be a null");
         }
@@ -113,6 +114,22 @@ namespace Disco.Tests
             var token = JsonConvert.DeserializeObject(json);
 
             Assert.IsNotNull(token);
+        }
+        [TestMethod]
+        public async Task ForgotPassword_ReturnsErrorResponse()
+        {
+            var model = new ForgotPasswordModel { Email = "stas_1999_nr@ukr.net" };
+            var json = JsonConvert.SerializeObject(model);
+            var buffer = Encoding.UTF8.GetBytes(json);
+
+            var bytesArry = new ByteArrayContent(buffer);
+            bytesArry.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var response = await httpClient.PostAsync("user/authentication/forgot-password", bytesArry);
+            var result = response.Content.ReadAsStringAsync();
+            var token = JsonConvert.DeserializeObject(json);
+
+            Assert.IsNull(token);
         }
     }
 }

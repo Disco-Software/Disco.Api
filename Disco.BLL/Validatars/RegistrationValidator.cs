@@ -1,4 +1,5 @@
 ﻿using Disco.BLL.Models;
+using Disco.BLL.Models.Authentication;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

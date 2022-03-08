@@ -1,5 +1,7 @@
 ﻿using Disco.BLL.DTO;
 using Disco.BLL.Models;
+using Disco.BLL.Models.Apple;
+using Disco.BLL.Models.Authentication;
 using Disco.DAL.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,13 +12,13 @@ namespace Disco.BLL.Interfaces
 {
     public interface IAuthenticationService
     {
-        Task<UserDTO> LogIn(LoginModel model);
-        Task<UserDTO> Register(RegistrationModel model);
-        Task<UserDTO> RefreshToken(string email);
-        Task<UserDTO> Facebook(string accessToken);
-        Task<UserDTO> Apple(AppleLogInModel model);
+        Task<UserResponseModel> LogIn(LoginModel model);
+        Task<UserResponseModel> Register(RegistrationModel model);
+        Task<UserResponseModel> RefreshToken(string email);
+        Task<UserResponseModel> Facebook(string accessToken);
+        Task<UserResponseModel> Apple(AppleLogInModel model);
         Task<string> ForgotPassword(string email);
-        Task<UserDTO> ResetPassword(ResetPasswordRequestModel model);
+        Task<UserResponseModel> ResetPassword(ResetPasswordRequestModel model);
         public string GenerateJwtToken(User user);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Disco.BLL.Models;
+using Disco.BLL.Models.PushNotifications;
 using Microsoft.Azure.NotificationHubs;
 using System;
 using System.Collections.Generic;

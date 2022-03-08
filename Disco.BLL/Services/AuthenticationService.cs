@@ -5,6 +5,9 @@ using Disco.BLL.Constants;
 using Disco.BLL.DTO;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
+using Disco.BLL.Models.Apple;
+using Disco.BLL.Models.Authentication;
+using Disco.BLL.Models.EmailNotifications;
 using Disco.BLL.Validatars;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
@@ -54,7 +57,7 @@ namespace Disco.BLL.Services
             emailService = _emailService;
         }
 
-        public async Task<UserDTO> LogIn(LoginModel model)
+        public async Task<Models.Authentication.UserResponseModel> LogIn(LoginModel model)
         {
             var user = await userManager.FindByEmailAsync(model.Email);
             if (user == null)
@@ -76,7 +79,7 @@ namespace Disco.BLL.Services
             return Ok(user, jwt);
         }
 
-        public async Task<UserDTO> Register(RegistrationModel userInfo)
+        public async Task<UserResponseModel> Register(RegistrationModel userInfo)
         {
             var validator = await RegistrationValidator.instance.ValidateAsync(userInfo);
             if (validator.Errors.Count > 0)
@@ -104,7 +107,7 @@ namespace Disco.BLL.Services
             return Ok(userResult, jwt);
         }
 
-        public async Task<UserDTO> Facebook(string accessToken)
+        public async Task<UserResponseModel> Facebook(string accessToken)
         {
             //var validation = await facebookAuthService.TokenValidation(accessToken);
 
@@ -182,7 +185,7 @@ namespace Disco.BLL.Services
             return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
         }
 
-        public async Task<UserDTO> RefreshToken(string email)
+        public async Task<UserResponseModel> RefreshToken(string email)
         {
             var user = await userManager.FindByEmailAsync(email);
 
@@ -194,7 +197,7 @@ namespace Disco.BLL.Services
             return Ok(user, jwt);
         }
 
-        public async Task<UserDTO> Apple(AppleLogInModel model)
+        public async Task<UserResponseModel> Apple(AppleLogInModel model)
         {
             User user;
             if (!string.IsNullOrWhiteSpace(model.Email))
@@ -277,13 +280,13 @@ namespace Disco.BLL.Services
             return passwordToken;
         }
 
-        public async Task<UserDTO> ResetPassword(ResetPasswordRequestModel model)
+        public async Task<UserResponseModel> ResetPassword(ResetPasswordRequestModel model)
         {
             var user = await userManager.FindByEmailAsync(model.Email);
             
             var identityResult = await userManager.ResetPasswordAsync(user, model.ConfirmationToken, model.Password);
             if (!identityResult.Succeeded)
-                return new UserDTO { VarificationResult = $"You have sum errors {identityResult.Errors}" };
+                return new UserResponseModel { VarificationResult = $"You have sum errors {identityResult.Errors}" };
             return Ok(user, "");
         }
     }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Disco.BLL.DTO
 {
-    public class TokenValidationDTO
+    public class TokenValidationResponseModel
     {
         [JsonProperty("app_id")]
         public string AppId { get; set; }

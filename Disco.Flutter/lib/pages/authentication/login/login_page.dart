@@ -155,7 +155,8 @@ class _LoginPageState extends State<LoginPage> {
   void _blocLisener(BuildContext context, Object? state) {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       if (state is LoggedInState) {
-        Navigator.pushReplacementNamed(context, MainPage.route);
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(MainPage.route, (route) => false);
       }
     });
   }

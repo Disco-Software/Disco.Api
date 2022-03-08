@@ -1,4 +1,5 @@
 ﻿using Disco.BLL.Models;
+using Disco.BLL.Models.EmailNotifications;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -3,6 +3,7 @@ using Disco.BLL.DTO;
 using Disco.BLL.Extensions;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
+using Disco.BLL.Models.Posts;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
 using Disco.DAL.Repositories;
@@ -21,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace Disco.BLL.Services
 {
-    public class PostService : PostDTOExtincions,IPostService
+    public class PostService : PostApiRequestHandlerBase,IPostService
     {
         private readonly IMapper mapper;
         private readonly ApiDbContext ctx;
@@ -37,7 +38,7 @@ namespace Disco.BLL.Services
             webHostEnvironment = _webHostEnvironment;
         }
 
-        public async Task<PostDTO> CreatePostAsync(CreatePostModel model)
+        public async Task<PostResponseModel> CreatePostAsync(CreatePostModel model)
         {
             var user = await userManager.FindByNameAsync(model.Name);
 
