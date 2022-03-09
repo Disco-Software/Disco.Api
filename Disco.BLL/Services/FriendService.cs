@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Disco.BLL.Services
 {
-    public class FriendService : FriendApiRequestHandlerBase, IFriendService
+    public class FriendService : FriendApiRequestHandlerBase,IFriendService
     {
         private readonly FriendRepository repository;
         private readonly UserManager<User> userManager;
@@ -35,7 +35,7 @@ namespace Disco.BLL.Services
             mapper = _mapper;
         }
 
-        public async Task<FriendResponseModel> CreateFriend(CreateFriendModel model)
+        public async Task<FriendResponseModel> CreateFriendAsync(CreateFriendModel model)
         {
             var userProfile = await profileRepository.Get(model.UserId);
             var friendProfile = await profileRepository.Get(model.FriendId);
@@ -54,10 +54,10 @@ namespace Disco.BLL.Services
 
             await repository.Add(friendResponse);
 
-            var userProfileModel = await ConvertToProfileModel(userProfile);
-            var friendProfileModel = await ConvertToProfileModel(friendProfile);
+            var userProfileModel =  ConvertToProfileModel(userProfile);
+            var friendProfileModel = ConvertToProfileModel(friendProfile);
 
-            return Ok(friendProfileModel, userProfileModel);
+            return Ok(friendProfileModel, userProfileModel, false, false);
         }
 
         public async Task DeleteFriend(int id) =>
@@ -66,32 +66,55 @@ namespace Disco.BLL.Services
         public async Task<List<Friend>> GetAllFriends(int id) =>
             await repository.GetAll(f => f.UserProfileId == id);
 
-        public async Task<FriendResponseModel> GetFriend(int id)
+        public async Task<FriendResponseModel> GetFriendAsync(int id)
         {
             var friend = await repository.Get(id);
             
             if (friend == null)
                 throw new Exception("freind not found");
 
-            var userProfile = await ConvertToProfileModel(friend.UserProfile);
-            var friendPorfile = await ConvertToProfileModel(friend.ProfileFriend);
+            var userProfile =  ConvertToProfileModel(friend.UserProfile);
+            var friendPorfile = ConvertToProfileModel(friend.ProfileFriend);
 
 
-            return Ok(friendPorfile, userProfile);
+            return new FriendResponseModel { UserProfile =userProfile , FriendProfile = friendPorfile, IsConfirmed = false };
         }
 
-        private async Task<ProfileModel> ConvertToProfileModel(DAL.Entities.Profile profile)
+        private ProfileModel ConvertToProfileModel(DAL.Entities.Profile profile)
         {
             var profileModel = new ProfileModel
             {
-                Posts = profile.Posts.Count,
                 Friends = profile.Friends.Count,
+                Posts = profile.Posts.Count,
                 Id = profile.Id,
-                Status = profile.Status,
-                User = profile.User,
                 UserId = profile.UserId,
+                Status = profile.Status,
+                UserModel = new UserModel
+                {
+                    Email = profile.User.Email,
+                    UserName = profile.User.UserName,
+                    Id = profile.UserId
+                }
             };
-           return profileModel;
+            return profileModel;
+        }
+
+        public async Task<FriendResponseModel> IsConfirmFriendAsync(ConfirmationFriendModel model)
+        {
+            var friend = await repository.Get(model.FriendId);
+
+            if (model.IsConfirmed == false)
+                throw new Exception("User not confirm your invitation");
+
+            friend.ProfileFriend.Friends.Add(friend);
+            friend.IsConfirmed = true;
+
+           await repository.ConfirmFriendAsync(friend);
+
+            var friendProfileModel = ConvertToProfileModel(friend.ProfileFriend);
+            var userProfileModel = ConvertToProfileModel(friend.UserProfile);
+
+            return Ok(friendProfileModel,userProfileModel, isFriend: friend.IsFriend, isConfirmed: friend.IsConfirmed);
         }
     }
 }

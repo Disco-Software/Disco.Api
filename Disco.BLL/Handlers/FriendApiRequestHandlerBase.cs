@@ -9,8 +9,7 @@ namespace Disco.BLL.Handlers
 {
     public abstract class FriendApiRequestHandlerBase
     {
-        public static FriendResponseModel Ok(ProfileModel friendProfile, ProfileModel userProfile, bool isFriend = false, bool isConfirmed = false) => new FriendResponseModel { FriendProfile = friendProfile };
-
+        public static FriendResponseModel Ok(ProfileModel friendProfile, ProfileModel userProfile, bool isFriend = false, bool isConfirmed = false) => new FriendResponseModel { FriendProfile = friendProfile, UserProfile = userProfile, IsConfirmed = isConfirmed };
         public static FriendResponseModel Ok() => new FriendResponseModel();
     }
 }

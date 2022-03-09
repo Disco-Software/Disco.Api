@@ -28,11 +28,11 @@ namespace Disco.Api.Controllers.Friend
 
         [HttpPost("create")]
         public async Task<FriendResponseModel> Create([FromBody] CreateFriendModel model) =>
-            await serviceManager.FriendService.CreateFriend(model);
+            await serviceManager.FriendService.CreateFriendAsync(model);
 
         [HttpGet("get/{friendId:int}")]
         public async Task<FriendResponseModel> GetFriend([FromRoute] int friendId) =>
-            await serviceManager.FriendService.GetFriend(friendId);
+            await serviceManager.FriendService.GetFriendAsync(friendId);
 
         [HttpGet("{userId:int}")]
         public async Task<List<Disco.DAL.Entities.Friend>> GetAll([FromRoute] int userId) =>
@@ -41,6 +41,10 @@ namespace Disco.Api.Controllers.Friend
         [HttpDelete("{friendId:int}")]
         public async Task DeleteFriend([FromRoute] int friendId) =>
             await serviceManager.FriendService.DeleteFriend(friendId);
+
+        [HttpPut("confirmation")]
+        public async Task<FriendResponseModel> ConfirmFriend([FromBody] ConfirmationFriendModel model) =>
+            await serviceManager.FriendService.IsConfirmFriendAsync(model);
 
     }
 }

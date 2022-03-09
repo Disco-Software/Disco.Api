@@ -12,6 +12,6 @@ namespace Disco.BLL.Models.Friends
         public int Friends { get; set; }
         public int Posts { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; }
+        public UserModel UserModel { get; set; }
     }
 }

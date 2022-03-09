@@ -18,6 +18,17 @@ namespace Disco.DAL.Repositories
         {
             await ctx.Friends.AddAsync(item);
             item.UserProfile.Friends.Add(item);
+            item.IsFriend = true;
+            await ctx.SaveChangesAsync();
+        }
+        public async Task ConfirmFriendAsync(Friend item)
+        {
+            item.ProfileFriend.Friends.Add(item);
+            if (item.IsConfirmed == false)
+                ctx.Friends.Remove(item);
+            item.IsConfirmed = true;
+            item.IsFriend = true;
+            ctx.Friends.Update(item);
             await ctx.SaveChangesAsync();
         }
 
