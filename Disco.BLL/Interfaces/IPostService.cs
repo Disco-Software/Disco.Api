@@ -16,6 +16,7 @@ namespace Disco.BLL.Interfaces
     {
         Task<PostResponseModel> CreatePostAsync(CreatePostModel model);
         Task<List<Post>> GetAllUserPosts(int userId);
+        Task<List<Post>> GetAllPosts(int userId);
         Task DeletePostAsync(int postId);
         Task<PostImage> AddPostImage(IFormFile file, int postId);
     }

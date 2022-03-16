@@ -55,7 +55,20 @@ namespace Disco.BLL.Services
                     ctx.PostImages.Add(image);
                     post.PostImages.Add(image);
                 }
-
+            if(model.PostSongs != null)
+                foreach (var postSong in model.PostSongs)
+                {
+                    var song = await this.AddPostSong(postSong, post.Id);
+                    ctx.PostSongs.Add(song);
+                    post.PostSongs.Add(song);
+                }
+            if(model.PostVideos != null)
+                foreach (var video in model.PostVideos)
+                {
+                    var postVideo = await this.AddPostVideos(video, post.Id);
+                    ctx.PostVideos.Add(postVideo);
+                    post.PostVideos.Add(postVideo);
+                }
 
             post.ProfileId = user.Profile.Id;
             post.Profile = user.Profile;
@@ -74,8 +87,12 @@ namespace Disco.BLL.Services
                 .FirstOrDefaultAsync();
            await postRepository.Remove(postId);
         }
+
         public async Task<List<Post>> GetAllUserPosts(int userId) =>
             await postRepository.GetAll(p => p.Profile.UserId == userId);
+
+        public async Task<List<Post>> GetAllPosts(int userId) =>
+            await postRepository.GetAll(userId);
 
         public async Task<PostImage> AddPostImage(IFormFile file, int postId)
         {
@@ -100,5 +117,53 @@ namespace Disco.BLL.Services
                 return postImage;
             }
         }
+        public async Task<PostSong> AddPostSong(IFormFile file, int postId)
+        {
+            var post = await postRepository.Get(postId);
+            if (file == null)
+                return null;
+
+            if (file.Length == 0)
+                return null;
+
+            var songPath = Path.Combine(webHostEnvironment.WebRootPath, "songs", file.FileName);
+            var songImagePath = Path.Combine(webHostEnvironment.WebRootPath, "songsImages", file.FileName);
+
+            var songReader = file.OpenReadStream();
+            using (var fileStream = new FileStream(songPath, FileMode.Create))
+            {
+                songReader.CopyTo(fileStream);
+
+                var postSong = new PostSong { ImageUrl = songImagePath, Source = fileStream.Name, Post = post };
+
+                await ctx.PostSongs.AddAsync(postSong);
+
+                return postSong;
+            }
+        }
+        public async Task<PostVideo> AddPostVideos(IFormFile file, int postId)
+        {
+            var post = await postRepository.Get(postId);
+            if (file == null)
+                return null;
+
+            if (file.Length == 0)
+                return null;
+
+            var videoPath = Path.Combine(webHostEnvironment.WebRootPath, "videos", file.FileName);
+
+            var songReader = file.OpenReadStream();
+            using (var fileStream = new FileStream(videoPath, FileMode.Create))
+            {
+                songReader.CopyTo(fileStream);
+
+                var postVideo = new PostVideo {VideoSource = fileStream.Name, Post = post };
+
+                await ctx.PostVideos.AddAsync(postVideo);
+
+                return postVideo;
+            }
+        }
+
     }
 }

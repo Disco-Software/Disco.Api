@@ -46,5 +46,39 @@ namespace Disco.DAL.Repositories
                 .FirstOrDefaultAsync();
             ctx.Remove(post);
         }
+
+        public async Task<List<Post>> GetAll(int userId)
+        {
+            var user = await ctx.Users
+                .Include(p => p.Profile)
+                .ThenInclude(f => f.Friends)
+                .Where(s => s.Id == userId)
+                .FirstOrDefaultAsync();
+            foreach (var friend in user.Profile.Friends)
+            {
+                friend.ProfileFriend = await ctx.Profiles
+                    .Include(p => p.Posts)
+                    .ThenInclude(i => i.PostImages)
+                    .Include(p => p.Posts)
+                    .ThenInclude(s => s.PostSongs)
+                    .Include(p => p.Posts)
+                    .ThenInclude(v => v.PostVideos)
+                    .Where(f => f.Id == friend.FriendProfileId)
+                    .FirstOrDefaultAsync();
+                var posts = friend.ProfileFriend.Posts.ToList();
+                return posts;
+            }
+            return null;
+        }
+
+        public override Task<Post> Get(int id)
+        {
+           return ctx.Posts
+                .Include(i => i.PostImages)
+                .Include(s => s.PostSongs)
+                .Include(v => v.PostVideos)
+                .Where(p => p.Id == id)
+                .FirstOrDefaultAsync();
+        }
     }
 }

@@ -37,5 +37,9 @@ namespace Disco.Api.Controllers.Posts
         [HttpGet("{userId:int}")]
         public async Task<List<Post>> GetAllUserPosts([FromRoute] int userId) =>
             await serviceManager.PostService.GetAllUserPosts(userId);
+
+        [HttpGet("{userId:int}/line")]
+        public async Task<List<Post>> GetAllPosts([FromRoute] int userId) =>
+            await serviceManager.PostService.GetAllPosts(userId);
     }
 }
