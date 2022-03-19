@@ -21,17 +21,22 @@ dependencies:
   objectbox_flutter_libs: 1.3.0
   flutter_facebook_auth: 4.0.1
   flutter_svg : 1.0.3
-
+  auto_route: 2.3.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^2.1.5
   objectbox_generator: ^1.3.0
-
+  auto_route_generator: 2.3.2
   flutter_lints: ^1.0.4
 
 flutter:
   assets:
     - assets/
+
+#  fonts:
+#    - family: ColonnaMT
+#      fonts:
+#        - asset: assets/fonts/ColonnaMT.ttf
   uses-material-design: true
 

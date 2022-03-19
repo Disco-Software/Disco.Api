@@ -47,7 +47,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="swagger.json" CodeGenerator="NSwagCSharp" Namespace="Disco.Api" ClassName="Swagger" />
+    <None Include="swagger.json" ClassName="Swagger" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <OpenApiReference Include="OpenAPIs\index.html" CodeGenerator="NSwagCSharp" Namespace="Disco.Api.Swagger" ClassName="Swagger">
+      <SourceUri>http://localhost/Disco.Api/swagger/index.html</SourceUri>
+    </OpenApiReference>
   </ItemGroup>
 
 

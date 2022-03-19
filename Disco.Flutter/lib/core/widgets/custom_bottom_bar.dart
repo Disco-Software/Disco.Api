@@ -1,88 +1,39 @@
 import 'package:disco_app/core/widgets/bottom_bar_item.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomBottomBar extends StatelessWidget {
-  const CustomBottomBar({Key? key}) : super(key: key);
-  final int _activeTab = 0;
+  const CustomBottomBar(
+      {Key? key,
+      required this.activeTab,
+      required this.items,
+      required this.onTap})
+      : super(key: key);
+  final int activeTab;
+  final List<BottomBarItem> items;
+  final Function({required int index, required String label}) onTap;
   @override
   Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40.0),
         child: Row(
           children: [
-            BottomBarItem(
-              onTap: () {
-                if (_activeTab != 0) {
-                  Navigator.of(context).pushNamed('/line');
-                }
-              },
-              id: 0,
-              imagePath: "assets/ic_home.svg",
-              color: _activeTab == 0
-                  ? DcColors.tabbarItemSelected
-                  : DcColors.darkWhite,
+            InkWell(
+              child: items[0],
+              onTap: () => onTap(index: 0, label: items[0].label),
             ),
-            const Spacer(),
-            BottomBarItem(
-              onTap: () {
-                if (_activeTab != 1) {
-                  Navigator.of(context).pushNamed('/saved');
-                }
-              },
-              id: 1,
-              imagePath: "assets/ic_base.svg",
-              color: _activeTab == 1
-                  ? DcColors.tabbarItemSelected
-                  : DcColors.darkWhite,
+            InkWell(
+              child: items[1],
+              onTap: () => onTap(index: 1, label: items[1].label),
             ),
-            const Spacer(),
-            Material(
-                type: MaterialType
-                    .transparency, //Makes it usable on any background color, thanks @IanSmith
-                child: Ink(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: DcColors.floatingActionButtonColor, width: 4.0),
-                    color: Colors.transparent,
-                    shape: BoxShape.circle,
-                  ),
-                  child: InkWell(
-                    //This keeps the splash effect within the circle
-                    borderRadius: BorderRadius.circular(
-                        1000.0), //Something large to ensure a circle
-                    child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: SvgPicture.asset('assets/ic_plus.svg'),
-                    ),
-                  ),
-                )),
-            const Spacer(),
-            BottomBarItem(
-              onTap: () {
-                if (_activeTab != 3) {
-                  Navigator.of(context).pushNamed('/chat');
-                }
-              },
-              id: 3,
-              imagePath: "assets/ic_chat.svg",
-              color: _activeTab == 3
-                  ? DcColors.tabbarItemSelected
-                  : DcColors.darkWhite,
+            InkWell(
+              child: items[2],
+              onTap: () => onTap(index: 2, label: items[2].label),
             ),
-            const Spacer(),
-            BottomBarItem(
-                onTap: () {
-                  if (_activeTab != 4) {
-                    Navigator.of(context).pushNamed('/profile');
-                  }
-                },
-                id: 4,
-                imagePath: "assets/ic_profile.svg",
-                color: _activeTab == 4
-                    ? DcColors.tabbarItemSelected
-                    : DcColors.darkWhite),
+            InkWell(
+              child: items[3],
+              onTap: () => onTap(index: 3, label: items[3].label),
+            ),
           ],
         ),
         decoration: const BoxDecoration(

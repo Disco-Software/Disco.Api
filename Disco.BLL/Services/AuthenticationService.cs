@@ -12,6 +12,7 @@ using Disco.BLL.Validatars;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,7 @@ namespace Disco.BLL.Services
         private readonly ApiDbContext ctx;
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
+        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IMapper mapper;
         private readonly IFacebookAuthService facebookAuthService;
         private readonly IOptions<AuthenticationOptions> authenticationOptions;
@@ -43,6 +45,7 @@ namespace Disco.BLL.Services
         public AuthenticationService(ApiDbContext _ctx,
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
+            IHttpContextAccessor _httpContextAccessor,
             IFacebookAuthService _facebookAuthService,
             IEmailService _emailService,
             IOptions<AuthenticationOptions> _authenticationOptions,
@@ -55,6 +58,7 @@ namespace Disco.BLL.Services
             mapper = _mapper;
             authenticationOptions = _authenticationOptions;
             emailService = _emailService;
+            httpContextAccessor = _httpContextAccessor;
         }
 
         public async Task<Models.Authentication.UserResponseModel> LogIn(LoginModel model)
@@ -185,10 +189,16 @@ namespace Disco.BLL.Services
             return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
         }
 
-        public async Task<UserResponseModel> RefreshToken(string email)
+        public async Task<UserResponseModel> RefreshToken()
         {
-            var user = await userManager.FindByEmailAsync(email);
-
+            var userClaim = httpContextAccessor.HttpContext.User;
+            
+            var user = await userManager.GetUserAsync(userClaim);
+           
+            await ctx.Entry(user)
+                .Reference(p => p.Profile)
+                .LoadAsync();
+                
             if (user == null)
                 return BadRequest("User not found");
 

@@ -1,18 +1,18 @@
-import 'package:disco_app/app/router.dart';
-import 'package:disco_app/pages/start/splash_page.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+import 'app_router.gr.dart';
 
+class MyApp extends StatelessWidget {
+  MyApp({Key? key}) : super(key: key);
+  final _appRouter = AppRouter();
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      onGenerateRoute: AppRouter.generateRoute,
-      initialRoute: SplashPage.routeName,
+    return MaterialApp.router(
+      routerDelegate: _appRouter.delegate(),
+      routeInformationParser: _appRouter.defaultRouteParser(),
       title: 'Flutter Demo',
       theme: ThemeData.dark().copyWith(
         inputDecorationTheme: InputDecorationTheme(

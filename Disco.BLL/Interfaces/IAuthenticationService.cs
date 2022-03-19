@@ -14,7 +14,7 @@ namespace Disco.BLL.Interfaces
     {
         Task<UserResponseModel> LogIn(LoginModel model);
         Task<UserResponseModel> Register(RegistrationModel model);
-        Task<UserResponseModel> RefreshToken(string email);
+        Task<UserResponseModel> RefreshToken();
         Task<UserResponseModel> Facebook(string accessToken);
         Task<UserResponseModel> Apple(AppleLogInModel model);
         Task<string> ForgotPassword(string email);

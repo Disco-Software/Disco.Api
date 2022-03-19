@@ -6,6 +6,7 @@ using Disco.DAL.Entities;
 using Disco.DAL.Interfaces;
 using Disco.DAL.Repositories;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Azure.NotificationHubs;
 using Microsoft.Extensions.Configuration;
@@ -40,12 +41,13 @@ namespace Disco.BLL.Services
             ILogger<ServiceManager> _logger,
             IConfiguration configuration,
             IWebHostEnvironment hostingEnvironment,
-            IHttpClientFactory httpClientFactory)
+            IHttpClientFactory httpClientFactory,
+            IHttpContextAccessor httpContextAccessor)
         {
             repositoryManager = new Lazy<IRepositoryManager>(() => new RepositoryManager(_ctx));
             facebookAuthService = new Lazy<IFacebookAuthService>(() => new FacebookAuthService(configuration, httpClientFactory));
             emailService = new Lazy<IEmailService>(() => new EmailService(_emailOptions,_logger));
-            authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, facebookAuthService.Value, emailService.Value,authenticationOptions,_mapper));
+            authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, httpContextAccessor, facebookAuthService.Value, emailService.Value,authenticationOptions,_mapper));
             postService = new Lazy<IPostService>(() => new PostService(_mapper,repositoryManager.Value.PostRepository, _ctx, _userManager,hostingEnvironment));
             friendService = new Lazy<IFriendService> (() => new FriendService(repositoryManager.Value.FriendRepository, repositoryManager.Value.ProfileRepository,_userManager, _mapper));
             var notificationHub = NotificationHubClient.CreateClientFromConnectionString(
