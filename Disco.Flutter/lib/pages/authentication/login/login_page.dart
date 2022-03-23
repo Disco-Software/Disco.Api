@@ -75,17 +75,14 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           child: Text(
                             "E-mail",
-                            style: TextStyle(
-                                fontSize: 16, color: DcColors.darkWhite),
+                            style: TextStyle(fontSize: 16, color: DcColors.darkWhite),
                           ),
                         ),
                         TextFormField(
                             controller: _emailController,
                             style: const TextStyle(color: DcColors.darkWhite),
                             decoration: InputDecoration(
-                                errorText: state is LogInErrorState
-                                    ? state.emailError
-                                    : null)),
+                                errorText: state is LogInErrorState ? state.emailError : null)),
                         const SizedBox(height: 24),
                         const Padding(
                           padding: EdgeInsets.only(
@@ -94,8 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           child: Text(
                             "Password",
-                            style: TextStyle(
-                                fontSize: 16, color: DcColors.darkWhite),
+                            style: TextStyle(fontSize: 16, color: DcColors.darkWhite),
                           ),
                         ),
                         TextFormField(
@@ -103,9 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                           obscureText: true,
                           controller: _passwordController,
                           decoration: InputDecoration(
-                              errorText: state is LogInErrorState
-                                  ? state.passwordError
-                                  : null),
+                              errorText: state is LogInErrorState ? state.passwordError : null),
                         ),
                         const SizedBox(height: 34),
                         const Text(
@@ -122,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                                     child: CircularProgressIndicator.adaptive(),
                                   )
                                 : ElevatedButton(
-                                    onPressed: _onLogin,
+                                    onPressed: () => context.router.navigate(const HomeRoute()),
                                     child: const Text('Log In')),
                           ),
                         ),

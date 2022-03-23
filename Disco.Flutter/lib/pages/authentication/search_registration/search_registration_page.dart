@@ -26,7 +26,7 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
   void _blocLisener(BuildContext context, Object? state) {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       if (state is FacebookRegistratedState) {
-        context.router.navigate(const MainRoute());
+        context.router.navigate(const HomeRoute());
       }
     });
   }
@@ -71,8 +71,8 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
                             label: Text(
                               'Continue with E-mail',
                               style: GoogleFonts.aBeeZee(
-                                  textStyle: const TextStyle(
-                                      color: DcColors.darkWhite, fontSize: 16)),
+                                  textStyle:
+                                      const TextStyle(color: DcColors.darkWhite, fontSize: 16)),
                             ),
                           )),
                     ),
@@ -99,8 +99,8 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
                             label: Text(
                               'Continue with Facebook',
                               style: GoogleFonts.aBeeZee(
-                                  textStyle: const TextStyle(
-                                      color: DcColors.darkWhite, fontSize: 16)),
+                                  textStyle:
+                                      const TextStyle(color: DcColors.darkWhite, fontSize: 16)),
                             ),
                           )),
                     ),
@@ -113,8 +113,7 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
                           'By continuing, you agree to accept our ' +
                               'Privacy Policy & Terms of Service',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: DcColors.darkWhite, fontSize: 12)),
+                          style: TextStyle(color: DcColors.darkWhite, fontSize: 12)),
                     ),
                   ],
                 ),
@@ -157,8 +156,7 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
   void onApplePressed() {}
 
   void onFacebookPressed() async {
-    final facebookResponse =
-        await FacebookAuth.i.login(permissions: ['public_profile', 'email']);
+    final facebookResponse = await FacebookAuth.i.login(permissions: ['public_profile', 'email']);
     final String? token = facebookResponse.accessToken?.token;
     if (facebookResponse.status == LoginStatus.success) {
       FacebookAuth.i.getUserData(fields: 'email,first_name,name,picture');

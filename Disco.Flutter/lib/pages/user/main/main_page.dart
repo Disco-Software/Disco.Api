@@ -6,17 +6,8 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-            backgroundColor: const Color(0xFF29193E),
-            title: const Text(
-              'DISCO',
-              style: TextStyle(fontFamily: 'ColonnaMT'),
-            )));
-    // body: Container(
-    //    color: const Color(0xFF1C142D),
-    //   ),
-    //    bottomNavigationBar: const CustomBottomBar());
-    //}
+    return Container(
+      color: const Color(0xFF1C142D),
+    );
   }
 }
