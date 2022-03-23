@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Disco.Tests.Base;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,5 +10,10 @@ namespace Disco.Tests
     [TestClass]
     public class FriendControllerTest : IntegrationTest
     {
+        [TestMethod]
+        public async Task AddFriend_ReturnsSuccessResponse()
+        {
+
+        }
     }
 }

@@ -4,7 +4,10 @@ using Disco.BLL.Models;
 using Disco.BLL.Models.Apple;
 using Disco.BLL.Models.Authentication;
 using Disco.BLL.Models.Facebook;
+using Disco.BLL.Models.Google;
 using Disco.BLL.Services;
+using Google.Apis.Auth.AspNetCore3;
+using Google.Apis.PeopleService.v1;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,9 +40,9 @@ namespace Disco.Api.Controllers.Authentification
         public async Task<UserResponseModel> Facebook([FromBody] FacebookRequestModel model) =>
             await serviceManager.AuthentificationService.Facebook(model.AccessToken);
 
-        [HttpPost("log-in/google"), AllowAnonymous]
-        public async Task<IActionResult> Google([FromBody] string accessToken) =>
-            Ok("Google");
+        [HttpPost("log-in/google"), AllowAnonymous, GoogleScopedAuthorize(PeopleServiceService.ScopeConstants.UserinfoProfile)]
+        public async Task<UserResponseModel> Google([FromServices] IGoogleAuthProvider googleAuthProvider) =>
+            await serviceManager.AuthentificationService.Google(googleAuthProvider);
 
         [HttpPost("log-in/apple"), AllowAnonymous]
         public async Task<UserResponseModel> Apple([FromBody] AppleLogInModel model) =>

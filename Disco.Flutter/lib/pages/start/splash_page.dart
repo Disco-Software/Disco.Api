@@ -1,4 +1,5 @@
-import 'package:disco_app/pages/start/start_page.dart';
+import 'package:auto_route/src/router/auto_router_x.dart';
+import 'package:disco_app/app/app_router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -15,8 +16,10 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 3000)).then((value) {
-      Navigator.of(context).pushReplacementNamed(StartPage.routeName);
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 3000)).then((value) {
+        context.router.navigate(const StartRoute());
+      });
     });
   }
 

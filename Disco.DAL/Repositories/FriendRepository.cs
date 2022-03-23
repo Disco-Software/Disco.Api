@@ -43,13 +43,26 @@ namespace Disco.DAL.Repositories
 
         public override async Task Remove(int id)
         {
-          var friend = await ctx.Friends.Include(u => u.UserProfile)
+          var friend = await ctx.Friends
+                .Include(u => u.UserProfile)
                 .ThenInclude(u => u.User)
                 .Include(f => f.ProfileFriend)
                 .ThenInclude(f => f.User)
                 .Where(f => f.Id == id)
                 .FirstOrDefaultAsync();
             ctx.Friends.Remove(friend);
+           await ctx.SaveChangesAsync();
+        }
+
+        public async Task<List<Friend>> GetAllFriends(int id)
+        {
+            return await ctx.Friends
+                .Include(u => u.UserProfile)
+                .ThenInclude(u => u.User)
+                .Include(f => f.ProfileFriend)
+                .ThenInclude(u => u.User)
+                .Where(f => f.UserProfileId == id)
+                .ToListAsync();
         }
     }
 }

@@ -1,3 +1,5 @@
+import 'package:auto_route/src/router/auto_router_x.dart';
+import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/pages/authentication/registration/bloc/registration_event.dart';
 import 'package:disco_app/pages/authentication/registration/bloc/registration_state.dart';
 import 'package:disco_app/res/colors.dart';
@@ -24,8 +26,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   void _blocLisener(BuildContext context, Object? state) {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil("newRouteName", (route) => false);
+      if (state is RegistratedState) {
+        context.router.navigate(const MainRoute());
+      }
     });
   }
 
@@ -42,7 +45,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return BlocConsumer<RegistrationBloc, RegistrationPageState>(
       bloc: _bloc,
       listener: _blocLisener,
-      builder:(context, state) => Scaffold(
+      builder: (context, state) => Scaffold(
         appBar: AppBar(
           title: const Text(
             "Registration",
@@ -83,7 +86,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     TextFormField(
                       controller: _userNameController,
-                      decoration: InputDecoration(errorText: state is RegistrationErrorState? state.userName : null),
+                      decoration: InputDecoration(
+                          errorText: state is RegistrationErrorState
+                              ? state.userName
+                              : null),
                       style: const TextStyle(color: DcColors.darkWhite),
                     ),
                     const SizedBox(
@@ -101,7 +107,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     TextFormField(
                       controller: _emailController,
-                      decoration: InputDecoration(errorText: state is RegistrationErrorState? state.email : null),
+                      decoration: InputDecoration(
+                          errorText: state is RegistrationErrorState
+                              ? state.email
+                              : null),
                       style: const TextStyle(color: DcColors.darkWhite),
                     ),
                     const Padding(
@@ -116,7 +125,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     TextFormField(
                       controller: _passwordController,
-                      decoration: InputDecoration(errorText: state is RegistrationErrorState? state.password : null),
+                      decoration: InputDecoration(
+                          errorText: state is RegistrationErrorState
+                              ? state.password
+                              : null),
                       style: const TextStyle(color: DcColors.darkWhite),
                     ),
                     const Padding(
@@ -131,7 +143,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     TextFormField(
                       controller: _confirmPasswordController,
-                      decoration: InputDecoration(errorText: state is RegistrationErrorState? state.confirmPassword : null),
+                      decoration: InputDecoration(
+                          errorText: state is RegistrationErrorState
+                              ? state.confirmPassword
+                              : null),
                       style: const TextStyle(color: DcColors.darkWhite),
                     ),
                     Center(
@@ -140,11 +155,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             child: Padding(
                               padding: const EdgeInsets.only(
                                   top: 64, left: 29, right: 29),
-                              child: state is RegistratingState ? const Center(child: CircularProgressIndicator.adaptive(),)
-                              : ElevatedButton(
-                                onPressed: onRegistration,
-                                child: const Text("Create account"),
-                              ),
+                              child: state is RegistratingState
+                                  ? const Center(
+                                      child:
+                                          CircularProgressIndicator.adaptive(),
+                                    )
+                                  : ElevatedButton(
+                                      onPressed: onRegistration,
+                                      child: const Text("Create account"),
+                                    ),
                             ))),
                   ],
                 ),
@@ -157,7 +176,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   void onBackPressed() {
-    Navigator.of(context).pop();
+    context.router.pop();
   }
 
   void onRegistration() {

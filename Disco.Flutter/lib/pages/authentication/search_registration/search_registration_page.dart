@@ -1,8 +1,9 @@
 import 'dart:io' show Platform;
 
+import 'package:auto_route/src/router/auto_router_x.dart';
+import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/pages/authentication/search_registration/bloc/search_bloc.dart';
 import 'package:disco_app/pages/authentication/search_registration/bloc/search_state.dart';
-import 'package:disco_app/pages/user/main/main_page.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,7 +26,7 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
   void _blocLisener(BuildContext context, Object? state) {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       if (state is FacebookRegistratedState) {
-        Navigator.of(context).pushReplacementNamed(MainPage.route);
+        context.router.navigate(const MainRoute());
       }
     });
   }
@@ -144,11 +145,11 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
   }
 
   void onBackButtonPressed() {
-    Navigator.of(context).pop();
+    context.router.pop();
   }
 
   void onEmailPressed() {
-    Navigator.of(context).pushNamed('/registration');
+    context.router.navigate(const RegistrationRoute());
   }
 
   void onGooglePressed() {}

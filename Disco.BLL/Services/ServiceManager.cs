@@ -38,6 +38,7 @@ namespace Disco.BLL.Services
             IOptions<PushNotificationOptions> pushNotificationOptions,
             IOptions<AuthenticationOptions> authenticationOptions,
             IOptions<EmailOptions> _emailOptions,
+            IOptions<GoogleOptions> _googleOptions,
             ILogger<ServiceManager> _logger,
             IConfiguration configuration,
             IWebHostEnvironment hostingEnvironment,
@@ -47,7 +48,7 @@ namespace Disco.BLL.Services
             repositoryManager = new Lazy<IRepositoryManager>(() => new RepositoryManager(_ctx));
             facebookAuthService = new Lazy<IFacebookAuthService>(() => new FacebookAuthService(configuration, httpClientFactory));
             emailService = new Lazy<IEmailService>(() => new EmailService(_emailOptions,_logger));
-            authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, httpContextAccessor, facebookAuthService.Value, emailService.Value,authenticationOptions,_mapper));
+            authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, httpContextAccessor, facebookAuthService.Value, emailService.Value,authenticationOptions,_googleOptions,_mapper));
             postService = new Lazy<IPostService>(() => new PostService(_mapper,repositoryManager.Value.PostRepository, _ctx, _userManager,hostingEnvironment));
             friendService = new Lazy<IFriendService> (() => new FriendService(repositoryManager.Value.FriendRepository, repositoryManager.Value.ProfileRepository,_userManager, _mapper));
             var notificationHub = NotificationHubClient.CreateClientFromConnectionString(

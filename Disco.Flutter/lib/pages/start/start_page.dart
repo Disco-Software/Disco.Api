@@ -1,8 +1,8 @@
-
-import 'package:disco_app/pages/authentication/login/login_page.dart';
-import 'package:disco_app/pages/authentication/search_registration/search_registration_page.dart';
+import 'package:auto_route/src/router/auto_router_x.dart';
+import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/material.dart';
+
 class StartPage extends StatefulWidget {
   const StartPage({Key? key}) : super(key: key);
 
@@ -16,7 +16,7 @@ class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: DcColors.white,//Color(0xFF29193E),
+      backgroundColor: DcColors.white, //Color(0xFF29193E),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -53,10 +53,10 @@ class _StartPageState extends State<StartPage> {
   }
 
   void _onLogin() {
-    Navigator.of(context).pushNamed(LoginPage.routeName);
+    context.router.navigate(const LoginRoute());
   }
 
   void _onRegistration() {
-    Navigator.of(context).pushNamed(SearchRegistrationPage.routeName);
+    context.router.navigate(const SearchRegistrationRoute());
   }
 }

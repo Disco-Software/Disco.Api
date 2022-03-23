@@ -15,7 +15,7 @@ namespace Disco.BLL.Interfaces
         Task<FriendResponseModel> CreateFriendAsync(CreateFriendModel model);
         Task DeleteFriend(int id);
         Task<FriendResponseModel> GetFriendAsync(int id);
-        Task<List<Friend>> GetAllFriends(int id);
+        Task<List<FriendResponseModel>> GetAllFriends(int id);
         Task<FriendResponseModel> IsConfirmFriendAsync(ConfirmationFriendModel model);
     }
 }

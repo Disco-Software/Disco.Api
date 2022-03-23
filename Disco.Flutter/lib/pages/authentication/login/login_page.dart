@@ -1,5 +1,6 @@
+import 'package:auto_route/src/router/auto_router_x.dart';
+import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/dialogs/forgot_password/forgot_password.dart';
-import 'package:disco_app/pages/user/main/main_page.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -155,8 +156,7 @@ class _LoginPageState extends State<LoginPage> {
   void _blocLisener(BuildContext context, Object? state) {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       if (state is LoggedInState) {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil(MainPage.route, (route) => false);
+        context.router.navigate(const HomeRoute());
       }
     });
   }

@@ -63,8 +63,22 @@ namespace Disco.BLL.Services
         public async Task DeleteFriend(int id) =>
             await repository.Remove(id);
 
-        public async Task<List<Friend>> GetAllFriends(int id) =>
-            await repository.GetAll(f => f.UserProfileId == id);
+        public async Task<List<FriendResponseModel>> GetAllFriends(int id)
+        {
+           var friends = await repository.GetAllFriends(id);
+            var friendModels = new List<FriendResponseModel>();
+            foreach (var friend in friends)
+            {
+                var friendModel = new FriendResponseModel
+                {
+                    FriendProfile = ConvertToProfileModel(friend.ProfileFriend),
+                    UserProfile = ConvertToProfileModel(friend.UserProfile),
+                    IsConfirmed = friend.IsConfirmed,
+                };
+                friendModels.Add(friendModel);
+            }
+            return friendModels;
+        }
 
         public async Task<FriendResponseModel> GetFriendAsync(int id)
         {
@@ -107,7 +121,7 @@ namespace Disco.BLL.Services
                 throw new Exception("User not confirm your invitation");
 
             friend.ProfileFriend.Friends.Add(friend);
-            friend.IsConfirmed = true;
+            friend.IsConfirmed = model.IsConfirmed;
 
            await repository.ConfirmFriendAsync(friend);
 

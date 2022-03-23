@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Disco.Tests
+namespace Disco.Tests.Base
 {
     [TestClass]
     public class IntegrationTest

@@ -33,6 +33,9 @@ using System.Reflection;
 using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Google.Apis.Auth.AspNetCore3;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 namespace Disco.Api
 {
     public class Startup
@@ -79,38 +82,43 @@ namespace Disco.Api
 
             services.AddOptions<AuthenticationOptions>();
             services.Configure<EmailOptions>(Configuration.GetSection("EmailSettings"));
+            services.Configure<BLL.Configurations.GoogleOptions>(Configuration.GetSection("Google"));
             services.ConfigureApplicationCookie(s =>
             {
                 s.Cookie.HttpOnly = true;
                 s.ExpireTimeSpan = TimeSpan.FromMinutes(3000);
             });
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddGoogle(options =>
-                {
-                    options.ClientId = Configuration["Google:ClientId"];
-                    options.ClientSecret = Configuration["Google:SecretKey"];
-                })
-                .AddJwtBearer(AuthScheme.UserToken, options =>
-                {
-                    options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidateLifetime = true,
-                        ValidIssuer = Configuration["Auth:Jwt:Issuer"],
-                        ValidAudience = Configuration["Auth:Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                        Convert.FromBase64String(Configuration["Auth:Jwt:SigningKey"]))
-                    };
-                })
-                .AddFacebook(facebookOptions =>
-                {
-                    facebookOptions.AppId = Configuration["Facebook:AppId"];
-                    facebookOptions.AppSecret = Configuration["Facebook:SecretKey"];
-                });
+            services.AddAuthentication(options =>
+            {
+                options.DefaultChallengeScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
+                options.DefaultForbidScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+           .AddCookie()
+           .AddGoogleOpenIdConnect(options =>
+            {
+               options.ClientId = Configuration["Google:ClientId"];
+               options.ClientSecret = Configuration["Google:SecretKey"];
+            }).AddJwtBearer(AuthScheme.UserToken, options =>
+            {
+               options.RequireHttpsMetadata = false;
+               options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+               {
+                 ValidateIssuer = true,
+                 ValidateAudience = true,
+                 ValidateIssuerSigningKey = true,
+                 ValidateLifetime = true,
+                 ValidIssuer = Configuration["Auth:Jwt:Issuer"],
+                 ValidAudience = Configuration["Auth:Jwt:Audience"],
+                 IssuerSigningKey = new SymmetricSecurityKey(
+                 Convert.FromBase64String(Configuration["Auth:Jwt:SigningKey"]))
+               };
+            }).AddFacebook(facebookOptions =>
+            {
+               facebookOptions.AppId = Configuration["Facebook:AppId"];
+               facebookOptions.AppSecret = Configuration["Facebook:SecretKey"];
+            });
             services.AddHttpContextAccessor();
             services.AddHttpClient();
 

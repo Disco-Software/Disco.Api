@@ -8,10 +8,15 @@ using Disco.BLL.Models;
 using Disco.BLL.Models.Apple;
 using Disco.BLL.Models.Authentication;
 using Disco.BLL.Models.EmailNotifications;
+using Disco.BLL.Models.Google;
 using Disco.BLL.Validatars;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
 using FluentValidation.Results;
+using Google.Apis.Auth.AspNetCore3;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.PeopleService.v1;
+using Google.Apis.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
@@ -28,6 +33,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Policy;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Disco.BLL.Services
@@ -42,6 +48,7 @@ namespace Disco.BLL.Services
         private readonly IFacebookAuthService facebookAuthService;
         private readonly IOptions<AuthenticationOptions> authenticationOptions;
         private readonly IEmailService emailService;
+        private readonly IOptions<GoogleOptions> googleOptions;
         public AuthenticationService(ApiDbContext _ctx,
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
@@ -49,6 +56,7 @@ namespace Disco.BLL.Services
             IFacebookAuthService _facebookAuthService,
             IEmailService _emailService,
             IOptions<AuthenticationOptions> _authenticationOptions,
+            IOptions<GoogleOptions> _googleOptions,
             IMapper _mapper)
         {
             ctx = _ctx;
@@ -117,18 +125,18 @@ namespace Disco.BLL.Services
 
 
             //if (!validation.IsValid)
-            //    return new UserDTO { VarificationResult = "Facebook token is invalid" };
+            //    return new UserResponseModel { VarificationResult = "Facebook token is invalid" };
 
             var userInfo = await facebookAuthService.GetUserInfo(accessToken);
 
             var user = await userManager.FindByLoginAsync(LogInProviders.Facebook, userInfo.Id);
 
-            await ctx.Entry(user)
-                .Reference(p => p.Profile)
-                .LoadAsync();
-
             if(user != null)
             {
+                await ctx.Entry(user)
+                        .Reference(p => p.Profile)
+                        .LoadAsync();
+               
                 user.Email = userInfo.Email;
                 user.UserName = userInfo.FirstName;
                 user.Profile.Photo = userInfo.Picture.Data.Url;
@@ -298,6 +306,53 @@ namespace Disco.BLL.Services
             if (!identityResult.Succeeded)
                 return new UserResponseModel { VarificationResult = $"You have sum errors {identityResult.Errors}" };
             return Ok(user, "");
+        }
+
+        public async Task<UserResponseModel> Google(IGoogleAuthProvider auth)
+        {
+            var fileStream = new FileStream("../Disco.Api/appsettings.json",FileMode.Open, FileAccess.Read);
+
+            var credential = GoogleCredential
+                .FromStream(fileStream)
+                .CreateScoped(PeopleServiceService.Scope.UserinfoEmail, PeopleServiceService.Scope.UserinfoProfile);
+
+            if (credential == null)
+                return BadRequest("Credential is empty, pleace authorize");
+
+            var peopleService = new Google.Apis.PeopleService.v1.PeopleServiceService(new BaseClientService.Initializer
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = "Disco"
+            });
+
+            var request = peopleService.People.Get("people/me");
+            request.PersonFields = "person.names,person.emailAddresses,person.birthdays";
+            var result = await request.ExecuteAsync();
+
+            var email = result.EmailAddresses.First();
+            var name = result.Names.First();
+            var id = result.ExternalIds.First();
+            var photo = result.Photos.First();
+            var user = new User
+            {
+                Email = email.DisplayName,
+
+                UserName = name.DisplayName,
+
+                Profile = new DAL.Entities.Profile
+                {
+                    Photo = photo.Url,
+                    Status = "Music starter",
+                }
+            };
+
+            await userManager.AddLoginAsync(user, new UserLoginInfo(LogInProviders.Google, id.Value, "GoogleId"));
+
+            await userManager.CreateAsync(user);
+
+            var jwt = GenerateJwtToken(user);
+
+            return Ok(user, jwt);
         }
     }
 }

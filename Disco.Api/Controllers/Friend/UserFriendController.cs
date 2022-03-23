@@ -35,7 +35,7 @@ namespace Disco.Api.Controllers.Friend
             await serviceManager.FriendService.GetFriendAsync(friendId);
 
         [HttpGet("{userId:int}")]
-        public async Task<List<Disco.DAL.Entities.Friend>> GetAll([FromRoute] int userId) =>
+        public async Task<List<FriendResponseModel>> GetAll([FromRoute] int userId) =>
             await serviceManager.FriendService.GetAllFriends(userId);
 
         [HttpDelete("{friendId:int}")]

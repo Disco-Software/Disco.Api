@@ -2,7 +2,9 @@
 using Disco.BLL.Models;
 using Disco.BLL.Models.Apple;
 using Disco.BLL.Models.Authentication;
+using Disco.BLL.Models.Google;
 using Disco.DAL.Entities;
+using Google.Apis.Auth.AspNetCore3;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,6 +21,7 @@ namespace Disco.BLL.Interfaces
         Task<UserResponseModel> Apple(AppleLogInModel model);
         Task<string> ForgotPassword(string email);
         Task<UserResponseModel> ResetPassword(ResetPasswordRequestModel model);
-        public string GenerateJwtToken(User user);
+        string GenerateJwtToken(User user);
+        Task<UserResponseModel> Google(IGoogleAuthProvider auth);
     }
 }

@@ -10,7 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-
+using Disco.Tests.Base;
 namespace Disco.Tests
 {
     [TestClass]
@@ -115,6 +115,7 @@ namespace Disco.Tests
 
             Assert.IsNotNull(token);
         }
+        
         [TestMethod]
         public async Task ForgotPassword_ReturnsErrorResponse()
         {
