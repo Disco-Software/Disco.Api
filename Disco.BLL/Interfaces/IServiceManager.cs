@@ -10,6 +10,7 @@ namespace Disco.BLL.Interfaces
     {
         IAuthenticationService AuthentificationService { get; }
         IFacebookAuthService FacebookAuthService { get; }
+        IGoogleAuthService GoogleAuthService { get; }
         IPostService PostService { get; }
         IRegisterDeviceService RegisterDeviceService { get; }
         IEmailService EmailService { get; }

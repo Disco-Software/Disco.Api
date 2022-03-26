@@ -9,7 +9,7 @@ class PostApi {
       });
 
   Future<List<Post>?> GetAllPosts(int id) => NetworkClient.instance.dio
-          .get<List<Post>>("user/posts/line/${id}")
+          .get<List<Post>>("user/posts/${id}/line")
           .then((response) {
         return response.data;
       });

@@ -49,11 +49,15 @@ namespace Disco.DAL.Repositories
 
         public async Task<List<Post>> GetAll(int userId)
         {
+            var posts = new List<Post>();
+
             var user = await ctx.Users
                 .Include(p => p.Profile)
                 .ThenInclude(f => f.Friends)
                 .Where(s => s.Id == userId)
                 .FirstOrDefaultAsync();
+
+
             foreach (var friend in user.Profile.Friends)
             {
                 friend.ProfileFriend = await ctx.Profiles
@@ -65,10 +69,26 @@ namespace Disco.DAL.Repositories
                     .ThenInclude(v => v.PostVideos)
                     .Where(f => f.Id == friend.FriendProfileId)
                     .FirstOrDefaultAsync();
-                var posts = friend.ProfileFriend.Posts.ToList();
-                return posts;
+               
+                posts = friend.ProfileFriend.Posts
+                    .OrderByDescending(s => s.DateOfCreation)
+                    .ToList();                
             }
-            return null;
+            return posts;
+        }
+
+        public override Task<List<Post>> GetAll(Expression<Func<Post, bool>> expression)
+        {
+            if (expression != null)
+               return ctx.Posts
+                    .Include(i => i.PostImages)
+                    .Include(s => s.PostSongs)
+                    .Include(v => v.PostVideos)
+                    .OrderByDescending(d => d.DateOfCreation)
+                    .Where(expression)
+                    .ToListAsync();
+
+            return ctx.Posts.ToListAsync();
         }
 
         public override Task<Post> Get(int id)

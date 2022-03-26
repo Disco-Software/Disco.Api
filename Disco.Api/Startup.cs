@@ -67,7 +67,7 @@ namespace Disco.Api
             });
             services.AddSwaggerGen();
             services.AddDbContext<ApiDbContext>(o => 
-                o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), 
+                o.UseSqlServer(Configuration.GetConnectionString("DevelopmentConnection"), 
                 b => b.MigrationsAssembly("../Disco.DAL")));
             services.AddIdentityCore<User>(options =>
             {

@@ -31,6 +31,7 @@ namespace Disco.BLL.Services
         private readonly Lazy<IEmailService> emailService;
         private readonly Lazy<IRepositoryManager> repositoryManager;
         private readonly Lazy<IFriendService> friendService;
+        private readonly Lazy<IGoogleAuthService> googleAuthService;
         public ServiceManager(ApiDbContext _ctx,
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
@@ -47,8 +48,9 @@ namespace Disco.BLL.Services
         {
             repositoryManager = new Lazy<IRepositoryManager>(() => new RepositoryManager(_ctx));
             facebookAuthService = new Lazy<IFacebookAuthService>(() => new FacebookAuthService(configuration, httpClientFactory));
+            googleAuthService = new Lazy<IGoogleAuthService>(() => new GoogleAuthService(httpClientFactory));
             emailService = new Lazy<IEmailService>(() => new EmailService(_emailOptions,_logger));
-            authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, httpContextAccessor, facebookAuthService.Value, emailService.Value,authenticationOptions,_googleOptions,_mapper));
+            authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, httpContextAccessor,googleAuthService.Value ,facebookAuthService.Value, emailService.Value,authenticationOptions,_googleOptions,_mapper));
             postService = new Lazy<IPostService>(() => new PostService(_mapper,repositoryManager.Value.PostRepository, _ctx, _userManager,hostingEnvironment));
             friendService = new Lazy<IFriendService> (() => new FriendService(repositoryManager.Value.FriendRepository, repositoryManager.Value.ProfileRepository,_userManager, _mapper));
             var notificationHub = NotificationHubClient.CreateClientFromConnectionString(
@@ -69,5 +71,7 @@ namespace Disco.BLL.Services
         public IRepositoryManager RepositoryManager => repositoryManager.Value;
 
       public IFriendService FriendService => friendService.Value;
+
+      public IGoogleAuthService GoogleAuthService => googleAuthService.Value;
     }
 }

@@ -38,7 +38,7 @@ namespace Disco.DAL.EF
         public ApiDbContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<ApiDbContext>();
-            builder.UseSqlServer("Server=tcp:disco-dev-sql-srv.database.windows.net,1433;Initial Catalog=disco-prod-sql-db;Persist Security Info=False;User ID=discosa;Password=cJM23H87;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
+            builder.UseSqlServer("Server=tcp:disco-dev-sql-srv.database.windows.net,1433;Initial Catalog=disco-dev-sql-db;Persist Security Info=False;User ID=discosa;Password=cJM23H87;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
                 optionsBuilder => optionsBuilder.MigrationsAssembly(typeof(ApiDbContext).GetTypeInfo().Assembly.GetName().Name));
 
             return new ApiDbContext(builder.Options);

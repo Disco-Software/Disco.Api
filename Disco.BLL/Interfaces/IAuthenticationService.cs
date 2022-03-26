@@ -22,6 +22,6 @@ namespace Disco.BLL.Interfaces
         Task<string> ForgotPassword(string email);
         Task<UserResponseModel> ResetPassword(ResetPasswordRequestModel model);
         string GenerateJwtToken(User user);
-        Task<UserResponseModel> Google(IGoogleAuthProvider auth);
+        Task<UserResponseModel> Google(IGoogleAuthProvider googleAuthProvider);
     }
 }

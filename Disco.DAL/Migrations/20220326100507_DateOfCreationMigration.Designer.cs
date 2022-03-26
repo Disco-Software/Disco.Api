@@ -4,14 +4,16 @@ using Disco.DAL.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Disco.DAL.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220326100507_DateOfCreationMigration")]
+    partial class DateOfCreationMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,8 +59,8 @@ namespace Disco.DAL.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime?>("DateOfCreation")
-                        .HasColumnType("date");
+                    b.Property<DateTimeOffset?>("DateOfCreation")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");

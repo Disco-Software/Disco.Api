@@ -14,6 +14,9 @@ namespace Disco.DAL.Entities
         public List<PostSong> PostSongs { get; set; }
         public List<PostVideo> PostVideos { get; set; }
 
+        [Column(TypeName = "date")]
+        public DateTime? DateOfCreation { get; set; }
+
         public int ProfileId { get; set; }
         public Profile Profile { get; set; }
     }

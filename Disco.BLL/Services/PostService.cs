@@ -72,6 +72,7 @@ namespace Disco.BLL.Services
 
             post.ProfileId = user.Profile.Id;
             post.Profile = user.Profile;
+            post.DateOfCreation = DateTime.UtcNow;
 
             await postRepository.AddAsync(post,user);
 
@@ -88,8 +89,15 @@ namespace Disco.BLL.Services
            await postRepository.Remove(postId);
         }
 
-        public async Task<List<Post>> GetAllUserPosts(int userId) =>
-            await postRepository.GetAll(p => p.Profile.UserId == userId);
+        public async Task<List<Post>> GetAllUserPosts(int userId)
+        {
+            var posts = postRepository
+                .GetAll(p => p.Profile.UserId == userId)
+                .Result
+                .OrderByDescending(d => d.DateOfCreation)
+                .ToList();
+            return posts;
+        }
 
         public async Task<List<Post>> GetAllPosts(int userId) =>
             await postRepository.GetAll(userId);

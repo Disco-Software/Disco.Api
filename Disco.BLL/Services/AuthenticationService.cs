@@ -45,6 +45,7 @@ namespace Disco.BLL.Services
         private readonly SignInManager<User> signInManager;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IMapper mapper;
+        private readonly IGoogleAuthService googleAuthService;
         private readonly IFacebookAuthService facebookAuthService;
         private readonly IOptions<AuthenticationOptions> authenticationOptions;
         private readonly IEmailService emailService;
@@ -53,6 +54,7 @@ namespace Disco.BLL.Services
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
             IHttpContextAccessor _httpContextAccessor,
+            IGoogleAuthService _googleAuthService,
             IFacebookAuthService _facebookAuthService,
             IEmailService _emailService,
             IOptions<AuthenticationOptions> _authenticationOptions,
@@ -65,6 +67,7 @@ namespace Disco.BLL.Services
             facebookAuthService = _facebookAuthService;
             mapper = _mapper;
             authenticationOptions = _authenticationOptions;
+            googleAuthService = _googleAuthService;
             emailService = _emailService;
             httpContextAccessor = _httpContextAccessor;
         }
@@ -74,11 +77,17 @@ namespace Disco.BLL.Services
             var user = await userManager.FindByEmailAsync(model.Email);
             if (user == null)
                 return BadRequest("user not found");
+           
             await ctx.Entry(user)
                 .Reference(p => p.Profile)
                 .LoadAsync();
+            
             await ctx.Entry(user.Profile)
                 .Collection(p => p.Posts)
+                .LoadAsync();
+
+            await ctx.Entry(user.Profile)
+                .Collection(f => f.Friends)
                 .LoadAsync();
                         
             var passwordVarification = userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password);
@@ -104,7 +113,7 @@ namespace Disco.BLL.Services
 
             var userResult = mapper.Map<User>(userInfo);
             userResult.PasswordHash = userManager.PasswordHasher.HashPassword(userResult, userInfo.Password);
-            userResult.Profile = new DAL.Entities.Profile { Status = "Music starter" };
+            userResult.Profile = new DAL.Entities.Profile { Status = StatusProvider.NewArtist };
             userResult.NormalizedEmail = userManager.NormalizeEmail(userResult.Email);
             userResult.NormalizedUserName = userManager.NormalizeName(userResult.UserName);
 
@@ -163,11 +172,11 @@ namespace Disco.BLL.Services
             {
                 UserName = userInfo.FirstName,
                 Email = string.IsNullOrWhiteSpace(userInfo.Email) ? userInfo.Email : userInfo.Name,
-                PasswordHash =  userManager.PasswordHasher.HashPassword(user, userInfo.Id),
+                PasswordHash = userManager.PasswordHasher.HashPassword(user, userInfo.Id),
                 Profile = new DAL.Entities.Profile
                 {
                     Photo = userInfo.Picture.Data.Url,
-                    Status = "Music starter"
+                    Status = StatusProvider.NewArtist,
                 }
             };
             user.NormalizedEmail = userManager.NormalizeEmail(user.Email);
@@ -308,45 +317,24 @@ namespace Disco.BLL.Services
             return Ok(user, "");
         }
 
-        public async Task<UserResponseModel> Google(IGoogleAuthProvider auth)
+        public async Task<UserResponseModel> Google(IGoogleAuthProvider googleAuthProvider)
         {
-            var fileStream = new FileStream("../Disco.Api/appsettings.json",FileMode.Open, FileAccess.Read);
+            var googleResponse = await googleAuthService.GetUserData(googleAuthProvider);
 
-            var credential = GoogleCredential
-                .FromStream(fileStream)
-                .CreateScoped(PeopleServiceService.Scope.UserinfoEmail, PeopleServiceService.Scope.UserinfoProfile);
+            var email = googleResponse.EmailAddresses.FirstOrDefault();
+            var userName = googleResponse.Names.FirstOrDefault();
+            var photo = googleResponse.Photos.FirstOrDefault();
 
-            if (credential == null)
-                return BadRequest("Credential is empty, pleace authorize");
-
-            var peopleService = new Google.Apis.PeopleService.v1.PeopleServiceService(new BaseClientService.Initializer
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = "Disco"
-            });
-
-            var request = peopleService.People.Get("people/me");
-            request.PersonFields = "person.names,person.emailAddresses,person.birthdays";
-            var result = await request.ExecuteAsync();
-
-            var email = result.EmailAddresses.First();
-            var name = result.Names.First();
-            var id = result.ExternalIds.First();
-            var photo = result.Photos.First();
             var user = new User
             {
-                Email = email.DisplayName,
-
-                UserName = name.DisplayName,
-
+                UserName = userName.DisplayName,
+                Email = email.Value,
                 Profile = new DAL.Entities.Profile
                 {
                     Photo = photo.Url,
-                    Status = "Music starter",
+                    Status = StatusProvider.NewArtist
                 }
             };
-
-            await userManager.AddLoginAsync(user, new UserLoginInfo(LogInProviders.Google, id.Value, "GoogleId"));
 
             await userManager.CreateAsync(user);
 

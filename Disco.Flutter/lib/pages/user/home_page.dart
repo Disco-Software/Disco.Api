@@ -1,82 +1,48 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/app/app_router.gr.dart';
+import 'package:disco_app/core/widgets/unicorn_outline_button.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
-    print("run 1 2 3");
-    // return AutoTabsRouter(
-    //   routes: [
-    //     MainRoute(),
-    //     SavedItemsRoute(),
-    //     AddPostRoute(),
-    //     ChatRoute(),
-    //     ProfileRoute()
-    //   ],
-    //   builder: (context, child, animation) {
-    //     final tabsRouter = AutoTabsRouter.of(context);
-    //     return Scaffold(
-    //       body: child,
-    //       bottomNavigationBar: BottomNavigationBar(
-    //         currentIndex: tabsRouter.activeIndex,
-    //         onTap: (index) => tabsRouter.setActiveIndex(index),
-    //         items: [
-    //           BottomNavigationBarItem(
-    //               icon: SvgPicture.asset(
-    //             'assets/ic_home.svg',
-    //             height: 30,
-    //             width: 30,
-    //             color: tabsRouter.activeIndex == 0
-    //                 ? Colors.orange
-    //                 : DcColors.darkWhite,
-    //           )),
-    //           BottomNavigationBarItem(
-    //               icon: SvgPicture.asset(
-    //             'assets/ic_base.svg',
-    //             height: 30,
-    //             width: 30,
-    //             color: tabsRouter.activeIndex == 1
-    //                 ? Colors.orange
-    //                 : DcColors.darkWhite,
-    //           )),
-    //           BottomNavigationBarItem(
-    //               icon: SvgPicture.asset(
-    //             'assets/ic_plus.svg',
-    //             height: 50,
-    //             width: 50,
-    //             color: tabsRouter.activeIndex == 2
-    //                 ? Colors.orange
-    //                 : DcColors.darkWhite,
-    //           )),
-    //           BottomNavigationBarItem(
-    //               icon: SvgPicture.asset(
-    //             'assets/ic_chat.svg',
-    //             height: 30,
-    //             width: 30,
-    //             color: tabsRouter.activeIndex == 3
-    //                 ? Colors.orange
-    //                 : DcColors.darkWhite,
-    //           )),
-    //           BottomNavigationBarItem(
-    //               icon: SvgPicture.asset(
-    //             'assets/ic_profile.svg',
-    //             height: 30,
-    //             width: 30,
-    //             color: tabsRouter.activeIndex == 4
-    //                 ? Colors.orange
-    //                 : DcColors.darkWhite,
-    //           )),
-    //         ],
-    //       ),
-    //     );
-    //   },
-    // );
     return AutoTabsScaffold(
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(top: 70),
+          child: FloatingActionButton(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            child: UnicornOutlineButton(
+                onPressed: () {},
+                gradient: const LinearGradient(colors: [
+                  Color(0xffDE9237),
+                  Color(0xFFF6EA7D),
+                ]),
+                radius: 360,
+                strokeWidth: 3,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Center(
+                      child: SvgPicture.asset(
+                    'assets/ic_plus.svg',
+                    width: 40,
+                    height: 40,
+                  )),
+                )),
+            onPressed: () {},
+          ),
+        ),
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterDocked,
         extendBody: true,
         backgroundColor: Colors.indigo,
         bottomNavigationBuilder: (context, tabsRouter) {
@@ -90,6 +56,12 @@ class HomePage extends StatelessWidget {
                 topLeft: Radius.circular(25.0),
                 topRight: Radius.circular(25.0),
               ),
+              // boxShadow: [
+              //   BoxShadow(
+              //       spreadRadius: 5,
+              //       offset: const Offset(0, 4),
+              //       color: Colors.black.withOpacity(0.25))
+              // ],
             ),
             margin: const EdgeInsets.symmetric(horizontal: 20.0),
             child: BottomNavigationBar(
@@ -105,7 +77,9 @@ class HomePage extends StatelessWidget {
                         'assets/ic_home.svg',
                         height: 30,
                         width: 30,
-                        color: tabsRouter.activeIndex == 0 ? Colors.orange : DcColors.darkWhite,
+                        color: tabsRouter.activeIndex == 0
+                            ? Colors.orange
+                            : DcColors.darkWhite,
                       )),
                   BottomNavigationBarItem(
                       label: '',
@@ -113,15 +87,15 @@ class HomePage extends StatelessWidget {
                         'assets/ic_base.svg',
                         height: 30,
                         width: 30,
-                        color: tabsRouter.activeIndex == 1 ? Colors.orange : DcColors.darkWhite,
+                        color: tabsRouter.activeIndex == 1
+                            ? Colors.orange
+                            : DcColors.darkWhite,
                       )),
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                       label: '',
-                      icon: SvgPicture.asset(
-                        'assets/ic_plus.svg',
+                      icon: SizedBox(
                         height: 50,
                         width: 50,
-                        // color: tabsRouter.activeIndex == 1 ? Colors.orange : DcColors.darkWhite,
                       )),
                   BottomNavigationBarItem(
                       label: '',
@@ -129,7 +103,9 @@ class HomePage extends StatelessWidget {
                         'assets/ic_chat.svg',
                         height: 30,
                         width: 30,
-                        color: tabsRouter.activeIndex == 3 ? Colors.orange : DcColors.darkWhite,
+                        color: tabsRouter.activeIndex == 3
+                            ? Colors.orange
+                            : DcColors.darkWhite,
                       )),
                   BottomNavigationBarItem(
                       label: '',
@@ -137,7 +113,9 @@ class HomePage extends StatelessWidget {
                         'assets/ic_profile.svg',
                         height: 30,
                         width: 30,
-                        color: tabsRouter.activeIndex == 4 ? Colors.orange : DcColors.darkWhite,
+                        color: tabsRouter.activeIndex == 4
+                            ? Colors.orange
+                            : DcColors.darkWhite,
                       )),
                 ]),
           );
