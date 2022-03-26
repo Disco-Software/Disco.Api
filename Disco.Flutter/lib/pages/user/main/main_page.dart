@@ -1,10 +1,17 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:disco_app/core/widgets/unicorn_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
   static const String route = "/main";
+
+  static const List<String> list = [
+    "https://html5css.ru/howto/img_avatar.png",
+    "https://html5css.ru/howto/img_avatar.png",
+    "https://html5css.ru/howto/img_avatar.png",
+    "https://html5css.ru/howto/img_avatar.png",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +40,30 @@ class MainPage extends StatelessWidget {
         ),
         body: Column(
           children: [
-            CachedNetworkImage(
-              imageUrl:
-                  "https://cdn.vectorstock.com/i/1000x1000/46/77/person-gray-photo-placeholder-girl-material-design-vector-23804677.webp",
+            SizedBox(
+              height: 85,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: list.length,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 12, right: 8),
+                        child: UnicornImage(
+                          imageUrl: list[index],
+                          shouldHaveGradientBorder: false,
+                          shouldHavePlus: true,
+                        ),
+                      );
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                        ),
+                        child: UnicornImage(imageUrl: list[index]),
+                      );
+                    }
+                  }),
             )
           ],
         ));
