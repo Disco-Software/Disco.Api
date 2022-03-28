@@ -59,6 +59,8 @@ namespace Disco.DAL.Repositories
             return await ctx.Friends
                 .Include(u => u.UserProfile)
                 .ThenInclude(u => u.User)
+                .Include(p => p.ProfileFriend)
+                .ThenInclude(s => s.Stories)
                 .Include(f => f.ProfileFriend)
                 .ThenInclude(u => u.User)
                 .Where(f => f.UserProfileId == id)

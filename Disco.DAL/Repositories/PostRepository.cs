@@ -54,9 +54,19 @@ namespace Disco.DAL.Repositories
             var user = await ctx.Users
                 .Include(p => p.Profile)
                 .ThenInclude(f => f.Friends)
+                .Include(p => p.Profile)
+                .ThenInclude(p => p.Posts)
+                .ThenInclude(p => p.PostImages)
+                .Include(p => p.Profile)
+                .ThenInclude(p => p.Posts)
+                .ThenInclude(s => s.PostSongs)
+                .Include(p => p.Profile)
+                .ThenInclude(p => p.Posts)
+                .ThenInclude(p => p.PostVideos)
                 .Where(s => s.Id == userId)
                 .FirstOrDefaultAsync();
 
+            posts.AddRange(user.Profile.Posts);
 
             foreach (var friend in user.Profile.Friends)
             {
@@ -69,11 +79,11 @@ namespace Disco.DAL.Repositories
                     .ThenInclude(v => v.PostVideos)
                     .Where(f => f.Id == friend.FriendProfileId)
                     .FirstOrDefaultAsync();
-               
-                posts = friend.ProfileFriend.Posts
-                    .OrderByDescending(s => s.DateOfCreation)
-                    .ToList();                
+                posts.AddRange(friend.ProfileFriend.Posts);             
             }
+
+            posts.OrderByDescending(d => d.DateOfCreation).ToList();
+
             return posts;
         }
 

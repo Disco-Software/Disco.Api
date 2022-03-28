@@ -18,6 +18,9 @@ namespace Disco.DAL.EF
         public DbSet<PostSong> PostSongs { get; set; }
         public DbSet<PostVideo> PostVideos { get; set; }
         public DbSet<Friend> Friends { get; set; }
+        public DbSet<Story> Stories { get; set; }
+        public DbSet<StoryImage> StoriesImages { get; set; }
+        public DbSet<StoryVideo> StoryVideos { get; set; }
         public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options) { }
         public ApiDbContext() { }
 
@@ -33,6 +36,16 @@ namespace Disco.DAL.EF
                 .HasMany(f => f.Friends)
                 .WithOne(p => p.UserProfile)
                 .HasForeignKey(f => f.UserProfileId);
+
+            //builder.Entity<Story>()
+            //    .HasMany(s => s.StoryImages)
+            //    .WithOne(s => s.Story)
+            //    .HasForeignKey(s => s.StoryId);
+
+            //builder.Entity<Story>()
+            //    .HasMany(v => v.StoryVideos)
+            //    .WithOne(s => s.Story)
+            //    .HasForeignKey(s => s.StoryId);
         }
 
         public ApiDbContext CreateDbContext(string[] args)

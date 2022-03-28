@@ -5,6 +5,7 @@ using Disco.BLL.Models.Authentication;
 using Disco.BLL.Models.Facebook;
 using Disco.BLL.Models.Friends;
 using Disco.BLL.Models.Posts;
+using Disco.BLL.Models.Stories;
 using Disco.DAL.Entities;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,7 @@ namespace Disco.BLL.Mapper
             CreateMap<User, FacebookModel>();
             CreateMap<CreateFriendModel, Friend>();
             CreateMap<DAL.Entities.Profile, ProfileModel>();
+            CreateMap<CreateStoryModel, Story>();
         }
     }
 }

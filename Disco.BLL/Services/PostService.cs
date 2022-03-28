@@ -29,24 +29,36 @@ namespace Disco.BLL.Services
         private readonly PostRepository postRepository;
         private readonly UserManager<User> userManager;
         private readonly IWebHostEnvironment webHostEnvironment;
-        public PostService(IMapper _mapper, PostRepository _postRepository, ApiDbContext _ctx, UserManager<User> _userManager, IWebHostEnvironment _webHostEnvironment)
+        private readonly IHttpContextAccessor httpContextAccessor;
+        public PostService
+            (IMapper _mapper, 
+            PostRepository _postRepository, 
+            ApiDbContext _ctx,
+            UserManager<User> _userManager,
+            IHttpContextAccessor _httpContextAccessor, 
+            IWebHostEnvironment _webHostEnvironment)
         {
             mapper = _mapper;
             postRepository = _postRepository;
-            ctx = _ctx;
             userManager = _userManager;
+            ctx = _ctx;
+            httpContextAccessor = _httpContextAccessor;
             webHostEnvironment = _webHostEnvironment;
         }
 
         public async Task<PostResponseModel> CreatePostAsync(CreatePostModel model)
         {
-            var user = await userManager.FindByNameAsync(model.Name);
-
-           await ctx.Entry(user)
-                .Reference(r => r.Profile)
+            var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
+           
+             await ctx.Entry(user)
+                .Reference(p => p.Profile)
                 .LoadAsync();
 
-            var post = new Post { Description = model.Description, Profile = ctx.Profiles.FirstOrDefault(p => p.User.UserName == model.Name), ProfileId = ctx.Profiles.FirstOrDefault(p => p.User.UserName == model.Name).Id, PostImages = new List<PostImage>(), PostSongs = new List<PostSong>(), PostVideos = new List<PostVideo>() };
+            await ctx.Entry(user.Profile)
+                 .Collection(p => p.Posts)
+                 .LoadAsync();
+
+            var post = new Post { Description = model.Description, Profile = user.Profile, ProfileId = user.Profile.Id, PostImages = new List<PostImage>(), PostSongs = new List<PostSong>(), PostVideos = new List<PostVideo>() };
 
             if (model.PostImages != null)
                 foreach (var file in model.PostImages)

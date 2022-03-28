@@ -40,30 +40,33 @@ class MainPage extends StatelessWidget {
         ),
         body: Column(
           children: [
-            SizedBox(
-              height: 85,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: list.length,
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 12, right: 8),
-                        child: UnicornImage(
-                          imageUrl: list[index],
-                          shouldHaveGradientBorder: false,
-                          shouldHavePlus: true,
-                        ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                        ),
-                        child: UnicornImage(imageUrl: list[index]),
-                      );
-                    }
-                  }),
+            Padding(
+              padding: const EdgeInsets.only(top: 10, left: 10),
+              child: SizedBox(
+                height: 85,
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 12, right: 8),
+                          child: UnicornImage(
+                            imageUrl: list[index],
+                            shouldHaveGradientBorder: false,
+                            shouldHavePlus: true,
+                          ),
+                        );
+                      } else {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                          ),
+                          child: UnicornImage(imageUrl: list[index]),
+                        );
+                      }
+                    }),
+              ),
             )
           ],
         ));

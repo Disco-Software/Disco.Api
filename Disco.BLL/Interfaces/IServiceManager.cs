@@ -15,6 +15,7 @@ namespace Disco.BLL.Interfaces
         IRegisterDeviceService RegisterDeviceService { get; }
         IEmailService EmailService { get; }
         IFriendService FriendService { get; }
+        IStoryService StoryService { get; }
         IRepositoryManager RepositoryManager { get; }
     }
 }

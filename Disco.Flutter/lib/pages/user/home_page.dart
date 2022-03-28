@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
               //       color: Colors.black.withOpacity(0.25))
               // ],
             ),
-            margin: const EdgeInsets.symmetric(horizontal: 20.0),
+            margin: const EdgeInsets.symmetric(horizontal: 10.0),
             child: BottomNavigationBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0.0,
