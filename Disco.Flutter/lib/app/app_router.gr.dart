@@ -68,8 +68,10 @@ class AppRouter extends _i1.RootStackRouter {
         }),
     LineRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
-        builder: (_) {
-          return const _i10.MainPage();
+        builder: (data) {
+          final args =
+              data.argsAs<LineRouteArgs>(orElse: () => const LineRouteArgs());
+          return _i10.MainPage(key: args.key);
         }),
     SavedItemsRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
@@ -166,10 +168,17 @@ class HomeRoute extends _i1.PageRouteInfo<void> {
   static const String name = 'HomeRoute';
 }
 
-class LineRoute extends _i1.PageRouteInfo<void> {
-  const LineRoute() : super(name, path: 'line');
+class LineRoute extends _i1.PageRouteInfo<LineRouteArgs> {
+  LineRoute({_i2.Key? key})
+      : super(name, path: 'line', args: LineRouteArgs(key: key));
 
   static const String name = 'LineRoute';
+}
+
+class LineRouteArgs {
+  const LineRouteArgs({this.key});
+
+  final _i2.Key? key;
 }
 
 class SavedItemsRoute extends _i1.PageRouteInfo<void> {
