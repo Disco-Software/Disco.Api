@@ -52,12 +52,13 @@ namespace Disco.BLL.Services
             friendResponse.FriendProfileId = model.FriendId;
             friendResponse.UserProfileId = model.UserId;
 
-            await repository.Add(friendResponse);
+            var id = await repository.Add(friendResponse);
+
 
             var userProfileModel =  ConvertToProfileModel(userProfile);
             var friendProfileModel = ConvertToProfileModel(friendProfile);
 
-            return Ok(friendProfileModel, userProfileModel, false, false);
+            return Ok(friendProfileModel, userProfileModel, id, false, false);
         }
 
         public async Task DeleteFriend(int id) =>
@@ -74,6 +75,7 @@ namespace Disco.BLL.Services
                     FriendProfile = ConvertToProfileModel(friend.ProfileFriend),
                     UserProfile = ConvertToProfileModel(friend.UserProfile),
                     IsConfirmed = friend.IsConfirmed,
+                    FriendId = friend.Id,
                 };
                 friendModels.Add(friendModel);
             }
@@ -120,15 +122,12 @@ namespace Disco.BLL.Services
             if (model.IsConfirmed == false)
                 throw new Exception("User not confirm your invitation");
 
-            friend.ProfileFriend.Friends.Add(friend);
-            friend.IsConfirmed = model.IsConfirmed;
-
            await repository.ConfirmFriendAsync(friend);
 
             var friendProfileModel = ConvertToProfileModel(friend.ProfileFriend);
             var userProfileModel = ConvertToProfileModel(friend.UserProfile);
 
-            return Ok(friendProfileModel,userProfileModel, isFriend: friend.IsFriend, isConfirmed: friend.IsConfirmed);
+            return Ok(friendProfileModel,userProfileModel,friend.Id, isFriend: friend.IsFriend, isConfirmed: friend.IsConfirmed);
         }
     }
 }
