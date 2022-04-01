@@ -119,6 +119,9 @@ namespace Disco.BLL.Services
         {
             var friend = await repository.Get(model.FriendId);
 
+            if (friend.FriendProfileId != model.FriendProfileId)
+                throw new Exception("You can not confirm, becose you send this invetation");
+
             if (model.IsConfirmed == false)
                 throw new Exception("User not confirm your invitation");
 
