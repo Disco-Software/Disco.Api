@@ -24,6 +24,10 @@ dependencies:
   auto_route: 2.3.2
   cached_network_image: ^3.2.0
   freezed: ^1.1.0
+  get_it: ^7.2.0
+  flutter_secure_storage: ^5.0.2
+  injectable: ^1.5.3
+  injectable_generator: ^1.5.2
 
 dev_dependencies:
   flutter_test:
