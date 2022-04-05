@@ -13,49 +13,47 @@ import '../request_models/login_request.dart';
 
 @injectable
 class AuthApi {
-  final Dio _dio;
-  AuthApi({required Dio dio}) : _dio = dio;
+  final Dio client;
+
+  AuthApi({required this.client});
 
   Future<UserTokenResponse?> login(LogInRequestModel model) =>
-      _dio.post("user/authentication/log-in", data: model).then((response) {
-        return UserTokenResponse.fromJson(response.data);
+      client.post("user/authentication/log-in", data: model).then((response) {
+        return response.data;
       });
 
-  Future<UserTokenResponse?> registration(RegisterRequestModel model) => _dio
+  Future<UserTokenResponse?> registration(RegisterRequestModel model) => client
           .post("user/authentication/registration", data: model)
           .then((response) {
-        return UserTokenResponse.fromJson(response.data);
-      });
-
-  Future<UserTokenResponse?> refreshToken() => _dio
-          .put<UserTokenResponse>("user/authentication/refresh")
-          .then((response) {
         return response.data;
       });
 
-  Future<UserTokenResponse?> facebook(AccessTokenRequestModel model) => _dio
+  Future<UserTokenResponse?> refreshToken() =>
+      client.put("user/authentication/refresh").then((response) {
+        return response.data;
+      });
+
+  Future<UserTokenResponse?> facebook(AccessTokenRequestModel model) => client
           .post("user/authentication/log-in/facebook", data: model)
           .then((response) {
-        return UserTokenResponse.fromJson(response.data);
+        return response.data;
       });
 
-  Future<UserTokenResponse?> apple(AppleLogInRequestModel model) => _dio
-          .post<UserTokenResponse>("user/authentication/log-in/apple",
-              data: model)
+  Future<UserTokenResponse?> apple(AppleLogInRequestModel model) => client
+          .post("user/authentication/log-in/apple", data: model)
           .then((response) {
         return response.data;
       });
 
-  Future<String?> forgotPassword(ForgotPasswordModel model) => _dio
-          .post<String?>('user/authentication/forgot-password', data: model)
+  Future<String?> forgotPassword(ForgotPasswordModel model) => client
+          .post('user/authentication/forgot-password', data: model)
           .then((response) {
         return response.data;
       });
 
   Future<UserTokenResponse?> resetPassword(ResetPasswordRequestModel model) =>
-      _dio
-          .put<UserTokenResponse>("user/authentication/reset-password",
-              data: model)
+      client
+          .put("user/authentication/reset-password", data: model.toJson())
           .then((response) {
         return response.data;
       });

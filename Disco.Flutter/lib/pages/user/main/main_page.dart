@@ -25,7 +25,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final _bloc = MainPageBloc();
   @override
   void initState() {
     // TODO: implement initState

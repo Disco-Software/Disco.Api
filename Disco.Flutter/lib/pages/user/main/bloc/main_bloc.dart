@@ -1,28 +1,29 @@
-import 'package:disco_app/data/network/api/post_api.dart';
-import 'package:disco_app/data/network/api/stories_api.dart';
+import 'package:disco_app/data/network/repositories/post_repository.dart';
+import 'package:disco_app/data/network/repositories/stories_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'main_event.dart';
 import 'main_state.dart';
 
 class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
-  MainPageBloc() : super(LoadingState()) {
+  final PostRepository postRepository;
+  final StoriesRepository storiesRepository;
+
+  MainPageBloc({required this.postRepository, required this.storiesRepository})
+      : super(LoadingState()) {
     print(123);
     on<InitialEvent>((event, emit) {
       _loadData(event, emit);
     });
   }
 
-  final _storiesApi = StoriesApi();
-  final _postApi = PostApi();
-
   void _loadData(MainPageEvent event, Emitter<MainPageState> emit) async {
     print("test");
     emit(LoadingState());
     if (event is InitialEvent) {
       try {
-        final stories = await _storiesApi.fetchStories(event.id);
-        final posts = await _postApi.GetAllPosts(event.id);
+        final stories = await storiesRepository.fetchStories(event.id);
+        final posts = await postRepository.getAllPosts(event.id);
         emit(SuccessState(stories: stories ?? [], posts: posts ?? []));
       } on Exception {
         emit(ErrorState());

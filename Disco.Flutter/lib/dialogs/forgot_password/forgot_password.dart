@@ -1,11 +1,13 @@
 import 'dart:ui';
 
+import 'package:disco_app/data/network/api/auth_api.dart';
 import 'package:disco_app/dialogs/forgot_password/bloc/forgot_password_bloc.dart';
 import 'package:disco_app/dialogs/forgot_password/bloc/forgot_password_event.dart';
 import 'package:disco_app/dialogs/forgot_password/bloc/forgot_password_state.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -15,7 +17,7 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-  final _bloc = ForgotPasswordBloc(InitState());
+  final _bloc = ForgotPasswordBloc(InitState(), authApi: GetIt.I.get<AuthApi>());
   final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 

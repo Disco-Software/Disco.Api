@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/core/widgets/unicorn_outline_button.dart';
+import 'package:disco_app/data/network/repositories/post_repository.dart';
+import 'package:disco_app/data/network/repositories/stories_repository.dart';
+import 'package:disco_app/injection.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +22,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider<MainPageBloc>(create: (_) => MainPageBloc())],
+      providers: [
+        BlocProvider<MainPageBloc>(
+            create: (_) => MainPageBloc(
+                postRepository: getIt.get<PostRepository>(),
+                storiesRepository: getIt.get<StoriesRepository>()))
+      ],
       child: AutoTabsScaffold(
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(top: 70),

@@ -1,18 +1,19 @@
 import 'package:dio/dio.dart';
-import 'package:disco_app/data/network/network_models/post_network.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class PostApi {
   final Dio dio;
 
   PostApi({required this.dio});
 
-  Future<List<Post>?> GetAllUserPost(int id) =>
-      dio.get<List<Post>>('user/posts/$id').then((response) {
+  Future<List<dynamic>?> getAllUserPost(int id) async =>
+      await dio.get('user/posts/$id').then((response) {
         return response.data;
       });
 
-  Future<List<Post>?> GetAllPosts(int id) =>
-      dio.get<List<Post>>("user/posts/$id/line").then((response) {
-        return response.data;
+  Future<List<dynamic>?> getAllPosts(int id) async =>
+      await dio.get("user/posts/$id/line").then((response) {
+        return response?.data;
       });
 }

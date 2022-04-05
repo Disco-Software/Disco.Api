@@ -7,7 +7,7 @@ import 'package:injectable/injectable.dart';
 import 'api/auth_api.dart';
 
 @injectable
-class NetworkClient<T> {
+class NetworkClient {
   final Dio dio;
   final AuthApi authApi;
   final FlutterSecureStorage storage;
@@ -26,8 +26,29 @@ class NetworkClient<T> {
     storage.write(key: Strings.token, value: user?.verificationResult);
   }
 
-  Future<Response<T>> get(String url, [dynamic queryParams]) async {
+  Future<Response<dynamic>> get(String url, [dynamic queryParams]) async {
     return await dio.get(url, queryParameters: queryParams);
+  }
+
+  Future<Response<List<dynamic>?>> getAll(String url) async {
+    return await dio.get<List<dynamic>>(url);
+  }
+
+  Future<Response<dynamic>> post(String url, [dynamic data]) async {
+    return await dio.post(url, data: data);
+  }
+
+  Future<Response<String?>> postString(String url, [dynamic data]) async {
+    return await dio.post(url, data: data);
+  }
+
+  Future<Response<dynamic>> put(String url,
+      [Map<String, dynamic>? queryParams]) async {
+    return await dio.put(url, queryParameters: queryParams);
+  }
+
+  Future<Response<dynamic>> delete(String url) async {
+    return await dio.delete(url);
   }
 
   Future<void> retry(RequestOptions requestOptions) {

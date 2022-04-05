@@ -2,12 +2,14 @@ import 'dart:io' show Platform;
 
 import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:disco_app/app/app_router.gr.dart';
+import 'package:disco_app/data/network/api/auth_api.dart';
 import 'package:disco_app/pages/authentication/search_registration/bloc/search_bloc.dart';
 import 'package:disco_app/pages/authentication/search_registration/bloc/search_state.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'bloc/search_event.dart';
@@ -21,7 +23,7 @@ class SearchRegistrationPage extends StatefulWidget {
 }
 
 class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
-  final _bloc = SearchBloc(InitialState());
+  final _bloc = SearchBloc(InitialState(), authApi: GetIt.I.get<AuthApi>());
 
   void _blocLisener(BuildContext context, Object? state) {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
@@ -71,8 +73,8 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
                             label: Text(
                               'Continue with E-mail',
                               style: GoogleFonts.aBeeZee(
-                                  textStyle:
-                                      const TextStyle(color: DcColors.darkWhite, fontSize: 16)),
+                                  textStyle: const TextStyle(
+                                      color: DcColors.darkWhite, fontSize: 16)),
                             ),
                           )),
                     ),
@@ -99,8 +101,8 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
                             label: Text(
                               'Continue with Facebook',
                               style: GoogleFonts.aBeeZee(
-                                  textStyle:
-                                      const TextStyle(color: DcColors.darkWhite, fontSize: 16)),
+                                  textStyle: const TextStyle(
+                                      color: DcColors.darkWhite, fontSize: 16)),
                             ),
                           )),
                     ),
@@ -113,7 +115,8 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
                           'By continuing, you agree to accept our ' +
                               'Privacy Policy & Terms of Service',
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: DcColors.darkWhite, fontSize: 12)),
+                          style: TextStyle(
+                              color: DcColors.darkWhite, fontSize: 12)),
                     ),
                   ],
                 ),
@@ -156,7 +159,8 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
   void onApplePressed() {}
 
   void onFacebookPressed() async {
-    final facebookResponse = await FacebookAuth.i.login(permissions: ['public_profile', 'email']);
+    final facebookResponse =
+        await FacebookAuth.i.login(permissions: ['public_profile', 'email']);
     final String? token = facebookResponse.accessToken?.token;
     if (facebookResponse.status == LoginStatus.success) {
       FacebookAuth.i.getUserData(fields: 'email,first_name,name,picture');

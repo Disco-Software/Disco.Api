@@ -1,12 +1,14 @@
-import 'package:disco_app/data/network/network_client.dart';
-import 'package:disco_app/data/network/network_models/story_network.dart';
+import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class StoriesApi {
-  final NetworkClient client;
+  final Dio dio;
 
-  StoriesApi({required this.client});
+  StoriesApi({required this.dio});
 
-  Future<List<StoriesModel>?> fetchStories(int userId) => client
-      .get<List<StoriesModel>>("user/story/all/${userId}")
-      .then((response) => response.data);
+  Future<List<dynamic>?> fetchStories(int userId) =>
+      dio.get("user/story/all/$userId").then((response) {
+        return response.data;
+      });
 }
