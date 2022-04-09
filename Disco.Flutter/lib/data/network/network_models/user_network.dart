@@ -5,8 +5,12 @@ class UserTokenResponse {
   UserTokenResponse({this.user, this.verificationResult});
 
   UserTokenResponse.fromJson(Map<String, dynamic> json) {
-    user = json['user'] != null ? User.fromJson(json['user']) : null;
-    verificationResult = json['varificationResult'];
+    try {
+      user = json['user'] != null ? User.fromJson(json['user']) : null;
+      verificationResult = json['varificationResult'];
+    } catch (err) {
+      print('loginError--> $err');
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -39,21 +43,21 @@ class User {
 
   User(
       {this.id,
-        this.userName,
-        this.normalizedUserName,
-        this.email,
-        this.normalizedEmail,
-        this.emailConfirmed,
-        this.passwordHash,
-        this.securityStamp,
-        this.concurrencyStamp,
-        this.phoneNumber,
-        this.phoneNumberConfirmed,
-        this.twoFactorEnabled,
-        this.lockoutEnd,
-        this.lockoutEnabled,
-        this.accessFailedCount,
-        this.profile});
+      this.userName,
+      this.normalizedUserName,
+      this.email,
+      this.normalizedEmail,
+      this.emailConfirmed,
+      this.passwordHash,
+      this.securityStamp,
+      this.concurrencyStamp,
+      this.phoneNumber,
+      this.phoneNumberConfirmed,
+      this.twoFactorEnabled,
+      this.lockoutEnd,
+      this.lockoutEnabled,
+      this.accessFailedCount,
+      this.profile});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -71,8 +75,7 @@ class User {
     lockoutEnd = json['lockoutEnd'];
     lockoutEnabled = json['lockoutEnabled'];
     accessFailedCount = json['accessFailedCount'];
-    profile =
-    json['profile'] != null ? Profile.fromJson(json['profile']) : null;
+    profile = json['profile'] != null ? Profile.fromJson(json['profile']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -107,8 +110,7 @@ class Profile {
   int? userId;
   String? user;
 
-  Profile(
-      {this.id, this.status, this.photo, this.posts, this.userId, this.user});
+  Profile({this.id, this.status, this.photo, this.posts, this.userId, this.user});
 
   Profile.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -149,12 +151,12 @@ class Posts {
 
   Posts(
       {this.id,
-        this.description,
-        this.postImages,
-        this.postSongs,
-        this.postVideos,
-        this.profileId,
-        this.profile});
+      this.description,
+      this.postImages,
+      this.postSongs,
+      this.postVideos,
+      this.profileId,
+      this.profile});
 
   Posts.fromJson(Map<String, dynamic> json) {
     id = json['id'];

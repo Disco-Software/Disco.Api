@@ -16,7 +16,9 @@ import 'data/network/api/stories_api.dart' as _i8;
 import 'data/network/network_client.dart' as _i11;
 import 'data/network/repositories/post_repository.dart' as _i7;
 import 'data/network/repositories/stories_repository.dart' as _i9;
-import 'register_module.dart' as _i12; // ignore_for_file: unnecessary_lambdas
+import 'data/network/repositories/user_repository.dart' as _i12;
+import 'pages/authentication/login/bloc/login_bloc.dart' as _i13;
+import 'register_module.dart' as _i14; // ignore_for_file: unnecessary_lambdas
 
 // ignore_for_file: lines_longer_than_80_chars
 /// initializes the registration of provided dependencies inside of [GetIt]
@@ -42,7 +44,13 @@ _i1.GetIt $initGetIt(_i1.GetIt get,
       dio: get<_i5.Dio>(),
       authApi: get<_i10.AuthApi>(),
       storage: get<_i3.FlutterSecureStorage>()));
+  gh.factory<_i12.UserRepository>(
+      () => _i12.UserRepository(authApi: get<_i10.AuthApi>()));
+  gh.factory<_i13.LoginBloc>(() => _i13.LoginBloc(
+      userRepository: get<_i12.UserRepository>(),
+      secureStorageRepository: get<_i4.SecureStorageRepository>(),
+      dio: get<_i5.Dio>()));
   return get;
 }
 
-class _$RegisterModule extends _i12.RegisterModule {}
+class _$RegisterModule extends _i14.RegisterModule {}

@@ -14,6 +14,6 @@ class PostApi {
 
   Future<List<dynamic>?> getAllPosts(int id) async =>
       await dio.get("user/posts/$id/line").then((response) {
-        return response?.data;
+        return response.data;
       });
 }

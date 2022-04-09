@@ -28,7 +28,6 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     // TODO: implement initState
-    print("user intialisator");
     context.read<MainPageBloc>().add(InitialEvent(id: 1));
     super.initState();
   }
@@ -41,16 +40,13 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: const Color(0xFF1C142D),
         title: const Text(
           "DISCO",
-          style: TextStyle(
-              fontSize: 32, fontFamily: 'Colonna', fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 32, fontFamily: 'Colonna', fontWeight: FontWeight.bold),
         ),
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
               padding: const EdgeInsets.only(right: 32),
               onPressed: () {
-                print('test 1 2 3');
-
                 /// context.read<MainPageBloc>().add(InitialEvent(id: 1));
               },
               icon: SvgPicture.asset(
@@ -61,25 +57,23 @@ class _MainPageState extends State<MainPage> {
         ],
       ),
       body: BlocConsumer<MainPageBloc, MainPageState>(
-        listener: (context, state) {
-          print("$state lissener");
-        },
+        listener: (context, state) {},
         builder: (context, state) {
-          print("$state  state");
           if (state is LoadingState) {
-            return InkWell(
-                onTap: () {
-                  BlocProvider.of<MainPageBloc>(context)
-                    ..add(InitialEvent(id: 1));
-                },
-                child: const CircularProgressIndicator.adaptive());
+            return const CircularProgressIndicator.adaptive();
           } else if (state is SuccessState) {
+            print("${state.stories.length}-->${state.posts.length}   SuccessState");
+
             return _SuccessStateWidget(
               stories: state.stories,
               posts: state.posts,
             );
           } else {
-            return const SizedBox();
+            return Container(
+              height: 100.0,
+              width: 100.0,
+              color: Colors.red,
+            );
           }
         },
       ),
@@ -99,9 +93,11 @@ class _SuccessStateWidget extends StatelessWidget {
   final List<StoriesModel> stories;
   final List<Post> posts;
   final String? userImageUrl;
+
   const _SuccessStateWidget(
       {Key? key, required this.stories, required this.posts, this.userImageUrl})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
