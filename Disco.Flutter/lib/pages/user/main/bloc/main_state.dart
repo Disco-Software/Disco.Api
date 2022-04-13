@@ -10,8 +10,10 @@ class LoadingState implements MainPageState {}
 class SuccessState implements MainPageState {
   List<StoriesModel> stories;
   List<Post> posts;
+  String userImageUrl;
 
-  SuccessState({required this.stories, required this.posts});
+  SuccessState(
+      {required this.stories, required this.posts, required this.userImageUrl});
 }
 
 class ErrorState implements MainPageState {}

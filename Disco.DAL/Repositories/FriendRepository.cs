@@ -14,13 +14,14 @@ namespace Disco.DAL.Repositories
     {
         public FriendRepository(ApiDbContext _ctx) : base(_ctx) { }
 
-        public async Task<int> Add(Friend item)
+        public async Task<int> AddAsync(Friend currentUserFriend, Friend userFriend)
         {
-            await ctx.Friends.AddAsync(item);
-            item.UserProfile.Friends.Add(item);
-            item.IsFriend = true;
+            ctx.Friends.Add(currentUserFriend);
+            ctx.Friends.Add(userFriend);
+            currentUserFriend.IsFriend = true;
+            userFriend.IsFriend = true;
             await ctx.SaveChangesAsync();
-            return item.Id;
+            return currentUserFriend.Id;
         }
         public async Task ConfirmFriendAsync(Friend item)
         {            

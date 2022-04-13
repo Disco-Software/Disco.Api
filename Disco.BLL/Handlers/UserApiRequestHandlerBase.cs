@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Disco.BLL.Abstracts
 {
-    public abstract class UserDTOExtinsions
+    public abstract class UserRequestHandlerBase
     {
         public static UserResponseModel Ok(User user, string varificationResult) => 
             new UserResponseModel{ User = user, VarificationResult = varificationResult };

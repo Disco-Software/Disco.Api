@@ -22,8 +22,9 @@ class AuthApi {
         return response.data;
       });
 
-  Future<UserTokenResponse?> registration(RegisterRequestModel model) =>
-      client.post("user/authentication/registration", data: model).then((response) {
+  Future<UserTokenResponse?> registration(RegisterRequestModel model) => client
+          .post("user/authentication/registration", data: model)
+          .then((response) {
         return response.data;
       });
 
@@ -32,23 +33,28 @@ class AuthApi {
         return UserTokenResponse.fromJson(response.data);
       });
 
-  Future<UserTokenResponse?> facebook(AccessTokenRequestModel model) =>
-      client.post("user/authentication/log-in/facebook", data: model).then((response) {
+  Future<UserTokenResponse?> facebook(AccessTokenRequestModel model) => client
+          .post("user/authentication/log-in/facebook", data: model)
+          .then((response) {
+        return UserTokenResponse.fromJson(response.data);
+      });
+
+  Future<UserTokenResponse?> apple(AppleLogInRequestModel model) => client
+          .post("user/authentication/log-in/apple", data: model)
+          .then((response) {
         return response.data;
       });
 
-  Future<UserTokenResponse?> apple(AppleLogInRequestModel model) =>
-      client.post("user/authentication/log-in/apple", data: model).then((response) {
-        return response.data;
-      });
-
-  Future<String?> forgotPassword(ForgotPasswordModel model) =>
-      client.post('user/authentication/forgot-password', data: model).then((response) {
+  Future<String?> forgotPassword(ForgotPasswordModel model) => client
+          .post('user/authentication/forgot-password', data: model)
+          .then((response) {
         return response.data;
       });
 
   Future<UserTokenResponse?> resetPassword(ResetPasswordRequestModel model) =>
-      client.put("user/authentication/reset-password", data: model.toJson()).then((response) {
+      client
+          .put("user/authentication/reset-password", data: model.toJson())
+          .then((response) {
         return response.data;
       });
 }

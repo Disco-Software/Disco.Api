@@ -38,7 +38,7 @@ using System.Threading.Tasks;
 
 namespace Disco.BLL.Services
 {
-    public class AuthenticationService : UserDTOExtinsions, IAuthenticationService
+    public class AuthenticationService : UserRequestHandlerBase, IAuthenticationService
     {
         private readonly ApiDbContext ctx;
         private readonly UserManager<User> userManager;

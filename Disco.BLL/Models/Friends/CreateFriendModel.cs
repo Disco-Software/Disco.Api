@@ -6,9 +6,9 @@ namespace Disco.BLL.Models.Friends
 {
     public class CreateFriendModel
     {
-        public int UserId { get; set; }
         public int FriendId { get; set;}
         public bool IsFriend { get; set; }
         public bool IsConfirmed { get; set; }
+        public string IntalationId { get; set; }
     }
 }

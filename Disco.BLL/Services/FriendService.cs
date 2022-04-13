@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Disco.BLL.Constants;
 using Disco.BLL.DTO;
 using Disco.BLL.Handlers;
 using Disco.BLL.Interfaces;
@@ -7,7 +8,9 @@ using Disco.BLL.Models.Friends;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
 using Disco.DAL.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Azure.NotificationHubs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,46 +22,92 @@ namespace Disco.BLL.Services
 {
     public class FriendService : FriendApiRequestHandlerBase,IFriendService
     {
+        private readonly ApiDbContext ctx;
         private readonly FriendRepository repository;
         private readonly UserManager<User> userManager;
-        private readonly ProfileRepository profileRepository;
         private readonly IMapper mapper;
+        private readonly IPushNotificationService pushNotificationService;
+        private readonly INotificationHubClient notificationHubClient;
+        private readonly IHttpContextAccessor httpContextAccessor;
         public FriendService(
+            ApiDbContext _ctx,
             FriendRepository _repository, 
-            ProfileRepository _profileRepository,
             UserManager<User> _userManager,
-            IMapper _mapper)
+            IMapper _mapper,
+            IPushNotificationService _pushNotificationService,
+            INotificationHubClient _notificationHubClient,
+            IHttpContextAccessor _httpContextAccessor)
         {
+            ctx = _ctx;
             repository = _repository;
             userManager = _userManager;
-            profileRepository = _profileRepository;
             mapper = _mapper;
+            pushNotificationService = _pushNotificationService;
+            notificationHubClient = _notificationHubClient;
+            httpContextAccessor = _httpContextAccessor;
         }
 
         public async Task<FriendResponseModel> CreateFriendAsync(CreateFriendModel model)
         {
-            var userProfile = await profileRepository.Get(model.UserId);
-            var friendProfile = await profileRepository.Get(model.FriendId);
+            var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
+            await ctx.Entry(user)
+                .Reference(p => p.Profile)
+                .LoadAsync();
+            
+            await ctx.Entry(user.Profile)
+                .Collection(f => f.Friends)
+                .LoadAsync();
 
-            if (userProfile == null && friendProfile == null)
+
+            var friend = await userManager.FindByIdAsync(model.FriendId.ToString());
+            await ctx.Entry(friend)
+                .Reference(f => f.Profile)
+                .LoadAsync();
+
+            await ctx.Entry(friend.Profile)
+                .Collection(f => f.Friends)
+                .LoadAsync();
+
+            if (user.Profile == null && friend == null)
                 throw new Exception("user profile or friend profile is null, chacked this please");
            
             if (model.IsFriend == true)
                 throw new Exception("friend allready cofirmed");
 
-            var friendResponse = mapper.Map<Friend>(model);
-            friendResponse.ProfileFriend = friendProfile;
-            friendResponse.UserProfile = userProfile;
-            friendResponse.FriendProfileId = model.FriendId;
-            friendResponse.UserProfileId = model.UserId;
+            var currentUserFriend = new Friend { UserProfile = user.Profile, ProfileFriend = friend.Profile, FriendProfileId = friend.Profile.Id, IsConfirmed = model.IsConfirmed, IsFriend = model.IsFriend, UserProfileId = user.Profile.Id };
+            var userFriend = new Friend { UserProfile = friend.Profile, ProfileFriend = user.Profile, FriendProfileId = user.Profile.Id, UserProfileId = friend.Profile.Id, IsConfirmed = model.IsConfirmed, IsFriend = model.IsFriend };
 
-            var id = await repository.Add(friendResponse);
+            if (user.Profile.Friends.All(f => f.FriendProfileId != model.FriendId))
+                user.Profile.Friends.Add(currentUserFriend);
+
+            if (friend.Profile.Friends.All(f => f.UserProfileId != user.Profile.Id))
+                friend.Profile.Friends.Add(userFriend);
+
+            var id = await repository.AddAsync(currentUserFriend, userFriend);
 
 
-            var userProfileModel =  ConvertToProfileModel(userProfile);
-            var friendProfileModel = ConvertToProfileModel(friendProfile);
+            if (model.IntalationId != null)
+            {
+                var instalation = await notificationHubClient.GetInstallationAsync(model.IntalationId);
+                
+                instalation.Tags.Add($"user-{friend.Id}");
 
-            return Ok(friendProfileModel, userProfileModel, id, false, false);
+               await notificationHubClient.CreateOrUpdateInstallationAsync(instalation);
+
+                await pushNotificationService.SendNewFriendNotificationAsync(new Models.PushNotifications.NewFriendNotificationModel
+                {
+                    FriendId = friend.Id,
+                    Title = "You have a new friend",
+                    Body = "Please confirm your new friend",
+                    NotificationType = NotificationTypes.NewFollower,
+                    Tags = $"user-{friend.Id}",
+                });
+            }
+
+            var userProfileModel =  ConvertToProfileModel(user.Profile);
+            var friendProfileModel = ConvertToProfileModel(friend.Profile);
+
+            return Ok(friendProfileModel, userProfileModel, currentUserFriend.Id, model.IsFriend, model.IsConfirmed);
         }
 
         public async Task DeleteFriend(int id) =>
@@ -125,7 +174,26 @@ namespace Disco.BLL.Services
             if (model.IsConfirmed == false)
                 throw new Exception("User not confirm your invitation");
 
-           await repository.ConfirmFriendAsync(friend);
+            friend.IsConfirmed = model.IsConfirmed;
+
+           await userManager.UpdateAsync(friend.ProfileFriend.User);
+
+            if(model.InstalationId != null)
+            {
+                var instalation = await notificationHubClient.GetInstallationAsync(model.InstalationId);
+
+                instalation.Tags.Add($"confirmation-{friend.Id}");
+
+                await notificationHubClient.CreateOrUpdateInstallationAsync(instalation);
+
+                await pushNotificationService.SendFriendConfirmationNotificationAsync(new Models.PushNotifications.PushNotificationBaseModel
+                {
+                    Title = $"{friend.ProfileFriend.User.UserName} confirm your invetation",
+                    Body = "Check heas account",
+                    NotificationType = NotificationTypes.ConfirmationFollower,
+                    Tag = $"confirmation-{friend.Id}",
+                }) ;
+            }
 
             var friendProfileModel = ConvertToProfileModel(friend.ProfileFriend);
             var userProfileModel = ConvertToProfileModel(friend.UserProfile);

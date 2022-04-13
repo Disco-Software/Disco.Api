@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class UnicornImage extends StatelessWidget {
   const UnicornImage({
@@ -42,8 +43,6 @@ class UnicornImage extends StatelessWidget {
                       )
                     : null,
                 child: Container(
-                  height: 69,
-                  width: 69,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
@@ -53,6 +52,8 @@ class UnicornImage extends StatelessWidget {
                     child: CachedNetworkImage(
                       fit: BoxFit.cover,
                       imageUrl: imageUrl,
+                      height: 69,
+                      width: 69,
                     ),
                   ),
                 ),
@@ -78,7 +79,13 @@ class UnicornImage extends StatelessWidget {
             ),
           ],
         ),
-        Text(title),
+        Text(
+          title,
+          style: GoogleFonts.aBeeZee(
+              color: const Color(0xFFE6E0D2),
+              fontWeight: FontWeight.w400,
+              fontSize: 14),
+        ),
       ],
     );
   }

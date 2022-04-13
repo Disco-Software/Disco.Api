@@ -31,6 +31,7 @@ namespace Disco.BLL.Services
         private readonly Lazy<IEmailService> emailService;
         private readonly Lazy<IRepositoryManager> repositoryManager;
         private readonly Lazy<IFriendService> friendService;
+        private readonly Lazy<IPushNotificationService> pushNotificationService;
         private readonly Lazy<IGoogleAuthService> googleAuthService;
         private readonly Lazy<IStoryService> storyService;
         public ServiceManager(ApiDbContext _ctx,
@@ -53,12 +54,13 @@ namespace Disco.BLL.Services
             emailService = new Lazy<IEmailService>(() => new EmailService(_emailOptions,_logger));
             authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, httpContextAccessor,googleAuthService.Value ,facebookAuthService.Value, emailService.Value,authenticationOptions,_googleOptions,_mapper));
             postService = new Lazy<IPostService>(() => new PostService(_mapper,repositoryManager.Value.PostRepository, _ctx, _userManager,httpContextAccessor,hostingEnvironment));
-            friendService = new Lazy<IFriendService> (() => new FriendService(repositoryManager.Value.FriendRepository, repositoryManager.Value.ProfileRepository,_userManager, _mapper));
             storyService = new Lazy<IStoryService>(() => new StoryService(repositoryManager.Value.StoryRepository, repositoryManager.Value.ProfileRepository,_ctx, _mapper, hostingEnvironment));
             var notificationHub = NotificationHubClient.CreateClientFromConnectionString(
                 configuration["ConnectionStrings:AzureNotificationHubConnection"],
                 configuration["NotificationHub:HubName"]);
             registerDeviceService = new Lazy<IRegisterDeviceService>(() => new RegisterDeviceService(notificationHub));
+            pushNotificationService = new Lazy<IPushNotificationService>(() => new PushNotificationService(notificationHub));
+            friendService = new Lazy<IFriendService>(() => new FriendService(_ctx, repositoryManager.Value.FriendRepository, _userManager, _mapper, pushNotificationService.Value,notificationHub, httpContextAccessor));
         }
         public IAuthenticationService AuthentificationService => authentificationService.Value;
 
@@ -72,10 +74,12 @@ namespace Disco.BLL.Services
 
         public IRepositoryManager RepositoryManager => repositoryManager.Value;
 
-      public IFriendService FriendService => friendService.Value;
+        public IFriendService FriendService => friendService.Value;
 
-      public IGoogleAuthService GoogleAuthService => googleAuthService.Value;
+        public IGoogleAuthService GoogleAuthService => googleAuthService.Value;
 
-      public IStoryService StoryService => storyService.Value;
+        public IStoryService StoryService => storyService.Value;
+
+         public IPushNotificationService PushNotificationService => throw new NotImplementedException();
     }
 }

@@ -117,13 +117,15 @@ namespace Disco.BLL.Services
         public async Task<PostImage> AddPostImage(IFormFile file, int postId)
         {
             var post = await postRepository.Get(postId);
+            string uniqueName = Guid.NewGuid().ToString() + "_" + file.FileName.Replace(' ', '_');
+
             if(file == null)
                 return null;
 
             if(file.Length == 0)
                 return null;
 
-            var imagePath = Path.Combine(webHostEnvironment.WebRootPath, "images", file.FileName);
+            var imagePath = Path.Combine(webHostEnvironment.WebRootPath, "images", uniqueName);
 
             var imageReader = file.OpenReadStream();
             using (var fileStream = new FileStream(imagePath, FileMode.Create))
@@ -140,13 +142,15 @@ namespace Disco.BLL.Services
         public async Task<PostSong> AddPostSong(IFormFile file, int postId)
         {
             var post = await postRepository.Get(postId);
+            var uniqueSongName = Guid.NewGuid().ToString() + "_" + file.FileName.Replace(' ', '_');
+            
             if (file == null)
                 return null;
 
             if (file.Length == 0)
                 return null;
 
-            var songPath = Path.Combine(webHostEnvironment.WebRootPath, "songs", file.FileName);
+            var songPath = Path.Combine(webHostEnvironment.WebRootPath, "songs", uniqueSongName);
             var songImagePath = Path.Combine(webHostEnvironment.WebRootPath, "songsImages", file.FileName);
 
             var songReader = file.OpenReadStream();
@@ -164,13 +168,15 @@ namespace Disco.BLL.Services
         public async Task<PostVideo> AddPostVideos(IFormFile file, int postId)
         {
             var post = await postRepository.Get(postId);
+            var uniqueVideoName = Guid.NewGuid().ToString() + "_" + file.FileName.Replace(' ', '_');
+
             if (file == null)
                 return null;
 
             if (file.Length == 0)
                 return null;
 
-            var videoPath = Path.Combine(webHostEnvironment.WebRootPath, "videos", file.FileName);
+            var videoPath = Path.Combine(webHostEnvironment.WebRootPath, "videos", uniqueVideoName);
 
             var songReader = file.OpenReadStream();
             using (var fileStream = new FileStream(videoPath, FileMode.Create))
