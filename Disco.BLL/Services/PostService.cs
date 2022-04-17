@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Storage.Blobs;
 using Disco.BLL.DTO;
 using Disco.BLL.Extensions;
 using Disco.BLL.Interfaces;
@@ -30,11 +31,13 @@ namespace Disco.BLL.Services
         private readonly UserManager<User> userManager;
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly BlobServiceClient blobServiceClient;
         public PostService
             (IMapper _mapper, 
             PostRepository _postRepository, 
             ApiDbContext _ctx,
             UserManager<User> _userManager,
+            BlobServiceClient _blobServiceClient,
             IHttpContextAccessor _httpContextAccessor, 
             IWebHostEnvironment _webHostEnvironment)
         {
@@ -44,6 +47,7 @@ namespace Disco.BLL.Services
             ctx = _ctx;
             httpContextAccessor = _httpContextAccessor;
             webHostEnvironment = _webHostEnvironment;
+            blobServiceClient = _blobServiceClient;
         }
 
         public async Task<PostResponseModel> CreatePostAsync(CreatePostModel model)
@@ -67,14 +71,14 @@ namespace Disco.BLL.Services
                     ctx.PostImages.Add(image);
                     post.PostImages.Add(image);
                 }
-            if(model.PostSongs != null)
+            if (model.PostSongs != null)
                 foreach (var postSong in model.PostSongs)
                 {
                     var song = await this.AddPostSong(postSong, post.Id);
                     ctx.PostSongs.Add(song);
                     post.PostSongs.Add(song);
                 }
-            if(model.PostVideos != null)
+            if (model.PostVideos != null)
                 foreach (var video in model.PostVideos)
                 {
                     var postVideo = await this.AddPostVideos(video, post.Id);
@@ -117,53 +121,53 @@ namespace Disco.BLL.Services
         public async Task<PostImage> AddPostImage(IFormFile file, int postId)
         {
             var post = await postRepository.Get(postId);
-            string uniqueName = Guid.NewGuid().ToString() + "_" + file.FileName.Replace(' ', '_');
+            var uniqueImageName = Guid.NewGuid().ToString() + "_" + file.FileName.Replace(' ', '_');
 
-            if(file == null)
-                return null;
-
-            if(file.Length == 0)
-                return null;
-
-            var imagePath = Path.Combine(webHostEnvironment.WebRootPath, "images", uniqueName);
-
-            var imageReader = file.OpenReadStream();
-            using (var fileStream = new FileStream(imagePath, FileMode.Create))
-            {
-                imageReader.CopyTo(fileStream);
-                
-                var postImage = new PostImage { Source = fileStream.Name, Post = post };
-                
-                await ctx.PostImages.AddAsync(postImage);
-                
-                return postImage;
-            }
-        }
-        public async Task<PostSong> AddPostSong(IFormFile file, int postId)
-        {
-            var post = await postRepository.Get(postId);
-            var uniqueSongName = Guid.NewGuid().ToString() + "_" + file.FileName.Replace(' ', '_');
-            
             if (file == null)
                 return null;
 
             if (file.Length == 0)
                 return null;
 
-            var songPath = Path.Combine(webHostEnvironment.WebRootPath, "songs", uniqueSongName);
-            var songImagePath = Path.Combine(webHostEnvironment.WebRootPath, "songsImages", file.FileName);
+            var containerClient = blobServiceClient.GetBlobContainerClient("images");
+            var blobClient = containerClient.GetBlobClient(uniqueImageName);
 
-            var songReader = file.OpenReadStream();
-            using (var fileStream = new FileStream(songPath, FileMode.Create))
-            {
-                songReader.CopyTo(fileStream);
+            using var imageReader = file.OpenReadStream();
+            var blobResult = blobClient.Upload(imageReader);
 
-                var postSong = new PostSong { ImageUrl = songImagePath, Source = fileStream.Name, Post = post };
+            var postImage = new PostImage { Source = blobClient.Uri.AbsoluteUri, Post = post };
 
-                await ctx.PostSongs.AddAsync(postSong);
+            await ctx.PostImages.AddAsync(postImage);
 
-                return postSong;
-            }
+            return postImage;
+        }
+        public async Task<PostSong> AddPostSong(IFormFile file, int postId)
+        {
+            var post = await postRepository.Get(postId);
+            var uniqueSongName = Guid.NewGuid().ToString() + "_" + file.FileName.Replace(' ', '_');
+            var uniqueImageName = Guid.NewGuid().ToString() + "_" + file.Name.Replace(' ', '_');
+            if (file == null)
+                return null;
+
+            if (file.Length == 0)
+                return null;
+
+            var blobSongContainerClient = blobServiceClient.GetBlobContainerClient("songs");
+            var blobImageContainerClient = blobServiceClient.GetBlobContainerClient("images");
+            var blobSongClient = blobSongContainerClient.GetBlobClient(uniqueSongName);
+            var blobImageClient = blobImageContainerClient.GetBlobClient(uniqueImageName);
+            
+            using var songReader = file.OpenReadStream();
+            var blobSongResult = blobSongClient.Upload(songReader);
+
+            using var imageReader = file.OpenReadStream();
+            var blobImageResult = blobImageClient.Upload(imageReader);
+
+            var postSong = new PostSong { ImageUrl = blobImageClient.Uri.AbsoluteUri, Source = blobSongClient.Uri.AbsoluteUri, Post = post };
+
+            await ctx.PostSongs.AddAsync(postSong);
+
+            return postSong;
         }
         public async Task<PostVideo> AddPostVideos(IFormFile file, int postId)
         {
@@ -176,19 +180,17 @@ namespace Disco.BLL.Services
             if (file.Length == 0)
                 return null;
 
-            var videoPath = Path.Combine(webHostEnvironment.WebRootPath, "videos", uniqueVideoName);
+           var containerClient = blobServiceClient.GetBlobContainerClient("videos");
+            var blobClient = containerClient.GetBlobClient(uniqueVideoName);
 
-            var songReader = file.OpenReadStream();
-            using (var fileStream = new FileStream(videoPath, FileMode.Create))
-            {
-                songReader.CopyTo(fileStream);
+            using var videoReader = file.OpenReadStream();
+            var blobResult = blobClient.Upload(videoReader);
 
-                var postVideo = new PostVideo {VideoSource = fileStream.Name, Post = post };
+            var postVideo = new PostVideo {VideoSource = blobClient.Uri.AbsoluteUri, Post = post };
 
-                await ctx.PostVideos.AddAsync(postVideo);
+            await ctx.PostVideos.AddAsync(postVideo);
 
-                return postVideo;
-            }
+            return postVideo;
         }
 
     }

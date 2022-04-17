@@ -42,11 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\" />
-    <Folder Include="wwwroot\videos\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="swagger.json" ClassName="Swagger" />
   </ItemGroup>
 

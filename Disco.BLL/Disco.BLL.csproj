@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0" />
     <PackageReference Include="FluentValidation" Version="10.3.6" />
     <PackageReference Include="Google.Apis.Auth.AspNetCore3" Version="1.56.0" />
     <PackageReference Include="Google.Apis.PeopleService.v1" Version="1.50.0.2266" />
@@ -14,6 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.17" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.Azure.NotificationHubs" Version="4.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Azure" Version="1.1.1" />
     <PackageReference Include="NETCore.MailKit" Version="2.0.3" />
   </ItemGroup>
 

@@ -1,14 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:disco_app/core/widgets/post.dart';
 import 'package:disco_app/core/widgets/unicorn_image.dart';
 import 'package:disco_app/data/network/network_models/post_network.dart';
 import 'package:disco_app/data/network/network_models/story_network.dart';
 import 'package:disco_app/pages/user/main/bloc/main_bloc.dart';
 import 'package:disco_app/pages/user/main/bloc/main_event.dart';
 import 'package:disco_app/pages/user/main/bloc/main_state.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 const String title = 'Your story';
 
@@ -166,97 +166,14 @@ class _SuccessStateWidget extends StatelessWidget {
             const SizedBox(
               height: 11,
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      height: 71,
-                      width: 56,
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(100),
-                            bottomRight: Radius.circular(100),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Color(0xFFB21887D7),
-                                offset: Offset(2, 3),
-                                spreadRadius: 7,
-                                blurRadius: 7)
-                          ]),
-                      child: posts.first.profile?.photo != null
-                          ? CachedNetworkImage(
-                              imageUrl: posts.first.profile?.photo ?? '',
-                              placeholder: (context, url) =>
-                                  Image.asset('assets/ic_photo.png'),
-                              fit: BoxFit.cover,
-                              height: 71,
-                              width: 56,
-                            )
-                          : Container(
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(100),
-                                  bottomRight: Radius.circular(100),
-                                ),
-                              ),
-                              child: Image.asset(
-                                'assets/ic_photo.png',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Text(posts.first.profile?.user?.userName ?? "",
-                        style: GoogleFonts.aBeeZee(
-                          color: const Color(0xFFE6E0D2),
-                          fontSize: 24,
-                        )),
-                    const Spacer(),
-                  ],
-                ),
-                const SizedBox(height: 27),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 52),
-                  child: Container(
-                      height: 184,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Color(0xFFB2A044FF),
-                              offset: Offset(0, 4),
-                              blurRadius: 7),
-                        ],
-                      ),
-                      child: CachedNetworkImage(
-                        imageUrl: posts.first.postImages?.first.source ?? '',
-                      )),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 52),
-                  child: Text(
-                    posts.first.description ?? '',
-                    style: GoogleFonts.textMeOne(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                Row(
-                  children: [],
-                )
-              ],
+            Expanded(
+              child: ListView.builder(
+                  itemCount: posts.length,
+                  itemBuilder: (context, index) {
+                    if (posts.isNotEmpty) {
+                      return UnicornPost(post: posts[index]);
+                    }
+                  }),
             ),
           ],
         ));

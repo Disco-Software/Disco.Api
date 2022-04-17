@@ -35,6 +35,8 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Azure.Storage.Blobs;
+using Microsoft.Extensions.Azure;
 
 namespace Disco.Api
 {
@@ -69,6 +71,8 @@ namespace Disco.Api
             services.AddDbContext<ApiDbContext>(o => 
                 o.UseSqlServer(Configuration.GetConnectionString("DevelopmentConnection"), 
                 b => b.MigrationsAssembly("../Disco.DAL")));
+            
+
             services.AddIdentityCore<User>(options =>
             {
                 options.Password.RequiredLength = 6;
@@ -79,6 +83,10 @@ namespace Disco.Api
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<ApiDbContext>()
                 .AddDefaultTokenProviders();
+            services.AddAzureClients(builder =>
+            {
+                builder.AddBlobServiceClient(Configuration.GetConnectionString("BlobStorage"));
+            });
 
             services.AddOptions<AuthenticationOptions>();
             services.Configure<EmailOptions>(Configuration.GetSection("EmailSettings"));

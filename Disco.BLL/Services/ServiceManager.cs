@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Storage.Blobs;
 using Disco.BLL.Configurations;
 using Disco.BLL.Interfaces;
 using Disco.DAL.EF;
@@ -37,6 +38,7 @@ namespace Disco.BLL.Services
         public ServiceManager(ApiDbContext _ctx,
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
+            BlobServiceClient _blobServiceClient,
             IMapper _mapper,
             IOptions<PushNotificationOptions> pushNotificationOptions,
             IOptions<AuthenticationOptions> authenticationOptions,
@@ -53,7 +55,7 @@ namespace Disco.BLL.Services
             googleAuthService = new Lazy<IGoogleAuthService>(() => new GoogleAuthService(httpClientFactory));
             emailService = new Lazy<IEmailService>(() => new EmailService(_emailOptions,_logger));
             authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, httpContextAccessor,googleAuthService.Value ,facebookAuthService.Value, emailService.Value,authenticationOptions,_googleOptions,_mapper));
-            postService = new Lazy<IPostService>(() => new PostService(_mapper,repositoryManager.Value.PostRepository, _ctx, _userManager,httpContextAccessor,hostingEnvironment));
+            postService = new Lazy<IPostService>(() => new PostService(_mapper,repositoryManager.Value.PostRepository, _ctx, _userManager,_blobServiceClient,httpContextAccessor,hostingEnvironment));
             storyService = new Lazy<IStoryService>(() => new StoryService(repositoryManager.Value.StoryRepository, repositoryManager.Value.ProfileRepository,_ctx, _mapper, hostingEnvironment));
             var notificationHub = NotificationHubClient.CreateClientFromConnectionString(
                 configuration["ConnectionStrings:AzureNotificationHubConnection"],
