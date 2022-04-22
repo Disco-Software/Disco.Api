@@ -17,6 +17,7 @@ namespace Disco.BLL.Interfaces
         IFriendService FriendService { get; }
         IStoryService StoryService { get; }
         IPushNotificationService PushNotificationService { get; }
+        ISongService SongService { get; }
         IRepositoryManager RepositoryManager { get; }
     }
 }

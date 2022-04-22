@@ -35,6 +35,7 @@ namespace Disco.BLL.Services
         private readonly Lazy<IPushNotificationService> pushNotificationService;
         private readonly Lazy<IGoogleAuthService> googleAuthService;
         private readonly Lazy<IStoryService> storyService;
+        private readonly Lazy<ISongService> songService;
         public ServiceManager(ApiDbContext _ctx,
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
@@ -56,13 +57,14 @@ namespace Disco.BLL.Services
             emailService = new Lazy<IEmailService>(() => new EmailService(_emailOptions,_logger));
             authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, httpContextAccessor,googleAuthService.Value ,facebookAuthService.Value, emailService.Value,authenticationOptions,_googleOptions,_mapper));
             postService = new Lazy<IPostService>(() => new PostService(_mapper,repositoryManager.Value.PostRepository, _ctx, _userManager,_blobServiceClient,httpContextAccessor,hostingEnvironment));
-            storyService = new Lazy<IStoryService>(() => new StoryService(repositoryManager.Value.StoryRepository, repositoryManager.Value.ProfileRepository,_ctx, _mapper, hostingEnvironment));
+            storyService = new Lazy<IStoryService>(() => new StoryService(repositoryManager.Value.StoryRepository, _userManager,_ctx, _blobServiceClient,_mapper, httpContextAccessor));
             var notificationHub = NotificationHubClient.CreateClientFromConnectionString(
                 configuration["ConnectionStrings:AzureNotificationHubConnection"],
                 configuration["NotificationHub:HubName"]);
             registerDeviceService = new Lazy<IRegisterDeviceService>(() => new RegisterDeviceService(notificationHub));
             pushNotificationService = new Lazy<IPushNotificationService>(() => new PushNotificationService(notificationHub));
             friendService = new Lazy<IFriendService>(() => new FriendService(_ctx, repositoryManager.Value.FriendRepository, _userManager, _mapper, pushNotificationService.Value,notificationHub, httpContextAccessor));
+            songService = new Lazy<ISongService>(() => new SongService(repositoryManager.Value.SongRepository, repositoryManager.Value.PostRepository, _blobServiceClient));
         }
         public IAuthenticationService AuthentificationService => authentificationService.Value;
 
@@ -83,5 +85,7 @@ namespace Disco.BLL.Services
         public IStoryService StoryService => storyService.Value;
 
          public IPushNotificationService PushNotificationService => throw new NotImplementedException();
+
+         public ISongService SongService => songService.Value;
     }
 }

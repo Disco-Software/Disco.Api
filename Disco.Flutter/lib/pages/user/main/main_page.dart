@@ -127,7 +127,7 @@ class _SuccessStateWidget extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 12, right: 8),
                             child: UnicornImage(
                               title: "Your story",
-                              imageUrl: userImageUrl ?? "",
+                              imageUrl: userImageUrl,
                               shouldHaveGradientBorder: false,
                               shouldHavePlus: true,
                             ),
@@ -166,15 +166,14 @@ class _SuccessStateWidget extends StatelessWidget {
             const SizedBox(
               height: 11,
             ),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: posts.length,
-                  itemBuilder: (context, index) {
-                    if (posts.isNotEmpty) {
+            if (posts.isNotEmpty)
+              Expanded(
+                child: ListView.builder(
+                    itemCount: posts.length,
+                    itemBuilder: (context, index) {
                       return UnicornPost(post: posts[index]);
-                    }
-                  }),
-            ),
+                    }),
+              ),
           ],
         ));
   }

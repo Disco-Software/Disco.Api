@@ -13,6 +13,7 @@ namespace Disco.DAL.Entities
         public List<PostImage> PostImages { get; set; }
         public List<PostSong> PostSongs { get; set; }
         public List<PostVideo> PostVideos { get; set; }
+        public List<Like> Likes { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime? DateOfCreation { get; set; }

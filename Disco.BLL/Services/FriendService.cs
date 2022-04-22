@@ -75,33 +75,35 @@ namespace Disco.BLL.Services
                 throw new Exception("friend allready cofirmed");
 
             var currentUserFriend = new Friend { UserProfile = user.Profile, ProfileFriend = friend.Profile, FriendProfileId = friend.Profile.Id, IsConfirmed = model.IsConfirmed, IsFriend = model.IsFriend, UserProfileId = user.Profile.Id };
-            var userFriend = new Friend { UserProfile = friend.Profile, ProfileFriend = user.Profile, FriendProfileId = user.Profile.Id, UserProfileId = friend.Profile.Id, IsConfirmed = model.IsConfirmed, IsFriend = model.IsFriend };
 
             if (user.Profile.Friends.All(f => f.FriendProfileId != model.FriendId))
                 user.Profile.Friends.Add(currentUserFriend);
 
-            if (friend.Profile.Friends.All(f => f.UserProfileId != user.Profile.Id))
-                friend.Profile.Friends.Add(userFriend);
-
-            var id = await repository.AddAsync(currentUserFriend, userFriend);
+            var id = await repository.AddAsync(currentUserFriend);
 
 
             if (model.IntalationId != null)
             {
                 var instalation = await notificationHubClient.GetInstallationAsync(model.IntalationId);
                 
-                instalation.Tags.Add($"user-{friend.Id}");
+               var tags = user.Profile.Friends
+                    .Select(u => $"user-{u.ProfileFriend.UserId}")
+                    .ToList();
+
+                tags.Add($"user-{friend.Id}");
+
+                instalation.Tags = tags;
 
                await notificationHubClient.CreateOrUpdateInstallationAsync(instalation);
 
-                await pushNotificationService.SendNewFriendNotificationAsync(new Models.PushNotifications.NewFriendNotificationModel
-                {
-                    FriendId = friend.Id,
-                    Title = "You have a new friend",
-                    Body = "Please confirm your new friend",
-                    NotificationType = NotificationTypes.NewFollower,
-                    Tags = $"user-{friend.Id}",
-                });
+                //await pushNotificationService.SendNewFriendNotificationAsync(new Models.PushNotifications.NewFriendNotificationModel
+                //{
+                //    FriendId = user.Id,
+                //    Title = "You have a new follower",
+                //    Body = "Please confirm your new friend",
+                //    NotificationType = NotificationTypes.NewFollower,
+                //    Tags = $"user-{friend.Id}",
+                //});
             }
 
             var userProfileModel =  ConvertToProfileModel(user.Profile);

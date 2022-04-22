@@ -17,6 +17,7 @@ namespace Disco.DAL.EF
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<PostSong> PostSongs { get; set; }
         public DbSet<PostVideo> PostVideos { get; set; }
+        public DbSet<Like> Like { get; set; }
         public DbSet<Friend> Friends { get; set; }
         public DbSet<Story> Stories { get; set; }
         public DbSet<StoryImage> StoriesImages { get; set; }
@@ -32,6 +33,7 @@ namespace Disco.DAL.EF
                 .HasOne(p => p.Profile)
                 .WithOne(u => u.User)
                 .HasForeignKey<Profile>(p => p.UserId);
+            
             builder.Entity<Profile>()
                 .HasMany(f => f.Friends)
                 .WithOne(p => p.UserProfile)

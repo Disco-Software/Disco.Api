@@ -77,6 +77,7 @@ namespace Disco.DAL.Repositories
                     .ThenInclude(s => s.PostSongs)
                     .Include(p => p.Posts)
                     .ThenInclude(v => v.PostVideos)
+                    .Include(u => u.User)
                     .Where(f => f.Id == friend.FriendProfileId)
                     .FirstOrDefaultAsync();
                 posts.AddRange(friend.ProfileFriend.Posts);             

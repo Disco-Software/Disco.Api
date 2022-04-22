@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Storage.Blobs;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models.Stories;
 using Disco.DAL.EF;
@@ -18,31 +19,41 @@ namespace Disco.BLL.Services
     public class StoryService : IStoryService
     {
         private readonly StoryRepository storyRepository;
-        private readonly ProfileRepository profileRepository;
+        private readonly UserManager<User> userManager;
         private readonly ApiDbContext ctx;
+        private readonly BlobServiceClient blobServiceClient;
         private readonly IMapper mapper;
-        private readonly IWebHostEnvironment webHostEnvironment;
-
+        private readonly IHttpContextAccessor httpContextAccessor;
         public StoryService(
             StoryRepository _storyRepository,
-            ProfileRepository _profileRepository,
+            UserManager<User> _userManager,
             ApiDbContext _ctx,
+            BlobServiceClient _blobServiceClient,
             IMapper _mapper,
-            IWebHostEnvironment _webHostEnvironment)
+            IHttpContextAccessor _httpContextAccessor)
         {
             storyRepository = _storyRepository;
-            profileRepository = _profileRepository;
+            userManager = _userManager;
             ctx = _ctx;
+            blobServiceClient = _blobServiceClient;
             mapper = _mapper;
-            webHostEnvironment = _webHostEnvironment;
+            httpContextAccessor = _httpContextAccessor;
         }
         
 
         public async Task<Story> CreateStoryAsync(CreateStoryModel model)
         {
-            var user = await profileRepository.Get(model.ProfileId);
+            var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
 
-            if (user.User == null)
+            await ctx.Entry(user)
+                .Reference(p => p.Profile)
+                .LoadAsync();
+
+            await ctx.Entry(user.Profile)
+                .Collection(s => s.Stories)
+                .LoadAsync();
+
+            if (user == null)
                 throw new NullReferenceException("User is null");
 
             var story = new Story 
@@ -68,7 +79,8 @@ namespace Disco.BLL.Services
 
             story.DateOfCreation = DateTime.UtcNow;
 
-            await storyRepository.Add(story, user);
+            user.Profile.Stories.Add(story);
+            await storyRepository.Add(story);
 
             return story;
         }
@@ -86,7 +98,15 @@ namespace Disco.BLL.Services
 
         public async Task<List<Story>> GetAllStoryAsync(int profileId)
         {
-            var profile = await profileRepository.Get(profileId);
+            var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
+
+            await ctx.Entry(user)
+                .Reference(s => s.Profile)
+                .LoadAsync();
+
+            await ctx.Entry(user.Profile)
+                .Collection(s => s.Stories)
+                .LoadAsync();
 
             return await storyRepository.GetAll(profileId);
         }
@@ -94,52 +114,50 @@ namespace Disco.BLL.Services
         private async Task<StoryImage> ConvertFileToStoryImage(IFormFile image, int storyId)
         {
             var story = await storyRepository.Get(storyId);
+            
+            var unequeName = Guid.NewGuid().ToString() + "_" + image.FileName.Replace(' ', '_');
+           
             if (image == null)
                 return null;
 
             if (image.Length == 0)
                 return null;
 
-            var imagePath = Path.Combine(webHostEnvironment.WebRootPath, "images", image.FileName);
+            var blobContainerClient = blobServiceClient.GetBlobContainerClient("images");
+            var blobClient = blobContainerClient.GetBlobClient(unequeName);
 
-            var imageReader = image.OpenReadStream();
-            using (var fileStream = new FileStream(imagePath, FileMode.Create))
-            {
-                imageReader.CopyTo(fileStream);
+            using var imageReader = image.OpenReadStream();
 
-                var storyImage = new StoryImage { Source = fileStream.Name, Story = story };
+            blobClient.Upload(imageReader);
 
-                ctx.StoriesImages.Add(storyImage);
+            var storyImage = new StoryImage { Source = blobClient.Uri.AbsoluteUri, Story = story };
+            
+            ctx.StoriesImages.Add(storyImage);
 
-                return storyImage;
-            }
-
+            return storyImage;
         }
         private async Task<StoryVideo> ConvertFileToStoryVideo(IFormFile video, int storyId)
         {
             var story = await storyRepository.Get(storyId);
+            
+            var unequeName = Guid.NewGuid().ToString() + "_" + video.FileName.Replace(' ', '_');
+
             if (video == null)
                 return null;
 
             if (video.Length == 0)
                 return null;
 
-            var imagePath = Path.Combine(webHostEnvironment.WebRootPath, "videos", video.FileName);
+            var blobContainerClient =  blobServiceClient.GetBlobContainerClient("videos");
+            var blobClient = blobContainerClient.GetBlobClient(unequeName);
 
-            var imageReader = video.OpenReadStream();
-            using (var fileStream = new FileStream(imagePath, FileMode.Create))
-            {
-                imageReader.CopyTo(fileStream);
+            using var videoReader = video.OpenReadStream();
 
-                var storyVideo = new StoryVideo { Source = fileStream.Name, Story = story };
+            blobClient.Upload(videoReader);
 
-                ctx.StoryVideos.Add(storyVideo);
+            var storyVideo = new StoryVideo { Source = blobClient.Uri.AbsoluteUri, Story = story};
 
-                await ctx.SaveChangesAsync();
-
-                return storyVideo;
-            }
-
+            return storyVideo;
         }
     }
 }

@@ -7,6 +7,7 @@ namespace Disco.DAL.Entities
 {
     public class PostSong : Base.BaseEntity<int>
     {
+        public string Name { get; set; }
         public string ImageUrl { get; set; }
         public string Source { get; set; }
 

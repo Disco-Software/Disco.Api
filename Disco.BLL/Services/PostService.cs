@@ -5,6 +5,7 @@ using Disco.BLL.Extensions;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
 using Disco.BLL.Models.Posts;
+using Disco.BLL.Models.Songs;
 using Disco.DAL.EF;
 using Disco.DAL.Entities;
 using Disco.DAL.Repositories;
@@ -74,9 +75,15 @@ namespace Disco.BLL.Services
             if (model.PostSongs != null)
                 foreach (var postSong in model.PostSongs)
                 {
-                    var song = await this.AddPostSong(postSong, post.Id);
-                    ctx.PostSongs.Add(song);
-                    post.PostSongs.Add(song);
+                    foreach (var postSongImage in model.PostSongImages)
+                    {
+                        foreach (var name in model.PostSongNames)
+                        {
+                            var song = await this.AddPostSong(new CreateSongModel { SongFile = postSong, SongImage = postSongImage, Name = name, PostId = post.Id });
+                            ctx.PostSongs.Add(song);
+                            post.PostSongs.Add(song);
+                        }
+                    }
                 }
             if (model.PostVideos != null)
                 foreach (var video in model.PostVideos)
@@ -115,8 +122,14 @@ namespace Disco.BLL.Services
             return posts;
         }
 
-        public async Task<List<Post>> GetAllPosts(int userId) =>
-            await postRepository.GetAll(userId);
+        public async Task<List<Post>> GetAllPosts(int userId)
+        {
+             var result = postRepository.GetAll(userId)
+                .Result
+                .OrderByDescending(p => p.DateOfCreation)
+                .ToList();
+            return result;
+        }
 
         public async Task<PostImage> AddPostImage(IFormFile file, int postId)
         {
@@ -141,15 +154,15 @@ namespace Disco.BLL.Services
 
             return postImage;
         }
-        public async Task<PostSong> AddPostSong(IFormFile file, int postId)
+        public async Task<PostSong> AddPostSong(CreateSongModel model)
         {
-            var post = await postRepository.Get(postId);
-            var uniqueSongName = Guid.NewGuid().ToString() + "_" + file.FileName.Replace(' ', '_');
-            var uniqueImageName = Guid.NewGuid().ToString() + "_" + file.Name.Replace(' ', '_');
-            if (file == null)
+            var post = await postRepository.Get(model.PostId);
+            var uniqueSongName = Guid.NewGuid().ToString() + "_" + model.SongFile.FileName.Replace(' ', '_');
+            var uniqueImageName = Guid.NewGuid().ToString() + "_" + model.SongImage.FileName.Replace(' ', '_');
+            if (model.SongFile == null)
                 return null;
 
-            if (file.Length == 0)
+            if (model.SongFile.Length == 0)
                 return null;
 
             var blobSongContainerClient = blobServiceClient.GetBlobContainerClient("songs");
@@ -157,13 +170,13 @@ namespace Disco.BLL.Services
             var blobSongClient = blobSongContainerClient.GetBlobClient(uniqueSongName);
             var blobImageClient = blobImageContainerClient.GetBlobClient(uniqueImageName);
             
-            using var songReader = file.OpenReadStream();
+            using var songReader = model.SongFile.OpenReadStream();
             var blobSongResult = blobSongClient.Upload(songReader);
 
-            using var imageReader = file.OpenReadStream();
+            using var imageReader = model.SongImage.OpenReadStream();
             var blobImageResult = blobImageClient.Upload(imageReader);
 
-            var postSong = new PostSong { ImageUrl = blobImageClient.Uri.AbsoluteUri, Source = blobSongClient.Uri.AbsoluteUri, Post = post };
+            var postSong = new PostSong { ImageUrl = blobImageClient.Uri.AbsoluteUri, Source = blobSongClient.Uri.AbsoluteUri, Post = post, Name = model.Name};
 
             await ctx.PostSongs.AddAsync(postSong);
 

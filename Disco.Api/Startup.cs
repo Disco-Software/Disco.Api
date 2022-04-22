@@ -88,6 +88,7 @@ namespace Disco.Api
                 builder.AddBlobServiceClient(Configuration.GetConnectionString("BlobStorage"));
             });
 
+            services.AddSignalR();
             services.AddOptions<AuthenticationOptions>();
             services.Configure<EmailOptions>(Configuration.GetSection("EmailSettings"));
             services.Configure<BLL.Configurations.GoogleOptions>(Configuration.GetSection("Google"));
