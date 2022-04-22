@@ -1,15 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:disco_app/core/widgets/post_button.dart';
-import 'package:disco_app/core/widgets/unicorn_outline_button.dart';
 import 'package:disco_app/data/network/network_models/image_network.dart';
 import 'package:disco_app/data/network/network_models/post_network.dart';
 import 'package:disco_app/data/network/network_models/song_network.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_audio_waveforms/flutter_audio_waveforms.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class UnicornPost extends StatefulWidget {
@@ -24,17 +25,15 @@ class UnicornPost extends StatefulWidget {
   State<UnicornPost> createState() => _UnicornPostState();
 }
 
-class _UnicornPostState extends State<UnicornPost>
-    with SingleTickerProviderStateMixin {
+class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStateMixin {
   int bodyIndex = 1;
   late AnimationController controller;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    controller = AnimationController(
-        value: 0.3, vsync: this, duration: const Duration(milliseconds: 300));
+    controller =
+        AnimationController(value: 0.3, vsync: this, duration: const Duration(milliseconds: 300));
   }
 
   @override
@@ -66,8 +65,7 @@ class _UnicornPostState extends State<UnicornPost>
                 child: widget.post.profile?.photo != null
                     ? CachedNetworkImage(
                         imageUrl: widget.post.profile?.photo ?? '',
-                        placeholder: (context, url) =>
-                            Image.asset('assets/ic_photo.png'),
+                        placeholder: (context, url) => Image.asset('assets/ic_photo.png'),
                         fit: BoxFit.fill,
                       )
                     : Container(
@@ -97,29 +95,31 @@ class _UnicornPostState extends State<UnicornPost>
           ),
         ),
         const SizedBox(height: 27),
-        CarouselSlider(
-          items: [
-            if (widget.post.postImages != null &&
-                widget.post.postImages!.isNotEmpty)
-              ...widget.post.postImages!
-                  .map((postImage) => _ImageBody(
-                        postImage: postImage,
-                      ))
-                  .toList(),
-            if (widget.post.postSongs != null &&
-                widget.post.postSongs!.isNotEmpty)
-              ...widget.post.postSongs!
-                  .map((postSong) => _SongBody(
-                        postSong: postSong,
-                      ))
-                  .toList(),
-            //  const _VideoBody()
-          ],
-          options: CarouselOptions(
-              viewportFraction: 1.0,
-              onPageChanged: (index, reason) {
-                controller.animateTo(_getIndicatorPercent(index + 1));
-              }),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 35),
+          child: CarouselSlider(
+            items: [
+              if (widget.post.postImages != null && widget.post.postImages!.isNotEmpty)
+                ...widget.post.postImages!
+                    .map((postImage) => _ImageBody(
+                          postImage: postImage,
+                        ))
+                    .toList(),
+              if (widget.post.postSongs != null && widget.post.postSongs!.isNotEmpty)
+                ...widget.post.postSongs!
+                    .map((postSong) => _SongBody(
+                          postSong: postSong,
+                        ))
+                    .toList(),
+              //  const _VideoBody()
+            ],
+            options: CarouselOptions(
+                viewportFraction: 1.0,
+                enableInfiniteScroll: false,
+                onPageChanged: (index, reason) {
+                  controller.animateTo(_getIndicatorPercent(index + 1));
+                }),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 52),
@@ -155,15 +155,14 @@ class _UnicornPostState extends State<UnicornPost>
               const SizedBox(width: 13),
               PostButton(onTap: () {}, imagePath: "assets/ic_share.svg"),
               const Spacer(),
-              if (widget.post.postImages != null &&
-                  widget.post.postImages!.isNotEmpty)
+              if (widget.post.postImages != null && widget.post.postImages!.isNotEmpty)
                 AnimatedBuilder(
                   builder: (context, index) => LinearPercentIndicator(
                     width: 100,
                     percent: controller.value,
                     barRadius: const Radius.circular(7),
-                    linearGradient: const LinearGradient(
-                        colors: [Color(0xFFE08D11), Color(0xFFF6EA7D)]),
+                    linearGradient:
+                        const LinearGradient(colors: [Color(0xFFE08D11), Color(0xFFF6EA7D)]),
                     backgroundColor: const Color(0xFFC9D6FF),
                   ),
                   animation: controller,
@@ -227,18 +226,15 @@ class _ImageBody extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 52),
+          padding: const EdgeInsets.symmetric(horizontal: 17),
           child: CachedNetworkImage(
             imageBuilder: (context, imageProvider) => Container(
-              height: 184,
+              height: 175,
               decoration: BoxDecoration(
                 image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: const [
-                  BoxShadow(
-                      color: Color(0xFFB2A044FF),
-                      offset: Offset(0, 4),
-                      blurRadius: 7),
+                  BoxShadow(color: Color(0xFFB2A044FF), offset: Offset(0, 4), blurRadius: 7),
                 ],
               ),
             ),
@@ -253,92 +249,178 @@ class _ImageBody extends StatelessWidget {
   }
 }
 
-class _SongBody extends StatelessWidget {
+class _SongBody extends StatefulWidget {
   const _SongBody({Key? key, required this.postSong}) : super(key: key);
 
   final PostSong postSong;
 
   @override
+  State<_SongBody> createState() => _SongBodyState();
+}
+
+class _SongBodyState extends State<_SongBody> with SingleTickerProviderStateMixin {
+  AudioPlayer audioPlayer = AudioPlayer();
+  late AnimationController controller;
+  late Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+      value: 1.0,
+    );
+    animation = CurvedAnimation(
+      parent: controller,
+      curve: Curves.fastOutSlowIn,
+    );
+    audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(widget.postSong.source ?? '')));
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 38),
-      child: Row(
-        children: [
-          if (postSong.imageUrl != null && postSong.imageUrl!.isNotEmpty)
-            CachedNetworkImage(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        if (widget.postSong.imageUrl != null && widget.postSong.imageUrl!.isNotEmpty)
+          SizeTransition(
+            sizeFactor: animation,
+            axis: Axis.horizontal,
+            axisAlignment: -1,
+            child: CachedNetworkImage(
               imageBuilder: (context, imageProvider) => Container(
                 height: 105,
                 width: 110,
                 decoration: BoxDecoration(
-                  image:
-                      DecorationImage(image: imageProvider, fit: BoxFit.fill),
+                  image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: const [
-                    BoxShadow(
-                        color: Color(0xFFB2A044FF),
-                        offset: Offset(0, 4),
-                        blurRadius: 7),
+                    BoxShadow(color: Color(0xFFB2A044FF), offset: Offset(0, 4), blurRadius: 7),
                   ],
                 ),
               ),
-              imageUrl: postSong.imageUrl ?? '',
+              imageUrl: widget.postSong.imageUrl ?? '',
               errorWidget: (context, url, error) => const SizedBox(),
             ),
-          const SizedBox(
-            width: 14,
+          )
+        else
+          Container(
+            color: Colors.green,
+            height: 105,
+            width: 110,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 80),
-            child: UnicornOutlineButton(
-                strokeWidth: 3.0,
-                radius: 360,
-                gradient: const LinearGradient(colors: [
-                  Color(0xffDE9237),
-                  Color(0xFFF6EA7D),
-                ]),
-                child: Center(
-                  child: SvgPicture.asset(
-                    'assets/ic_play.svg',
-                    height: 50,
-                    width: 50,
+        if (animation.isCompleted)
+          AnimatedBuilder(
+            builder: (ctx, child) => const Spacer(),
+            animation: animation,
+          ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 50.0),
+          child: Stack(
+            children: [
+              Container(
+                height: 55.0,
+                width: 55.0,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(colors: [
+                    Color(0xffDE9237),
+                    Color(0xFFF6EA7D),
+                  ]),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(360),
+                  child: InkWell(
+                    onTap: () {
+                      if (audioPlayer.playing) {
+                        audioPlayer.pause();
+                        controller.forward();
+                      } else {
+                        controller.reverse();
+                        audioPlayer.play();
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(360),
+                    child: Center(
+                      child: Container(
+                        height: 50.0,
+                        width: 50.0,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: DcColors.bottomBarLeft,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: SvgPicture.asset(
+                            'assets/ic_play.svg',
+                            color: Color(0xffDE9237),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                onPressed: () {}),
+              ),
+            ],
           ),
-          const SizedBox(width: 14),
-          SizedBox(
-            width: 100,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  postSong.name ?? "",
-                  maxLines: 1,
-                  style: GoogleFonts.aBeeZee(
-                    color: DcColors.darkWhite,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 24,
+        ),
+        const Spacer(),
+        AnimatedBuilder(
+          builder: (context, child) => AnimatedSwitcher(
+            duration: const Duration(seconds: 1),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            child: animation.status != AnimationStatus.completed
+                ? SquigglyWaveform(
+                    absolute: true,
+                    maxDuration: audioPlayer.duration,
+                    activeColor: Colors.purple,
+                    strokeWidth: 2,
+                    showActiveWaveform: true,
+                    inactiveColor: Colors.grey,
+                    elapsedDuration: audioPlayer.position,
+                    samples: [1, 2, 3, 4, 5],
+                    height: 80.0,
+                    width: 150.0,
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          widget.postSong.name ?? "",
+                          maxLines: 1,
+                          style: GoogleFonts.aBeeZee(
+                            color: DcColors.darkWhite,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 24,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          'singer',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.textMeOne(
+                            color: DcColors.white,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 24,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  'singer',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.textMeOne(
-                    color: DcColors.white,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 24,
-                  ),
-                ),
-              ],
-            ),
           ),
-          const SizedBox(
-            width: 14,
-          ),
-        ],
-      ),
+          animation: animation,
+        ),
+        const Spacer(flex: 3),
+      ],
     );
   }
 }

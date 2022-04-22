@@ -42,8 +42,7 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: const Color(0xFF1C142D),
         title: const Text(
           "DISCO",
-          style: TextStyle(
-              fontSize: 32, fontFamily: 'Colonna', fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 32, fontFamily: 'Colonna', fontWeight: FontWeight.bold),
         ),
         automaticallyImplyLeading: false,
         actions: [
@@ -63,10 +62,9 @@ class _MainPageState extends State<MainPage> {
         listener: (context, state) {},
         builder: (context, state) {
           if (state is LoadingState) {
-            return const CircularProgressIndicator.adaptive();
+            return const Center(child: CircularProgressIndicator.adaptive());
           } else if (state is SuccessState) {
-            print(
-                "${state.stories.length}-->${state.posts.length}   SuccessState");
+            print("${state.stories.length}-->${state.posts.length}   SuccessState");
 
             return _SuccessStateWidget(
               stories: state.stories,
@@ -74,10 +72,15 @@ class _MainPageState extends State<MainPage> {
               userImageUrl: state.userImageUrl,
             );
           } else {
-            return Container(
-              height: 100.0,
-              width: 100.0,
-              color: Colors.red,
+            return InkWell(
+              onTap: () {
+                context.read<MainPageBloc>().add(InitialEvent(id: 1));
+              },
+              child: Container(
+                height: 100.0,
+                width: 100.0,
+                color: Colors.red,
+              ),
             );
           }
         },
@@ -100,10 +103,7 @@ class _SuccessStateWidget extends StatelessWidget {
   final String userImageUrl;
 
   const _SuccessStateWidget(
-      {Key? key,
-      required this.stories,
-      required this.posts,
-      required this.userImageUrl})
+      {Key? key, required this.stories, required this.posts, required this.userImageUrl})
       : super(key: key);
 
   @override
@@ -138,10 +138,8 @@ class _SuccessStateWidget extends StatelessWidget {
                               horizontal: 8,
                             ),
                             child: UnicornImage(
-                              imageUrl: stories[index].profile?.photo ??
-                                  "assets/ic_photo.png",
-                              title:
-                                  stories[index].profile?.user?.userName ?? "",
+                              imageUrl: stories[index].profile?.photo ?? "assets/ic_photo.png",
+                              title: stories[index].profile?.user?.userName ?? "",
                             ),
                           );
                         }
