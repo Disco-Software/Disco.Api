@@ -1,5 +1,4 @@
-import 'package:disco_app/data/network/network_models/post_network.dart';
-import 'package:disco_app/data/network/network_models/story_network.dart';
+import 'package:flutter/cupertino.dart';
 
 abstract class MainPageEvent {}
 
@@ -9,11 +8,16 @@ class InitialEvent implements MainPageEvent {
   InitialEvent({required this.id});
 }
 
-class SuccessEvent implements MainPageEvent {
-  List<StoriesModel>? stories;
-  List<Post>? posts;
+class LoadPostsEvent implements MainPageEvent {
+  final int id;
+  final bool hasLoading;
+  final VoidCallback onLoaded;
 
-  SuccessEvent({this.posts, this.stories});
+  LoadPostsEvent({
+    required this.id,
+    required this.hasLoading,
+    required this.onLoaded,
+  });
 }
 
 class ErrorEvent implements MainPageEvent {}

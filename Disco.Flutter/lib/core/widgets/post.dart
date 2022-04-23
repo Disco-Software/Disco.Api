@@ -7,8 +7,6 @@ import 'package:disco_app/data/network/network_models/song_network.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_audio_waveforms/flutter_audio_waveforms.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -258,24 +256,36 @@ class _SongBody extends StatefulWidget {
   State<_SongBody> createState() => _SongBodyState();
 }
 
-class _SongBodyState extends State<_SongBody> with SingleTickerProviderStateMixin {
-  AudioPlayer audioPlayer = AudioPlayer();
-  late AnimationController controller;
-  late Animation<double> animation;
+class _SongBodyState extends State<_SongBody> {
+  late AudioPlayer audioPlayer;
+
+  final Widget _switchedPause = Padding(
+    key: const ValueKey(1),
+    padding: const EdgeInsets.all(4.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset('assets/ic_rectangle.png'),
+        Image.asset('assets/ic_rectangle.png'),
+      ],
+    ),
+  );
+
+  final Widget _switchedPlay = Padding(
+    padding: const EdgeInsets.all(4.0),
+    child: Image.asset(
+      'assets/ic_play.png',
+      color: const Color(0xffDE9237),
+    ),
+  );
+
+  late Widget _switchedWidget;
 
   @override
   void initState() {
     super.initState();
-
-    controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-      value: 1.0,
-    );
-    animation = CurvedAnimation(
-      parent: controller,
-      curve: Curves.fastOutSlowIn,
-    );
+    _switchedWidget = _switchedPlay;
+    audioPlayer = AudioPlayer();
     audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(widget.postSong.source ?? '')));
   }
 
@@ -285,25 +295,20 @@ class _SongBodyState extends State<_SongBody> with SingleTickerProviderStateMixi
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         if (widget.postSong.imageUrl != null && widget.postSong.imageUrl!.isNotEmpty)
-          SizeTransition(
-            sizeFactor: animation,
-            axis: Axis.horizontal,
-            axisAlignment: -1,
-            child: CachedNetworkImage(
-              imageBuilder: (context, imageProvider) => Container(
-                height: 105,
-                width: 110,
-                decoration: BoxDecoration(
-                  image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(color: Color(0xFFB2A044FF), offset: Offset(0, 4), blurRadius: 7),
-                  ],
-                ),
+          CachedNetworkImage(
+            imageBuilder: (context, imageProvider) => Container(
+              height: 105,
+              width: 110,
+              decoration: BoxDecoration(
+                image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: const [
+                  BoxShadow(color: Color(0xFFB2A044FF), offset: Offset(0, 4), blurRadius: 7),
+                ],
               ),
-              imageUrl: widget.postSong.imageUrl ?? '',
-              errorWidget: (context, url, error) => const SizedBox(),
             ),
+            imageUrl: widget.postSong.imageUrl ?? '',
+            errorWidget: (context, url, error) => const SizedBox(),
           )
         else
           Container(
@@ -311,113 +316,109 @@ class _SongBodyState extends State<_SongBody> with SingleTickerProviderStateMixi
             height: 105,
             width: 110,
           ),
-        if (animation.isCompleted)
-          AnimatedBuilder(
-            builder: (ctx, child) => const Spacer(),
-            animation: animation,
-          ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 50.0),
-          child: Stack(
-            children: [
-              Container(
-                height: 55.0,
-                width: 55.0,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(colors: [
-                    Color(0xffDE9237),
-                    Color(0xFFF6EA7D),
-                  ]),
-                ),
-                child: Material(
-                  color: Colors.transparent,
+        const Spacer(),
+        Stack(
+          children: [
+            Container(
+              height: 55.0,
+              width: 55.0,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(colors: [
+                  Color(0xffDE9237),
+                  Color(0xFFF6EA7D),
+                ]),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(360),
+                child: InkWell(
+                  onTap: () {
+                    if (audioPlayer.playing) {
+                      setState(() {
+                        _switchedWidget = _switchedPlay;
+                      });
+                      audioPlayer.pause();
+                    } else {
+                      setState(() {
+                        _switchedWidget = _switchedPause;
+                      });
+                      audioPlayer.play();
+                    }
+                  },
                   borderRadius: BorderRadius.circular(360),
-                  child: InkWell(
-                    onTap: () {
-                      if (audioPlayer.playing) {
-                        audioPlayer.pause();
-                        controller.forward();
-                      } else {
-                        controller.reverse();
-                        audioPlayer.play();
-                      }
-                    },
-                    borderRadius: BorderRadius.circular(360),
-                    child: Center(
-                      child: Container(
-                        height: 50.0,
-                        width: 50.0,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: DcColors.bottomBarLeft,
+                  child: Center(
+                    child: Container(
+                      height: 50.0,
+                      width: 50.0,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: DcColors.bottomBarLeft,
+                      ),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        transitionBuilder: (child, animation) => FadeTransition(
+                          opacity: animation,
+                          child: child,
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: SvgPicture.asset(
-                            'assets/ic_play.svg',
-                            color: Color(0xffDE9237),
-                          ),
-                        ),
+                        child: _switchedWidget,
                       ),
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         const Spacer(),
-        AnimatedBuilder(
-          builder: (context, child) => AnimatedSwitcher(
-            duration: const Duration(seconds: 1),
-            transitionBuilder: (Widget child, Animation<double> animation) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-            child: animation.status != AnimationStatus.completed
-                ? SquigglyWaveform(
-                    absolute: true,
-                    maxDuration: audioPlayer.duration,
-                    activeColor: Colors.purple,
-                    strokeWidth: 2,
-                    showActiveWaveform: true,
-                    inactiveColor: Colors.grey,
-                    elapsedDuration: audioPlayer.position,
-                    samples: [1, 2, 3, 4, 5],
-                    height: 80.0,
-                    width: 150.0,
-                  )
-                : Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          widget.postSong.name ?? "",
-                          maxLines: 1,
-                          style: GoogleFonts.aBeeZee(
-                            color: DcColors.darkWhite,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 24,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          'singer',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.textMeOne(
-                            color: DcColors.white,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 24,
-                          ),
-                        ),
-                      ],
-                    ),
+        AnimatedSwitcher(
+          duration: const Duration(seconds: 1),
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+          // animation.status != AnimationStatus.completed
+          // ? SquigglyWaveform(
+          // absolute: true,
+          // maxDuration: audioPlayer.duration,
+          // activeColor: Colors.purple,
+          // strokeWidth: 2,
+          // showActiveWaveform: true,
+          // inactiveColor: Colors.grey,
+          // elapsedDuration: audioPlayer.position,
+          // samples: [1, 2, 3, 4, 5],
+          // height: 80.0,
+          // width: 150.0,
+          // )
+          //     :
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  widget.postSong.name ?? "",
+                  maxLines: 1,
+                  style: GoogleFonts.aBeeZee(
+                    color: DcColors.darkWhite,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 24,
                   ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  'singer',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.textMeOne(
+                    color: DcColors.white,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 24,
+                  ),
+                ),
+              ],
+            ),
           ),
-          animation: animation,
         ),
         const Spacer(flex: 3),
       ],

@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'main/bloc/main_bloc.dart';
+import 'main/bloc/stories_bloc.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -26,7 +27,11 @@ class _HomePageState extends State<HomePage> {
         BlocProvider<MainPageBloc>(
             create: (_) => MainPageBloc(
                 postRepository: getIt.get<PostRepository>(),
-                storiesRepository: getIt.get<StoriesRepository>()))
+                storiesRepository: getIt.get<StoriesRepository>())),
+        BlocProvider<StoriesBloc>(
+            create: (_) => StoriesBloc(
+                postRepository: getIt.get<PostRepository>(),
+                storiesRepository: getIt.get<StoriesRepository>())),
       ],
       child: AutoTabsScaffold(
           floatingActionButton: Padding(
@@ -54,8 +59,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {},
             ),
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.miniCenterDocked,
+          floatingActionButtonLocation: FloatingActionButtonLocation.miniCenterDocked,
           extendBody: true,
           backgroundColor: Colors.indigo,
           bottomNavigationBuilder: (context, tabsRouter) {
@@ -90,9 +94,7 @@ class _HomePageState extends State<HomePage> {
                           'assets/ic_home.svg',
                           height: 30,
                           width: 30,
-                          color: tabsRouter.activeIndex == 0
-                              ? Colors.orange
-                              : DcColors.darkWhite,
+                          color: tabsRouter.activeIndex == 0 ? Colors.orange : DcColors.darkWhite,
                         )),
                     BottomNavigationBarItem(
                         label: '',
@@ -100,9 +102,7 @@ class _HomePageState extends State<HomePage> {
                           'assets/ic_base.svg',
                           height: 30,
                           width: 30,
-                          color: tabsRouter.activeIndex == 1
-                              ? Colors.orange
-                              : DcColors.darkWhite,
+                          color: tabsRouter.activeIndex == 1 ? Colors.orange : DcColors.darkWhite,
                         )),
                     const BottomNavigationBarItem(
                         label: '',
@@ -116,9 +116,7 @@ class _HomePageState extends State<HomePage> {
                           'assets/ic_chat.svg',
                           height: 30,
                           width: 30,
-                          color: tabsRouter.activeIndex == 3
-                              ? Colors.orange
-                              : DcColors.darkWhite,
+                          color: tabsRouter.activeIndex == 3 ? Colors.orange : DcColors.darkWhite,
                         )),
                     BottomNavigationBarItem(
                         label: '',
@@ -126,9 +124,7 @@ class _HomePageState extends State<HomePage> {
                           'assets/ic_profile.svg',
                           height: 30,
                           width: 30,
-                          color: tabsRouter.activeIndex == 4
-                              ? Colors.orange
-                              : DcColors.darkWhite,
+                          color: tabsRouter.activeIndex == 4 ? Colors.orange : DcColors.darkWhite,
                         )),
                   ]),
             );

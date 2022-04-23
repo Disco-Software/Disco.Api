@@ -1,14 +1,17 @@
 import 'package:disco_app/core/widgets/post.dart';
 import 'package:disco_app/core/widgets/unicorn_image.dart';
-import 'package:disco_app/data/network/network_models/post_network.dart';
-import 'package:disco_app/data/network/network_models/story_network.dart';
 import 'package:disco_app/pages/user/main/bloc/main_bloc.dart';
 import 'package:disco_app/pages/user/main/bloc/main_event.dart';
 import 'package:disco_app/pages/user/main/bloc/main_state.dart';
+import 'package:disco_app/pages/user/main/bloc/stories_bloc.dart';
+import 'package:disco_app/pages/user/main/bloc/stories_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import 'bloc/stories_event.dart';
 
 const String title = 'Your story';
 
@@ -27,10 +30,16 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
+
   @override
   void initState() {
-    // TODO: implement initState
-    context.read<MainPageBloc>().add(InitialEvent(id: 1));
+    context.read<StoriesBloc>().add(LoadStoriesEvent(id: 1));
+    context.read<MainPageBloc>().add(LoadPostsEvent(
+          id: 1,
+          hasLoading: true,
+          onLoaded: () {},
+        ));
     super.initState();
   }
 
@@ -40,9 +49,15 @@ class _MainPageState extends State<MainPage> {
       backgroundColor: const Color(0xff1C142E),
       appBar: AppBar(
         backgroundColor: const Color(0xFF1C142D),
+        centerTitle: false,
         title: const Text(
           "DISCO",
-          style: TextStyle(fontSize: 32, fontFamily: 'Colonna', fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 32,
+            fontFamily: 'Colonna',
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.start,
         ),
         automaticallyImplyLeading: false,
         actions: [
@@ -58,53 +73,25 @@ class _MainPageState extends State<MainPage> {
               )),
         ],
       ),
-      body: BlocConsumer<MainPageBloc, MainPageState>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          if (state is LoadingState) {
-            return const Center(child: CircularProgressIndicator.adaptive());
-          } else if (state is SuccessState) {
-            print("${state.stories.length}-->${state.posts.length}   SuccessState");
-
-            return _SuccessStateWidget(
-              stories: state.stories,
-              posts: state.posts,
-              userImageUrl: state.userImageUrl,
-            );
-          } else {
-            return InkWell(
-              onTap: () {
-                context.read<MainPageBloc>().add(InitialEvent(id: 1));
-              },
-              child: Container(
-                height: 100.0,
-                width: 100.0,
-                color: Colors.red,
-              ),
-            );
-          }
-        },
+      body: _SuccessStateWidget(
+        controller: _refreshController,
       ),
     );
   }
-
-  void _blocLisener(BuildContext context, Object? state) {
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      if (state is SuccessState) {}
-    });
-  }
-
-  onSearch() {}
 }
 
-class _SuccessStateWidget extends StatelessWidget {
-  final List<StoriesModel> stories;
-  final List<Post> posts;
-  final String userImageUrl;
+// void _blocLisener(BuildContext context, Object? state) {
+//   WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+//     if (state is SuccessState) {}
+//   });
+// }
 
-  const _SuccessStateWidget(
-      {Key? key, required this.stories, required this.posts, required this.userImageUrl})
-      : super(key: key);
+// onSearch() {}
+
+class _SuccessStateWidget extends StatelessWidget {
+  final RefreshController controller;
+
+  const _SuccessStateWidget({Key? key, required this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -115,63 +102,93 @@ class _SuccessStateWidget extends StatelessWidget {
             const SizedBox(
               height: 6,
             ),
-            if (stories.isNotEmpty)
-              SizedBox(
-                  height: 105,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: stories.length,
-                      itemBuilder: (context, index) {
-                        if (index == 0) {
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 12, right: 8),
-                            child: UnicornImage(
-                              title: "Your story",
-                              imageUrl: userImageUrl,
-                              shouldHaveGradientBorder: false,
-                              shouldHavePlus: true,
-                            ),
-                          );
-                        } else {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                            ),
-                            child: UnicornImage(
-                              imageUrl: stories[index].profile?.photo ?? "assets/ic_photo.png",
-                              title: stories[index].profile?.user?.userName ?? "",
-                            ),
-                          );
-                        }
-                      }))
-            else
-              Padding(
-                padding: const EdgeInsets.only(right: 8, top: 8),
-                child: Row(
-                  children: [
-                    const SizedBox(
-                      width: 12,
-                    ),
-                    UnicornImage(
-                      title: "Your story",
-                      imageUrl: userImageUrl,
-                      shouldHaveGradientBorder: false,
-                      shouldHavePlus: true,
-                    ),
-                  ],
-                ),
-              ),
+            BlocBuilder<StoriesBloc, StoriesState>(
+              builder: (context, state) {
+                if (state is SuccessStoriesState) {
+                  if (state.stories.isNotEmpty) {
+                    return SizedBox(
+                        height: 105,
+                        child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: state.stories.length,
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(left: 12, right: 8),
+                                  child: UnicornImage(
+                                    title: "Your story",
+                                    imageUrl: state.userImageUrl,
+                                    shouldHaveGradientBorder: false,
+                                    shouldHavePlus: true,
+                                  ),
+                                );
+                              } else {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: UnicornImage(
+                                    imageUrl: state.stories[index].profile?.photo ??
+                                        "assets/ic_photo.png",
+                                    title: state.stories[index].profile?.user?.userName ?? "",
+                                  ),
+                                );
+                              }
+                            }));
+                  } else {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8, top: 8),
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 12,
+                          ),
+                          UnicornImage(
+                            title: "Your story",
+                            imageUrl: state.userImageUrl,
+                            shouldHaveGradientBorder: false,
+                            shouldHavePlus: true,
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                }
+                return const SizedBox();
+              },
+            ),
             const SizedBox(
               height: 11,
             ),
-            if (posts.isNotEmpty)
-              Expanded(
-                child: ListView.builder(
-                    itemCount: posts.length,
-                    itemBuilder: (context, index) {
-                      return UnicornPost(post: posts[index]);
-                    }),
-              ),
+            BlocBuilder<MainPageBloc, MainPageState>(
+              builder: (context, state) {
+                if (state is SuccessPostsState) {
+                  return Expanded(
+                    child: SmartRefresher(
+                      controller: controller,
+                      onRefresh: () {
+                        context.read<MainPageBloc>().add(LoadPostsEvent(
+                              id: 1,
+                              hasLoading: false,
+                              onLoaded: () {
+                                controller.refreshCompleted();
+                              },
+                            ));
+                      },
+                      footer: Container(
+                        color: Colors.red,
+                      ),
+                      child: ListView.builder(
+                          itemCount: state.posts.length,
+                          itemBuilder: (context, index) {
+                            return UnicornPost(post: state.posts[index]);
+                          }),
+                    ),
+                  );
+                }
+                return const Center(child: CircularProgressIndicator.adaptive());
+              },
+            ),
           ],
         ));
   }

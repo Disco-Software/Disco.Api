@@ -1,5 +1,4 @@
 import 'package:disco_app/data/network/network_models/post_network.dart';
-import 'package:disco_app/data/network/network_models/story_network.dart';
 
 abstract class MainPageState {}
 
@@ -7,13 +6,14 @@ class InitialState implements MainPageState {}
 
 class LoadingState implements MainPageState {}
 
-class SuccessState implements MainPageState {
-  List<StoriesModel> stories;
+class SuccessPostsState implements MainPageState {
   List<Post> posts;
-  String userImageUrl;
+  final bool hasLoading;
 
-  SuccessState(
-      {required this.stories, required this.posts, required this.userImageUrl});
+  SuccessPostsState({
+    required this.posts,
+    required this.hasLoading,
+  });
 }
 
 class ErrorState implements MainPageState {}
