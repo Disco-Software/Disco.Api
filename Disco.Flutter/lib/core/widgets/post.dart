@@ -23,15 +23,16 @@ class UnicornPost extends StatefulWidget {
   State<UnicornPost> createState() => _UnicornPostState();
 }
 
-class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStateMixin {
+class _UnicornPostState extends State<UnicornPost>
+    with SingleTickerProviderStateMixin {
   int bodyIndex = 1;
   late AnimationController controller;
 
   @override
   void initState() {
     super.initState();
-    controller =
-        AnimationController(value: 0.3, vsync: this, duration: const Duration(milliseconds: 300));
+    controller = AnimationController(
+        value: 0.3, vsync: this, duration: const Duration(milliseconds: 300));
   }
 
   @override
@@ -63,7 +64,8 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
                 child: widget.post.profile?.photo != null
                     ? CachedNetworkImage(
                         imageUrl: widget.post.profile?.photo ?? '',
-                        placeholder: (context, url) => Image.asset('assets/ic_photo.png'),
+                        placeholder: (context, url) =>
+                            Image.asset('assets/ic_photo.png'),
                         fit: BoxFit.fill,
                       )
                     : Container(
@@ -97,13 +99,15 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
           padding: const EdgeInsets.symmetric(horizontal: 35),
           child: CarouselSlider(
             items: [
-              if (widget.post.postImages != null && widget.post.postImages!.isNotEmpty)
+              if (widget.post.postImages != null &&
+                  widget.post.postImages!.isNotEmpty)
                 ...widget.post.postImages!
                     .map((postImage) => _ImageBody(
                           postImage: postImage,
                         ))
                     .toList(),
-              if (widget.post.postSongs != null && widget.post.postSongs!.isNotEmpty)
+              if (widget.post.postSongs != null &&
+                  widget.post.postSongs!.isNotEmpty)
                 ...widget.post.postSongs!
                     .map((postSong) => _SongBody(
                           postSong: postSong,
@@ -153,14 +157,15 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
               const SizedBox(width: 13),
               PostButton(onTap: () {}, imagePath: "assets/ic_share.svg"),
               const Spacer(),
-              if (widget.post.postImages != null && widget.post.postImages!.isNotEmpty)
+              if (widget.post.postImages != null &&
+                  widget.post.postImages!.isNotEmpty)
                 AnimatedBuilder(
                   builder: (context, index) => LinearPercentIndicator(
                     width: 100,
                     percent: controller.value,
                     barRadius: const Radius.circular(7),
-                    linearGradient:
-                        const LinearGradient(colors: [Color(0xFFE08D11), Color(0xFFF6EA7D)]),
+                    linearGradient: const LinearGradient(
+                        colors: [Color(0xFFE08D11), Color(0xFFF6EA7D)]),
                     backgroundColor: const Color(0xFFC9D6FF),
                   ),
                   animation: controller,
@@ -232,7 +237,10 @@ class _ImageBody extends StatelessWidget {
                 image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: const [
-                  BoxShadow(color: Color(0xFFB2A044FF), offset: Offset(0, 4), blurRadius: 7),
+                  BoxShadow(
+                      color: Color(0xFFB2A044FF),
+                      offset: Offset(0, 4),
+                      blurRadius: 7),
                 ],
               ),
             ),
@@ -286,7 +294,8 @@ class _SongBodyState extends State<_SongBody> {
     super.initState();
     _switchedWidget = _switchedPlay;
     audioPlayer = AudioPlayer();
-    audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(widget.postSong.source ?? '')));
+    audioPlayer.setAudioSource(
+        AudioSource.uri(Uri.parse(widget.postSong.source ?? '')));
   }
 
   @override
@@ -294,7 +303,8 @@ class _SongBodyState extends State<_SongBody> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        if (widget.postSong.imageUrl != null && widget.postSong.imageUrl!.isNotEmpty)
+        if (widget.postSong.imageUrl != null &&
+            widget.postSong.imageUrl!.isNotEmpty)
           CachedNetworkImage(
             imageBuilder: (context, imageProvider) => Container(
               height: 105,
@@ -303,7 +313,10 @@ class _SongBodyState extends State<_SongBody> {
                 image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: const [
-                  BoxShadow(color: Color(0xFFB2A044FF), offset: Offset(0, 4), blurRadius: 7),
+                  BoxShadow(
+                      color: Color(0xFFB2A044FF),
+                      offset: Offset(0, 4),
+                      blurRadius: 7),
                 ],
               ),
             ),
@@ -316,7 +329,10 @@ class _SongBodyState extends State<_SongBody> {
             height: 105,
             width: 110,
           ),
-        const Spacer(),
+        //const Spacer(),
+        const SizedBox(
+          width: 14,
+        ),
         Stack(
           children: [
             Container(
@@ -391,7 +407,7 @@ class _SongBodyState extends State<_SongBody> {
           // )
           //     :
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
+            padding: const EdgeInsets.only(bottom: 10.0, left: 13),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -409,6 +425,7 @@ class _SongBodyState extends State<_SongBody> {
                 Text(
                   'singer',
                   maxLines: 1,
+                  textAlign: TextAlign.start,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.textMeOne(
                     color: DcColors.white,

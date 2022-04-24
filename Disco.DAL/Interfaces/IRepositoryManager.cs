@@ -8,6 +8,7 @@ namespace Disco.DAL.Interfaces
     public interface IRepositoryManager
     {
         PostRepository PostRepository { get; }
+        ImageRepository ImageRepository { get; }
         SongRepository SongRepository { get; }
         VideoRepository VideoRepository { get; }
         FriendRepository FriendRepository { get; }

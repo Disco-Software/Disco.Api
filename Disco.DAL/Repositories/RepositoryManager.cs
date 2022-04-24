@@ -9,6 +9,7 @@ namespace Disco.DAL.Repositories
     public class RepositoryManager : IRepositoryManager
     {
         private readonly Lazy<PostRepository> postRepository;
+        private readonly Lazy<ImageRepository> imageRepository;
         private readonly Lazy<SongRepository> songRepository;
         private readonly Lazy<VideoRepository> videoRepository;
         private readonly Lazy<FriendRepository> friendRepository;
@@ -22,6 +23,7 @@ namespace Disco.DAL.Repositories
             profileRepository = new Lazy<ProfileRepository>(() => new ProfileRepository(_ctx));
             friendRepository = new Lazy<FriendRepository>(() => new FriendRepository(_ctx));
             storyRepository = new Lazy<StoryRepository>(() => new StoryRepository(_ctx));
+            imageRepository = new Lazy<ImageRepository>(() => new ImageRepository(_ctx));
         }
 
         public PostRepository PostRepository => postRepository.Value;
@@ -35,5 +37,7 @@ namespace Disco.DAL.Repositories
         public  ProfileRepository ProfileRepository => profileRepository.Value;
 
         public StoryRepository StoryRepository => storyRepository.Value;
+
+        public ImageRepository ImageRepository => imageRepository.Value;
     }
 }

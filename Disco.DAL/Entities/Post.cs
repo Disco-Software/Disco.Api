@@ -10,10 +10,10 @@ namespace Disco.DAL.Entities
     {
         public string Description { get; set; }
 
-        public List<PostImage> PostImages { get; set; }
-        public List<PostSong> PostSongs { get; set; }
-        public List<PostVideo> PostVideos { get; set; }
-        public List<Like> Likes { get; set; }
+        public List<PostImage> PostImages { get; set; } = new List<PostImage>();
+        public List<PostSong> PostSongs { get; set; } = new List<PostSong>();
+        public List<PostVideo> PostVideos { get; set; } = new List<PostVideo>();
+        public List<Like> Likes { get; set; } = new List<Like>();
 
         [Column(TypeName = "date")]
         public DateTime? DateOfCreation { get; set; }

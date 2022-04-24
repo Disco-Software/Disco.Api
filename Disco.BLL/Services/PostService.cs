@@ -26,29 +26,35 @@ namespace Disco.BLL.Services
 {
     public class PostService : PostApiRequestHandlerBase,IPostService
     {
-        private readonly IMapper mapper;
         private readonly ApiDbContext ctx;
         private readonly PostRepository postRepository;
         private readonly UserManager<User> userManager;
-        private readonly IWebHostEnvironment webHostEnvironment;
-        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly BlobServiceClient blobServiceClient;
-        public PostService
-            (IMapper _mapper, 
-            PostRepository _postRepository, 
+        private readonly IImageService imageService;
+        private readonly ISongService songService;
+        private readonly IVideoService videoService;
+        private readonly IMapper mapper;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        public PostService(
+            PostRepository _postRepository,
             ApiDbContext _ctx,
             UserManager<User> _userManager,
             BlobServiceClient _blobServiceClient,
-            IHttpContextAccessor _httpContextAccessor, 
-            IWebHostEnvironment _webHostEnvironment)
+            IMapper _mapper,
+            IImageService _imageService,
+            ISongService _songService,
+            IVideoService _videoService,
+            IHttpContextAccessor _httpContextAccessor)
         {
-            mapper = _mapper;
             postRepository = _postRepository;
-            userManager = _userManager;
             ctx = _ctx;
-            httpContextAccessor = _httpContextAccessor;
-            webHostEnvironment = _webHostEnvironment;
+            userManager = _userManager;
             blobServiceClient = _blobServiceClient;
+            mapper = _mapper;
+            imageService = _imageService;
+            songService = _songService;
+            videoService = _videoService;
+            httpContextAccessor = _httpContextAccessor;
         }
 
         public async Task<PostResponseModel> CreatePostAsync(CreatePostModel model)
@@ -63,13 +69,15 @@ namespace Disco.BLL.Services
                  .Collection(p => p.Posts)
                  .LoadAsync();
 
-            var post = new Post { Description = model.Description, Profile = user.Profile, ProfileId = user.Profile.Id, PostImages = new List<PostImage>(), PostSongs = new List<PostSong>(), PostVideos = new List<PostVideo>() };
-
+            var post = mapper.Map<Post>(model);
+            post.Profile = user.Profile;
+            post.ProfileId = user.Profile.Id;
+            
             if (model.PostImages != null)
                 foreach (var file in model.PostImages)
                 {
-                    var image = await this.AddPostImage(file, post.Id);
-                    ctx.PostImages.Add(image);
+                    var image = await imageService.CreatePostImage(
+                        new Models.Images.CreateImageModel { ImageFile = file });
                     post.PostImages.Add(image);
                 }
             if (model.PostSongs != null)
@@ -79,8 +87,8 @@ namespace Disco.BLL.Services
                     {
                         foreach (var name in model.PostSongNames)
                         {
-                            var song = await this.AddPostSong(new CreateSongModel { SongFile = postSong, SongImage = postSongImage, Name = name, PostId = post.Id });
-                            ctx.PostSongs.Add(song);
+                            var song = await songService.CreatePostSongAsync(
+                                new CreateSongModel { SongFile = postSong, SongImage = postSongImage, Name = name, PostId = post.Id });
                             post.PostSongs.Add(song);
                         }
                     }
@@ -88,8 +96,8 @@ namespace Disco.BLL.Services
             if (model.PostVideos != null)
                 foreach (var video in model.PostVideos)
                 {
-                    var postVideo = await this.AddPostVideos(video, post.Id);
-                    ctx.PostVideos.Add(postVideo);
+                    var postVideo = await videoService.CreateVideoAsync(
+                        new Models.Videos.CreateVideoModel { VideoFile = video });
                     post.PostVideos.Add(postVideo);
                 }
 

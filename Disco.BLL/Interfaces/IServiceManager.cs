@@ -18,6 +18,8 @@ namespace Disco.BLL.Interfaces
         IStoryService StoryService { get; }
         IPushNotificationService PushNotificationService { get; }
         ISongService SongService { get; }
+        IImageService ImageService { get; }
+        IVideoService VideoService { get; }
         IRepositoryManager RepositoryManager { get; }
     }
 }
