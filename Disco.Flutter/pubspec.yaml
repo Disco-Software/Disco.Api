@@ -35,6 +35,8 @@ dependencies:
   pull_to_refresh: ^2.0.0
   flutter_audio_waveforms: ^1.2.1+4
   just_audio: ^0.9.20
+  signalr_client: ^0.1.2
+  video_player: ^2.1.15
 
 dev_dependencies:
   flutter_test:

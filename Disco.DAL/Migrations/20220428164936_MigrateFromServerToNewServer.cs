@@ -2,12 +2,12 @@
 
 namespace Disco.DAL.Migrations
 {
-    public partial class SongNamesMigration : Migration
+    public partial class MigrateFromServerToNewServer : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Name",
+                name: "UserName",
                 table: "PostSongs",
                 type: "nvarchar(max)",
                 nullable: true);
@@ -16,7 +16,7 @@ namespace Disco.DAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Name",
+                name: "UserName",
                 table: "PostSongs");
         }
     }

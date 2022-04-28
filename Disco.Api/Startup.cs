@@ -37,6 +37,10 @@ using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Azure.Storage.Blobs;
 using Microsoft.Extensions.Azure;
+using Disco.Api.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using Azure.Storage.Queues;
+using Azure.Core.Extensions;
 
 namespace Disco.Api
 {
@@ -174,6 +178,8 @@ namespace Disco.Api
             {
                 u.SwaggerEndpoint("1.0/swagger.json", "Disco.Api");
             });
+
+
             ILogger logger = loggerFactory.CreateLogger("ClientErrorLogger");
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -181,10 +187,48 @@ namespace Disco.Api
             app.UseAuthorization();
             app.UseAuthentication();
             app.UseCors(s => s.AllowAnyOrigin());
+            app.Use(async (ctx, next) =>
+            {
+                var hubContext = ctx
+                    .RequestServices
+                    .GetRequiredService<IHubContext<PostHub>>();
+                
+                if(next != null)
+                {
+                    await next.Invoke();
+                }
+
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<PostHub>("/hub/post");
             });
+        }
+    }
+    internal static class StartupExtensions
+    {
+        public static IAzureClientBuilder<BlobServiceClient, BlobClientOptions> AddBlobServiceClient(this AzureClientFactoryBuilder builder, string serviceUriOrConnectionString, bool preferMsi)
+        {
+            if (preferMsi && Uri.TryCreate(serviceUriOrConnectionString, UriKind.Absolute, out Uri serviceUri))
+            {
+                return builder.AddBlobServiceClient(serviceUri);
+            }
+            else
+            {
+                return builder.AddBlobServiceClient(serviceUriOrConnectionString);
+            }
+        }
+        public static IAzureClientBuilder<QueueServiceClient, QueueClientOptions> AddQueueServiceClient(this AzureClientFactoryBuilder builder, string serviceUriOrConnectionString, bool preferMsi)
+        {
+            if (preferMsi && Uri.TryCreate(serviceUriOrConnectionString, UriKind.Absolute, out Uri serviceUri))
+            {
+                return builder.AddQueueServiceClient(serviceUri);
+            }
+            else
+            {
+                return builder.AddQueueServiceClient(serviceUriOrConnectionString);
+            }
         }
     }
 }

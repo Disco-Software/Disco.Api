@@ -12,7 +12,7 @@ const token =
 abstract class RegisterModule {
   // You can register named preemptive types like follows
   @Named("BaseUrl")
-  String get baseUrl => 'https://discoapi20211205192712.azurewebsites.net/api/';
+  String get baseUrl => 'https://devdiscoapi.azurewebsites.net/api/';
 
   // url here will be injected
   @lazySingleton

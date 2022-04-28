@@ -4,12 +4,14 @@ import 'package:disco_app/core/widgets/post_button.dart';
 import 'package:disco_app/data/network/network_models/image_network.dart';
 import 'package:disco_app/data/network/network_models/post_network.dart';
 import 'package:disco_app/data/network/network_models/song_network.dart';
+import 'package:disco_app/data/network/network_models/video_network.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:video_player/video_player.dart';
 
 class UnicornPost extends StatefulWidget {
   const UnicornPost({
@@ -110,10 +112,17 @@ class _UnicornPostState extends State<UnicornPost>
                   widget.post.postSongs!.isNotEmpty)
                 ...widget.post.postSongs!
                     .map((postSong) => _SongBody(
+                          userName: widget.post.profile?.user?.userName ?? "",
                           postSong: postSong,
                         ))
                     .toList(),
-              //  const _VideoBody()
+              if (widget.post.postVideos != null &&
+                  widget.post.postVideos!.isNotEmpty)
+                ...widget.post.postVideos!
+                    .map((postVideo) => _VideoBody(
+                          postVideo: postVideo,
+                        ))
+                    .toList(),
             ],
             options: CarouselOptions(
                 viewportFraction: 1.0,
@@ -256,8 +265,12 @@ class _ImageBody extends StatelessWidget {
 }
 
 class _SongBody extends StatefulWidget {
-  const _SongBody({Key? key, required this.postSong}) : super(key: key);
-
+  const _SongBody({
+    Key? key,
+    required this.postSong,
+    required this.userName,
+  }) : super(key: key);
+  final String userName;
   final PostSong postSong;
 
   @override
@@ -387,28 +400,13 @@ class _SongBodyState extends State<_SongBody> {
           ],
         ),
         const Spacer(),
-        AnimatedSwitcher(
-          duration: const Duration(seconds: 1),
-          transitionBuilder: (Widget child, Animation<double> animation) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-          // animation.status != AnimationStatus.completed
-          // ? SquigglyWaveform(
-          // absolute: true,
-          // maxDuration: audioPlayer.duration,
-          // activeColor: Colors.purple,
-          // strokeWidth: 2,
-          // showActiveWaveform: true,
-          // inactiveColor: Colors.grey,
-          // elapsedDuration: audioPlayer.position,
-          // samples: [1, 2, 3, 4, 5],
-          // height: 80.0,
-          // width: 150.0,
-          // )
-          //     :
+        ConstrainedBox(
+          constraints:
+              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.3),
           child: Padding(
             padding: const EdgeInsets.only(bottom: 10.0, left: 13),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -423,7 +421,7 @@ class _SongBodyState extends State<_SongBody> {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  'singer',
+                  widget.userName,
                   maxLines: 1,
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.ellipsis,
@@ -443,11 +441,48 @@ class _SongBodyState extends State<_SongBody> {
   }
 }
 
-class _VideoBody extends StatelessWidget {
-  const _VideoBody({Key? key}) : super(key: key);
+class _VideoBody extends StatefulWidget {
+  const _VideoBody({Key? key, required this.postVideo}) : super(key: key);
+
+  final PostVideo postVideo;
+
+  @override
+  State<_VideoBody> createState() => _VideoBodyState();
+}
+
+class _VideoBodyState extends State<_VideoBody> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(
+        "https://www.youtube.com/watch?v=cMIHLzuJ4Wg")
+      ..initialize().then((value) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(color: Colors.green);
+    return InkWell(
+        onTap: () {
+          if (_controller.value.isPlaying)
+            _controller.pause();
+          else
+            _controller.play();
+        },
+        child: Container(
+          child: _controller.value.isInitialized
+              ? AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: VideoPlayer(_controller),
+                )
+              : const SizedBox(),
+        ));
   }
 }

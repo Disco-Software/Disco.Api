@@ -39,21 +39,21 @@ namespace Disco.DAL.EF
                 .WithOne(p => p.UserProfile)
                 .HasForeignKey(f => f.UserProfileId);
 
-            //builder.Entity<Story>()
-            //    .HasMany(s => s.StoryImages)
-            //    .WithOne(s => s.Story)
-            //    .HasForeignKey(s => s.StoryId);
+            builder.Entity<Story>()
+                .HasMany(s => s.StoryImages)
+                .WithOne(s => s.Story)
+                .HasForeignKey(s => s.StoryId);
 
-            //builder.Entity<Story>()
-            //    .HasMany(v => v.StoryVideos)
-            //    .WithOne(s => s.Story)
-            //    .HasForeignKey(s => s.StoryId);
+            builder.Entity<Story>()
+                .HasMany(v => v.StoryVideos)
+                .WithOne(s => s.Story)
+                .HasForeignKey(s => s.StoryId);
         }
 
         public ApiDbContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<ApiDbContext>();
-            builder.UseSqlServer("Server=tcp:disco-dev-sql-srv.database.windows.net,1433;Initial Catalog=disco-dev-sql-db;Persist Security Info=False;User ID=discosa;Password=cJM23H87;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
+            builder.UseSqlServer("Server=tcp:disco-dev-sql-srv.database.windows.net,1433;Initial Catalog=disco-dev-sql-db;Persist Security Info=False;User ID=disco-dev-sa;Password=StasZeus2021!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
                 optionsBuilder => optionsBuilder.MigrationsAssembly(typeof(ApiDbContext).GetTypeInfo().Assembly.GetName().Name));
 
             return new ApiDbContext(builder.Options);

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Disco.DAL.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20220422153939_SongNamesMigration")]
-    partial class SongNamesMigration
+    [Migration("20220428164936_MigrateFromServerToNewServer")]
+    partial class MigrateFromServerToNewServer
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -125,13 +125,13 @@ namespace Disco.DAL.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
                     b.Property<string>("Source")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

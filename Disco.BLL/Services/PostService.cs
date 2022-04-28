@@ -184,7 +184,7 @@ namespace Disco.BLL.Services
             using var imageReader = model.SongImage.OpenReadStream();
             var blobImageResult = blobImageClient.Upload(imageReader);
 
-            var postSong = new PostSong { ImageUrl = blobImageClient.Uri.AbsoluteUri, Source = blobSongClient.Uri.AbsoluteUri, Post = post, Name = model.Name};
+            var postSong = new PostSong { ImageUrl = blobImageClient.Uri.AbsoluteUri, Source = blobSongClient.Uri.AbsoluteUri, Post = post, UserName = model.Name};
 
             await ctx.PostSongs.AddAsync(postSong);
 

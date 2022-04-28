@@ -30,7 +30,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final RefreshController _refreshController = RefreshController(initialRefresh: false);
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -91,7 +92,8 @@ class _MainPageState extends State<MainPage> {
 class _SuccessStateWidget extends StatelessWidget {
   final RefreshController controller;
 
-  const _SuccessStateWidget({Key? key, required this.controller}) : super(key: key);
+  const _SuccessStateWidget({Key? key, required this.controller})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +116,8 @@ class _SuccessStateWidget extends StatelessWidget {
                             itemBuilder: (context, index) {
                               if (index == 0) {
                                 return Padding(
-                                  padding: const EdgeInsets.only(left: 12, right: 8),
+                                  padding:
+                                      const EdgeInsets.only(left: 12, right: 8),
                                   child: UnicornImage(
                                     title: "Your story",
                                     imageUrl: state.userImageUrl,
@@ -128,9 +131,12 @@ class _SuccessStateWidget extends StatelessWidget {
                                     horizontal: 8,
                                   ),
                                   child: UnicornImage(
-                                    imageUrl: state.stories[index].profile?.photo ??
-                                        "assets/ic_photo.png",
-                                    title: state.stories[index].profile?.user?.userName ?? "",
+                                    imageUrl:
+                                        state.stories[index].profile?.photo ??
+                                            "assets/ic_photo.png",
+                                    title: state.stories[index].profile?.user
+                                            ?.userName ??
+                                        "",
                                   ),
                                 );
                               }
@@ -186,7 +192,8 @@ class _SuccessStateWidget extends StatelessWidget {
                     ),
                   );
                 }
-                return const Center(child: CircularProgressIndicator.adaptive());
+                return const Center(
+                    child: CircularProgressIndicator.adaptive());
               },
             ),
           ],

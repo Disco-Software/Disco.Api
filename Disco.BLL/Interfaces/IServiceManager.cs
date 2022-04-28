@@ -20,6 +20,7 @@ namespace Disco.BLL.Interfaces
         ISongService SongService { get; }
         IImageService ImageService { get; }
         IVideoService VideoService { get; }
+        ILikeSevice LikeSevice { get; }
         IRepositoryManager RepositoryManager { get; }
     }
 }

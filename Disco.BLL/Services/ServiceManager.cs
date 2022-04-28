@@ -38,6 +38,7 @@ namespace Disco.BLL.Services
         private readonly Lazy<ISongService> songService;
         private readonly Lazy<IImageService> imageService;
         private readonly Lazy<IVideoService> videoService;
+        private readonly Lazy<ILikeSevice> likeSevice;
         public ServiceManager(ApiDbContext _ctx,
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
@@ -68,6 +69,7 @@ namespace Disco.BLL.Services
             imageService = new Lazy<IImageService>(() => new ImageService(repositoryManager.Value.PostRepository, repositoryManager.Value.ImageRepository, _blobServiceClient, _mapper));
             songService = new Lazy<ISongService>(() => new SongService(repositoryManager.Value.SongRepository, repositoryManager.Value.PostRepository, _blobServiceClient, _mapper, httpContextAccessor));
             videoService = new Lazy<IVideoService>(() => new VideoService(repositoryManager.Value.VideoRepository, repositoryManager.Value.PostRepository, _blobServiceClient, _mapper));
+            likeSevice = new Lazy<ILikeSevice>(() => new LikeService(_ctx, repositoryManager.Value.PostRepository, _userManager, httpContextAccessor));
             postService = new Lazy<IPostService>(() => new PostService(repositoryManager.Value.PostRepository, _ctx, _userManager, _blobServiceClient, _mapper, imageService.Value, songService.Value, videoService.Value, httpContextAccessor));
         }
         public IAuthenticationService AuthentificationService => authentificationService.Value;
@@ -95,5 +97,8 @@ namespace Disco.BLL.Services
         public IImageService ImageService => imageService.Value;
 
         public IVideoService VideoService => throw new NotImplementedException();
+
+        public ILikeSevice LikeSevice => 
+            likeSevice.Value;
     }
 }
