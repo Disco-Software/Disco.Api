@@ -16,6 +16,7 @@ class UnicornImage extends StatelessWidget {
   final bool shouldHaveGradientBorder;
   final String imageUrl;
   final String title;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -54,6 +55,8 @@ class UnicornImage extends StatelessWidget {
                       imageUrl: imageUrl,
                       height: 69,
                       width: 69,
+                      errorWidget: (context, string, err) =>
+                          Container(color: Colors.white, child: Image.asset('assets/ic_photo.png')),
                     ),
                   ),
                 ),
@@ -82,9 +85,7 @@ class UnicornImage extends StatelessWidget {
         Text(
           title,
           style: GoogleFonts.aBeeZee(
-              color: const Color(0xFFE6E0D2),
-              fontWeight: FontWeight.w400,
-              fontSize: 14),
+              color: const Color(0xFFE6E0D2), fontWeight: FontWeight.w400, fontSize: 14),
         ),
       ],
     );

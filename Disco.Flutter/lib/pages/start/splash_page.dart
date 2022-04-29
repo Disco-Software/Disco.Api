@@ -1,3 +1,5 @@
+import 'package:auto_route/src/router/auto_router_x.dart';
+import 'package:disco_app/app/app_router.gr.dart';
 import 'package:flutter/material.dart';
 
 class SplashPage extends StatefulWidget {
@@ -23,6 +25,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
     color: Color(0xFFE7E5DF),
     fontFamily: 'Colonna',
     fontSize: 65,
+    letterSpacing: 0.1,
   );
   late TextStyle _secondTextStyle;
   late TextStyle _thirdTextStyle;
@@ -31,36 +34,28 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
 
   final BoxDecoration _firstDecoration = const BoxDecoration(
       gradient: RadialGradient(
-    center: Alignment.topRight,
     tileMode: TileMode.repeated,
-    radius: 8,
+    focal: Alignment(1.0, -1.0),
+    radius: 2.4,
+    center: Alignment(1.2, 0.0),
     colors: [
-      Color(0xFF78737D),
-      Color(0xFFA7A7A7),
-      Color(0xFF0F0C1B),
+      Color(0xFFA0A0A1),
+      Color(0xFF242333),
+      Color(0xFF100C1C),
     ],
   ));
 
   final BoxDecoration _secondDecoration = const BoxDecoration(
     gradient: RadialGradient(
-      center: Alignment.topRight,
-      radius: 8,
+      radius: 2.4,
       tileMode: TileMode.repeated,
+      center: Alignment(1.2, -1.0),
       colors: [
+        Color(0xFF432461),
         Color(0xFF402053),
-        Color(0xFF0F0C1B),
         Color(0xFF0F0C1B),
       ],
     ),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.black,
-        // color: Color(0xFFA044FF),
-        offset: Offset(0, 4),
-        blurRadius: 7.0,
-        spreadRadius: 5.0,
-      ),
-    ],
   );
 
   @override
@@ -77,11 +72,28 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
       foreground: Paint()..shader = linearGradient,
       fontSize: 96,
       fontFamily: 'Colonna',
+      shadows: const [
+        BoxShadow(
+          color: Color(0xFFa044ff),
+          offset: Offset(0, 4),
+          blurRadius: 7.0,
+          spreadRadius: 2.0,
+        ),
+      ],
     );
     _thirdTextStyle = TextStyle(
       foreground: Paint()..shader = linearGradient,
       fontSize: 72,
       fontFamily: 'Colonna',
+      shadows: const [
+        BoxShadow(
+          color: Color(0xFFa044ff),
+          // color: Color(0xFFA044FF),
+          offset: Offset(0, 4),
+          blurRadius: 7.0,
+          spreadRadius: 2.0,
+        ),
+      ],
     );
     _textStyle = _firstTextStyle;
     _decoration = _firstDecoration;
@@ -102,12 +114,6 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
         controller.reverse();
       });
     }
-
-    // WidgetsBinding.instance!.addPostFrameCallback((_) {
-    //   Future.delayed(const Duration(seconds: 10)).then((value) {
-    //     context.router.navigate(const StartRoute());
-    //   });
-    // });
   }
 
   @override
@@ -148,7 +154,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
                   : const _BackGroundBody(),
             ),
             AnimatedPositioned(
-              bottom: shoudlChangeBackGround ? 500.0 : 400.0,
+              bottom: shoudlChangeBackGround ? 480.0 : 380.0,
               duration: const Duration(seconds: 1),
               child: AnimatedDefaultTextStyle(
                 child: const Text('DISCO'),
@@ -164,6 +170,10 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
       ),
     );
   }
+
+// Future<String> _getToken() async {
+//   return await getIt.get<SecureStorageRepository>().read(key: Strings.token);
+// }
 }
 
 class _BackGroundBody extends StatelessWidget {
@@ -186,12 +196,20 @@ class _BackGroundBody extends StatelessWidget {
           const SizedBox(height: 36),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 100.0),
-            child: OutlinedButton(onPressed: () {}, child: const Text("Log In")),
+            child: OutlinedButton(onPressed: () => _onLogin(context), child: const Text("Log In")),
           ),
           const SizedBox(height: 36),
-          TextButton(onPressed: () {}, child: const Text("Registration")),
+          TextButton(onPressed: () => _onRegistration(context), child: const Text("Registration")),
         ],
       ),
     );
+  }
+
+  void _onRegistration(BuildContext context) {
+    context.router.navigate(const SearchRegistrationRoute());
+  }
+
+  void _onLogin(BuildContext context) {
+    context.router.navigate(const LoginRoute());
   }
 }
