@@ -38,16 +38,6 @@ namespace Disco.DAL.EF
                 .HasMany(f => f.Friends)
                 .WithOne(p => p.UserProfile)
                 .HasForeignKey(f => f.UserProfileId);
-
-            builder.Entity<Story>()
-                .HasMany(s => s.StoryImages)
-                .WithOne(s => s.Story)
-                .HasForeignKey(s => s.StoryId);
-
-            builder.Entity<Story>()
-                .HasMany(v => v.StoryVideos)
-                .WithOne(s => s.Story)
-                .HasForeignKey(s => s.StoryId);
         }
 
         public ApiDbContext CreateDbContext(string[] args)

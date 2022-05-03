@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.Tests
+namespace Disco.Tests.Tests
 {
     [TestClass]
     public class FriendControllerTest : IntegrationTest

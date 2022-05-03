@@ -63,7 +63,7 @@ namespace Disco.BLL.Services
             var song = mapper.Map<PostSong>(model);
             song.ImageUrl = blobImageClient.Uri.AbsoluteUri;
             song.Source = blobSongClient.Uri.AbsoluteUri;
-            song.UserName = model.Name;
+            song.Name = model.Name;
 
             await songRepository.Add(song);
 

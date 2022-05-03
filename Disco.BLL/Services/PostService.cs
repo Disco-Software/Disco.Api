@@ -110,15 +110,8 @@ namespace Disco.BLL.Services
             return Ok(post);
         }
 
-        public async Task DeletePostAsync(int postId)
-        {
-            var post = await ctx.Posts
-                .Include(u => u.Profile)
-                .ThenInclude(p => p.User)
-                .Where(p => p.Id == postId)
-                .FirstOrDefaultAsync();
+        public async Task DeletePostAsync(int postId) =>
            await postRepository.Remove(postId);
-        }
 
         public async Task<List<Post>> GetAllUserPosts(int userId)
         {
@@ -132,86 +125,11 @@ namespace Disco.BLL.Services
 
         public async Task<List<Post>> GetAllPosts(int userId)
         {
-             var result = postRepository.GetAll(userId)
+            var result = postRepository.GetAll(userId)
                 .Result
-                .OrderByDescending(p => p.DateOfCreation)
+                .OrderByDescending(t => t.Id)
                 .ToList();
             return result;
-        }
-
-        public async Task<PostImage> AddPostImage(IFormFile file, int postId)
-        {
-            var post = await postRepository.Get(postId);
-            var uniqueImageName = Guid.NewGuid().ToString() + "_" + file.FileName.Replace(' ', '_');
-
-            if (file == null)
-                return null;
-
-            if (file.Length == 0)
-                return null;
-
-            var containerClient = blobServiceClient.GetBlobContainerClient("images");
-            var blobClient = containerClient.GetBlobClient(uniqueImageName);
-
-            using var imageReader = file.OpenReadStream();
-            var blobResult = blobClient.Upload(imageReader);
-
-            var postImage = new PostImage { Source = blobClient.Uri.AbsoluteUri, Post = post };
-
-            await ctx.PostImages.AddAsync(postImage);
-
-            return postImage;
-        }
-        public async Task<PostSong> AddPostSong(CreateSongModel model)
-        {
-            var post = await postRepository.Get(model.PostId);
-            var uniqueSongName = Guid.NewGuid().ToString() + "_" + model.SongFile.FileName.Replace(' ', '_');
-            var uniqueImageName = Guid.NewGuid().ToString() + "_" + model.SongImage.FileName.Replace(' ', '_');
-            if (model.SongFile == null)
-                return null;
-
-            if (model.SongFile.Length == 0)
-                return null;
-
-            var blobSongContainerClient = blobServiceClient.GetBlobContainerClient("songs");
-            var blobImageContainerClient = blobServiceClient.GetBlobContainerClient("images");
-            var blobSongClient = blobSongContainerClient.GetBlobClient(uniqueSongName);
-            var blobImageClient = blobImageContainerClient.GetBlobClient(uniqueImageName);
-            
-            using var songReader = model.SongFile.OpenReadStream();
-            var blobSongResult = blobSongClient.Upload(songReader);
-
-            using var imageReader = model.SongImage.OpenReadStream();
-            var blobImageResult = blobImageClient.Upload(imageReader);
-
-            var postSong = new PostSong { ImageUrl = blobImageClient.Uri.AbsoluteUri, Source = blobSongClient.Uri.AbsoluteUri, Post = post, UserName = model.Name};
-
-            await ctx.PostSongs.AddAsync(postSong);
-
-            return postSong;
-        }
-        public async Task<PostVideo> AddPostVideos(IFormFile file, int postId)
-        {
-            var post = await postRepository.Get(postId);
-            var uniqueVideoName = Guid.NewGuid().ToString() + "_" + file.FileName.Replace(' ', '_');
-
-            if (file == null)
-                return null;
-
-            if (file.Length == 0)
-                return null;
-
-           var containerClient = blobServiceClient.GetBlobContainerClient("videos");
-            var blobClient = containerClient.GetBlobClient(uniqueVideoName);
-
-            using var videoReader = file.OpenReadStream();
-            var blobResult = blobClient.Upload(videoReader);
-
-            var postVideo = new PostVideo {VideoSource = blobClient.Uri.AbsoluteUri, Post = post };
-
-            await ctx.PostVideos.AddAsync(postVideo);
-
-            return postVideo;
         }
 
     }

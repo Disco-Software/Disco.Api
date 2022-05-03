@@ -53,7 +53,19 @@ namespace Disco.DAL.Repositories
             storyList.AddRange(profile.Stories);
 
             foreach (var friend in profile.Friends)
+            {
+                friend.ProfileFriend = await ctx.Profiles
+                    .Include(p => p.Posts)
+                    .ThenInclude(i => i.PostImages)
+                    .Include(p => p.Posts)
+                    .ThenInclude(s => s.PostSongs)
+                    .Include(p => p.Posts)
+                    .ThenInclude(v => v.PostVideos)
+                    .Include(u => u.User)
+                    .Where(f => f.Id == friend.FriendProfileId)
+                    .FirstOrDefaultAsync();
                 storyList.AddRange(friend.ProfileFriend.Stories);
+            }
 
            return storyList.OrderByDescending(d => d.DateOfCreation).ToList();
         }

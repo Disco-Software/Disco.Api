@@ -15,6 +15,8 @@ namespace Disco.DAL.Repositories
         private readonly Lazy<FriendRepository> friendRepository;
         private readonly Lazy<ProfileRepository> profileRepository;
         private readonly Lazy<StoryRepository> storyRepository;
+        private readonly Lazy<StoryImageRepository> storyImageRepository;
+        private readonly Lazy<StoryVideoRepository> storyVideoRepository;
         public RepositoryManager(ApiDbContext _ctx)
         {
             postRepository = new Lazy<PostRepository>(() => new PostRepository(_ctx));
@@ -24,6 +26,8 @@ namespace Disco.DAL.Repositories
             friendRepository = new Lazy<FriendRepository>(() => new FriendRepository(_ctx));
             storyRepository = new Lazy<StoryRepository>(() => new StoryRepository(_ctx));
             imageRepository = new Lazy<ImageRepository>(() => new ImageRepository(_ctx));
+            storyImageRepository = new Lazy<StoryImageRepository>(() => new StoryImageRepository(_ctx));
+            storyVideoRepository = new Lazy<StoryVideoRepository>(() => new StoryVideoRepository(_ctx));
         }
 
         public PostRepository PostRepository => postRepository.Value;
@@ -39,5 +43,9 @@ namespace Disco.DAL.Repositories
         public StoryRepository StoryRepository => storyRepository.Value;
 
         public ImageRepository ImageRepository => imageRepository.Value;
+
+        public StoryImageRepository StoryImageRepository => storyImageRepository.Value;
+
+        public StoryVideoRepository StoryVideoRepository => storyVideoRepository.Value;
     }
 }

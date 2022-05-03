@@ -11,7 +11,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Disco.Tests.Base;
-namespace Disco.Tests
+namespace Disco.Tests.Tests
 {
     [TestClass]
     public class AuthenticationControllerTest : IntegrationTest

@@ -22,6 +22,8 @@ namespace Disco.BLL.Services
         private readonly UserManager<User> userManager;
         private readonly ApiDbContext ctx;
         private readonly BlobServiceClient blobServiceClient;
+        private readonly IStoryImageService storyImageService;
+        private readonly IStoryVideoService storyVideoService;
         private readonly IMapper mapper;
         private readonly IHttpContextAccessor httpContextAccessor;
         public StoryService(
@@ -29,6 +31,8 @@ namespace Disco.BLL.Services
             UserManager<User> _userManager,
             ApiDbContext _ctx,
             BlobServiceClient _blobServiceClient,
+            IStoryImageService _storyImageService,
+            IStoryVideoService _storyVideoService,
             IMapper _mapper,
             IHttpContextAccessor _httpContextAccessor)
         {
@@ -36,6 +40,8 @@ namespace Disco.BLL.Services
             userManager = _userManager;
             ctx = _ctx;
             blobServiceClient = _blobServiceClient;
+            storyImageService = _storyImageService;
+            storyVideoService = _storyVideoService;
             mapper = _mapper;
             httpContextAccessor = _httpContextAccessor;
         }
@@ -56,24 +62,21 @@ namespace Disco.BLL.Services
             if (user == null)
                 throw new NullReferenceException("User is null");
 
-            var story = new Story 
-            { 
-                DateOfCreation = DateTime.UtcNow,
-                StoryVideos = new List<StoryVideo>(),
-                StoryImages = new List<StoryImage>()
-            };
+            var story = mapper.Map<Story>(model);
 
             if (model.StoryImages != null)
                 foreach (var image in model.StoryImages)
                 {
-                    var storyImage = await this.ConvertFileToStoryImage(image, story.Id);
+                    var storyImage = await storyImageService.CreateStoryImageAsync(
+                        new Models.StoryImages.CreateStoryImageModel { StoryImageFile = image });
                     story.StoryImages.Add(storyImage);
                 }
 
             if (model.StoryVideos != null)
                 foreach (var video in model.StoryVideos)
                 {
-                    var storyImage = await this.ConvertFileToStoryVideo(video, story.Id);
+                    var storyImage = await storyVideoService.CreateStoryVideoAsync(
+                        new Models.StoryVideos.CreateStoryVideoModel { VideoFile = video });
                     story.StoryVideos.Add(storyImage);
                 }
 
@@ -109,55 +112,6 @@ namespace Disco.BLL.Services
                 .LoadAsync();
 
             return await storyRepository.GetAll(profileId);
-        }
-
-        private async Task<StoryImage> ConvertFileToStoryImage(IFormFile image, int storyId)
-        {
-            var story = await storyRepository.Get(storyId);
-            
-            var unequeName = Guid.NewGuid().ToString() + "_" + image.FileName.Replace(' ', '_');
-           
-            if (image == null)
-                return null;
-
-            if (image.Length == 0)
-                return null;
-
-            var blobContainerClient = blobServiceClient.GetBlobContainerClient("images");
-            var blobClient = blobContainerClient.GetBlobClient(unequeName);
-
-            using var imageReader = image.OpenReadStream();
-
-            blobClient.Upload(imageReader);
-
-            var storyImage = new StoryImage { Source = blobClient.Uri.AbsoluteUri, Story = story };
-            
-            ctx.StoriesImages.Add(storyImage);
-
-            return storyImage;
-        }
-        private async Task<StoryVideo> ConvertFileToStoryVideo(IFormFile video, int storyId)
-        {
-            var story = await storyRepository.Get(storyId);
-            
-            var unequeName = Guid.NewGuid().ToString() + "_" + video.FileName.Replace(' ', '_');
-
-            if (video == null)
-                return null;
-
-            if (video.Length == 0)
-                return null;
-
-            var blobContainerClient =  blobServiceClient.GetBlobContainerClient("videos");
-            var blobClient = blobContainerClient.GetBlobClient(unequeName);
-
-            using var videoReader = video.OpenReadStream();
-
-            blobClient.Upload(videoReader);
-
-            var storyVideo = new StoryVideo { Source = blobClient.Uri.AbsoluteUri, Story = story};
-
-            return storyVideo;
         }
     }
 }

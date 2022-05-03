@@ -44,7 +44,12 @@ namespace Disco.DAL.Repositories
                 .Include(i => i.PostImages)
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
+
+            post.Profile.Posts.Remove(post);
+
             ctx.Remove(post);
+
+            await ctx.SaveChangesAsync();
         }
 
         public async Task<List<Post>> GetAll(int userId)

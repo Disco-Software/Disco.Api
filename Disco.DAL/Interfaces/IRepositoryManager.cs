@@ -14,5 +14,7 @@ namespace Disco.DAL.Interfaces
         FriendRepository FriendRepository { get; }
         ProfileRepository ProfileRepository { get; }
         StoryRepository StoryRepository { get; }
+        StoryImageRepository StoryImageRepository { get; }
+        StoryVideoRepository StoryVideoRepository { get; }
     }
 }

@@ -21,6 +21,8 @@ namespace Disco.BLL.Interfaces
         IImageService ImageService { get; }
         IVideoService VideoService { get; }
         ILikeSevice LikeSevice { get; }
+        IStoryImageService StoryImageService { get; }
+        IStoryVideoService StoryVideoService { get; }
         IRepositoryManager RepositoryManager { get; }
     }
 }

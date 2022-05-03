@@ -8,6 +8,8 @@ using Disco.BLL.Models.Images;
 using Disco.BLL.Models.Posts;
 using Disco.BLL.Models.Songs;
 using Disco.BLL.Models.Stories;
+using Disco.BLL.Models.StoryImages;
+using Disco.BLL.Models.StoryVideos;
 using Disco.BLL.Models.Videos;
 using Disco.DAL.Entities;
 using Microsoft.AspNetCore.Http;
@@ -33,11 +35,18 @@ namespace Disco.BLL.Mapper
                 .ForMember(source => source.Source, opt => opt.Ignore());
             CreateMap<CreateVideoModel, PostVideo>()
                 .ForMember(source => source.VideoSource, opt => opt.Ignore());
+            CreateMap<CreateStoryModel,Story>()
+                .ForMember(source => source.StoryImages, opt => opt.Ignore())
+                .ForMember(source => source.StoryVideos, opt => opt.Ignore())
+                .ForMember(source => source.DateOfCreation, opt => opt.Ignore());
+            CreateMap<CreateStoryImageModel, StoryImage>()
+                .ForMember(source => source.Source, opt => opt.Ignore());
+            CreateMap<CreateStoryVideoModel, StoryVideo>()
+                .ForMember(source => source.Source, opt => opt.Ignore());
             CreateMap<RegistrationModel, User>();
             CreateMap<FacebookModel, User>();
             CreateMap<CreateFriendModel, Friend>();
             CreateMap<DAL.Entities.Profile, ProfileModel>();
-            CreateMap<CreateStoryModel, Story>();
         }
     }
 }

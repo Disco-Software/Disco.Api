@@ -18,6 +18,5 @@ namespace Disco.BLL.Interfaces
         Task<List<Post>> GetAllUserPosts(int userId);
         Task<List<Post>> GetAllPosts(int userId);
         Task DeletePostAsync(int postId);
-        Task<PostImage> AddPostImage(IFormFile file, int postId);
     }
 }

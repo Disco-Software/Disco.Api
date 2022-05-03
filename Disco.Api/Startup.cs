@@ -115,6 +115,7 @@ namespace Disco.Api
                options.ClientSecret = Configuration["Google:SecretKey"];
             }).AddJwtBearer(AuthScheme.UserToken, options =>
             {
+                options.SaveToken = true;
                options.RequireHttpsMetadata = false;
                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                {
