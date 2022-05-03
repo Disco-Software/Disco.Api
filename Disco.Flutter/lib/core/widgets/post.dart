@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:chewie/chewie.dart';
 import 'package:disco_app/core/widgets/post_button.dart';
 import 'package:disco_app/data/network/network_models/image_network.dart';
 import 'package:disco_app/data/network/network_models/post_network.dart';
@@ -25,16 +26,15 @@ class UnicornPost extends StatefulWidget {
   State<UnicornPost> createState() => _UnicornPostState();
 }
 
-class _UnicornPostState extends State<UnicornPost>
-    with SingleTickerProviderStateMixin {
+class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStateMixin {
   int bodyIndex = 1;
   late AnimationController controller;
 
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
-        value: 0.3, vsync: this, duration: const Duration(milliseconds: 300));
+    controller =
+        AnimationController(value: 0.3, vsync: this, duration: const Duration(milliseconds: 300));
   }
 
   @override
@@ -66,8 +66,7 @@ class _UnicornPostState extends State<UnicornPost>
                 child: widget.post.profile?.photo != null
                     ? CachedNetworkImage(
                         imageUrl: widget.post.profile?.photo ?? '',
-                        placeholder: (context, url) =>
-                            Image.asset('assets/ic_photo.png'),
+                        placeholder: (context, url) => Image.asset('assets/ic_photo.png'),
                         fit: BoxFit.fill,
                       )
                     : Container(
@@ -101,23 +100,20 @@ class _UnicornPostState extends State<UnicornPost>
           padding: const EdgeInsets.symmetric(horizontal: 35),
           child: CarouselSlider(
             items: [
-              if (widget.post.postImages != null &&
-                  widget.post.postImages!.isNotEmpty)
+              if (widget.post.postImages != null && widget.post.postImages!.isNotEmpty)
                 ...widget.post.postImages!
                     .map((postImage) => _ImageBody(
                           postImage: postImage,
                         ))
                     .toList(),
-              if (widget.post.postSongs != null &&
-                  widget.post.postSongs!.isNotEmpty)
+              if (widget.post.postSongs != null && widget.post.postSongs!.isNotEmpty)
                 ...widget.post.postSongs!
                     .map((postSong) => _SongBody(
                           userName: widget.post.profile?.user?.userName ?? "",
                           postSong: postSong,
                         ))
                     .toList(),
-              if (widget.post.postVideos != null &&
-                  widget.post.postVideos!.isNotEmpty)
+              if (widget.post.postVideos != null && widget.post.postVideos!.isNotEmpty)
                 ...widget.post.postVideos!
                     .map((postVideo) => _VideoBody(
                           postVideo: postVideo,
@@ -166,15 +162,14 @@ class _UnicornPostState extends State<UnicornPost>
               const SizedBox(width: 13),
               PostButton(onTap: () {}, imagePath: "assets/ic_share.svg"),
               const Spacer(),
-              if (widget.post.postImages != null &&
-                  widget.post.postImages!.isNotEmpty)
+              if (_shouldShowPercentIndicator(widget.post))
                 AnimatedBuilder(
                   builder: (context, index) => LinearPercentIndicator(
                     width: 100,
                     percent: controller.value,
                     barRadius: const Radius.circular(7),
-                    linearGradient: const LinearGradient(
-                        colors: [Color(0xFFE08D11), Color(0xFFF6EA7D)]),
+                    linearGradient:
+                        const LinearGradient(colors: [Color(0xFFE08D11), Color(0xFFF6EA7D)]),
                     backgroundColor: const Color(0xFFC9D6FF),
                   ),
                   animation: controller,
@@ -225,6 +220,16 @@ class _UnicornPostState extends State<UnicornPost>
     final videosLength = widget.post.postVideos?.length ?? 0;
     return index / (imagesLength + songsLength + videosLength);
   }
+
+  _shouldShowPercentIndicator(Post post) {
+    final imagesLength = post.postImages?.length ?? 0;
+    final songsLength = post.postSongs?.length ?? 0;
+    final videosLength = post.postVideos?.length ?? 0;
+
+    final summ = imagesLength + songsLength + videosLength;
+
+    return summ > 1;
+  }
 }
 
 class _ImageBody extends StatelessWidget {
@@ -246,10 +251,7 @@ class _ImageBody extends StatelessWidget {
                 image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: const [
-                  BoxShadow(
-                      color: Color(0xFFB2A044FF),
-                      offset: Offset(0, 4),
-                      blurRadius: 7),
+                  BoxShadow(color: Color(0xFFB2A044FF), offset: Offset(0, 4), blurRadius: 7),
                 ],
               ),
             ),
@@ -307,8 +309,7 @@ class _SongBodyState extends State<_SongBody> {
     super.initState();
     _switchedWidget = _switchedPlay;
     audioPlayer = AudioPlayer();
-    audioPlayer.setAudioSource(
-        AudioSource.uri(Uri.parse(widget.postSong.source ?? '')));
+    audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(widget.postSong.source ?? '')));
   }
 
   @override
@@ -316,8 +317,7 @@ class _SongBodyState extends State<_SongBody> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        if (widget.postSong.imageUrl != null &&
-            widget.postSong.imageUrl!.isNotEmpty)
+        if (widget.postSong.imageUrl != null && widget.postSong.imageUrl!.isNotEmpty)
           CachedNetworkImage(
             imageBuilder: (context, imageProvider) => Container(
               height: 105,
@@ -326,10 +326,7 @@ class _SongBodyState extends State<_SongBody> {
                 image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: const [
-                  BoxShadow(
-                      color: Color(0xFFB2A044FF),
-                      offset: Offset(0, 4),
-                      blurRadius: 7),
+                  BoxShadow(color: Color(0xFFB2A044FF), offset: Offset(0, 4), blurRadius: 7),
                 ],
               ),
             ),
@@ -401,8 +398,7 @@ class _SongBodyState extends State<_SongBody> {
         ),
         const Spacer(),
         ConstrainedBox(
-          constraints:
-              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.3),
+          constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.3),
           child: Padding(
             padding: const EdgeInsets.only(bottom: 10.0, left: 13),
             child: Column(
@@ -452,13 +448,19 @@ class _VideoBody extends StatefulWidget {
 
 class _VideoBodyState extends State<_VideoBody> {
   late VideoPlayerController _controller;
+  late ChewieController _chewieController;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(
-        "https://www.youtube.com/watch?v=cMIHLzuJ4Wg")
-      ..initialize().then((value) => setState(() {}));
+    _controller = VideoPlayerController.network(widget.postVideo.videoSource ?? '')
+      ..initialize().then((value) {
+        setState(() {});
+      });
+    _chewieController = ChewieController(
+      videoPlayerController: _controller,
+      autoPlay: true,
+    );
   }
 
   @override
@@ -469,20 +471,6 @@ class _VideoBodyState extends State<_VideoBody> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-        onTap: () {
-          if (_controller.value.isPlaying)
-            _controller.pause();
-          else
-            _controller.play();
-        },
-        child: Container(
-          child: _controller.value.isInitialized
-              ? AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
-                )
-              : const SizedBox(),
-        ));
+    return Chewie(controller: _chewieController);
   }
 }
