@@ -115,7 +115,7 @@ namespace Disco.Api
                options.ClientSecret = Configuration["Google:SecretKey"];
             }).AddJwtBearer(AuthScheme.UserToken, options =>
             {
-                options.SaveToken = true;
+               options.SaveToken = true;
                options.RequireHttpsMetadata = false;
                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                {
@@ -146,7 +146,10 @@ namespace Disco.Api
                 .ValidateDataAnnotations();
             services.AddLogging();
 
-            services.AddCors(cors => cors.AddPolicy(name: "app", builder => builder.WithOrigins("http://discoapi20211205192712.azurewebsites.net/swagger/index.html")));
+            services.AddCors(cors =>
+            {
+                cors.AddPolicy(name: "app", builder => builder.WithOrigins("http://discoapi20211205192712.azurewebsites.net/swagger/index.html"));
+            });
 
             var mapperConfig = new MapperConfiguration(ms =>
             {
