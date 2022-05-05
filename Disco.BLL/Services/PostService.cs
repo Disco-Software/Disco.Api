@@ -83,15 +83,16 @@ namespace Disco.BLL.Services
             if (model.PostSongs != null)
                 foreach (var postSong in model.PostSongs)
                 {
-                    foreach (var postSongImage in model.PostSongImages)
-                    {
-                        foreach (var name in model.PostSongNames)
-                        {
-                            var song = await songService.CreatePostSongAsync(
-                                new CreateSongModel { SongFile = postSong, SongImage = postSongImage, Name = name, PostId = post.Id });
-                            post.PostSongs.Add(song);
-                        }
-                    }
+                    var name = model.PostSongNames.First();
+                    var image = model.PostSongImages.First();
+                    
+                    var song = await songService.CreatePostSongAsync(
+                         new CreateSongModel { SongFile = postSong, SongImage = image, Name = name, PostId = post.Id });
+                   
+                    model.PostSongNames.Remove(name);
+                    model.PostSongImages.Remove(image);
+                    
+                    post.PostSongs.Add(song);
                 }
             if (model.PostVideos != null)
                 foreach (var video in model.PostVideos)
