@@ -6,15 +6,14 @@ import 'package:disco_app/data/network/network_models/image_network.dart';
 import 'package:disco_app/data/network/network_models/post_network.dart';
 import 'package:disco_app/data/network/network_models/song_network.dart';
 import 'package:disco_app/data/network/network_models/video_network.dart';
+import 'package:disco_app/providers/post_provider.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
-
-import '../../injection.dart';
 
 class UnicornPost extends StatefulWidget {
   const UnicornPost({
@@ -282,8 +281,6 @@ class _SongBody extends StatefulWidget {
 }
 
 class _SongBodyState extends State<_SongBody> {
-  late AudioPlayer audioPlayer;
-
   final Widget _switchedPause = Padding(
     key: const ValueKey(1),
     padding: const EdgeInsets.all(4.0),
@@ -310,7 +307,6 @@ class _SongBodyState extends State<_SongBody> {
   void initState() {
     super.initState();
     _switchedWidget = _switchedPlay;
-    audioPlayer = getIt.get<AudioPlayer>();
   }
 
   @override
@@ -361,12 +357,12 @@ class _SongBodyState extends State<_SongBody> {
                 borderRadius: BorderRadius.circular(360),
                 child: InkWell(
                   onTap: () {
-                    if (audioPlayer.audioSource !=
-                        AudioSource.uri(Uri.parse(widget.postSong.source ?? ''))) {
-                      print(
-                          'RENEWED s1:${audioPlayer.audioSource.toString()} and s2: ${AudioSource.uri(Uri.parse(widget.postSong.source ?? ''))}');
-                      audioPlayer.setUrl(widget.postSong.source ?? '');
-                    }
+                    final audioPlayer = Provider.of<PostProvider>(context, listen: false).player;
+                    Provider.of<PostProvider>(context, listen: false)
+                        .setUrl(widget.postSong.source ?? '');
+                    Provider.of<PostProvider>(context, listen: false).setPost(widget.postSong);
+                    Provider.of<PostProvider>(context, listen: false).setSinger(widget.userName);
+
                     if (audioPlayer.playing) {
                       setState(() {
                         _switchedWidget = _switchedPlay;
@@ -394,7 +390,15 @@ class _SongBodyState extends State<_SongBody> {
                           opacity: animation,
                           child: child,
                         ),
-                        child: _switchedWidget,
+                        child: Consumer<PostProvider>(
+                          builder: (BuildContext context, value, Widget? child) {
+                            if (value.player.playing && value.oldUrl == widget.postSong.source) {
+                              return _switchedPause;
+                            } else {
+                              return _switchedPlay;
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -408,33 +412,35 @@ class _SongBodyState extends State<_SongBody> {
           constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.3),
           child: Padding(
             padding: const EdgeInsets.only(bottom: 10.0, left: 13),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  widget.postSong.name ?? "",
-                  maxLines: 1,
-                  style: GoogleFonts.aBeeZee(
-                    color: DcColors.darkWhite,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 24,
+            child: Consumer<PostProvider>(
+              builder: (context, data, child) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    widget.postSong.name ?? "",
+                    maxLines: 1,
+                    style: GoogleFonts.aBeeZee(
+                      color: DcColors.darkWhite,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 24,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  widget.userName,
-                  maxLines: 1,
-                  textAlign: TextAlign.start,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.textMeOne(
-                    color: DcColors.white,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 24,
+                  Text(
+                    widget.userName,
+                    maxLines: 1,
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.textMeOne(
+                      color: DcColors.white,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 24,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

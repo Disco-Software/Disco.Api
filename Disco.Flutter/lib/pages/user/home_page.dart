@@ -4,13 +4,13 @@ import 'package:disco_app/core/widgets/unicorn_outline_button.dart';
 import 'package:disco_app/data/network/repositories/post_repository.dart';
 import 'package:disco_app/data/network/repositories/stories_repository.dart';
 import 'package:disco_app/injection.dart';
+import 'package:disco_app/providers/post_provider.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 
 import 'main/bloc/main_bloc.dart';
@@ -25,6 +25,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   late AnimationController animationController;
+  bool isPlaying = false;
 
   final Widget _switchedPause = Padding(
     key: const ValueKey(1),
@@ -45,18 +46,27 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       color: const Color(0xffDE9237),
     ),
   );
-  late Widget _switchedWidget = _switchedPlay;
 
   @override
   void initState() {
-    _switchedWidget = _switchedPlay;
-    animationController = AnimationController(vsync: this, duration: const Duration(seconds: 1));
     super.initState();
+    animationController = AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    context.read<PostProvider>().player.playingStream.listen((event) {
+      if (event) {
+        animationController.forward();
+        setState(() {
+          isPlaying = true;
+        });
+      } else if (!event) {
+        setState(() {
+          isPlaying = false;
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final audioPlayer = getIt.get<AudioPlayer>();
     return MultiBlocProvider(
       providers: [
         BlocProvider<MainPageBloc>(
@@ -64,9 +74,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 postRepository: getIt.get<PostRepository>(),
                 storiesRepository: getIt.get<StoriesRepository>())),
         BlocProvider<StoriesBloc>(
-            create: (_) => StoriesBloc(
-                postRepository: getIt.get<PostRepository>(),
-                storiesRepository: getIt.get<StoriesRepository>())),
+          create: (_) => StoriesBloc(
+              postRepository: getIt.get<PostRepository>(),
+              storiesRepository: getIt.get<StoriesRepository>()),
+        ),
       ],
       child: AutoTabsScaffold(
           extendBody: true,
@@ -76,6 +87,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               onPanUpdate: (details) {
                 if (details.delta.dy > 0) {
                   animationController.reverse();
+                  final audioPlayer = Provider.of<PostProvider>(context, listen: false).player;
+                  audioPlayer.stop();
                 }
               },
               child: Stack(
@@ -98,40 +111,52 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Spacer(),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Tinyleopard',
-                                  style:
-                                      GoogleFonts.aBeeZee(fontSize: 24.0, color: Color(0xFFE6E0D2)),
-                                ),
-                                Text(
-                                  'Guy Flores',
-                                  style: GoogleFonts.textMeOne(
-                                    fontSize: 18.0,
-                                    color: Colors.white,
+                            Consumer<PostProvider>(
+                              builder: (ctx, data, child) => Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    data.post.name ?? '',
+                                    style: GoogleFonts.aBeeZee(
+                                        fontSize: 24.0, color: Color(0xFFE6E0D2)),
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    data.singer,
+                                    style: GoogleFonts.textMeOne(
+                                      fontSize: 18.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                             const Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: SvgPicture.asset('assets/ic_arrows_left.svg'),
+                            GestureDetector(
+                              onLongPressStart: (_) {
+                                final audioPlayer =
+                                    Provider.of<PostProvider>(context, listen: false).player;
+                                audioPlayer
+                                    .seek(Duration(seconds: audioPlayer.position.inSeconds - 5));
+                              },
+                              onLongPressEnd: (_) {
+                                final audioPlayer =
+                                    Provider.of<PostProvider>(context, listen: false).player;
+                                audioPlayer.setSpeed(1);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: SvgPicture.asset('assets/ic_arrows_left.svg'),
+                              ),
                             ),
                             const Spacer(),
                             InkWell(
                               onTap: () {
+                                final audioPlayer =
+                                    Provider.of<PostProvider>(context, listen: false).player;
+
                                 if (audioPlayer.playing) {
-                                  setState(() {
-                                    _switchedWidget = _switchedPlay;
-                                  });
                                   audioPlayer.pause();
                                 } else {
-                                  setState(() {
-                                    _switchedWidget = _switchedPause;
-                                  });
                                   audioPlayer.play();
                                 }
                               },
@@ -159,17 +184,41 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                         opacity: animation,
                                         child: child,
                                       ),
-                                      child: Consumer(builder: (BuildContext context, value, Widget? child) {return _  },
-                                      child: _switchedWidget),
+                                      child: Consumer<PostProvider>(
+                                        builder: (BuildContext context, value, Widget? child) {
+                                          if (isPlaying) {
+                                            return _switchedPause;
+                                          } else {
+                                            return _switchedPlay;
+                                          }
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
                             const Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: SvgPicture.asset('assets/ic_arrows_right.svg'),
+                            GestureDetector(
+                              onTap: () {
+                                final audioPlayer =
+                                    Provider.of<PostProvider>(context, listen: false).player;
+                                final post = Provider.of<PostProvider>(context, listen: false).post;
+                              },
+                              onLongPressStart: (_) {
+                                final audioPlayer =
+                                    Provider.of<PostProvider>(context, listen: false).player;
+                                audioPlayer.setSpeed(2);
+                              },
+                              onLongPressEnd: (_) {
+                                final audioPlayer =
+                                    Provider.of<PostProvider>(context, listen: false).player;
+                                audioPlayer.setSpeed(1);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: SvgPicture.asset('assets/ic_arrows_right.svg'),
+                              ),
                             ),
                             const Spacer(),
                           ],
@@ -228,12 +277,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                               backgroundColor: Colors.transparent,
                               elevation: 0.0,
                               child: UnicornOutlineButton(
-                                  onPressed: () {
-                                    print('asdds${audioPlayer.audioSource}');
-                                    animationController.value == 1
-                                        ? animationController.reverse()
-                                        : animationController.forward();
-                                  },
+                                  onPressed: () {},
                                   gradient: const LinearGradient(colors: [
                                     Color(0xffDE9237),
                                     Color(0xFFF6EA7D),
