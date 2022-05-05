@@ -1,8 +1,10 @@
 import 'package:disco_app/app/app.dart';
 import 'package:disco_app/data/network/request_models/login_request.dart';
 import 'package:disco_app/injection.dart';
+import 'package:disco_app/providers/post_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'data/network/interceptors/header_interceptor.dart';
 
@@ -20,5 +22,8 @@ void main() {
       print('lol1err');
     },
   );
-  runApp(MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (BuildContext context) => PostProvider(),
+    child: MyApp(),
+  ));
 }

@@ -14,6 +14,8 @@ import 'package:just_audio/just_audio.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../injection.dart';
+
 class UnicornPost extends StatefulWidget {
   const UnicornPost({
     Key? key,
@@ -308,8 +310,7 @@ class _SongBodyState extends State<_SongBody> {
   void initState() {
     super.initState();
     _switchedWidget = _switchedPlay;
-    audioPlayer = AudioPlayer();
-    audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(widget.postSong.source ?? '')));
+    audioPlayer = getIt.get<AudioPlayer>();
   }
 
   @override
@@ -360,6 +361,12 @@ class _SongBodyState extends State<_SongBody> {
                 borderRadius: BorderRadius.circular(360),
                 child: InkWell(
                   onTap: () {
+                    if (audioPlayer.audioSource !=
+                        AudioSource.uri(Uri.parse(widget.postSong.source ?? ''))) {
+                      print(
+                          'RENEWED s1:${audioPlayer.audioSource.toString()} and s2: ${AudioSource.uri(Uri.parse(widget.postSong.source ?? ''))}');
+                      audioPlayer.setUrl(widget.postSong.source ?? '');
+                    }
                     if (audioPlayer.playing) {
                       setState(() {
                         _switchedWidget = _switchedPlay;

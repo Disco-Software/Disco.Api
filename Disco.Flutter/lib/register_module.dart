@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'data/network/interceptors/header_interceptor.dart';
@@ -17,6 +18,9 @@ abstract class RegisterModule {
 
   @lazySingleton
   FlutterSecureStorage flutterSecureStorage() => const FlutterSecureStorage();
+
+  @lazySingleton
+  AudioPlayer audioPlayer() => AudioPlayer();
 
   Dio _getDio(String url) {
     final dio = Dio(BaseOptions(baseUrl: url));
