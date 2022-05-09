@@ -60,7 +60,7 @@ namespace Disco.BLL.Services
             facebookAuthService = new Lazy<IFacebookAuthService>(() => new FacebookAuthService(configuration, httpClientFactory));
             googleAuthService = new Lazy<IGoogleAuthService>(() => new GoogleAuthService(httpClientFactory));
             emailService = new Lazy<IEmailService>(() => new EmailService(_emailOptions,_logger));
-            authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, httpContextAccessor,googleAuthService.Value ,facebookAuthService.Value, emailService.Value,authenticationOptions,_googleOptions,_mapper));
+            authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, _blobServiceClient, httpContextAccessor,googleAuthService.Value ,facebookAuthService.Value, emailService.Value,authenticationOptions,_googleOptions,_mapper));
             var notificationHub = NotificationHubClient.CreateClientFromConnectionString(
                 configuration["ConnectionStrings:AzureNotificationHubConnection"],
                 configuration["NotificationHub:HubName"]);
@@ -70,7 +70,7 @@ namespace Disco.BLL.Services
             imageService = new Lazy<IImageService>(() => new ImageService(repositoryManager.Value.PostRepository, repositoryManager.Value.ImageRepository, _blobServiceClient, _mapper));
             songService = new Lazy<ISongService>(() => new SongService(repositoryManager.Value.SongRepository, repositoryManager.Value.PostRepository, _blobServiceClient, _mapper, httpContextAccessor));
             videoService = new Lazy<IVideoService>(() => new VideoService(repositoryManager.Value.VideoRepository, repositoryManager.Value.PostRepository, _blobServiceClient, _mapper));
-            likeSevice = new Lazy<ILikeSevice>(() => new LikeService(_ctx, repositoryManager.Value.PostRepository, _userManager, httpContextAccessor));
+            likeSevice = new Lazy<ILikeSevice>(() => new LikeService(_ctx, repositoryManager.Value.PostRepository, repositoryManager.Value.LikeRepository,_userManager, httpContextAccessor));
             postService = new Lazy<IPostService>(() => new PostService(repositoryManager.Value.PostRepository, _ctx, _userManager, _blobServiceClient, _mapper, imageService.Value, songService.Value, videoService.Value, httpContextAccessor));
             storyService = new Lazy<IStoryService>(() => new StoryService(repositoryManager.Value.StoryRepository, _userManager, _ctx,_blobServiceClient,storyImageService.Value,storyVideoService.Value,_mapper,httpContextAccessor));
             storyImageService = new Lazy<IStoryImageService> (() => new StoryImageService(repositoryManager.Value.StoryImageRepository, repositoryManager.Value.StoryRepository, _userManager, _blobServiceClient, _mapper, httpContextAccessor));

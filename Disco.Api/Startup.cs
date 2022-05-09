@@ -190,12 +190,19 @@ namespace Disco.Api
             app.ApplicationServices.CreateScope();
             app.UseAuthorization();
             app.UseAuthentication();
-            app.UseCors(s => s.AllowAnyOrigin());
+            
+            app.UseCors(s =>
+            {
+                s.SetIsOriginAllowed(o => true)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+
             app.Use(async (ctx, next) =>
             {
                 var hubContext = ctx
                     .RequestServices
-                    .GetRequiredService<IHubContext<PostHub>>();
+                    .GetRequiredService<IHubContext<LikeHub>>();
                 
                 if(next != null)
                 {
@@ -206,7 +213,7 @@ namespace Disco.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<PostHub>("/hub/post");
+                endpoints.MapHub<LikeHub>("/hub/like");
             });
         }
     }

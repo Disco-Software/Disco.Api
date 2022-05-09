@@ -18,15 +18,18 @@ namespace Disco.BLL.Services
     {
         private readonly ApiDbContext ctx;
         private readonly PostRepository postRepository;
+        private readonly LikeRepository likeRepository;
         private readonly UserManager<User> userManager;
         private readonly IHttpContextAccessor httpContextAccessor;
         public LikeService(
             ApiDbContext _ctx,
             PostRepository _postRepository,
+            LikeRepository _likeRepository,
             UserManager<User> _userManager,
             IHttpContextAccessor _httpContextAccessor)
         {
             postRepository = _postRepository;
+            likeRepository = _likeRepository;
             ctx = _ctx;
             userManager = _userManager;
             httpContextAccessor = _httpContextAccessor;
@@ -36,41 +39,31 @@ namespace Disco.BLL.Services
         {
             var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
             var post = await postRepository.Get(postId);
-
-            var like = post.Likes.Where(l => l.UserName == user.UserName).FirstOrDefault();
            
-            if(like != null)
-            {
-                post.Likes.Remove(like);
-                ctx.Like.Remove(like);
-                
-                await ctx.SaveChangesAsync();
-             
-                return post.Likes;
-            }
-
-            like = new Like
+            var like = new Like
             {
                 Post = post,
                 UserName = user.UserName,
                 PostId = postId,
             };
 
-            post.Likes.Add(like);
-            ctx.Like.Add(like);
-
-            await ctx.SaveChangesAsync();
+            await likeRepository.AddAsync(like, postId);
 
             return post.Likes;
         }
 
-        public async Task RemoveLikeAsync(int likeId)
+        public async Task<List<Like>> RemoveLikeAsync(int postId)
         {
-            var like = await ctx.Like
-                .Where(l => l.Id == likeId)
-                .FirstOrDefaultAsync();
+            var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
+            var post = await postRepository.Get(postId);
+            
+            var like = post.Likes
+                .Where(u => u.UserName == user.UserName)
+                .FirstOrDefault();
 
-            ctx.Remove(like);
+           await likeRepository.Remove(like.Id);
+
+            return post.Likes;
         }
     }
 }

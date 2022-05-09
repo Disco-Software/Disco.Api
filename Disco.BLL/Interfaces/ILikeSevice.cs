@@ -10,6 +10,6 @@ namespace Disco.BLL.Interfaces
     {
         public Task<List<Like>> CreateLikeAsync(int postId);
 
-        public Task RemoveLikeAsync(int likeId);
+        public Task<List<Like>> RemoveLikeAsync(int likeId);
     }
 }
