@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chewie/chewie.dart';
@@ -10,7 +12,9 @@ import 'package:disco_app/providers/post_provider.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -30,6 +34,8 @@ class UnicornPost extends StatefulWidget {
 class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStateMixin {
   int bodyIndex = 1;
   late AnimationController controller;
+  final CarouselController carouselController = CarouselController();
+  int _currentPageIndex = 0;
 
   @override
   void initState() {
@@ -100,18 +106,26 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 35),
           child: CarouselSlider(
+            carouselController: carouselController,
             items: [
-              if (widget.post.postImages != null && widget.post.postImages!.isNotEmpty)
-                ...widget.post.postImages!
-                    .map((postImage) => _ImageBody(
-                          postImage: postImage,
-                        ))
-                    .toList(),
               if (widget.post.postSongs != null && widget.post.postSongs!.isNotEmpty)
                 ...widget.post.postSongs!
                     .map((postSong) => _SongBody(
                           userName: widget.post.profile?.user?.userName ?? "",
                           postSong: postSong,
+                          songSources:
+                              widget.post.postSongs?.map((e) => e.source ?? '').toList() ?? [],
+                          songTitles:
+                              widget.post.postSongs?.map((e) => e.name ?? '').toList() ?? [],
+                          carouselController: carouselController,
+                          post: widget.post,
+                          currentPageIndex: _currentPageIndex,
+                        ))
+                    .toList(),
+              if (widget.post.postImages != null && widget.post.postImages!.isNotEmpty)
+                ...widget.post.postImages!
+                    .map((postImage) => _ImageBody(
+                          postImage: postImage,
                         ))
                     .toList(),
               if (widget.post.postVideos != null && widget.post.postVideos!.isNotEmpty)
@@ -125,6 +139,9 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
                 viewportFraction: 1.0,
                 enableInfiniteScroll: false,
                 onPageChanged: (index, reason) {
+                  setState(() {
+                    _currentPageIndex = index;
+                  });
                   controller.animateTo(_getIndicatorPercent(index + 1));
                 }),
           ),
@@ -272,15 +289,27 @@ class _SongBody extends StatefulWidget {
     Key? key,
     required this.postSong,
     required this.userName,
+    required this.songSources,
+    required this.songTitles,
+    required this.carouselController,
+    required this.post,
+    required this.currentPageIndex,
   }) : super(key: key);
   final String userName;
   final PostSong postSong;
+  final List<String> songSources;
+  final List<String> songTitles;
+  final CarouselController carouselController;
+  final Post post;
+  final int currentPageIndex;
 
   @override
   State<_SongBody> createState() => _SongBodyState();
 }
 
 class _SongBodyState extends State<_SongBody> {
+  late StreamSubscription subscription;
+
   final Widget _switchedPause = Padding(
     key: const ValueKey(1),
     padding: const EdgeInsets.all(4.0),
@@ -301,12 +330,35 @@ class _SongBodyState extends State<_SongBody> {
     ),
   );
 
-  late Widget _switchedWidget;
-
   @override
   void initState() {
     super.initState();
-    _switchedWidget = _switchedPlay;
+
+    subscription =
+        context.read<PostProvider>().player.playerStateStream.listen((PlayerState state) async {
+      final provider = Provider.of<PostProvider>(context, listen: false);
+      if (state.processingState == ProcessingState.completed) {
+        await provider.player.stop();
+        setState(() {});
+      }
+
+      // if (event) {
+      //   animationController.forward();
+      //   setState(() {
+      //     isPlaying = true;
+      //   });
+      // } else if (!event) {
+      //   setState(() {
+      //     isPlaying = false;
+      //   });
+      // }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    subscription.cancel();
   }
 
   @override
@@ -357,22 +409,26 @@ class _SongBodyState extends State<_SongBody> {
                 borderRadius: BorderRadius.circular(360),
                 child: InkWell(
                   onTap: () {
-                    final audioPlayer = Provider.of<PostProvider>(context, listen: false).player;
-                    Provider.of<PostProvider>(context, listen: false)
-                        .setUrl(widget.postSong.source ?? '');
-                    Provider.of<PostProvider>(context, listen: false).setPost(widget.postSong);
-                    Provider.of<PostProvider>(context, listen: false).setSinger(widget.userName);
+                    final provider = Provider.of<PostProvider>(context, listen: false);
 
-                    if (audioPlayer.playing) {
-                      setState(() {
-                        _switchedWidget = _switchedPlay;
-                      });
-                      audioPlayer.pause();
+                    final oldPost = provider.oldPost;
+                    if (widget.postSong.id != oldPost.id) {
+                      provider.setSongIndex(0);
+                    }
+                    provider.setUrl(widget.postSong.source ?? '');
+                    provider.setPostSong(widget.postSong);
+                    provider.setSinger(widget.userName);
+                    provider.setAudioSources(widget.songSources);
+                    provider.setAudioTitles(widget.songTitles);
+                    provider.setSongIndex(widget.currentPageIndex);
+                    provider.setCarouselController(widget.carouselController);
+                    if (provider.player.playing) {
+                      print('lolPAUSE');
+                      provider.player.pause();
                     } else {
-                      setState(() {
-                        _switchedWidget = _switchedPause;
-                      });
-                      audioPlayer.play();
+                      print('lolPLAY');
+
+                      provider.player.play();
                     }
                   },
                   borderRadius: BorderRadius.circular(360),
@@ -392,7 +448,9 @@ class _SongBodyState extends State<_SongBody> {
                         ),
                         child: Consumer<PostProvider>(
                           builder: (BuildContext context, value, Widget? child) {
-                            if (value.player.playing && value.oldUrl == widget.postSong.source) {
+                            if (value.songSources[value.currentSongIndex] ==
+                                    widget.postSong.source &&
+                                value.player.playing) {
                               return _switchedPause;
                             } else {
                               return _switchedPlay;
@@ -471,19 +529,27 @@ class _VideoBodyState extends State<_VideoBody> {
         setState(() {});
       });
     _chewieController = ChewieController(
-      videoPlayerController: _controller,
-      autoPlay: true,
-    );
+        videoPlayerController: _controller,
+        autoPlay: true,
+        deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp]);
   }
 
   @override
   void dispose() {
     super.dispose();
     _controller.dispose();
+    _chewieController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Chewie(controller: _chewieController);
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Chewie(
+          controller: _chewieController,
+        ));
   }
 }
