@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    data.post.name ?? '',
+                                    data.songTitles[data.currentSongIndex],
                                     style: GoogleFonts.aBeeZee(
                                         fontSize: 24.0, color: Color(0xFFE6E0D2)),
                                   ),
@@ -142,6 +142,20 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                 final audioPlayer =
                                     Provider.of<PostProvider>(context, listen: false).player;
                                 audioPlayer.setSpeed(1);
+                              },
+                              onTap: () {
+                                final provider = Provider.of<PostProvider>(context, listen: false);
+                                final audioPlayer = provider.player;
+                                int index = provider.currentSongIndex;
+                                final urls = provider.songSources;
+                                final controller = provider.carouselController;
+                                if (index > 0) {
+                                  controller.previousPage();
+                                  provider.setSongIndex(index - 1);
+                                  provider.setUrl(urls[index - 1]);
+                                  // await audioPlayer.setUrl(urls[index]);
+                                  audioPlayer.play();
+                                } else {}
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
@@ -200,15 +214,26 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             ),
                             const Spacer(),
                             GestureDetector(
-                              onTap: () {
-                                final audioPlayer =
-                                    Provider.of<PostProvider>(context, listen: false).player;
-                                final post = Provider.of<PostProvider>(context, listen: false).post;
+                              onTap: () async {
+                                final provider = Provider.of<PostProvider>(context, listen: false);
+                                final audioPlayer = provider.player;
+                                int index = provider.currentSongIndex;
+                                final urls = provider.songSources;
+                                // final titles = provider.songTitles;
+                                final controller = provider.carouselController;
+                                if (index < urls.length - 1) {
+                                  controller.nextPage();
+                                  provider.setSongIndex(index + 1);
+                                  provider.setUrl(urls[index + 1]);
+
+                                  // await audioPlayer.setUrl(urls[index]);
+                                  audioPlayer.play();
+                                } else {}
                               },
                               onLongPressStart: (_) {
                                 final audioPlayer =
                                     Provider.of<PostProvider>(context, listen: false).player;
-                                audioPlayer.setSpeed(2);
+                                audioPlayer.setSpeed(15);
                               },
                               onLongPressEnd: (_) {
                                 final audioPlayer =
