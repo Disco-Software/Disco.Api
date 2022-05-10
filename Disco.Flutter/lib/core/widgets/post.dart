@@ -17,7 +17,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:signalr_netcore/hub_connection_builder.dart';
 import 'package:video_player/video_player.dart';
+
+const String serverUrl = 'http://10.0.2.2:8000/Disco.Api/hub/like';
 
 class UnicornPost extends StatefulWidget {
   const UnicornPost({
@@ -31,18 +34,22 @@ class UnicornPost extends StatefulWidget {
   State<UnicornPost> createState() => _UnicornPostState();
 }
 
-class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStateMixin {
+class _UnicornPostState extends State<UnicornPost>
+    with SingleTickerProviderStateMixin {
   int bodyIndex = 1;
   late AnimationController controller;
   final CarouselController carouselController = CarouselController();
   int _currentPageIndex = 0;
-
+  final hubConnection = HubConnectionBuilder().withUrl(serverUrl).build();
   @override
   void initState() {
     super.initState();
-    controller =
-        AnimationController(value: 0.3, vsync: this, duration: const Duration(milliseconds: 300));
+    hubConnectionStart();
+    controller = AnimationController(
+        value: 0.3, vsync: this, duration: const Duration(milliseconds: 300));
   }
+
+  void hubConnectionStart() async => await hubConnection.start();
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +80,8 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
                 child: widget.post.profile?.photo != null
                     ? CachedNetworkImage(
                         imageUrl: widget.post.profile?.photo ?? '',
-                        placeholder: (context, url) => Image.asset('assets/ic_photo.png'),
+                        placeholder: (context, url) =>
+                            Image.asset('assets/ic_photo.png'),
                         fit: BoxFit.fill,
                       )
                     : Container(
@@ -108,27 +116,34 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
           child: CarouselSlider(
             carouselController: carouselController,
             items: [
-              if (widget.post.postSongs != null && widget.post.postSongs!.isNotEmpty)
+              if (widget.post.postSongs != null &&
+                  widget.post.postSongs!.isNotEmpty)
                 ...widget.post.postSongs!
                     .map((postSong) => _SongBody(
                           userName: widget.post.profile?.user?.userName ?? "",
                           postSong: postSong,
-                          songSources:
-                              widget.post.postSongs?.map((e) => e.source ?? '').toList() ?? [],
-                          songTitles:
-                              widget.post.postSongs?.map((e) => e.name ?? '').toList() ?? [],
+                          songSources: widget.post.postSongs
+                                  ?.map((e) => e.source ?? '')
+                                  .toList() ??
+                              [],
+                          songTitles: widget.post.postSongs
+                                  ?.map((e) => e.name ?? '')
+                                  .toList() ??
+                              [],
                           carouselController: carouselController,
                           post: widget.post,
                           currentPageIndex: _currentPageIndex,
                         ))
                     .toList(),
-              if (widget.post.postImages != null && widget.post.postImages!.isNotEmpty)
+              if (widget.post.postImages != null &&
+                  widget.post.postImages!.isNotEmpty)
                 ...widget.post.postImages!
                     .map((postImage) => _ImageBody(
                           postImage: postImage,
                         ))
                     .toList(),
-              if (widget.post.postVideos != null && widget.post.postVideos!.isNotEmpty)
+              if (widget.post.postVideos != null &&
+                  widget.post.postVideos!.isNotEmpty)
                 ...widget.post.postVideos!
                     .map((postVideo) => _VideoBody(
                           postVideo: postVideo,
@@ -164,7 +179,21 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
           padding: const EdgeInsets.symmetric(horizontal: 37),
           child: Row(
             children: [
-              PostButton(onTap: () {}, imagePath: "assets/ic_star.svg"),
+              FutureBuilder(builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return PostButton(
+                      onTap: () {
+                        hubConnection
+                            .invoke('create', args: [widget.post.id ?? 0]);
+                      },
+                      imagePath: "assets/ic_star.svg");
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const CircularProgressIndicator.adaptive();
+                } else {
+                  return const SizedBox();
+                }
+              }),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Text(
@@ -186,8 +215,8 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
                     width: 100,
                     percent: controller.value,
                     barRadius: const Radius.circular(7),
-                    linearGradient:
-                        const LinearGradient(colors: [Color(0xFFE08D11), Color(0xFFF6EA7D)]),
+                    linearGradient: const LinearGradient(
+                        colors: [Color(0xFFE08D11), Color(0xFFF6EA7D)]),
                     backgroundColor: const Color(0xFFC9D6FF),
                   ),
                   animation: controller,
@@ -269,7 +298,10 @@ class _ImageBody extends StatelessWidget {
                 image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: const [
-                  BoxShadow(color: Color(0xFFB2A044FF), offset: Offset(0, 4), blurRadius: 7),
+                  BoxShadow(
+                      color: Color(0xFFB2A044FF),
+                      offset: Offset(0, 4),
+                      blurRadius: 7),
                 ],
               ),
             ),
@@ -334,8 +366,11 @@ class _SongBodyState extends State<_SongBody> {
   void initState() {
     super.initState();
 
-    subscription =
-        context.read<PostProvider>().player.playerStateStream.listen((PlayerState state) async {
+    subscription = context
+        .read<PostProvider>()
+        .player
+        .playerStateStream
+        .listen((PlayerState state) async {
       final provider = Provider.of<PostProvider>(context, listen: false);
       if (state.processingState == ProcessingState.completed) {
         await provider.player.stop();
@@ -366,7 +401,8 @@ class _SongBodyState extends State<_SongBody> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        if (widget.postSong.imageUrl != null && widget.postSong.imageUrl!.isNotEmpty)
+        if (widget.postSong.imageUrl != null &&
+            widget.postSong.imageUrl!.isNotEmpty)
           CachedNetworkImage(
             imageBuilder: (context, imageProvider) => Container(
               height: 105,
@@ -375,7 +411,10 @@ class _SongBodyState extends State<_SongBody> {
                 image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: const [
-                  BoxShadow(color: Color(0xFFB2A044FF), offset: Offset(0, 4), blurRadius: 7),
+                  BoxShadow(
+                      color: Color(0xFFB2A044FF),
+                      offset: Offset(0, 4),
+                      blurRadius: 7),
                 ],
               ),
             ),
@@ -409,7 +448,8 @@ class _SongBodyState extends State<_SongBody> {
                 borderRadius: BorderRadius.circular(360),
                 child: InkWell(
                   onTap: () {
-                    final provider = Provider.of<PostProvider>(context, listen: false);
+                    final provider =
+                        Provider.of<PostProvider>(context, listen: false);
 
                     final oldPost = provider.oldPost;
                     if (widget.postSong.id != oldPost.id) {
@@ -447,7 +487,8 @@ class _SongBodyState extends State<_SongBody> {
                           child: child,
                         ),
                         child: Consumer<PostProvider>(
-                          builder: (BuildContext context, value, Widget? child) {
+                          builder:
+                              (BuildContext context, value, Widget? child) {
                             if (value.songSources[value.currentSongIndex] ==
                                     widget.postSong.source &&
                                 value.player.playing) {
@@ -467,7 +508,8 @@ class _SongBodyState extends State<_SongBody> {
         ),
         const Spacer(),
         ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.3),
+          constraints:
+              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.3),
           child: Padding(
             padding: const EdgeInsets.only(bottom: 10.0, left: 13),
             child: Consumer<PostProvider>(
@@ -524,10 +566,11 @@ class _VideoBodyState extends State<_VideoBody> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(widget.postVideo.videoSource ?? '')
-      ..initialize().then((value) {
-        setState(() {});
-      });
+    _controller =
+        VideoPlayerController.network(widget.postVideo.videoSource ?? '')
+          ..initialize().then((value) {
+            setState(() {});
+          });
     _chewieController = ChewieController(
         videoPlayerController: _controller,
         autoPlay: true,

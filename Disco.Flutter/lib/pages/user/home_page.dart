@@ -23,7 +23,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   late AnimationController animationController;
   bool isPlaying = false;
 
@@ -50,7 +51,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    animationController = AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    animationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
     context.read<PostProvider>().player.playingStream.listen((event) {
       if (event) {
         animationController.forward();
@@ -87,7 +89,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               onPanUpdate: (details) {
                 if (details.delta.dy > 0) {
                   animationController.reverse();
-                  final audioPlayer = Provider.of<PostProvider>(context, listen: false).player;
+                  final audioPlayer =
+                      Provider.of<PostProvider>(context, listen: false).player;
                   audioPlayer.stop();
                 }
               },
@@ -97,7 +100,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   AnimatedBuilder(
                     child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                      height: 200.0,
+                      height: MediaQuery.of(context).padding.bottom > 0
+                          ? 200.0
+                          : 175,
                       decoration: const BoxDecoration(
                         color: Color(0xFF543388),
                         borderRadius: BorderRadius.only(
@@ -118,7 +123,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                   Text(
                                     data.songTitles[data.currentSongIndex],
                                     style: GoogleFonts.aBeeZee(
-                                        fontSize: 24.0, color: Color(0xFFE6E0D2)),
+                                        fontSize: 24.0,
+                                        color: Color(0xFFE6E0D2)),
                                   ),
                                   Text(
                                     data.singer,
@@ -133,18 +139,25 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             const Spacer(),
                             GestureDetector(
                               onLongPressStart: (_) {
-                                final audioPlayer =
-                                    Provider.of<PostProvider>(context, listen: false).player;
-                                audioPlayer
-                                    .seek(Duration(seconds: audioPlayer.position.inSeconds - 5));
+                                final audioPlayer = Provider.of<PostProvider>(
+                                        context,
+                                        listen: false)
+                                    .player;
+                                audioPlayer.seek(Duration(
+                                    seconds:
+                                        audioPlayer.position.inSeconds - 5));
                               },
                               onLongPressEnd: (_) {
-                                final audioPlayer =
-                                    Provider.of<PostProvider>(context, listen: false).player;
+                                final audioPlayer = Provider.of<PostProvider>(
+                                        context,
+                                        listen: false)
+                                    .player;
                                 audioPlayer.setSpeed(1);
                               },
                               onTap: () {
-                                final provider = Provider.of<PostProvider>(context, listen: false);
+                                final provider = Provider.of<PostProvider>(
+                                    context,
+                                    listen: false);
                                 final audioPlayer = provider.player;
                                 int index = provider.currentSongIndex;
                                 final urls = provider.songSources;
@@ -159,15 +172,19 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
-                                child: SvgPicture.asset('assets/ic_arrows_left.svg'),
+                                child: SvgPicture.asset(
+                                    'assets/ic_arrows_left.svg'),
                               ),
                             ),
                             const Spacer(),
                             InkWell(
                               onTap: () {
-                                final audioPlayer =
-                                    Provider.of<PostProvider>(context, listen: false).player;
-
+                                print(
+                                    'stas print ${MediaQuery.of(context).padding.bottom}');
+                                final audioPlayer = Provider.of<PostProvider>(
+                                        context,
+                                        listen: false)
+                                    .player;
                                 if (audioPlayer.playing) {
                                   audioPlayer.pause();
                                 } else {
@@ -193,13 +210,16 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                       shape: BoxShape.circle,
                                     ),
                                     child: AnimatedSwitcher(
-                                      duration: const Duration(milliseconds: 300),
-                                      transitionBuilder: (child, animation) => FadeTransition(
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      transitionBuilder: (child, animation) =>
+                                          FadeTransition(
                                         opacity: animation,
                                         child: child,
                                       ),
                                       child: Consumer<PostProvider>(
-                                        builder: (BuildContext context, value, Widget? child) {
+                                        builder: (BuildContext context, value,
+                                            Widget? child) {
                                           if (isPlaying) {
                                             return _switchedPause;
                                           } else {
@@ -215,7 +235,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             const Spacer(),
                             GestureDetector(
                               onTap: () async {
-                                final provider = Provider.of<PostProvider>(context, listen: false);
+                                final provider = Provider.of<PostProvider>(
+                                    context,
+                                    listen: false);
                                 final audioPlayer = provider.player;
                                 int index = provider.currentSongIndex;
                                 final urls = provider.songSources;
@@ -231,18 +253,23 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                 } else {}
                               },
                               onLongPressStart: (_) {
-                                final audioPlayer =
-                                    Provider.of<PostProvider>(context, listen: false).player;
+                                final audioPlayer = Provider.of<PostProvider>(
+                                        context,
+                                        listen: false)
+                                    .player;
                                 audioPlayer.setSpeed(15);
                               },
                               onLongPressEnd: (_) {
-                                final audioPlayer =
-                                    Provider.of<PostProvider>(context, listen: false).player;
+                                final audioPlayer = Provider.of<PostProvider>(
+                                        context,
+                                        listen: false)
+                                    .player;
                                 audioPlayer.setSpeed(1);
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
-                                child: SvgPicture.asset('assets/ic_arrows_right.svg'),
+                                child: SvgPicture.asset(
+                                    'assets/ic_arrows_right.svg'),
                               ),
                             ),
                             const Spacer(),

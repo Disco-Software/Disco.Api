@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Storage.Blobs;
 using Disco.BLL.Abstracts;
 using Disco.BLL.Configurations;
 using Disco.BLL.Constants;
@@ -29,6 +30,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Policy;
@@ -43,6 +45,7 @@ namespace Disco.BLL.Services
         private readonly ApiDbContext ctx;
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
+        private readonly BlobServiceClient blobServiceClient;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IMapper mapper;
         private readonly IGoogleAuthService googleAuthService;
@@ -53,6 +56,7 @@ namespace Disco.BLL.Services
         public AuthenticationService(ApiDbContext _ctx,
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
+            BlobServiceClient _blobServiceClient,
             IHttpContextAccessor _httpContextAccessor,
             IGoogleAuthService _googleAuthService,
             IFacebookAuthService _facebookAuthService,
@@ -64,6 +68,7 @@ namespace Disco.BLL.Services
             ctx = _ctx;
             userManager = _userManager;
             signInManager = _signInManager;
+            blobServiceClient = _blobServiceClient;
             facebookAuthService = _facebookAuthService;
             mapper = _mapper;
             authenticationOptions = _authenticationOptions;
@@ -294,7 +299,13 @@ namespace Disco.BLL.Services
             if (user == null)
                 return "user not found";
 
-            var html = await File.ReadAllTextAsync("../Disco.BLL/EmailTemplates/ConfirmationEmail/index.html");
+            var blobContainerClient = blobServiceClient.GetBlobContainerClient("templates");
+            var blobClient = blobContainerClient.GetBlobClient("index.html");
+
+            var uri = blobClient.Uri.AbsoluteUri;
+
+
+            var html = (new WebClient()).DownloadString(uri);
             var passwordToken = await userManager.GeneratePasswordResetTokenAsync(user);
             string url = $"disco://disco.app/token/{passwordToken}";
             EmailConfirmationModel model = new EmailConfirmationModel();
