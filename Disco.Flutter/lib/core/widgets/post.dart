@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chewie/chewie.dart';
 import 'package:disco_app/core/widgets/post_button.dart';
-import 'package:disco_app/data/local/local_storage.dart';
 import 'package:disco_app/data/network/network_models/image_network.dart';
 import 'package:disco_app/data/network/network_models/post_network.dart';
 import 'package:disco_app/data/network/network_models/song_network.dart';
@@ -16,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:logging/logging.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:signalr_netcore/hub_connection.dart';
@@ -23,9 +23,9 @@ import 'package:signalr_netcore/ihub_protocol.dart';
 import 'package:signalr_netcore/signalr_client.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../injection.dart';
-
 const String serverUrl = 'https://devdiscoapi.azurewebsites.net/hub/like';
+const String token =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJuYmYiOjE2NTIyOTkyMDIsImV4cCI6MTY1MjM3MTIwMiwiaXNzIjoiZGlzY28tYXBpIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdC9EaXNjby5BcGkifQ.TvwhbL9HvUXOvL5yux88wenI9Z5gogClOKAUZL-42CI';
 
 class UnicornPost extends StatefulWidget {
   const UnicornPost({
@@ -46,7 +46,8 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
   int _currentPageIndex = 0;
 
   // final hubConnection = HubConnectionBuilder().withUrl(serverUrl).build();
-  late HubConnection hubConnection;
+  // late HubConnection hubConnection;
+  final hubProtLogger = Logger("SignalR - hub");
 
   @override
   void initState() {
@@ -59,16 +60,17 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
 
   void initSignalR() {
     final headers = MessageHeaders();
-    // headers.setHeaderValue('Authorization', token);
-    hubConnection = HubConnectionBuilder()
-        .withUrl(serverUrl,
-            options: HttpConnectionOptions(
-                accessTokenFactory: () =>
-                    Future.value(getIt.get<SecureStorageRepository>().read(key: 'token'))))
-        .build();
-    hubConnection.onclose(
-      ({error}) => print('Connection close'),
-    );
+    headers.setHeaderValue('Authorization', token);
+    // hubConnection = HubConnectionBuilder()
+    //     .withUrl(serverUrl,
+    //         options: HttpConnectionOptions(
+    //           accessTokenFactory: () async => token,
+    //         ))
+    //     .configureLogging(hubProtLogger)
+    //     .build();
+    // hubConnection.onclose(
+    //   ({error}) => print('Connection close'),
+    // );
     // hubConnection.on('', (args) {});
   }
 
@@ -196,13 +198,24 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
             children: [
               PostButton(
                   onTap: () async {
+                    final hubConnection = HubConnectionBuilder()
+                        .withUrl(serverUrl,
+                            options: HttpConnectionOptions(
+                              accessTokenFactory: () async => token,
+                            ))
+                        .configureLogging(hubProtLogger)
+                        .build();
+
+                    hubConnection.serverTimeoutInMilliseconds = 10 * 60 * 60 * 1000;
+                    hubConnection.keepAliveIntervalInMilliseconds = 10 * 60 * 60 * 1000;
                     try {
                       await hubConnection.start();
+                      hubConnection.onclose(({error}) => print("Connection Closed"));
                     } catch (err) {
                       print('$err lol1 ${hubConnection.state}');
-                      if (hubConnection.state == HubConnectionState.Connected) {
-                        hubConnection.invoke('create', args: <Object>[widget.post.id ?? 0]);
-                      }
+                    }
+                    if (hubConnection.state == HubConnectionState.Connected) {
+                      hubConnection.invoke('create', args: <Object>[widget.post.id ?? 0]);
                     }
                     setState(() {});
                   },
