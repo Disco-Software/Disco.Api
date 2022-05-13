@@ -73,8 +73,8 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
                             label: Text(
                               'Continue with E-mail',
                               style: GoogleFonts.aBeeZee(
-                                  textStyle: const TextStyle(
-                                      color: DcColors.darkWhite, fontSize: 16)),
+                                  textStyle:
+                                      const TextStyle(color: DcColors.darkWhite, fontSize: 16)),
                             ),
                           )),
                     ),
@@ -101,8 +101,8 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
                             label: Text(
                               'Continue with Facebook',
                               style: GoogleFonts.aBeeZee(
-                                  textStyle: const TextStyle(
-                                      color: DcColors.darkWhite, fontSize: 16)),
+                                  textStyle:
+                                      const TextStyle(color: DcColors.darkWhite, fontSize: 16)),
                             ),
                           )),
                     ),
@@ -115,8 +115,7 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
                           'By continuing, you agree to accept our ' +
                               'Privacy Policy & Terms of Service',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: DcColors.darkWhite, fontSize: 12)),
+                          style: TextStyle(color: DcColors.darkWhite, fontSize: 12)),
                     ),
                   ],
                 ),
@@ -130,7 +129,7 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
     if (Platform.isIOS) {
       return OutlinedButton.icon(
           onPressed: onApplePressed,
-          icon: Image.asset('assets/apple.png'),
+          icon: Image.asset('assets/ic_apple.png'),
           label: const Text(
             'Continue with Apple ID',
             style: TextStyle(fontSize: 16),
@@ -159,8 +158,7 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
   void onApplePressed() {}
 
   void onFacebookPressed() async {
-    final facebookResponse =
-        await FacebookAuth.i.login(permissions: ['public_profile', 'email']);
+    final facebookResponse = await FacebookAuth.i.login(permissions: ['public_profile', 'email']);
     final String? token = facebookResponse.accessToken?.token;
     if (facebookResponse.status == LoginStatus.success) {
       FacebookAuth.i.getUserData(fields: 'email,first_name,name,picture');
