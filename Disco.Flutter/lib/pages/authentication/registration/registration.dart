@@ -36,7 +36,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void _blocLisener(BuildContext context, Object? state) {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       if (state is RegistratedState) {
-        context.router.pushAndPopUntil(const HomeRoute(), predicate: (route) => false);
+        context.router
+            .pushAndPopUntil(const HomeRoute(), predicate: (route) => false);
       }
     });
   }
@@ -45,6 +46,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void dispose() {
     _bloc.close();
     _emailController.dispose();
+    _userNameController.dispose();
+    _confirmPasswordController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -60,15 +63,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
             "Registration",
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.normal),
           ),
-          leading:
-              IconButton(onPressed: onBackPressed, icon: Image.asset("assets/back_button.png")),
+          leading: IconButton(
+              onPressed: onBackPressed,
+              icon: Image.asset("assets/back_button.png")),
           centerTitle: true,
           backgroundColor: DcColors.darkViolet,
         ),
         body: Container(
           decoration: const BoxDecoration(
-              image:
-                  DecorationImage(image: AssetImage("assets/background.png"), fit: BoxFit.cover)),
+              image: DecorationImage(
+                  image: AssetImage("assets/background.png"),
+                  fit: BoxFit.cover)),
           width: double.infinity,
           height: double.infinity,
           child: SingleChildScrollView(
@@ -86,13 +91,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       child: Text(
                         "Name",
                         style: TextStyle(
-                            color: DcColors.darkWhite, fontSize: 16, fontStyle: FontStyle.normal),
+                            color: DcColors.darkWhite,
+                            fontSize: 16,
+                            fontStyle: FontStyle.normal),
                       ),
                     ),
                     TextFormField(
                       controller: _userNameController,
                       decoration: InputDecoration(
-                          errorText: state is RegistrationErrorState ? state.userName : null),
+                          errorText: state is RegistrationErrorState
+                              ? state.userName
+                              : null),
                       style: const TextStyle(color: DcColors.darkWhite),
                     ),
                     const SizedBox(
@@ -103,13 +112,26 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       child: Text(
                         "E-mail",
                         style: TextStyle(
-                            color: DcColors.darkWhite, fontSize: 16, fontStyle: FontStyle.normal),
+                            color: DcColors.darkWhite,
+                            fontSize: 16,
+                            fontStyle: FontStyle.normal),
                       ),
                     ),
                     TextFormField(
                       controller: _emailController,
+                      onChanged: (value) {
+                        setState(() {});
+                      },
+                      validator: (value) {
+                        bool emailValid = RegExp(
+                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                            .hasMatch(value ?? "");
+                        if (!emailValid) {
+                          return 'Please enter valid e-mail';
+                        }
+                      },
                       decoration: InputDecoration(
-                          errorText: state is RegistrationErrorState ? state.email : null),
+                          errorText: _getEmailErrorText(_emailController.text)),
                       style: const TextStyle(color: DcColors.darkWhite),
                     ),
                     const Padding(
@@ -117,13 +139,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       child: Text(
                         "Password",
                         style: TextStyle(
-                            color: DcColors.darkWhite, fontSize: 16, fontStyle: FontStyle.normal),
+                            color: DcColors.darkWhite,
+                            fontSize: 16,
+                            fontStyle: FontStyle.normal),
                       ),
                     ),
                     TextFormField(
                       controller: _passwordController,
                       decoration: InputDecoration(
-                          errorText: state is RegistrationErrorState ? state.password : null),
+                          errorText: state is RegistrationErrorState
+                              ? state.password
+                              : null),
                       style: const TextStyle(color: DcColors.darkWhite),
                     ),
                     const Padding(
@@ -131,14 +157,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       child: Text(
                         "Confirm password",
                         style: TextStyle(
-                            color: DcColors.darkWhite, fontSize: 16, fontStyle: FontStyle.normal),
+                            color: DcColors.darkWhite,
+                            fontSize: 16,
+                            fontStyle: FontStyle.normal),
                       ),
                     ),
                     TextFormField(
                       controller: _confirmPasswordController,
                       decoration: InputDecoration(
-                          errorText:
-                              state is RegistrationErrorState ? state.confirmPassword : null),
+                          errorText: state is RegistrationErrorState
+                              ? state.confirmPassword
+                              : null),
                       style: const TextStyle(color: DcColors.darkWhite),
                     ),
                     const SizedBox(height: 64),
@@ -189,7 +218,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
       final confirmPassword = _confirmPasswordController.text;
 
       _bloc.add(RegistrationEvent(
-          userName: userName, email: email, password: password, confirmPassword: confirmPassword));
+          userName: userName,
+          email: email,
+          password: password,
+          confirmPassword: confirmPassword));
+    }
+  }
+
+  String? _getEmailErrorText(String value) {
+    bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(value ?? "");
+    if (value.isEmpty) {
+      return "Email can not be empty";
+    } else if (!emailValid) {
+      return 'Invalid email';
+    } else {
+      return null;
     }
   }
 }
