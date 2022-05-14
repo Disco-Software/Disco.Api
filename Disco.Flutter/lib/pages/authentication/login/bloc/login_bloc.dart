@@ -38,6 +38,9 @@ class LoginBloc extends Bloc<LoginPageEvent, LoginPageState> {
       yield LoggedInState(userTokenResponse: authResult);
       secureStorageRepository.write(
           key: Strings.token, value: authResult?.verificationResult ?? '');
+      secureStorageRepository.write(
+          key: Strings.userPhoto, value: authResult?.user?.profile?.photo ?? '');
+      secureStorageRepository.write(key: Strings.userId, value: '${authResult?.user?.id}');
       dio.options.headers.addAll({'Authorization': 'Bearer: ${authResult?.verificationResult}'});
     } else {
       final errorText = authResult?.verificationResult;

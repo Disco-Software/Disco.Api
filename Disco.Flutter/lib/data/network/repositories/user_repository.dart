@@ -20,8 +20,8 @@ class UserRepository {
       });
 
   Future<UserTokenResponse?> registration(RegisterRequestModel model) async =>
-      await authApi.registration(model).then((user) {
-        return user;
+      await authApi.registration(model).then((response) {
+        return UserTokenResponse.fromJson(response);
       });
 
   Future<UserTokenResponse?> facebook(AccessTokenRequestModel model) async =>

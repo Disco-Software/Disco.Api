@@ -3,6 +3,7 @@ import 'package:disco_app/data/network/repositories/post_repository.dart';
 import 'package:disco_app/data/network/repositories/stories_repository.dart';
 import 'package:disco_app/pages/user/main/bloc/stories_event.dart';
 import 'package:disco_app/pages/user/main/bloc/stories_state.dart';
+import 'package:disco_app/res/strings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,8 +23,9 @@ class StoriesBloc extends Bloc<StoriesEvent, StoriesState> {
 
   Future<void> _loadStories(StoriesEvent event, Emitter<StoriesState> emit) async {
     try {
-      final stories = await storiesRepository.fetchStories((event as LoadStoriesEvent).id);
-      final userImageUrl = await getIt.get<SecureStorageRepository>().read(key: 'userImageUrl');
+      final userId = await getIt.get<SecureStorageRepository>().read(key: Strings.userId);
+      final stories = await storiesRepository.fetchStories(int.parse(userId));
+      final userImageUrl = await getIt.get<SecureStorageRepository>().read(key: Strings.userPhoto);
       emit(SuccessStoriesState(
         stories: stories ?? [],
         userImageUrl: userImageUrl,

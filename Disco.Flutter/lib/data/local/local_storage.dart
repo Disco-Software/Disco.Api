@@ -21,4 +21,8 @@ class SecureStorageRepository {
     debugPrint('SecureStorageRepository --> reded value: $value');
     return value;
   }
+
+  void delete({required String key}) {
+    secureStorage.delete(key: key);
+  }
 }

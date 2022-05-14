@@ -9,12 +9,10 @@ class InitialEvent implements MainPageEvent {
 }
 
 class LoadPostsEvent implements MainPageEvent {
-  final int id;
   final bool hasLoading;
   final VoidCallback onLoaded;
 
   LoadPostsEvent({
-    required this.id,
     required this.hasLoading,
     required this.onLoaded,
   });

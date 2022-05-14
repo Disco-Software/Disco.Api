@@ -4,32 +4,6 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>CFBundleURLTypes</key>
-    <array>
-      <dict>
-        <key>CFBundleURLSchemes</key>
-        <array>
-          <string>fb261002815859881</string>
-        </array>
-      </dict>
-    </array>
-    <key>FacebookAppID</key>
-    <string>261002815859881</string>
-    <key>FacebookClientToken</key>
-    <string>9c4f0fbe6ed89d0c35d1a7cd965de88c</string>
-    <key>FacebookDisplayName</key>
-    <string>Disco</string>
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-      <string>fbapi</string>
-      <string>fb-messenger-share-api</string>
-      <string>fbauth2</string>
-      <string>fbshareextension</string>
-    </array>
-
-
-	<key>NSMicrophoneUsageDescription</key>
-	<string>For creating own songs </string>
 	<key>CFBundleDisplayName</key>
 	<string>Disco App</string>
 	<key>CFBundleExecutable</key>
@@ -46,10 +20,34 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb261002815859881</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FacebookAppID</key>
+	<string>261002815859881</string>
+	<key>FacebookClientToken</key>
+	<string>9c4f0fbe6ed89d0c35d1a7cd965de88c</string>
+	<key>FacebookDisplayName</key>
+	<string>Disco</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>For creating own songs </string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

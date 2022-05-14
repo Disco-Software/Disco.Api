@@ -7,19 +7,18 @@
 import 'package:auto_route/auto_route.dart' as _i1;
 import 'package:flutter/material.dart' as _i2;
 
-import '../pages/authentication/login/login_page.dart' as _i5;
-import '../pages/authentication/registration/registration.dart' as _i7;
+import '../pages/authentication/login/login_page.dart' as _i4;
+import '../pages/authentication/registration/registration.dart' as _i6;
 import '../pages/authentication/search_registration/search_registration_page.dart'
-    as _i6;
+    as _i5;
 import '../pages/start/splash_page.dart' as _i3;
-import '../pages/start/start_page.dart' as _i4;
-import '../pages/user/add_post/add_post_page.dart' as _i12;
-import '../pages/user/chat/chat.dart' as _i13;
-import '../pages/user/home_page.dart' as _i9;
-import '../pages/user/main/main_page.dart' as _i10;
-import '../pages/user/profile/profile.dart' as _i14;
-import '../pages/user/saved/saved.dart' as _i11;
-import '../pages/user/saved/saved_item_page/saved_item.dart' as _i8;
+import '../pages/user/add_post/add_post_page.dart' as _i11;
+import '../pages/user/chat/chat.dart' as _i12;
+import '../pages/user/home_page.dart' as _i8;
+import '../pages/user/main/main_page.dart' as _i9;
+import '../pages/user/profile/profile.dart' as _i13;
+import '../pages/user/saved/saved.dart' as _i10;
+import '../pages/user/saved/saved_item_page/saved_item.dart' as _i7;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter([_i2.GlobalKey<_i2.NavigatorState>? navigatorKey])
@@ -32,25 +31,20 @@ class AppRouter extends _i1.RootStackRouter {
         builder: (_) {
           return const _i3.SplashPage();
         }),
-    StartRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
-        routeData: routeData,
-        builder: (_) {
-          return const _i4.StartPage();
-        }),
     LoginRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i5.LoginPage();
+          return const _i4.LoginPage();
         }),
     SearchRegistrationRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i6.SearchRegistrationPage();
+          return const _i5.SearchRegistrationPage();
         }),
     RegistrationRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i7.RegistrationPage();
+          return const _i6.RegistrationPage();
         }),
     SavedItemRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
@@ -59,46 +53,45 @@ class AppRouter extends _i1.RootStackRouter {
           final args = data.argsAs<SavedItemRouteArgs>(
               orElse: () =>
                   SavedItemRouteArgs(itemId: pathParams.getInt('itemId')));
-          return _i8.SavedItem(key: args.key, itemId: args.itemId);
+          return _i7.SavedItem(key: args.key, itemId: args.itemId);
         }),
     HomeRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i9.HomePage();
+          return const _i8.HomePage();
         }),
     LineRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (data) {
           final args =
               data.argsAs<LineRouteArgs>(orElse: () => const LineRouteArgs());
-          return _i10.MainPage(key: args.key);
+          return _i9.MainPage(key: args.key);
         }),
     SavedItemsRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i11.SavedItemsPage();
+          return const _i10.SavedItemsPage();
         }),
     PostRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i12.AddPostPage();
+          return const _i11.AddPostPage();
         }),
     ChatRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i13.ChatPage();
+          return const _i12.ChatPage();
         }),
     ProfileRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i14.ProfilePage();
+          return const _i13.ProfilePage();
         })
   };
 
   @override
   List<_i1.RouteConfig> get routes => [
         _i1.RouteConfig(SplashRoute.name, path: '/'),
-        _i1.RouteConfig(StartRoute.name, path: '/start'),
         _i1.RouteConfig(LoginRoute.name, path: '/log-in'),
         _i1.RouteConfig(SearchRegistrationRoute.name, path: '/search'),
         _i1.RouteConfig(RegistrationRoute.name, path: '/registration'),
@@ -117,12 +110,6 @@ class SplashRoute extends _i1.PageRouteInfo<void> {
   const SplashRoute() : super(name, path: '/');
 
   static const String name = 'SplashRoute';
-}
-
-class StartRoute extends _i1.PageRouteInfo<void> {
-  const StartRoute() : super(name, path: '/start');
-
-  static const String name = 'StartRoute';
 }
 
 class LoginRoute extends _i1.PageRouteInfo<void> {

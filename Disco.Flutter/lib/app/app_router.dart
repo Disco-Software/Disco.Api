@@ -4,7 +4,6 @@ import 'package:disco_app/pages/authentication/login/login_page.dart';
 import 'package:disco_app/pages/authentication/registration/registration.dart';
 import 'package:disco_app/pages/authentication/search_registration/search_registration_page.dart';
 import 'package:disco_app/pages/start/splash_page.dart';
-import 'package:disco_app/pages/start/start_page.dart';
 import 'package:disco_app/pages/user/add_post/add_post_page.dart';
 import 'package:disco_app/pages/user/chat/chat.dart';
 import 'package:disco_app/pages/user/home_page.dart';
@@ -17,7 +16,6 @@ import 'package:disco_app/pages/user/saved/saved_item_page/saved_item.dart';
   replaceInRouteName: 'Page,Route',
   routes: <AutoRoute>[
     AutoRoute(path: '/', page: SplashPage, initial: true),
-    AutoRoute(path: "/start", page: StartPage),
     AutoRoute(path: "/log-in", page: LoginPage),
     AutoRoute(path: "/search", page: SearchRegistrationPage),
     AutoRoute(path: "/registration", page: RegistrationPage),

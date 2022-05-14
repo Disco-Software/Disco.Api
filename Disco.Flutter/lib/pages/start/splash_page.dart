@@ -154,10 +154,15 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
                   : const _BackGroundBody(),
             ),
             AnimatedPositioned(
-              bottom: shoudlChangeBackGround ? 480.0 : 380.0,
+              bottom: shoudlChangeBackGround
+                  ? MediaQuery.of(context).size.height * 0.6
+                  : MediaQuery.of(context).size.height * 0.5,
               duration: const Duration(seconds: 1),
               child: AnimatedDefaultTextStyle(
-                child: const Text('DISCO'),
+                child: const Text(
+                  'DISCO',
+                ),
+                maxLines: 1,
                 style: _textStyle,
                 duration: const Duration(seconds: 1),
               ),
@@ -195,7 +200,7 @@ class _BackGroundBody extends StatelessWidget {
           const SizedBox(height: 36),
           const SizedBox(height: 36),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 100.0),
+            padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.27),
             child: OutlinedButton(onPressed: () => _onLogin(context), child: const Text("Log In")),
           ),
           const SizedBox(height: 36),

@@ -34,9 +34,8 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    context.read<StoriesBloc>().add(LoadStoriesEvent(id: 1));
+    context.read<StoriesBloc>().add(LoadStoriesEvent());
     context.read<MainPageBloc>().add(LoadPostsEvent(
-          id: 1,
           hasLoading: true,
           onLoaded: () {},
         ));
@@ -168,7 +167,6 @@ class _SuccessStateWidget extends StatelessWidget {
                       controller: controller,
                       onRefresh: () {
                         context.read<MainPageBloc>().add(LoadPostsEvent(
-                              id: 1,
                               hasLoading: false,
                               onLoaded: () {
                                 controller.refreshCompleted();
@@ -178,17 +176,28 @@ class _SuccessStateWidget extends StatelessWidget {
                       footer: Container(
                         color: Colors.red,
                       ),
-                      child: ListView.builder(
-                          itemCount: state.posts.length,
-                          itemBuilder: (context, index) {
-                            if (index == state.posts.length - 1) {
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 100.0),
-                                child: UnicornPost(post: state.posts[index]),
-                              );
-                            }
-                            return UnicornPost(post: state.posts[index]);
-                          }),
+                      child: state.posts.length > 0
+                          ? ListView.builder(
+                              itemCount: state.posts.length,
+                              itemBuilder: (context, index) {
+                                if (index == state.posts.length - 1) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 100.0),
+                                    child: UnicornPost(post: state.posts[index]),
+                                  );
+                                }
+                                return UnicornPost(post: state.posts[index]);
+                              })
+                          : const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 80, vertical: 200),
+                              child: Text(
+                                'You don\'t have posts yet',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                     ),
                   );
                 }
