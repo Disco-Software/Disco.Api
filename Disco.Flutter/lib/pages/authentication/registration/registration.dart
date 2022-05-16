@@ -98,10 +98,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     TextFormField(
                       controller: _userNameController,
-                      decoration: InputDecoration(
-                          errorText: state is RegistrationErrorState
-                              ? state.userName
-                              : null),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) => _getUserNameErrorText(value ?? ''),
                       style: const TextStyle(color: DcColors.darkWhite),
                     ),
                     const SizedBox(
@@ -119,19 +117,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     TextFormField(
                       controller: _emailController,
-                      onChanged: (value) {
-                        setState(() {});
-                      },
-                      validator: (value) {
-                        bool emailValid = RegExp(
-                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                            .hasMatch(value ?? "");
-                        if (!emailValid) {
-                          return 'Please enter valid e-mail';
-                        }
-                      },
-                      decoration: InputDecoration(
-                          errorText: _getEmailErrorText(_emailController.text)),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) => _getEmailErrorText(value ?? ''),
                       style: const TextStyle(color: DcColors.darkWhite),
                     ),
                     const Padding(
@@ -146,10 +133,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     TextFormField(
                       controller: _passwordController,
-                      decoration: InputDecoration(
-                          errorText: state is RegistrationErrorState
-                              ? state.password
-                              : null),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) => _getPasswordErrorText(value ?? ''),
                       style: const TextStyle(color: DcColors.darkWhite),
                     ),
                     const Padding(
@@ -164,10 +149,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     TextFormField(
                       controller: _confirmPasswordController,
-                      decoration: InputDecoration(
-                          errorText: state is RegistrationErrorState
-                              ? state.confirmPassword
-                              : null),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) => _getConfirmationPasswordErrorText(
+                          value ?? '', _passwordController.text),
                       style: const TextStyle(color: DcColors.darkWhite),
                     ),
                     const SizedBox(height: 64),
@@ -225,16 +209,44 @@ class _RegistrationPageState extends State<RegistrationPage> {
     }
   }
 
-  String? _getEmailErrorText(String value) {
-    bool emailValid = RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(value ?? "");
+  String? _getUserNameErrorText(String value) {
     if (value.isEmpty) {
-      return "Email can not be empty";
-    } else if (!emailValid) {
-      return 'Invalid email';
+      return "User name is can not be empty";
+    }
+    return null;
+  }
+
+  String? _getPasswordErrorText(String value) {
+    if (value.isEmpty) {
+      return 'Password can not be empty';
+    } else if (value.length < 6) {
+      return 'Password must have not less the 6 letters';
     } else {
       return null;
     }
+  }
+
+  String? _getConfirmationPasswordErrorText(
+      String firstValue, String secondvalue) {
+    if (firstValue.isEmpty) {
+      return 'Confirm password can not be empty';
+    } else if (firstValue != secondvalue) {
+      return 'Password and confirm password must be equal';
+    } else {
+      return null;
+    }
+  }
+}
+
+String? _getEmailErrorText(String value) {
+  bool emailValid = RegExp(
+          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+      .hasMatch(value ?? "");
+  if (value.isEmpty) {
+    return "Email can not be empty";
+  } else if (!emailValid) {
+    return 'Invalid email';
+  } else {
+    return null;
   }
 }

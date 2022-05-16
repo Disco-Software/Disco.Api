@@ -107,9 +107,7 @@ namespace Disco.BLL.Services
 
         public async Task<UserResponseModel> Register(RegistrationModel userInfo)
         {
-            var validator = await RegistrationValidator.instance.ValidateAsync(userInfo);
-            if (validator.Errors.Count > 0)
-                return BadRequest(validator.Errors.FirstOrDefault().ErrorMessage);
+            RegistrationValidator.Create(userManager);
 
             var user = await userManager.FindByEmailAsync(userInfo.Email);
 

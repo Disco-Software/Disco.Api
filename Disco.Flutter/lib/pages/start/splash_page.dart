@@ -11,7 +11,8 @@ class SplashPage extends StatefulWidget {
   _SplashPageState createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateMixin {
+class _SplashPageState extends State<SplashPage>
+    with SingleTickerProviderStateMixin {
   late AnimationController controller;
   late Animation heightAnimation;
   late Animation widthAnimation;
@@ -66,8 +67,10 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
       duration: const Duration(seconds: 1),
       value: 1.0,
     );
-    heightAnimation = Tween<double>(begin: 1000.0, end: 20.0).animate(controller);
-    widthAnimation = Tween<double>(begin: 1000.0, end: 20.0).animate(controller);
+    heightAnimation =
+        Tween<double>(begin: 1000.0, end: 20.0).animate(controller);
+    widthAnimation =
+        Tween<double>(begin: 1000.0, end: 20.0).animate(controller);
     _secondTextStyle = TextStyle(
       foreground: Paint()..shader = linearGradient,
       fontSize: 96,
@@ -83,7 +86,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
     );
     _thirdTextStyle = TextStyle(
       foreground: Paint()..shader = linearGradient,
-      fontSize: 72,
+      fontSize: 67,
       fontFamily: 'Colonna',
       shadows: const [
         BoxShadow(
@@ -200,11 +203,16 @@ class _BackGroundBody extends StatelessWidget {
           const SizedBox(height: 36),
           const SizedBox(height: 36),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.27),
-            child: OutlinedButton(onPressed: () => _onLogin(context), child: const Text("Log In")),
+            padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.27),
+            child: OutlinedButton(
+                onPressed: () => _onLogin(context),
+                child: const Text("Log In")),
           ),
           const SizedBox(height: 36),
-          TextButton(onPressed: () => _onRegistration(context), child: const Text("Registration")),
+          TextButton(
+              onPressed: () => _onRegistration(context),
+              child: const Text("Registration")),
         ],
       ),
     );
