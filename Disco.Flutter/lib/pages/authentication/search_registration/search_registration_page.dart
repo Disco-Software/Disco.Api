@@ -158,7 +158,10 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
   void onApplePressed() {}
 
   void onFacebookPressed() async {
-    final facebookResponse = await FacebookAuth.i.login(permissions: ['public_profile', 'email']);
+    final facebookResponse = await FacebookAuth.i.login(
+      permissions: ['public_profile', 'email'],
+      loginBehavior: LoginBehavior.webOnly,
+    );
     final String? token = facebookResponse.accessToken?.token;
     if (facebookResponse.status == LoginStatus.success) {
       FacebookAuth.i.getUserData(fields: 'email,first_name,name,picture');

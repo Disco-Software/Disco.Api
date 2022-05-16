@@ -98,15 +98,13 @@ class _SuccessStateWidget extends StatelessWidget {
         backgroundColor: const Color(0xff1C142E),
         body: Column(
           children: [
-            const SizedBox(
-              height: 6,
-            ),
+            const SizedBox(height: 6),
             BlocBuilder<StoriesBloc, StoriesState>(
               builder: (context, state) {
                 if (state is SuccessStoriesState) {
                   if (state.stories.isNotEmpty) {
                     return SizedBox(
-                        height: 105,
+                        height: 110,
                         child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: state.stories.length,
@@ -123,9 +121,7 @@ class _SuccessStateWidget extends StatelessWidget {
                                 );
                               } else {
                                 return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                  ),
+                                  padding: const EdgeInsets.symmetric(horizontal: 8),
                                   child: UnicornImage(
                                     imageUrl: state.stories[index].profile?.photo ??
                                         "assets/ic_photo.png",
@@ -156,9 +152,7 @@ class _SuccessStateWidget extends StatelessWidget {
                 return const SizedBox();
               },
             ),
-            const SizedBox(
-              height: 11,
-            ),
+            const SizedBox(height: 11),
             BlocBuilder<MainPageBloc, MainPageState>(
               builder: (context, state) {
                 if (state is SuccessPostsState) {
@@ -176,7 +170,7 @@ class _SuccessStateWidget extends StatelessWidget {
                       footer: Container(
                         color: Colors.red,
                       ),
-                      child: state.posts.length > 0
+                      child: state.posts.isNotEmpty
                           ? ListView.builder(
                               itemCount: state.posts.length,
                               itemBuilder: (context, index) {
@@ -204,6 +198,7 @@ class _SuccessStateWidget extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator.adaptive());
               },
             ),
+            const SizedBox(height: 80.0),
           ],
         ));
   }
