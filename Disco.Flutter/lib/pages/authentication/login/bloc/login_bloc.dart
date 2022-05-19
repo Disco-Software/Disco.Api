@@ -5,7 +5,6 @@ import 'package:disco_app/data/local/local_storage.dart';
 import 'package:disco_app/data/network/repositories/user_repository.dart';
 import 'package:disco_app/data/network/request_models/login_request.dart';
 import 'package:disco_app/res/strings.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -33,17 +32,19 @@ class LoginBloc extends Bloc<LoginPageEvent, LoginPageState> {
       email: event.email,
       password: event.password,
     ));
-    debugPrint('HandleLogin--> $authResult');
-    if (authResult?.user != null && authResult?.verificationResult != null) {
+    if (authResult?.user != null && authResult?.accesToken != null) {
       yield LoggedInState(userTokenResponse: authResult);
+      secureStorageRepository.write(key: Strings.token, value: authResult?.accesToken ?? '');
       secureStorageRepository.write(
-          key: Strings.token, value: authResult?.verificationResult ?? '');
+        key: Strings.refreshToken,
+        value: authResult?.refreshToken ?? '',
+      );
       secureStorageRepository.write(
           key: Strings.userPhoto, value: authResult?.user?.profile?.photo ?? '');
       secureStorageRepository.write(key: Strings.userId, value: '${authResult?.user?.id}');
-      dio.options.headers.addAll({'Authorization': 'Bearer: ${authResult?.verificationResult}'});
+      dio.options.headers.addAll({'Authorization': 'Bearer: ${authResult?.accesToken}'});
     } else {
-      final errorText = authResult?.verificationResult;
+      final errorText = authResult?.accesToken;
       if (errorText?.contains("Password is not valid") ?? false) {
         yield LogInErrorState(passwordError: errorText);
       } else if (errorText?.contains("user not found") ?? false) {

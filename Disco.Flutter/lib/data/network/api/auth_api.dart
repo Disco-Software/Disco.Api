@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:disco_app/data/network/network_models/refresh_token_model.dart';
 import 'package:disco_app/data/network/request_models/access_token_requset_model.dart';
 import 'package:disco_app/data/network/request_models/apple_login.dart';
 import 'package:disco_app/data/network/request_models/register_request.dart';
@@ -27,8 +28,8 @@ class AuthApi {
         return response.data;
       });
 
-  Future<UserTokenResponse?> refreshToken() =>
-      client.put("user/authentication/refresh").then((response) {
+  Future<UserTokenResponse?> refreshToken(RefreshTokenModel model) =>
+      client.put("user/authentication/refresh", data: model).then((response) {
         return UserTokenResponse.fromJson(response.data);
       });
 

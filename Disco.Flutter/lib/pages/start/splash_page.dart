@@ -1,6 +1,10 @@
 import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:disco_app/app/app_router.gr.dart';
+import 'package:disco_app/data/local/local_storage.dart';
+import 'package:disco_app/res/strings.dart';
 import 'package:flutter/material.dart';
+
+import '../../injection.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -11,8 +15,7 @@ class SplashPage extends StatefulWidget {
   _SplashPageState createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage>
-    with SingleTickerProviderStateMixin {
+class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateMixin {
   late AnimationController controller;
   late Animation heightAnimation;
   late Animation widthAnimation;
@@ -67,10 +70,8 @@ class _SplashPageState extends State<SplashPage>
       duration: const Duration(seconds: 1),
       value: 1.0,
     );
-    heightAnimation =
-        Tween<double>(begin: 1000.0, end: 20.0).animate(controller);
-    widthAnimation =
-        Tween<double>(begin: 1000.0, end: 20.0).animate(controller);
+    heightAnimation = Tween<double>(begin: 1000.0, end: 20.0).animate(controller);
+    widthAnimation = Tween<double>(begin: 1000.0, end: 20.0).animate(controller);
     _secondTextStyle = TextStyle(
       foreground: Paint()..shader = linearGradient,
       fontSize: 96,
@@ -101,20 +102,28 @@ class _SplashPageState extends State<SplashPage>
     _textStyle = _firstTextStyle;
     _decoration = _firstDecoration;
     if (mounted) {
-      Future.delayed(const Duration(milliseconds: 500)).then((value) {
+      Future.delayed(Duration.zero, () async {
+        final token = await _getToken();
+        await Future.delayed(const Duration(milliseconds: 300));
         setState(() {
           _decoration = _secondDecoration;
           _textStyle = _secondTextStyle;
         });
-      });
-      Future.delayed(const Duration(seconds: 2)).then((value) {
-        setState(() {
-          _textStyle = _thirdTextStyle;
-          shoudlChangeBackGround = true;
-        });
-      });
-      Future.delayed(const Duration(milliseconds: 4000)).then((value) {
-        controller.reverse();
+
+        if (token.isEmpty) {
+          await Future.delayed(const Duration(seconds: 2));
+          setState(() {
+            _textStyle = _thirdTextStyle;
+            shoudlChangeBackGround = true;
+          });
+        }
+        if (token.isEmpty) {
+          await Future.delayed(const Duration(seconds: 4));
+          controller.reverse();
+        }
+        if (token.isNotEmpty) {
+          context.router.pushAndPopUntil(const HomeRoute(), predicate: (route) => false);
+        }
       });
     }
   }
@@ -179,9 +188,9 @@ class _SplashPageState extends State<SplashPage>
     );
   }
 
-// Future<String> _getToken() async {
-//   return await getIt.get<SecureStorageRepository>().read(key: Strings.token);
-// }
+  Future<String> _getToken() async {
+    return await getIt.get<SecureStorageRepository>().read(key: Strings.token);
+  }
 }
 
 class _BackGroundBody extends StatelessWidget {
@@ -203,16 +212,11 @@ class _BackGroundBody extends StatelessWidget {
           const SizedBox(height: 36),
           const SizedBox(height: 36),
           Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * 0.27),
-            child: OutlinedButton(
-                onPressed: () => _onLogin(context),
-                child: const Text("Log In")),
+            padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.27),
+            child: OutlinedButton(onPressed: () => _onLogin(context), child: const Text("Log In")),
           ),
           const SizedBox(height: 36),
-          TextButton(
-              onPressed: () => _onRegistration(context),
-              child: const Text("Registration")),
+          TextButton(onPressed: () => _onRegistration(context), child: const Text("Registration")),
         ],
       ),
     );

@@ -581,10 +581,7 @@ class _VideoBodyState extends State<_VideoBody> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(widget.postVideo.videoSource ?? '')
-      ..initialize().then((value) {
-        setState(() {});
-      });
+    _controller = VideoPlayerController.network(widget.postVideo.videoSource ?? '');
     _chewieController = ChewieController(
       videoPlayerController: _controller,
       autoPlay: true,
