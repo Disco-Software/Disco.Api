@@ -49,8 +49,8 @@ namespace Disco.Api.Controllers.Authentification
             await serviceManager.AuthentificationService.Apple(model);
 
         [HttpPut("refresh")]
-        public async Task<UserResponseModel> RefreshToken() =>
-            await serviceManager.AuthentificationService.RefreshToken();
+        public async Task<UserResponseModel> RefreshToken([FromBody] RefreshTokenRequestModel model) =>
+            await serviceManager.AuthentificationService.RefreshToken(model);
 
         [HttpPost("registration")]
         public async Task<UserResponseModel> Registration([FromBody] RegistrationModel model) =>

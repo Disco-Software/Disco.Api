@@ -6,6 +6,7 @@ namespace Disco.BLL.Models
 {
     public class RefreshTokenRequestModel
     {
-        public string Email { get; set; }
+        public string RefreshToken { get; set; }
+        public string AccessToken { get; set; }
     }
 }
