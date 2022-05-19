@@ -23,6 +23,7 @@ namespace Disco.BLL.Interfaces
         ILikeSevice LikeSevice { get; }
         IStoryImageService StoryImageService { get; }
         IStoryVideoService StoryVideoService { get; }
+        ITokenService TokenService { get; }
         IRepositoryManager RepositoryManager { get; }
     }
 }

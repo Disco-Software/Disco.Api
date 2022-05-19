@@ -16,12 +16,11 @@ namespace Disco.BLL.Interfaces
     {
         Task<UserResponseModel> LogIn(LoginModel model);
         Task<UserResponseModel> Register(RegistrationModel model);
-        Task<UserResponseModel> RefreshToken();
+        Task<UserResponseModel> RefreshToken(RefreshTokenRequestModel model);
         Task<UserResponseModel> Facebook(string accessToken);
         Task<UserResponseModel> Apple(AppleLogInModel model);
         Task<string> ForgotPassword(string email);
         Task<UserResponseModel> ResetPassword(ResetPasswordRequestModel model);
-        string GenerateJwtToken(User user);
         Task<UserResponseModel> Google(IGoogleAuthProvider googleAuthProvider);
     }
 }

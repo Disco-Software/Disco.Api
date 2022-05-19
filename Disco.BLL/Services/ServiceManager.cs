@@ -41,6 +41,7 @@ namespace Disco.BLL.Services
         private readonly Lazy<IImageService> imageService;
         private readonly Lazy<IVideoService> videoService;
         private readonly Lazy<ILikeSevice> likeSevice;
+        private readonly Lazy<ITokenService> tokenService;
         public ServiceManager(ApiDbContext _ctx,
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
@@ -60,7 +61,8 @@ namespace Disco.BLL.Services
             facebookAuthService = new Lazy<IFacebookAuthService>(() => new FacebookAuthService(configuration, httpClientFactory));
             googleAuthService = new Lazy<IGoogleAuthService>(() => new GoogleAuthService(httpClientFactory));
             emailService = new Lazy<IEmailService>(() => new EmailService(_emailOptions,_logger));
-            authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, _blobServiceClient, httpContextAccessor,googleAuthService.Value ,facebookAuthService.Value, emailService.Value,authenticationOptions,_googleOptions,_mapper));
+            tokenService = new Lazy<ITokenService>(() => new TokenService(authenticationOptions));
+            authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, _blobServiceClient, repositoryManager.Value.UserRepository,httpContextAccessor,tokenService.Value,googleAuthService.Value ,facebookAuthService.Value, emailService.Value,authenticationOptions,_googleOptions,_mapper));
             var notificationHub = NotificationHubClient.CreateClientFromConnectionString(
                 configuration["ConnectionStrings:AzureNotificationHubConnection"],
                 configuration["NotificationHub:HubName"]);
@@ -110,5 +112,8 @@ namespace Disco.BLL.Services
 
        public IStoryVideoService StoryVideoService =>
             storyVideoService.Value;
+
+       public ITokenService TokenService => 
+            tokenService.Value;
     }
 }

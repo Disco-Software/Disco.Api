@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Disco.BLL.Constants
 {
-    public class LogInProviders
+    public class LogInProvider
     {
         public const string Facebook = "Facebook";
         public const string Apple = "Apple";

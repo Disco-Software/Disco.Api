@@ -31,7 +31,9 @@ namespace Disco.BLL.Validatars
                 .WithMessage("This email already registered");
         }
 
-        public static RegistrationValidator Create(UserManager<User> userManager) =>
-            new RegistrationValidator(userManager);
+        public static RegistrationValidator Create(UserManager<User> userManager)
+        {
+            return new RegistrationValidator(userManager);
+        }
     }
 }

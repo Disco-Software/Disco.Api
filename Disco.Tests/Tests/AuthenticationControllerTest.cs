@@ -57,7 +57,7 @@ namespace Disco.Tests.Tests
 
             var userDTO = JsonConvert.DeserializeObject<UserResponseModel>(result);
 
-            Assert.IsTrue(userDTO.VarificationResult == "user not found");
+            Assert.IsTrue(userDTO.AccessToken == "user not found");
         }
 
         [TestMethod]
@@ -77,7 +77,7 @@ namespace Disco.Tests.Tests
 
             var userDTO = JsonConvert.DeserializeObject<UserResponseModel>(result);
 
-            Assert.IsTrue(userDTO.VarificationResult == "Password is not valid");
+            Assert.IsTrue(userDTO.AccessToken == "Password is not valid");
         }
 
         [TestMethod]
@@ -96,7 +96,7 @@ namespace Disco.Tests.Tests
 
             var userDTO = JsonConvert.DeserializeObject<UserResponseModel>(result);
 
-            Assert.IsTrue(userDTO.VarificationResult == "Log in form can not be a null");
+            Assert.IsTrue(userDTO.AccessToken == "Log in form can not be a null");
         }
 
         [TestMethod]
