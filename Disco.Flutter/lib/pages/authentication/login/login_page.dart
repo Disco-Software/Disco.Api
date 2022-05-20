@@ -93,6 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         TextFormField(
                             controller: _emailController,
+                            validator: (value) => _onEmailValidate(_emailController.text),
                             style: const TextStyle(color: DcColors.darkWhite),
                             decoration: InputDecoration(
                                 errorText: state is LogInErrorState ? state.emailError : null)),
@@ -110,6 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                         TextFormField(
                           style: const TextStyle(color: DcColors.darkWhite),
                           obscureText: true,
+                          validator: (value) => String? _onPasswordValidate(_passwordController.text),
                           controller: _passwordController,
                           decoration: InputDecoration(
                               errorText: state is LogInErrorState ? state.passwordError : null),
@@ -174,7 +176,31 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  String? _onEmailValidate(String value){
+    bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(value);
+    if (value.isEmpty) {
+      return "Email can not be empty";
+    } else if (!emailValid) {
+      return 'Invalid email';
+    } else {
+      return null;
+    }
+  }
+
   void _onPasswordForgot() {
     showDialog(context: context, builder: (_) => const ForgotPassword());
+  }
+
+  String? _onPasswordValidate(String value) {
+    if(value.isEmpty){
+      return 'Password is requared';
+    }
+    else if (value.length < 6){
+      return 'Password must have more the 6 letters';
+    }
+    else {
+      return null
+    }
   }
 }
