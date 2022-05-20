@@ -1,28 +1,17 @@
-abstract class SearchPageState{
+abstract class SearchPageState {}
 
-}
+class InitialState extends SearchPageState {}
 
-class InitialState extends SearchPageState{
+class LoadingState extends SearchPageState {}
 
-}
+class FacebookRegistrationState extends SearchPageState {}
 
-class FacebookRegistrationState extends SearchPageState{
+class FacebookRegistratedState extends SearchPageState {}
 
-}
+class GoogleRegistrationState extends SearchPageState {}
 
-class FacebookRegistratedState extends SearchPageState{
+class GoogleRegistratedState extends SearchPageState {}
 
-}
+class AppleRegistrationState extends SearchPageState {}
 
-class GoogleRegistrationState extends SearchPageState{
-
-}
-class GoogleRegistratedState extends SearchPageState{
-
-}
-class AppleRegistrationState extends SearchPageState{
-
-}
-class AppleRegistratedState extends SearchPageState{
-
-}
+class AppleRegistratedState extends SearchPageState {}

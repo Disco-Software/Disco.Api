@@ -8,7 +8,7 @@ class SecureStorageRepository {
 
   SecureStorageRepository({required this.secureStorage});
 
-  void write({required String key, required String value}) {
+  Future<void>? write({required String key, required String value}) {
     debugPrint('SecureStorageRepository -->write');
 
     secureStorage.write(key: key, value: value);

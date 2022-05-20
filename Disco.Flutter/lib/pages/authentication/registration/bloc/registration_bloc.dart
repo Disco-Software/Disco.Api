@@ -30,15 +30,16 @@ class RegistrationBloc extends Bloc<RegistrationPageEvent, RegistrationPageState
         email: event.email,
         password: event.password,
         confirmPassword: event.confirmPassword));
-    if (response?.user != null && response?.verificationResult != null) {
+    if (response?.user != null && response?.accesToken != null) {
       yield RegistratedState();
-      secureStorageRepository.write(key: Strings.token, value: response?.verificationResult ?? '');
+      secureStorageRepository.write(key: Strings.token, value: response?.accesToken ?? '');
+      secureStorageRepository.write(key: Strings.refreshToken, value: response?.refreshToken ?? '');
       secureStorageRepository.write(
           key: Strings.userPhoto, value: response?.user?.profile?.photo ?? '');
       secureStorageRepository.write(key: Strings.userId, value: '${response?.user?.id}');
-      dio.options.headers.addAll({'Authorization': 'Bearer: ${response?.verificationResult}'});
+      dio.options.headers.addAll({'Authorization': 'Bearer: ${response?.accesToken}'});
     } else {
-      final errorText = response?.verificationResult;
+      final errorText = response?.accesToken;
       switch (errorText) {
         case "User name is requared":
           yield RegistrationErrorState(userName: "User name is requared");

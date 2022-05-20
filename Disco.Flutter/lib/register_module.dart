@@ -25,7 +25,7 @@ abstract class RegisterModule {
   Dio _getDio(String url) {
     final dio = Dio(BaseOptions(baseUrl: url));
     final interceptors = [
-      HeaderInterceptor.instance..set(dio),
+      HeaderInterceptor.instance..setDio(dio),
       PrettyDioLogger(
         requestBody: true,
         requestHeader: true,

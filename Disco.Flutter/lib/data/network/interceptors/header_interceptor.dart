@@ -3,13 +3,11 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:disco_app/data/local/local_storage.dart';
 import 'package:disco_app/data/network/api/auth_api.dart';
+import 'package:disco_app/data/network/network_models/refresh_token_model.dart';
 import 'package:disco_app/data/network/network_models/user_network.dart';
 import 'package:disco_app/res/strings.dart';
-import 'package:flutter/material.dart';
 
 import '../../../injection.dart';
-
-enum TokenType { Firebase, JWT, Bearer, Custom }
 
 const _authHeader = 'Authorization';
 
@@ -19,32 +17,10 @@ class HeaderInterceptor extends Interceptor {
   static final HeaderInterceptor _instance = HeaderInterceptor._privateConstructor();
 
   static HeaderInterceptor get instance => _instance;
-
   late final Dio _dio;
 
-  // TokenStorage _tokenStorage;
-
-  // bool _isFirstTokenError = true;
-
-  late Future Function(RequestOptions, RequestInterceptorHandler) onRequestFunction;
-  late Future Function(Response, ResponseInterceptorHandler) onResponseFunction;
-  late Future Function(DioError, ErrorInterceptorHandler) onErrorFunction;
-
-  void init({
-    TokenType tokenType = TokenType.Custom,
-    required Future Function(RequestOptions options, RequestInterceptorHandler handler) onRequest,
-    required Future Function(Response response, ResponseInterceptorHandler handler) onResponse,
-    required Future Function(DioError error, ErrorInterceptorHandler handler) onError,
-  }) {
-    onRequestFunction = onRequest;
-    onResponseFunction = onResponse;
-    onErrorFunction = onError;
-    return;
-  }
-
-  void set(Dio dio) {
+  void setDio(Dio dio) {
     _dio = dio;
-    // _tokenStorage = tokenStorage;
   }
 
   @override
@@ -53,32 +29,50 @@ class HeaderInterceptor extends Interceptor {
     if (token.isNotEmpty) {
       options.headers[_authHeader] = 'Bearer ' + token;
     }
-    debugPrint('${options.headers} hehe');
 
-    // return onRequestFunction(options, handler);
     return handler.next(options);
   }
 
   @override
   Future onError(DioError error, ErrorInterceptorHandler handler) async {
-    // final String token = await getIt.get<SecureStorageRepository>().read(key: Strings.token) ?? '';
     if (_isTokenExpiredError(error)) {
+      final accessToken = await getIt.get<SecureStorageRepository>().read(key: Strings.token);
+      final refreshToken =
+          await getIt.get<SecureStorageRepository>().read(key: Strings.refreshToken);
+
       try {
-        final UserTokenResponse? newToken = await getIt.get<AuthApi>().refreshToken();
-        getIt
+        final UserTokenResponse? newToken =
+            await getIt.get<AuthApi>().refreshToken(RefreshTokenModel(
+                  accessToken: accessToken,
+                  refreshToken: refreshToken,
+                ));
+        await getIt
             .get<SecureStorageRepository>()
-            .write(key: Strings.token, value: newToken?.verificationResult ?? '');
+            .write(key: Strings.token, value: newToken?.accesToken ?? '');
+        await getIt
+            .get<SecureStorageRepository>()
+            .write(key: Strings.refreshToken, value: newToken?.accesToken ?? '');
       } catch (err) {
         print('Error _refreshToken | header_interceptor-> $err');
       }
 
-      return handler.next(error);
+      return handler.resolve(await _retry(error.requestOptions, _dio));
     }
-    // else if (_isTokenExpiredError(error)) {
-    //   _logger.info('token RENEWED, logout');
-    // }
 
     return handler.next(error);
+  }
+
+  Future<Response<dynamic>> _retry(RequestOptions requestOptions, Dio dio) async {
+    final options = Options(
+      method: requestOptions.method,
+      headers: requestOptions.headers,
+    );
+    return dio.request<dynamic>(
+      requestOptions.path,
+      data: requestOptions.data,
+      queryParameters: requestOptions.queryParameters,
+      options: options,
+    );
   }
 
   @override

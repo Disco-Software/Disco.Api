@@ -1,13 +1,19 @@
 class UserTokenResponse {
   User? user;
-  String? verificationResult;
+  String? accesToken;
+  String? refreshToken;
 
-  UserTokenResponse({this.user, this.verificationResult});
+  UserTokenResponse({
+    this.user,
+    this.accesToken,
+    this.refreshToken,
+  });
 
   UserTokenResponse.fromJson(Map<String, dynamic> json) {
     try {
       user = json['user'] != null ? User.fromJson(json['user']) : null;
-      verificationResult = json['varificationResult'];
+      accesToken = json.entries.elementAt(json.length - 2).value;
+      refreshToken = json['refreshToken'];
     } catch (err) {
       print('loginError--> $err');
     }
@@ -18,7 +24,8 @@ class UserTokenResponse {
     if (user != null) {
       data['user'] = user!.toJson();
     }
-    data['varificationResult'] = verificationResult;
+    data['accesToken'] = accesToken;
+    data['refreshToken'] = refreshToken;
     return data;
   }
 }
@@ -37,6 +44,7 @@ class User {
   bool? phoneNumberConfirmed;
   bool? twoFactorEnabled;
   String? lockoutEnd;
+  String? refreshToken;
   bool? lockoutEnabled;
   int? accessFailedCount;
   Profile? profile;
@@ -46,6 +54,7 @@ class User {
       this.userName,
       this.normalizedUserName,
       this.email,
+      this.refreshToken,
       this.normalizedEmail,
       this.emailConfirmed,
       this.passwordHash,
@@ -68,6 +77,7 @@ class User {
     emailConfirmed = json['emailConfirmed'];
     passwordHash = json['passwordHash'];
     securityStamp = json['securityStamp'];
+    refreshToken = json['refreshToken'];
     concurrencyStamp = json['concurrencyStamp'];
     phoneNumber = json['phoneNumber'];
     phoneNumberConfirmed = json['phoneNumberConfirmed'];
@@ -87,6 +97,7 @@ class User {
     data['normalizedEmail'] = normalizedEmail;
     data['emailConfirmed'] = emailConfirmed;
     data['passwordHash'] = passwordHash;
+    data['refreshToken'] = refreshToken;
     data['securityStamp'] = securityStamp;
     data['concurrencyStamp'] = concurrencyStamp;
     data['phoneNumber'] = phoneNumber;
