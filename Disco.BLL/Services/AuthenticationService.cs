@@ -222,13 +222,15 @@ namespace Disco.BLL.Services
                 return BadRequest("User not found");
             
             if(user.RefreshTokenExpiress >= DateTime.UtcNow)
-            {
-                tokenService.GenerateRefreshToken();
-                
+            {                
                 user.RefreshToken = tokenService.GenerateRefreshToken();
-                user.RefreshTokenExpiress = DateTime.UtcNow;
+                user.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
                 
                 await ctx.SaveChangesAsync();
+
+                var jwtToken = tokenService.GenerateAccessToken(user);
+
+                return Ok(user, jwtToken, user.RefreshToken);
             }
 
             var jwt = tokenService.GenerateAccessToken(user);
@@ -314,7 +316,6 @@ namespace Disco.BLL.Services
 
             var uri = blobClient.Uri.AbsoluteUri;
 
-
             var html = (new WebClient()).DownloadString(uri);
             var passwordToken = await userManager.GeneratePasswordResetTokenAsync(user);
             string url = $"disco://disco.app/token/{passwordToken}";
@@ -324,7 +325,7 @@ namespace Disco.BLL.Services
             model.ToEmail = email;
             model.IsHtmlTemplate = true;
 
-            await emailService.EmailConfirmation(model);
+            emailService.EmailConfirmation(model);
             return passwordToken;
         }
 

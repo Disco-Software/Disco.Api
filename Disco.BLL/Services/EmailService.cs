@@ -3,13 +3,15 @@ using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
 using Disco.BLL.Models.EmailNotifications;
 using Disco.DAL.EF;
-using MailKit.Net.Smtp;
+//using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
+using System.Net.Mail;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,25 +28,23 @@ namespace Disco.BLL.Services
             logger = _logger;
         }
 
-        public async Task EmailConfirmation(EmailConfirmationModel model)
+        public void EmailConfirmation(EmailConfirmationModel model)
         {
-            using (var client = new SmtpClient())
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress(emailOptions.Value.Mail, "Disco");
+            mailMessage.To.Add(model.ToEmail);
+            mailMessage.Subject = model.MessageHeader;
+            mailMessage.Body = model.MessageBody;
+            mailMessage.IsBodyHtml = model.IsHtmlTemplate;
+
+            using var smtpClient = new SmtpClient("smtp.gmail.com")
             {
-                MimeMessage message = new MimeMessage();
-                message.From.Add(new MailboxAddress("Disco", emailOptions.Value.Mail));
-                message.To.Add(new MailboxAddress(model.Name, model.ToEmail));
-                message.Subject = model.MessageHeader;
-                message.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = model.MessageBody };
-                
-                client.Connect(emailOptions.Value.Host, emailOptions.Value.Port, true);
-                client.AuthenticationMechanisms.Remove("XOAUTH2");
-                client.Authenticate(emailOptions.Value.Name, emailOptions.Value.Password);
+                Port = 587,
+                Credentials = new NetworkCredential(emailOptions.Value.Mail, emailOptions.Value.Password),
+                EnableSsl = true,
+            };
 
-                var result = await client.SendAsync(message);
-                logger.LogInformation(result);
-
-                client.Disconnect(true);
-            }
+            smtpClient.Send(mailMessage);
         }
     }
 }

@@ -9,6 +9,6 @@ namespace Disco.BLL.Interfaces
 {
     public interface IEmailService
     {
-         Task EmailConfirmation(EmailConfirmationModel model);
+         void EmailConfirmation(EmailConfirmationModel model);
     }
 }
