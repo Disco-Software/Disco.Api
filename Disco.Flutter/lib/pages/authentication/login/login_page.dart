@@ -92,11 +92,13 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         TextFormField(
-                            controller: _emailController,
-                            validator: (value) => _onEmailValidate(_emailController.text),
-                            style: const TextStyle(color: DcColors.darkWhite),
-                            decoration: InputDecoration(
-                                errorText: state is LogInErrorState ? state.emailError : null)),
+                          controller: _emailController,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) => _onEmailValidate(_emailController.text),
+                          style: const TextStyle(color: DcColors.darkWhite),
+                          decoration: InputDecoration(
+                              errorText: state is LogInErrorState ? state.emailError : null),
+                        ),
                         const SizedBox(height: 24),
                         const Padding(
                           padding: EdgeInsets.only(
@@ -111,7 +113,8 @@ class _LoginPageState extends State<LoginPage> {
                         TextFormField(
                           style: const TextStyle(color: DcColors.darkWhite),
                           obscureText: true,
-                          validator: (value) => String? _onPasswordValidate(_passwordController.text),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) => _onPasswordValidate(_passwordController.text),
                           controller: _passwordController,
                           decoration: InputDecoration(
                               errorText: state is LogInErrorState ? state.passwordError : null),
@@ -128,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                             width: 192,
                             child: state is LoginingState
                                 ? const Center(
-                                    child: CircularProgressIndicator.adaptive(),
+                                    child: CircularProgressIndicator(),
                                   )
                                 : ElevatedButton(onPressed: _onLogin, child: const Text('Log In')),
                           ),
@@ -176,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  String? _onEmailValidate(String value){
+  String? _onEmailValidate(String value) {
     bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(value);
     if (value.isEmpty) {
@@ -193,14 +196,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   String? _onPasswordValidate(String value) {
-    if(value.isEmpty){
+    if (value.isEmpty) {
       return 'Password is requared';
-    }
-    else if (value.length < 6){
+    } else if (value.length < 6) {
       return 'Password must have more the 6 letters';
-    }
-    else {
-      return null
+    } else {
+      return null;
     }
   }
 }

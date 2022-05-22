@@ -1,4 +1,4 @@
-import 'package:disco_app/core/widgets/post.dart';
+import 'package:disco_app/core/widgets/post/post.dart';
 import 'package:disco_app/core/widgets/unicorn_image.dart';
 import 'package:disco_app/pages/user/main/bloc/main_bloc.dart';
 import 'package:disco_app/pages/user/main/bloc/main_event.dart';
@@ -195,7 +195,7 @@ class _SuccessStateWidget extends StatelessWidget {
                     ),
                   );
                 }
-                return const Center(child: CircularProgressIndicator.adaptive());
+                return const Center(child: CircularProgressIndicator());
               },
             ),
             const SizedBox(height: 80.0),

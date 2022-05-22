@@ -146,7 +146,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     const SizedBox(height: 64),
                     state is RegistratingState
                         ? const Center(
-                            child: CircularProgressIndicator.adaptive(),
+                            child: CircularProgressIndicator(),
                           )
                         : Padding(
                             padding: const EdgeInsets.all(8.0),

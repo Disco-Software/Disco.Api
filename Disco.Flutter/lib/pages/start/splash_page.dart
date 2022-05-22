@@ -104,11 +104,15 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
     if (mounted) {
       Future.delayed(Duration.zero, () async {
         final token = await _getToken();
-        await Future.delayed(const Duration(milliseconds: 300));
         setState(() {
           _decoration = _secondDecoration;
           _textStyle = _secondTextStyle;
         });
+        if (token.isEmpty) {
+          await Future.delayed(const Duration(milliseconds: 550));
+        } else {
+          await Future.delayed(const Duration(seconds: 1));
+        }
 
         if (token.isEmpty) {
           await Future.delayed(const Duration(seconds: 2));

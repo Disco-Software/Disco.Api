@@ -25,4 +25,8 @@ class SecureStorageRepository {
   void delete({required String key}) {
     secureStorage.delete(key: key);
   }
+
+  void deleteAll({required String key}) {
+    secureStorage.deleteAll();
+  }
 }
