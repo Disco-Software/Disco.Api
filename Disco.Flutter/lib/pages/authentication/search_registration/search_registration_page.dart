@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import 'bloc/search_cubit.dart';
 
@@ -25,7 +26,7 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
     return BlocConsumer<SearchCubit, SearchPageState>(
       listener: (ctx, state) {
         WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-          if (state is FacebookRegistratedState) {
+          if (state is FacebookRegistratedState || state is AppleRegistratedState) {
             context.router.navigate(const HomeRoute());
           }
         });
@@ -154,7 +155,19 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
 
   void onGooglePressed() {}
 
-  void onApplePressed() {}
+  Future<void> onApplePressed() async {
+    final appleResponse = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+    );
+
+    if (appleResponse.email != null && appleResponse.givenName != null) {
+      context.read<SearchCubit>().handleAppleLogIn(
+          name: appleResponse.givenName ?? '', email: appleResponse.userIdentifier ?? '');
+    }
+  }
 
   void onFacebookPressed() async {
     final facebookResponse = await FacebookAuth.i.login(permissions: ['public_profile', 'email']);

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/core/widgets/unicorn_outline_button.dart';
@@ -47,11 +49,13 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     ),
   );
 
+  late StreamSubscription _subscription;
+
   @override
   void initState() {
     super.initState();
     animationController = AnimationController(vsync: this, duration: const Duration(seconds: 1));
-    context.read<PostProvider>().player.playingStream.listen((event) {
+    _subscription = context.read<PostProvider>().player.playingStream.listen((event) {
       if (event) {
         animationController.forward();
         setState(() {
@@ -63,6 +67,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         });
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -80,6 +90,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         ),
       ],
       child: AutoTabsScaffold(
+          animationDuration: const Duration(seconds: 0),
           extendBody: true,
           backgroundColor: Colors.indigo,
           bottomNavigationBuilder: (context, tabsRouter) {
@@ -332,15 +343,15 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                     : DcColors.darkWhite,
                               )),
                           BottomNavigationBarItem(
-                              label: '',
-                              icon: SvgPicture.asset(
-                                'assets/ic_profile.svg',
-                                height: 30,
-                                width: 30,
-                                color: tabsRouter.activeIndex == 4
-                                    ? Colors.orange
-                                    : DcColors.darkWhite,
-                              )),
+                            label: '',
+                            icon: SvgPicture.asset(
+                              'assets/ic_profile.svg',
+                              height: 30,
+                              width: 30,
+                              color:
+                                  tabsRouter.activeIndex == 4 ? Colors.orange : DcColors.darkWhite,
+                            ),
+                          ),
                         ]),
                   ),
                 ],
