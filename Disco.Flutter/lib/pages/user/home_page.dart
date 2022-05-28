@@ -176,7 +176,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             const Spacer(),
                             InkWell(
                               onTap: () {
-                                print('stas print ${MediaQuery.of(context).padding.bottom}');
                                 final audioPlayer =
                                     Provider.of<PostProvider>(context, listen: false).player;
                                 if (audioPlayer.playing) {
@@ -313,13 +312,15 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                               backgroundColor: Colors.transparent,
                               elevation: 0.0,
                               child: UnicornOutlineButton(
-                                  onPressed: () {},
                                   gradient: const LinearGradient(colors: [
                                     Color(0xffDE9237),
                                     Color(0xFFF6EA7D),
                                   ]),
                                   radius: 360,
                                   strokeWidth: 3,
+                                  onPressed: () {
+                                    context.router.navigate(const PostRoute());
+                                  },
                                   child: Padding(
                                     padding: const EdgeInsets.only(top: 5),
                                     child: Center(
@@ -361,7 +362,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           routes: [
             LineRoute(),
             const SavedItemsRoute(),
-            const PostRoute(),
+            const EmptyAddPostRoute(),
             const ChatRoute(),
             const ProfileRoute(),
           ]),
