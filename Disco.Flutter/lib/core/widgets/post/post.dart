@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:disco_app/core/widgets/post/widgets/image_body.dart';
 import 'package:disco_app/core/widgets/post/widgets/post_author.dart';
@@ -8,12 +10,13 @@ import 'package:disco_app/data/network/network_models/post_network.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/io_client.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:signalr_pure/signalr_pure.dart';
+import 'package:signalr_core/signalr_core.dart';
 
 const String serverUrl = 'https://devdiscoapi.azurewebsites.net/hub/like';
 const String token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJuYmYiOjE2NTM1MTAyMzUsImV4cCI6MTY1MzU4MjIzNSwiaXNzIjoiZGlzY28tYXBpIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdC9EaXNjby5BcGkifQ.MvepsNQ3vx_8DrOJuVdVSGDqq85GI5T3AcpBuExBG4Y';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJuYmYiOjE2NTM5MzkzMTcsImV4cCI6MTY1NDAxMTMxNywiaXNzIjoiZGlzY28tYXBpIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdC9EaXNjby5BcGkifQ.VExgLUHvPuzCk5eT_L9OgStWMdxVKIEk40Jza6-ougU';
 
 class UnicornPost extends StatefulWidget {
   const UnicornPost({
@@ -43,7 +46,7 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    initLikeHub();
+    // initLikeHub();
     controller =
         AnimationController(value: 0.3, vsync: this, duration: const Duration(milliseconds: 300));
   }
@@ -55,13 +58,13 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
     //   Uri.parse(serverUrl),
     //   headers: {'Authorization': token},
     // );
-    final builder = HubConnectionBuilder()
-      ..url = serverUrl
-      ..reconnect = true
-      ..httpConnectionOptions = HttpConnectionOptions(
-        accessTokenBuilder: () async => token,
-        transport: HttpTransportType.serverSentEvents,
-      );
+    final builder = HubConnectionBuilder().withUrl(
+      serverUrl,
+      HttpConnectionOptions(
+        accessTokenFactory: () async => token,
+        client: IOClient(HttpClient()..badCertificateCallback = (x, y, z) => true),
+      ),
+    );
     hubConnection = builder.build();
     // hubConnection = HubConnectionBuilder()
     //     .withUrl(serverUrl,
@@ -81,7 +84,7 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
 
   @override
   void dispose() {
-    hubConnection.stopAsync();
+    // hubConnection.stop();
     super.dispose();
   }
 
@@ -157,41 +160,24 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
             children: [
               PostButton(
                   onTap: () async {
-                    // _channel.sink.add({'create': '${widget.post.id ?? 0}'});
-                    // final hubConnection = HubConnectionBuilder()
-                    //     .withUrl(serverUrl,
-                    //         options: HttpConnectionOptions(
-                    //           accessTokenFactory: () async => token,
-                    //         ))
-                    //     .configureLogging(hubProtLogger)
-                    //     .build();
-
-                    // hubConnection.serverTimeoutInMilliseconds = 10 * 60 * 60 * 1000;
-                    // hubConnection.keepAliveIntervalInMilliseconds = 10 * 60 * 60 * 1000;
-                    // try {
-                    //   await hubConnection.start();
-                    //   hubConnection.onclose(({error}) => print("Connection Closed"));
-                    // } catch (err) {
-                    //   print('$err lol1 ${hubConnection.state}');
-                    // }
-                    // hubConnection = HubConnectionBuilder()
-                    //     .withUrl(serverUrl,
-                    //         options: HttpConnectionOptions(
-                    //           accessTokenFactory: () async => token,
-                    //         ))
-                    //     .build();
-                    // hubConnection.onclose(
-                    //   (error) => print('Connection close'),
-                    // );
-                    await hubConnection.startAsync();
+                    final builder = HubConnectionBuilder().withUrl(
+                      serverUrl,
+                      HttpConnectionOptions(
+                        accessTokenFactory: () async => token,
+                        client: IOClient(HttpClient()..badCertificateCallback = (x, y, z) => true),
+                        logging: (level, message) => print(message),
+                      ),
+                    );
+                    final hubConnection = builder.build();
+                    await hubConnection.start();
                     // hubConnection.on('add', (args) {
                     //   print('LOL1 ${args}');
                     // });
                     // print('HEH ${hubConnection.state}');
                     // // if (hubConnection.state == HubConnectionState.Connected) {
-                    // final obj = hubConnection.invokeAsync('add', [widget.post.id ?? 0]);
+                    // final obj = hubConnection.invoke('create', args: [widget.post.id ?? 0]);
                     // print('OBJECT 888 $obj');
-                    // }
+
                     // setState(() {});
                   },
                   imagePath: "assets/ic_star.svg"),

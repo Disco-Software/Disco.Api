@@ -7,11 +7,9 @@ class PostAuthor extends StatelessWidget {
   const PostAuthor({
     Key? key,
     required this.post,
-
   }) : super(key: key);
 
   final Post post;
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,24 +35,32 @@ class PostAuthor extends StatelessWidget {
                       blurRadius: 7)
                 ]),
             child: post.profile?.photo != null
-                ? CachedNetworkImage(
-              imageUrl: post.profile?.photo ?? '',
-              placeholder: (context, url) => Image.asset('assets/ic_photo.png'),
-              fit: BoxFit.fill,
-            )
+                ? ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(100),
+                      bottomRight: Radius.circular(100),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: post.profile?.photo ?? '',
+                      placeholder: (context, url) => Image.asset('assets/ic_photo.png'),
+                      fit: BoxFit.fill,
+                    ),
+                  )
                 : Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(100),
-                  bottomRight: Radius.circular(100),
-                ),
-              ),
-              child: Image.asset(
-                'assets/ic_photo.png',
-                fit: BoxFit.fill,
-              ),
-            ),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(100),
+                        bottomRight: Radius.circular(100),
+                      ),
+                      child: Image.asset(
+                        'assets/ic_photo.png',
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
           ),
           const SizedBox(
             width: 16,

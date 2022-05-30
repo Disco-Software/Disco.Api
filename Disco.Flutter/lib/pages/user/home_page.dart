@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 
 import 'main/bloc/main_bloc.dart';
@@ -126,10 +127,20 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                               builder: (ctx, data, child) => Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    data.songTitles[data.currentSongIndex],
-                                    style: GoogleFonts.aBeeZee(
-                                        fontSize: 24.0, color: Color(0xFFE6E0D2)),
+                                  SizedBox(
+                                    height: 30.0,
+                                    width: 200.0,
+                                    child: Marquee(
+                                      scrollAxis: Axis.horizontal,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      blankSpace: 50.0,
+                                      velocity: 100.0,
+                                      startPadding: 10.0,
+                                      onDone: () {},
+                                      text: data.songTitles[data.currentSongIndex],
+                                      style: GoogleFonts.aBeeZee(
+                                          fontSize: 24.0, color: Color(0xFFE6E0D2)),
+                                    ),
                                   ),
                                   Text(
                                     data.singer,
