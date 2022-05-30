@@ -13,7 +13,7 @@ import 'package:signalr_pure/signalr_pure.dart';
 
 const String serverUrl = 'https://devdiscoapi.azurewebsites.net/hub/like';
 const String token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJuYmYiOjE2NTMxNjE3MzAsImV4cCI6MTY1MzIzMzczMCwiaXNzIjoiZGlzY28tYXBpIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdC9EaXNjby5BcGkifQ.9Nkf14VeLR9hUJ5x5zpd1yU6NaD3SoIpTo2zOY858A4';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJuYmYiOjE2NTM1MTAyMzUsImV4cCI6MTY1MzU4MjIzNSwiaXNzIjoiZGlzY28tYXBpIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdC9EaXNjby5BcGkifQ.MvepsNQ3vx_8DrOJuVdVSGDqq85GI5T3AcpBuExBG4Y';
 
 class UnicornPost extends StatefulWidget {
   const UnicornPost({
@@ -60,7 +60,7 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
       ..reconnect = true
       ..httpConnectionOptions = HttpConnectionOptions(
         accessTokenBuilder: () async => token,
-        transport: HttpTransportType.none,
+        transport: HttpTransportType.serverSentEvents,
       );
     hubConnection = builder.build();
     // hubConnection = HubConnectionBuilder()

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/core/widgets/unicorn_outline_button.dart';
@@ -47,11 +49,13 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     ),
   );
 
+  late StreamSubscription _subscription;
+
   @override
   void initState() {
     super.initState();
     animationController = AnimationController(vsync: this, duration: const Duration(seconds: 1));
-    context.read<PostProvider>().player.playingStream.listen((event) {
+    _subscription = context.read<PostProvider>().player.playingStream.listen((event) {
       if (event) {
         animationController.forward();
         setState(() {
@@ -63,6 +67,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         });
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -80,6 +90,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         ),
       ],
       child: AutoTabsScaffold(
+          animationDuration: const Duration(seconds: 0),
           extendBody: true,
           backgroundColor: Colors.indigo,
           bottomNavigationBuilder: (context, tabsRouter) {
@@ -165,7 +176,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             const Spacer(),
                             InkWell(
                               onTap: () {
-                                print('stas print ${MediaQuery.of(context).padding.bottom}');
                                 final audioPlayer =
                                     Provider.of<PostProvider>(context, listen: false).player;
                                 if (audioPlayer.playing) {
@@ -302,13 +312,15 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                               backgroundColor: Colors.transparent,
                               elevation: 0.0,
                               child: UnicornOutlineButton(
-                                  onPressed: () {},
                                   gradient: const LinearGradient(colors: [
                                     Color(0xffDE9237),
                                     Color(0xFFF6EA7D),
                                   ]),
                                   radius: 360,
                                   strokeWidth: 3,
+                                  onPressed: () {
+                                    context.router.navigate(const PostRoute());
+                                  },
                                   child: Padding(
                                     padding: const EdgeInsets.only(top: 5),
                                     child: Center(
@@ -332,15 +344,15 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                     : DcColors.darkWhite,
                               )),
                           BottomNavigationBarItem(
-                              label: '',
-                              icon: SvgPicture.asset(
-                                'assets/ic_profile.svg',
-                                height: 30,
-                                width: 30,
-                                color: tabsRouter.activeIndex == 4
-                                    ? Colors.orange
-                                    : DcColors.darkWhite,
-                              )),
+                            label: '',
+                            icon: SvgPicture.asset(
+                              'assets/ic_profile.svg',
+                              height: 30,
+                              width: 30,
+                              color:
+                                  tabsRouter.activeIndex == 4 ? Colors.orange : DcColors.darkWhite,
+                            ),
+                          ),
                         ]),
                   ),
                 ],
@@ -350,7 +362,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           routes: [
             LineRoute(),
             const SavedItemsRoute(),
-            const PostRoute(),
+            const EmptyAddPostRoute(),
             const ChatRoute(),
             const ProfileRoute(),
           ]),

@@ -26,7 +26,7 @@ class SecureStorageRepository {
     secureStorage.delete(key: key);
   }
 
-  void deleteAll({required String key}) {
-    secureStorage.deleteAll();
+  Future<void> deleteAll() async {
+    return await secureStorage.deleteAll();
   }
 }
