@@ -174,10 +174,12 @@ namespace Disco.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+            
             app.UseSwagger(c =>
             {
                 c.SerializeAsV2 = true;
             });
+           
             app.UseSwaggerUI(u =>
             {
                 u.SwaggerEndpoint("1.0/swagger.json", "Disco.Api");
@@ -185,7 +187,7 @@ namespace Disco.Api
 
 
             ILogger logger = loggerFactory.CreateLogger("ClientErrorLogger");
-            app.UseHttpsRedirection();
+            
             app.UseRouting();
             app.ApplicationServices.CreateScope();
             app.UseAuthorization();
@@ -198,18 +200,6 @@ namespace Disco.Api
                     .AllowAnyMethod();
             });
 
-            app.Use(async (ctx, next) =>
-            {
-                var hubContext = ctx
-                    .RequestServices
-                    .GetRequiredService<IHubContext<LikeHub>>();
-                
-                if(next != null)
-                {
-                    await next.Invoke();
-                }
-
-            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

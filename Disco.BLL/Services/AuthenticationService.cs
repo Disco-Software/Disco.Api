@@ -201,6 +201,9 @@ namespace Disco.BLL.Services
                     Status = StatusProvider.NewArtist,
                 }
             };
+
+            user.RefreshToken = tokenService.GenerateRefreshToken();
+            user.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
             user.NormalizedEmail = userManager.NormalizeEmail(user.Email);
             user.NormalizedUserName = userManager.NormalizeName(user.UserName);
             
@@ -248,6 +251,7 @@ namespace Disco.BLL.Services
                 {
                     user.UserName = model.Name;
                     user.RefreshToken = tokenService.GenerateRefreshToken();
+                    user.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
 
                     await userManager.UpdateAsync(user);
 
@@ -256,12 +260,13 @@ namespace Disco.BLL.Services
                     return Ok(user, jwtToken);
                 }
 
-                user = await userManager.FindByLoginAsync(LogInProvider.Apple, model.AppleId);
+                user = await userManager.FindByLoginAsync(LogInProvider.Apple, model.Name);
                 if (user != null)
                 {
                     user.UserName = model.Name;
                     user.Email = model.Email;
                     user.RefreshToken = tokenService.GenerateRefreshToken();
+                    user.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
 
                     await userManager.UpdateAsync(user);
 
@@ -287,6 +292,7 @@ namespace Disco.BLL.Services
                 };
                 user.Profile = profile;
                 user.RefreshToken = tokenService.GenerateRefreshToken();
+                user.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
 
                 var identity = await userManager.CreateAsync(user);
                 if (!identity.Succeeded)
