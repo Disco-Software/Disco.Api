@@ -49,6 +49,10 @@ class PostAuthor extends StatelessWidget {
                 : Container(
                     decoration: const BoxDecoration(
                       color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(100),
+                        bottomRight: Radius.circular(100),
+                      ),
                     ),
                     child: ClipRRect(
                       borderRadius: const BorderRadius.only(

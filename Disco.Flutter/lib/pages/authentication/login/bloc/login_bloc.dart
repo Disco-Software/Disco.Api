@@ -27,29 +27,33 @@ class LoginBloc extends Bloc<LoginPageEvent, LoginPageState> {
   }
 
   Stream<LoginPageState> _handleLogin(LoginEvent event) async* {
-    yield LoginingState();
-    final authResult = await userRepository.login(LogInRequestModel(
-      email: event.email,
-      password: event.password,
-    ));
-    if (authResult?.user != null && authResult?.accesToken != null) {
-      yield LoggedInState(userTokenResponse: authResult);
-      secureStorageRepository.write(key: Strings.token, value: authResult?.accesToken ?? '');
-      secureStorageRepository.write(
-        key: Strings.refreshToken,
-        value: authResult?.refreshToken ?? '',
-      );
-      secureStorageRepository.write(
-          key: Strings.userPhoto, value: authResult?.user?.profile?.photo ?? '');
-      secureStorageRepository.write(key: Strings.userId, value: '${authResult?.user?.id}');
-      dio.options.headers.addAll({'Authorization': 'Bearer: ${authResult?.accesToken}'});
-    } else {
-      final errorText = authResult?.accesToken;
-      if (errorText?.contains("Password is not valid") ?? false) {
-        yield LogInErrorState(passwordError: errorText);
-      } else if (errorText?.contains("user not found") ?? false) {
-        yield LogInErrorState(emailError: errorText);
+    try {
+      yield LoginingState();
+      final authResult = await userRepository.login(LogInRequestModel(
+        email: event.email,
+        password: event.password,
+      ));
+      if (authResult?.user != null && authResult?.accesToken != null) {
+        yield LoggedInState(userTokenResponse: authResult);
+        secureStorageRepository.write(key: Strings.token, value: authResult?.accesToken ?? '');
+        secureStorageRepository.write(
+          key: Strings.refreshToken,
+          value: authResult?.refreshToken ?? '',
+        );
+        secureStorageRepository.write(
+            key: Strings.userPhoto, value: authResult?.user?.profile?.photo ?? '');
+        secureStorageRepository.write(key: Strings.userId, value: '${authResult?.user?.id}');
+        dio.options.headers.addAll({'Authorization': 'Bearer: ${authResult?.accesToken}'});
+      } else {
+        final errorText = authResult?.accesToken;
+        if (errorText?.contains("Password is not valid") ?? false) {
+          yield LogInErrorState(passwordError: errorText);
+        } else if (errorText?.contains("user not found") ?? false) {
+          yield LogInErrorState(emailError: errorText);
+        }
       }
+    } catch (err) {
+      yield LogInErrorState(emailError: 'Invalid email or password!');
     }
   }
 }
