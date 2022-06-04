@@ -25,7 +25,7 @@ class AddPostPage extends StatelessWidget {
         ),
         automaticallyImplyLeading: false,
         leading: IconButton(
-            padding: const EdgeInsets.only(right: 32),
+            padding: const EdgeInsets.only(left: 10.0),
             onPressed: () {
               context.router.push(const HomeRoute());
             },
