@@ -6,7 +6,9 @@ import 'package:disco_app/core/widgets/post/widgets/post_author.dart';
 import 'package:disco_app/core/widgets/post/widgets/song_body.dart';
 import 'package:disco_app/core/widgets/post/widgets/video_body.dart';
 import 'package:disco_app/core/widgets/post_button.dart';
+import 'package:disco_app/data/local/local_storage.dart';
 import 'package:disco_app/data/network/network_models/post_network.dart';
+import 'package:disco_app/res/strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,9 +16,11 @@ import 'package:http/io_client.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:signalr_core/signalr_core.dart';
 
+import '../../../injection.dart';
+
 const String serverUrl = 'https://devdiscoapi.azurewebsites.net/hub/like';
 const String token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJuYmYiOjE2NTM5MzkzMTcsImV4cCI6MTY1NDAxMTMxNywiaXNzIjoiZGlzY28tYXBpIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdC9EaXNjby5BcGkifQ.VExgLUHvPuzCk5eT_L9OgStWMdxVKIEk40Jza6-ougU';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJuYmYiOjE2NTQxOTk2OTMsImV4cCI6MTY1NDI3MTY5MywiaXNzIjoiZGlzY28tYXBpIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdC9EaXNjby5BcGkifQ.o0pUMkhRb5hm3ziPDNv1QCcLs-shMhAkc2dHGw_MkWI';
 
 class UnicornPost extends StatefulWidget {
   const UnicornPost({
@@ -58,14 +62,16 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
     //   Uri.parse(serverUrl),
     //   headers: {'Authorization': token},
     // );
-    final builder = HubConnectionBuilder().withUrl(
-      serverUrl,
-      HttpConnectionOptions(
-        accessTokenFactory: () async => token,
-        client: IOClient(HttpClient()..badCertificateCallback = (x, y, z) => true),
-      ),
-    );
-    hubConnection = builder.build();
+    final builder = HubConnectionBuilder()
+        .withUrl(
+          serverUrl,
+          HttpConnectionOptions(
+            accessTokenFactory: () async => token,
+            client: IOClient(HttpClient()..badCertificateCallback = (x, y, z) => true),
+          ),
+        )
+        .withAutomaticReconnect();
+    hubConnection = builder.build()..serverTimeoutInMilliseconds = 100000;
     // hubConnection = HubConnectionBuilder()
     //     .withUrl(serverUrl,
     //         options: HttpConnectionOptions(
@@ -77,7 +83,7 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
     hubConnection.onclose(
       (error) => print('Connection close'),
     );
-    hubConnection.on('add', (args) {
+    hubConnection.on('create', (args) {
       print('LOL1 ${args}');
     });
   }
@@ -163,19 +169,26 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
                     final builder = HubConnectionBuilder().withUrl(
                       serverUrl,
                       HttpConnectionOptions(
-                        accessTokenFactory: () async => token,
+                        accessTokenFactory: () async =>
+                            await getIt.get<SecureStorageRepository>().read(key: Strings.token),
                         client: IOClient(HttpClient()..badCertificateCallback = (x, y, z) => true),
                         logging: (level, message) => print(message),
                       ),
                     );
-                    final hubConnection = builder.build();
+                    final hubConnection = builder.build()..serverTimeoutInMilliseconds = 100000;
                     await hubConnection.start();
-                    // hubConnection.on('add', (args) {
-                    //   print('LOL1 ${args}');
-                    // });
                     // print('HEH ${hubConnection.state}');
-                    // // if (hubConnection.state == HubConnectionState.Connected) {
-                    // final obj = hubConnection.invoke('create', args: [widget.post.id ?? 0]);
+                    if (hubConnection.state == HubConnectionState.connected) {
+                      final obj = hubConnection.invoke('create', args: [widget.post.id ?? 0]);
+                    }
+
+                    hubConnection.on('create', (args) {
+                      print('LOL1 ${args}');
+                    });
+
+                    hubConnection.onclose(
+                      (error) => print('Connection close123'),
+                    );
                     // print('OBJECT 888 $obj');
 
                     // setState(() {});
@@ -217,7 +230,7 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
                   ),
                   PostButton(onTap: () {}, imagePath: "assets/ic_save.svg"),
                   Positioned(
-                    top: 10,
+                    top: 8,
                     left: 8,
                     child: Container(
                       padding: const EdgeInsets.all(3),

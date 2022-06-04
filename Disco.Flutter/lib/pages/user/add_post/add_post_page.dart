@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -25,7 +26,7 @@ class AddPostPage extends StatelessWidget {
         leading: IconButton(
             padding: const EdgeInsets.only(right: 32),
             onPressed: () {
-              context.router.pop();
+              context.router.push(const HomeRoute());
             },
             icon: SvgPicture.asset(
               "assets/ic_back_button.svg",

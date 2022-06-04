@@ -5,6 +5,7 @@
 // **************************************************************************
 
 import 'package:auto_route/auto_route.dart' as _i1;
+import 'package:flutter/cupertino.dart' as _i14;
 import 'package:flutter/material.dart' as _i2;
 
 import '../pages/authentication/login/login_page.dart' as _i4;
@@ -12,13 +13,13 @@ import '../pages/authentication/registration/registration.dart' as _i6;
 import '../pages/authentication/search_registration/search_registration_page.dart'
     as _i5;
 import '../pages/start/splash_page.dart' as _i3;
-import '../pages/user/add_post/add_post_page.dart' as _i7;
-import '../pages/user/chat/chat.dart' as _i12;
-import '../pages/user/home_page.dart' as _i9;
-import '../pages/user/main/main_page.dart' as _i10;
-import '../pages/user/profile/profile.dart' as _i13;
-import '../pages/user/saved/saved.dart' as _i11;
-import '../pages/user/saved/saved_item_page/saved_item.dart' as _i8;
+import '../pages/user/add_post/add_post_page.dart' as _i13;
+import '../pages/user/chat/chat.dart' as _i11;
+import '../pages/user/home_page.dart' as _i8;
+import '../pages/user/main/main_page.dart' as _i9;
+import '../pages/user/profile/profile.dart' as _i12;
+import '../pages/user/saved/saved.dart' as _i10;
+import '../pages/user/saved/saved_item_page/saved_item.dart' as _i7;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter([_i2.GlobalKey<_i2.NavigatorState>? navigatorKey])
@@ -46,11 +47,6 @@ class AppRouter extends _i1.RootStackRouter {
         builder: (_) {
           return const _i6.RegistrationPage();
         }),
-    PostRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
-        routeData: routeData,
-        builder: (_) {
-          return const _i7.AddPostPage();
-        }),
     SavedItemRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (data) {
@@ -58,26 +54,26 @@ class AppRouter extends _i1.RootStackRouter {
           final args = data.argsAs<SavedItemRouteArgs>(
               orElse: () =>
                   SavedItemRouteArgs(itemId: pathParams.getInt('itemId')));
-          return _i8.SavedItem(key: args.key, itemId: args.itemId);
+          return _i7.SavedItem(key: args.key, itemId: args.itemId);
         }),
     HomeRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i9.HomePage();
+          return const _i8.HomePage();
         }),
     LineRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (data) {
           final args =
               data.argsAs<LineRouteArgs>(orElse: () => const LineRouteArgs());
-          return _i10.MainPage(key: args.key);
+          return _i9.MainPage(key: args.key);
         }),
     SavedItemsRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i11.SavedItemsPage();
+          return const _i10.SavedItemsPage();
         }),
-    EmptyAddPostRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
+    AddPostRouter.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
           return const _i1.EmptyRouterPage();
@@ -85,12 +81,17 @@ class AppRouter extends _i1.RootStackRouter {
     ChatRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i12.ChatPage();
+          return const _i11.ChatPage();
         }),
     ProfileRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i13.ProfilePage();
+          return const _i12.ProfilePage();
+        }),
+    AddPostRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
+        routeData: routeData,
+        builder: (_) {
+          return const _i13.AddPostPage();
         })
   };
 
@@ -100,12 +101,13 @@ class AppRouter extends _i1.RootStackRouter {
         _i1.RouteConfig(LoginRoute.name, path: '/log-in'),
         _i1.RouteConfig(SearchRegistrationRoute.name, path: '/search'),
         _i1.RouteConfig(RegistrationRoute.name, path: '/registration'),
-        _i1.RouteConfig(PostRoute.name, path: '/create-post'),
         _i1.RouteConfig(SavedItemRoute.name, path: ':itemId'),
         _i1.RouteConfig(HomeRoute.name, path: '/home', children: [
           _i1.RouteConfig(LineRoute.name, path: 'line'),
           _i1.RouteConfig(SavedItemsRoute.name, path: 'saved'),
-          _i1.RouteConfig(EmptyAddPostRoute.name, path: 'empty_add_post'),
+          _i1.RouteConfig(AddPostRouter.name,
+              path: 'addPost',
+              children: [_i1.RouteConfig(AddPostRoute.name, path: '')]),
           _i1.RouteConfig(ChatRoute.name, path: 'chat'),
           _i1.RouteConfig(ProfileRoute.name, path: 'profile')
         ])
@@ -136,14 +138,8 @@ class RegistrationRoute extends _i1.PageRouteInfo<void> {
   static const String name = 'RegistrationRoute';
 }
 
-class PostRoute extends _i1.PageRouteInfo<void> {
-  const PostRoute() : super(name, path: '/create-post');
-
-  static const String name = 'PostRoute';
-}
-
 class SavedItemRoute extends _i1.PageRouteInfo<SavedItemRouteArgs> {
-  SavedItemRoute({_i2.Key? key, required int itemId})
+  SavedItemRoute({_i14.Key? key, required int itemId})
       : super(name,
             path: ':itemId',
             args: SavedItemRouteArgs(key: key, itemId: itemId),
@@ -155,7 +151,7 @@ class SavedItemRoute extends _i1.PageRouteInfo<SavedItemRouteArgs> {
 class SavedItemRouteArgs {
   const SavedItemRouteArgs({this.key, required this.itemId});
 
-  final _i2.Key? key;
+  final _i14.Key? key;
 
   final int itemId;
 }
@@ -168,7 +164,7 @@ class HomeRoute extends _i1.PageRouteInfo<void> {
 }
 
 class LineRoute extends _i1.PageRouteInfo<LineRouteArgs> {
-  LineRoute({_i2.Key? key})
+  LineRoute({_i14.Key? key})
       : super(name, path: 'line', args: LineRouteArgs(key: key));
 
   static const String name = 'LineRoute';
@@ -177,7 +173,7 @@ class LineRoute extends _i1.PageRouteInfo<LineRouteArgs> {
 class LineRouteArgs {
   const LineRouteArgs({this.key});
 
-  final _i2.Key? key;
+  final _i14.Key? key;
 }
 
 class SavedItemsRoute extends _i1.PageRouteInfo<void> {
@@ -186,10 +182,11 @@ class SavedItemsRoute extends _i1.PageRouteInfo<void> {
   static const String name = 'SavedItemsRoute';
 }
 
-class EmptyAddPostRoute extends _i1.PageRouteInfo<void> {
-  const EmptyAddPostRoute() : super(name, path: 'empty_add_post');
+class AddPostRouter extends _i1.PageRouteInfo<void> {
+  const AddPostRouter({List<_i1.PageRouteInfo>? children})
+      : super(name, path: 'addPost', initialChildren: children);
 
-  static const String name = 'EmptyAddPostRoute';
+  static const String name = 'AddPostRouter';
 }
 
 class ChatRoute extends _i1.PageRouteInfo<void> {
@@ -202,4 +199,10 @@ class ProfileRoute extends _i1.PageRouteInfo<void> {
   const ProfileRoute() : super(name, path: 'profile');
 
   static const String name = 'ProfileRoute';
+}
+
+class AddPostRoute extends _i1.PageRouteInfo<void> {
+  const AddPostRoute() : super(name, path: '');
+
+  static const String name = 'AddPostRoute';
 }

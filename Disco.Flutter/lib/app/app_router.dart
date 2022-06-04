@@ -19,7 +19,6 @@ import 'package:disco_app/pages/user/saved/saved_item_page/saved_item.dart';
     AutoRoute(path: "/log-in", page: LoginPage),
     AutoRoute(path: "/search", page: SearchRegistrationPage),
     AutoRoute(path: "/registration", page: RegistrationPage),
-    AutoRoute(path: "/create-post", page: AddPostPage, name: 'PostRoute'),
     AutoRoute(
       path: ':itemId',
       page: SavedItem,
@@ -32,7 +31,11 @@ import 'package:disco_app/pages/user/saved/saved_item_page/saved_item.dart';
         page: SavedItemsPage,
         name: 'SavedItemsRoute',
       ),
-      AutoRoute(path: "empty_add_post", page: EmptyRouterPage, name: 'EmptyAddPostRoute'),
+      AutoRoute(
+          path: 'addPost',
+          name: 'AddPostRouter',
+          page: EmptyRouterPage,
+          children: [AutoRoute(path: '', page: AddPostPage)]),
       AutoRoute(path: "chat", page: ChatPage),
       AutoRoute(path: "profile", page: ProfilePage),
     ]),
