@@ -126,7 +126,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
           controller.reverse();
         }
         if (token.isNotEmpty) {
-          context.router.pushAndPopUntil(const HomeRoute(), predicate: (route) => false);
+          context.router.pushAndPopUntil(HomeRoute(), predicate: (route) => false);
         }
       });
     }

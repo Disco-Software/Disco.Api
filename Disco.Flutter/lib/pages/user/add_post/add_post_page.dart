@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/dialogs/add_audio/add_audio.dart';
 import 'package:disco_app/res/colors.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,7 +30,8 @@ class AddPostPage extends StatelessWidget {
         leading: IconButton(
             padding: const EdgeInsets.only(left: 10.0),
             onPressed: () {
-              context.router.push(const HomeRoute());
+              context.router
+                  .pushAndPopUntil(HomeRoute(shouldLoadData: false), predicate: (route) => false);
             },
             icon: SvgPicture.asset(
               "assets/ic_back_button.svg",
@@ -46,8 +50,19 @@ class AddPostPage extends StatelessWidget {
             showDialog(
               context: context,
               builder: (ctx) => AddAudio(
-                onSelectAudioTap: () {},
-                onRecordTap: () {},
+                onSelectAudioTap: () async {
+                  FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+                  if (result != null) {
+                    File file = File('path');
+                  } else {
+                    // User canceled the picker
+                  }
+                },
+                onRecordTap: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.router.push(const RecordAudioRoute());
+                },
               ),
             );
           },

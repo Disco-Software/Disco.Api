@@ -69,5 +69,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSAppleMusicUsageDescription</key>
+    <string>User can upload his own music to our app</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>User can upload pictures and videos for creating beautiful post</string>
 </dict>
 </plist>

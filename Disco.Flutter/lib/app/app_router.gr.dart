@@ -5,7 +5,6 @@
 // **************************************************************************
 
 import 'package:auto_route/auto_route.dart' as _i1;
-import 'package:flutter/cupertino.dart' as _i14;
 import 'package:flutter/material.dart' as _i2;
 
 import '../pages/authentication/login/login_page.dart' as _i4;
@@ -14,6 +13,7 @@ import '../pages/authentication/search_registration/search_registration_page.dar
     as _i5;
 import '../pages/start/splash_page.dart' as _i3;
 import '../pages/user/add_post/add_post_page.dart' as _i13;
+import '../pages/user/add_post/record_audio_page.dart' as _i14;
 import '../pages/user/chat/chat.dart' as _i11;
 import '../pages/user/home_page.dart' as _i8;
 import '../pages/user/main/main_page.dart' as _i9;
@@ -58,15 +58,19 @@ class AppRouter extends _i1.RootStackRouter {
         }),
     HomeRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
-        builder: (_) {
-          return const _i8.HomePage();
+        builder: (data) {
+          final args =
+              data.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
+          return _i8.HomePage(
+              key: args.key, shouldLoadData: args.shouldLoadData);
         }),
-    LineRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
+    FeedRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (data) {
           final args =
-              data.argsAs<LineRouteArgs>(orElse: () => const LineRouteArgs());
-          return _i9.MainPage(key: args.key);
+              data.argsAs<FeedRouteArgs>(orElse: () => const FeedRouteArgs());
+          return _i9.MainPage(
+              key: args.key, shouldLoadData: args.shouldLoadData);
         }),
     SavedItemsRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
@@ -92,6 +96,11 @@ class AppRouter extends _i1.RootStackRouter {
         routeData: routeData,
         builder: (_) {
           return const _i13.AddPostPage();
+        }),
+    RecordAudioRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
+        routeData: routeData,
+        builder: (_) {
+          return const _i14.RecordAudioPage();
         })
   };
 
@@ -103,11 +112,12 @@ class AppRouter extends _i1.RootStackRouter {
         _i1.RouteConfig(RegistrationRoute.name, path: '/registration'),
         _i1.RouteConfig(SavedItemRoute.name, path: ':itemId'),
         _i1.RouteConfig(HomeRoute.name, path: '/home', children: [
-          _i1.RouteConfig(LineRoute.name, path: 'line'),
+          _i1.RouteConfig(FeedRoute.name, path: 'feed'),
           _i1.RouteConfig(SavedItemsRoute.name, path: 'saved'),
-          _i1.RouteConfig(AddPostRouter.name,
-              path: 'addPost',
-              children: [_i1.RouteConfig(AddPostRoute.name, path: '')]),
+          _i1.RouteConfig(AddPostRouter.name, path: 'addPost', children: [
+            _i1.RouteConfig(AddPostRoute.name, path: ''),
+            _i1.RouteConfig(RecordAudioRoute.name, path: 'record-audio')
+          ]),
           _i1.RouteConfig(ChatRoute.name, path: 'chat'),
           _i1.RouteConfig(ProfileRoute.name, path: 'profile')
         ])
@@ -139,7 +149,7 @@ class RegistrationRoute extends _i1.PageRouteInfo<void> {
 }
 
 class SavedItemRoute extends _i1.PageRouteInfo<SavedItemRouteArgs> {
-  SavedItemRoute({_i14.Key? key, required int itemId})
+  SavedItemRoute({_i2.Key? key, required int itemId})
       : super(name,
             path: ':itemId',
             args: SavedItemRouteArgs(key: key, itemId: itemId),
@@ -151,29 +161,47 @@ class SavedItemRoute extends _i1.PageRouteInfo<SavedItemRouteArgs> {
 class SavedItemRouteArgs {
   const SavedItemRouteArgs({this.key, required this.itemId});
 
-  final _i14.Key? key;
+  final _i2.Key? key;
 
   final int itemId;
 }
 
-class HomeRoute extends _i1.PageRouteInfo<void> {
-  const HomeRoute({List<_i1.PageRouteInfo>? children})
-      : super(name, path: '/home', initialChildren: children);
+class HomeRoute extends _i1.PageRouteInfo<HomeRouteArgs> {
+  HomeRoute(
+      {_i2.Key? key,
+      bool shouldLoadData = true,
+      List<_i1.PageRouteInfo>? children})
+      : super(name,
+            path: '/home',
+            args: HomeRouteArgs(key: key, shouldLoadData: shouldLoadData),
+            initialChildren: children);
 
   static const String name = 'HomeRoute';
 }
 
-class LineRoute extends _i1.PageRouteInfo<LineRouteArgs> {
-  LineRoute({_i14.Key? key})
-      : super(name, path: 'line', args: LineRouteArgs(key: key));
+class HomeRouteArgs {
+  const HomeRouteArgs({this.key, this.shouldLoadData = true});
 
-  static const String name = 'LineRoute';
+  final _i2.Key? key;
+
+  final bool shouldLoadData;
 }
 
-class LineRouteArgs {
-  const LineRouteArgs({this.key});
+class FeedRoute extends _i1.PageRouteInfo<FeedRouteArgs> {
+  FeedRoute({_i2.Key? key, bool shouldLoadData = true})
+      : super(name,
+            path: 'feed',
+            args: FeedRouteArgs(key: key, shouldLoadData: shouldLoadData));
 
-  final _i14.Key? key;
+  static const String name = 'FeedRoute';
+}
+
+class FeedRouteArgs {
+  const FeedRouteArgs({this.key, this.shouldLoadData = true});
+
+  final _i2.Key? key;
+
+  final bool shouldLoadData;
 }
 
 class SavedItemsRoute extends _i1.PageRouteInfo<void> {
@@ -205,4 +233,10 @@ class AddPostRoute extends _i1.PageRouteInfo<void> {
   const AddPostRoute() : super(name, path: '');
 
   static const String name = 'AddPostRoute';
+}
+
+class RecordAudioRoute extends _i1.PageRouteInfo<void> {
+  const RecordAudioRoute() : super(name, path: 'record-audio');
+
+  static const String name = 'RecordAudioRoute';
 }

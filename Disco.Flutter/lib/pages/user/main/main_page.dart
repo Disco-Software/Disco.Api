@@ -10,21 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import 'bloc/stories_event.dart';
 
 const String title = 'Your story';
 
 class MainPage extends StatefulWidget {
-  MainPage({Key? key}) : super(key: key);
-  static const String route = "/main";
-  static const List<String> list = [
-    "https://html5css.ru/howto/img_avatar.png",
-    "https://html5css.ru/howto/img_avatar.png",
-    "https://html5css.ru/howto/img_avatar.png",
-    "https://html5css.ru/howto/img_avatar.png",
-  ];
+  MainPage({Key? key, this.shouldLoadData = true}) : super(key: key);
+  final bool shouldLoadData;
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -35,11 +28,13 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    context.read<StoriesBloc>().add(LoadStoriesEvent());
-    context.read<MainPageBloc>().add(LoadPostsEvent(
-          hasLoading: true,
-          onLoaded: () {},
-        ));
+    if (widget.shouldLoadData) {
+      context.read<StoriesBloc>().add(LoadStoriesEvent());
+      context.read<MainPageBloc>().add(LoadPostsEvent(
+            hasLoading: true,
+            onLoaded: () {},
+          ));
+    }
     super.initState();
   }
 

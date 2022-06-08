@@ -36,7 +36,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void _blocLisener(BuildContext context, Object? state) {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       if (state is RegistratedState) {
-        context.router.pushAndPopUntil(const HomeRoute(), predicate: (route) => false);
+        context.router.pushAndPopUntil(HomeRoute(), predicate: (route) => false);
       }
     });
   }
