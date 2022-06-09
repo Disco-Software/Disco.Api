@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/dialogs/add_audio/add_audio.dart';
+import 'package:disco_app/pages/user/add_post/widgets/add_post_appbar.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -16,29 +17,7 @@ class AddPostPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff1C142E),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1C142D),
-        centerTitle: true,
-        title: const Text(
-          "Add post",
-          style: TextStyle(
-            fontSize: 24,
-          ),
-          textAlign: TextAlign.start,
-        ),
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-            padding: const EdgeInsets.only(left: 10.0),
-            onPressed: () {
-              context.router
-                  .pushAndPopUntil(HomeRoute(shouldLoadData: false), predicate: (route) => false);
-            },
-            icon: SvgPicture.asset(
-              "assets/ic_back_button.svg",
-              width: 32,
-              height: 30,
-            )),
-      ),
+      appBar: addPostAppBar(context),
       body: Column(children: [
         const Spacer(
           flex: 3,
@@ -54,7 +33,9 @@ class AddPostPage extends StatelessWidget {
                   FilePickerResult? result = await FilePicker.platform.pickFiles();
 
                   if (result != null) {
-                    File file = File('path');
+                    File file = File(result.files.single.path ?? '');
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.push(const SelectFilesRoute());
                   } else {
                     // User canceled the picker
                   }
