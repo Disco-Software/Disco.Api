@@ -1,14 +1,14 @@
-import 'dart:io';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/dialogs/add_audio/add_audio.dart';
 import 'package:disco_app/pages/user/add_post/widgets/add_post_appbar.dart';
+import 'package:disco_app/providers/add_post_provider.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/src/provider.dart';
 
 class AddPostPage extends StatelessWidget {
   const AddPostPage({Key? key}) : super(key: key);
@@ -30,15 +30,13 @@ class AddPostPage extends StatelessWidget {
               context: context,
               builder: (ctx) => AddAudio(
                 onSelectAudioTap: () async {
-                  FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-                  if (result != null) {
-                    File file = File(result.files.single.path ?? '');
-                    Navigator.of(context, rootNavigator: true).pop();
-                    context.router.push(const SelectFilesRoute());
-                  } else {
-                    // User canceled the picker
-                  }
+                  await _selectFile(context, (result) {
+                    context
+                        .read<AddPostProvider>()
+                        .currentCreatedPost
+                        .postSongs
+                        .add(result?.files.single.path ?? '');
+                  });
                 },
                 onRecordTap: () {
                   Navigator.of(context, rootNavigator: true).pop();
@@ -52,19 +50,49 @@ class AddPostPage extends StatelessWidget {
         AddPostButton(
           icon: SvgPicture.asset('assets/ic_video.svg'),
           text: 'Video',
-          onTap: () {},
+          onTap: () async {
+            await _selectFile(context, (result) {
+              context
+                  .read<AddPostProvider>()
+                  .currentCreatedPost
+                  .postVideos
+                  .add(result?.files.single.path ?? '');
+            });
+          },
         ),
         const Spacer(),
         AddPostButton(
           icon: SvgPicture.asset('assets/ic_picture.svg'),
           text: 'Picture',
-          onTap: () {},
+          onTap: () async {
+            await _selectFile(context, (result) {
+              context
+                  .read<AddPostProvider>()
+                  .currentCreatedPost
+                  .postImages
+                  .add(result?.files.single.path ?? '');
+            });
+          },
         ),
         const Spacer(
           flex: 3,
         ),
       ]),
     );
+  }
+
+  Future<void> _selectFile(
+      BuildContext context, Function(FilePickerResult? result) saveCallback) async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      saveCallback(result);
+
+      Navigator.of(context, rootNavigator: true).pop();
+      context.router.push(const SelectFilesRoute());
+    } else {
+      // User canceled the picker
+    }
   }
 }
 
