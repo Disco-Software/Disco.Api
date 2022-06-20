@@ -29,21 +29,21 @@ namespace Disco.DAL.Repositories
 
             var profile = await ctx.Profiles
                 .Include(u => u.User)
-                .Include(f => f.Friends)
+                .Include(f => f.Followers)
                 .ThenInclude(p => p.ProfileFriend)
                 .ThenInclude(s => s.Stories)
                 .ThenInclude(si => si.StoryImages)
-                .Include(f => f.Friends)
+                .Include(f => f.Followers)
                 .ThenInclude(p => p.ProfileFriend)
                 .ThenInclude(p => p.Stories)
                 .ThenInclude(s => s.StoryVideos)
-                .Include(f => f.Friends)
+                .Include(f => f.Followers)
                 .ThenInclude(p => p.UserProfile)
-                .Include(f => f.Friends)
+                .Include(f => f.Followers)
                 .ThenInclude(p => p.ProfileFriend)
                 .ThenInclude(s => s.Stories)
                 .ThenInclude(s => s.StoryImages)
-                .Include(f => f.Friends)
+                .Include(f => f.Followers)
                 .ThenInclude(f => f.ProfileFriend)
                 .ThenInclude(f => f.Stories)
                 .ThenInclude(f => f.StoryVideos)
@@ -52,7 +52,7 @@ namespace Disco.DAL.Repositories
             
             storyList.AddRange(profile.Stories);
 
-            foreach (var friend in profile.Friends)
+            foreach (var friend in profile.Followers)
             {
                 friend.ProfileFriend = await ctx.Profiles
                     .Include(p => p.Posts)

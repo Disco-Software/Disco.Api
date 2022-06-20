@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Disco.BLL.Handlers
 {
-    public static class ApiRequestHandlerBase
+    public abstract class ApiRequestHandlerBase
     {
         public static OkObjectResult Ok(object value) => new OkObjectResult(value);
         public static OkResult Ok() => new OkResult();

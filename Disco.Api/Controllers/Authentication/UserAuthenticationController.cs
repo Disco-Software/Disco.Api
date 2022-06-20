@@ -33,35 +33,35 @@ namespace Disco.Api.Controllers.Authentification
         /// <param name="model">email and password</param>
         /// <returns>object: UserDto with user and varification result</returns>
         [HttpPost("log-in"), AllowAnonymous]
-        public async Task<UserResponseModel> LogIn([FromBody] LoginModel model) =>
+        public async Task<IActionResult> LogIn([FromBody] LoginModel model) =>
             await serviceManager.AuthentificationService.LogIn(model);
 
         [HttpPost("log-in/facebook"), AllowAnonymous]
-        public async Task<UserResponseModel> Facebook([FromBody] FacebookRequestModel model) =>
-            await serviceManager.AuthentificationService.Facebook(model.AccessToken);
+        public async Task<IActionResult> Facebook([FromBody] FacebookRequestModel model) =>
+            await serviceManager.AuthentificationService.Facebook(model);
 
         [HttpPost("log-in/google"), AllowAnonymous, GoogleScopedAuthorize(PeopleServiceService.ScopeConstants.UserinfoProfile)]
-        public async Task<UserResponseModel> Google([FromServices] IGoogleAuthProvider googleAuthProvider) =>
+        public async Task<IActionResult> Google([FromServices] IGoogleAuthProvider googleAuthProvider) =>
             await serviceManager.AuthentificationService.Google(googleAuthProvider);
 
         [HttpPost("log-in/apple"), AllowAnonymous]
-        public async Task<UserResponseModel> Apple([FromBody] AppleLogInModel model) =>
+        public async Task<IActionResult> Apple([FromBody] AppleLogInModel model) =>
             await serviceManager.AuthentificationService.Apple(model);
 
         [HttpPut("refresh")]
-        public async Task<UserResponseModel> RefreshToken([FromBody] RefreshTokenRequestModel model) =>
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestModel model) =>
             await serviceManager.AuthentificationService.RefreshToken(model);
 
         [HttpPost("registration")]
-        public async Task<UserResponseModel> Registration([FromBody] RegistrationModel model) =>
+        public async Task<IActionResult> Registration([FromBody] RegistrationModel model) =>
             await serviceManager.AuthentificationService.Register(model);
 
         [HttpPost("forgot-password"), AllowAnonymous]
-        public async Task<string> ForgotPassword([FromBody] ForgotPasswordModel model) =>
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model) =>
             await serviceManager.AuthentificationService.ForgotPassword(model.Email);
 
         [HttpPut("reset-password")]
-        public async Task<UserResponseModel> ResetPassword([FromBody] ResetPasswordRequestModel model) =>
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestModel model) =>
             await serviceManager.AuthentificationService.ResetPassword(model);
     }
 }

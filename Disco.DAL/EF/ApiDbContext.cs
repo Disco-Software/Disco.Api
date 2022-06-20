@@ -35,7 +35,7 @@ namespace Disco.DAL.EF
                 .HasForeignKey<Profile>(p => p.UserId);
             
             builder.Entity<Profile>()
-                .HasMany(f => f.Friends)
+                .HasMany(f => f.Followers)
                 .WithOne(p => p.UserProfile)
                 .HasForeignKey(f => f.UserProfileId);
         }

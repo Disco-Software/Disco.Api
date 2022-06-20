@@ -4,11 +4,13 @@ using Disco.BLL.Abstracts;
 using Disco.BLL.Configurations;
 using Disco.BLL.Constants;
 using Disco.BLL.DTO;
+using Disco.BLL.Handlers;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
 using Disco.BLL.Models.Apple;
 using Disco.BLL.Models.Authentication;
 using Disco.BLL.Models.EmailNotifications;
+using Disco.BLL.Models.Facebook;
 using Disco.BLL.Models.Google;
 using Disco.BLL.Validatars;
 using Disco.DAL.EF;
@@ -21,6 +23,7 @@ using Google.Apis.PeopleService.v1;
 using Google.Apis.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -41,7 +44,7 @@ using System.Threading.Tasks;
 
 namespace Disco.BLL.Services
 {
-    public class AuthenticationService : UserRequestHandlerBase, IAuthenticationService
+    public class AuthenticationService : ApiRequestHandlerBase, IAuthenticationService
     {
         private readonly ApiDbContext ctx;
         private readonly UserManager<User> userManager;
@@ -84,11 +87,16 @@ namespace Disco.BLL.Services
             httpContextAccessor = _httpContextAccessor;
         }
 
-        public async Task<Models.Authentication.UserResponseModel> LogIn(LoginModel model)
+        public async Task<IActionResult> LogIn(LoginModel model)
         {
+            var validator = await LogInValidator
+                .Create()
+                .ValidateAsync(model);
+
+            if (validator.Errors.Count > 0)
+                return BadRequest(validator);
+
             var user = await userManager.FindByEmailAsync(model.Email);
-            if (user == null)
-                return BadRequest("user not found");
            
             await ctx.Entry(user)
                 .Reference(p => p.Profile)
@@ -99,7 +107,7 @@ namespace Disco.BLL.Services
                 .LoadAsync();
 
             await ctx.Entry(user.Profile)
-                .Collection(f => f.Friends)
+                .Collection(f => f.Followers)
                 .LoadAsync();
                         
             var passwordVarification = userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password);
@@ -115,19 +123,22 @@ namespace Disco.BLL.Services
 
             await ctx.SaveChangesAsync();   
 
-            return Ok(user, jwt, refreshToken);
+            var userResponseModel = mapper.Map<UserResponseModel>(user);
+            userResponseModel.RefreshToken = refreshToken;
+            userResponseModel.AccessToken = jwt;
+            userResponseModel.User = user;
+
+            return Ok(userResponseModel);
         }
 
-        public async Task<UserResponseModel> Register(RegistrationModel userInfo)
+        public async Task<IActionResult> Register(RegistrationModel userInfo)
         {
-            var validator = await RegistrationValidator
-                .Create(userManager)
-                .ValidateAsync(userInfo);
-            
-            var user = await userManager.FindByEmailAsync(userInfo.Email);
+            var validator = await RegistrationValidator.Create(userManager).ValidateAsync(userInfo);
 
-            if (user != null)
-                return BadRequest("this user allready created");
+            if (validator.Errors.Count > 0)
+                return BadRequest(validator);
+
+            var user = await userManager.FindByEmailAsync(userInfo.Email);
 
             var userResult = mapper.Map<User>(userInfo);
             userResult.PasswordHash = userManager.PasswordHasher.HashPassword(userResult, userInfo.Password);
@@ -145,18 +156,27 @@ namespace Disco.BLL.Services
             await signInManager.SignInAsync(userResult, true);
             var jwt = tokenService.GenerateAccessToken(user);
 
-            return Ok(userResult, jwt);
+            var userResponseModel = mapper.Map<UserResponseModel>(user);
+            userResponseModel.RefreshToken = user.RefreshToken;
+            userResponseModel.AccessToken = jwt;
+            userResponseModel.User = user;
+
+            return Ok(userResponseModel);
         }
 
-        public async Task<UserResponseModel> Facebook(string accessToken)
+        public async Task<IActionResult> Facebook(FacebookRequestModel facebookRequestModel)
         {
-            //var validation = await facebookAuthService.TokenValidation(accessToken);
+            var validator = await FacebookAccessTokenValidator
+                .Create()
+                .ValidateAsync(facebookRequestModel);
 
+            if (validator.Errors.Count > 0)
+                return BadRequest(validator);
 
-            //if (!validation.IsValid)
-            //    return new UserResponseModel { VarificationResult = "Facebook token is invalid" };
+            var userInfo = await facebookAuthService.GetUserInfo(facebookRequestModel.AccessToken);
 
-            var userInfo = await facebookAuthService.GetUserInfo(accessToken);
+            if (userInfo == null)
+                return BadRequest("info can't be null");
 
             var user = await userManager.FindByLoginAsync(LogInProvider.Facebook, userInfo.Id);
 
@@ -175,7 +195,12 @@ namespace Disco.BLL.Services
                 var jwt = tokenService.GenerateAccessToken(user);
                 var refreshToken = tokenService.GenerateRefreshToken();
 
-                return Ok(user, jwt);
+                var userResponseModel = mapper.Map<UserResponseModel>(user);
+                userResponseModel.AccessToken = jwt;
+                userResponseModel.RefreshToken = refreshToken;
+                userResponseModel.User = user;
+
+                return Ok(userResponseModel);
             }
 
             user = await userManager.FindByEmailAsync(userInfo.Email);
@@ -186,7 +211,12 @@ namespace Disco.BLL.Services
                 var jwt = tokenService.GenerateAccessToken(user);
                 var refreshToken = tokenService.GenerateRefreshToken();
 
-                return Ok(user, jwt, refreshToken);
+                var userResponseModel = mapper.Map<UserResponseModel>(user);
+                userResponseModel.RefreshToken = refreshToken;
+                userResponseModel.AccessToken = jwt;
+                userResponseModel.User = user;
+
+                return Ok(userResponseModel);
             }
 
 
@@ -214,10 +244,15 @@ namespace Disco.BLL.Services
 
             var jwtToken = tokenService.GenerateAccessToken(user);
 
-            return Ok(user, jwtToken);
+            var userResponse = mapper.Map<UserResponseModel>(user);
+            userResponse.AccessToken = jwtToken;
+            userResponse.RefreshToken = user.RefreshToken;
+            userResponse.User = user;
+
+            return Ok(userResponse);
         }
 
-        public async Task<UserResponseModel> RefreshToken(RefreshTokenRequestModel model)
+        public async Task<IActionResult> RefreshToken(RefreshTokenRequestModel model)
         {
             var user = await userRepository.GetUserByRefreshTokenAsync(model.RefreshToken);
                            
@@ -233,15 +268,25 @@ namespace Disco.BLL.Services
 
                 var jwtToken = tokenService.GenerateAccessToken(user);
 
-                return Ok(user, jwtToken, user.RefreshToken);
+                var userResponseModel = mapper.Map<UserResponseModel>(user);
+                userResponseModel.RefreshToken = user.RefreshToken;
+                userResponseModel.AccessToken = jwtToken;
+                userResponseModel.User = user;
+
+                return Ok(userResponseModel);
             }
 
             var jwt = tokenService.GenerateAccessToken(user);
 
-            return Ok(user, jwt, model.RefreshToken);
+            var userResponse = mapper.Map<UserResponseModel>(user);
+            userResponse.RefreshToken = user.RefreshToken;
+            userResponse.AccessToken = jwt;
+            userResponse.User = user;
+
+            return Ok(userResponse);
         }
 
-        public async Task<UserResponseModel> Apple(AppleLogInModel model)
+        public async Task<IActionResult> Apple(AppleLogInModel model)
         {
             User user;
             if (!string.IsNullOrWhiteSpace(model.Email))
@@ -257,7 +302,12 @@ namespace Disco.BLL.Services
 
                     var jwtToken = tokenService.GenerateAccessToken(user);
 
-                    return Ok(user, jwtToken);
+                    var userResponseModel = mapper.Map<UserResponseModel>(user);
+                    userResponseModel.RefreshToken = user.RefreshToken;
+                    userResponseModel.AccessToken = jwtToken;
+                    userResponseModel.User = user;
+
+                    return Ok(userResponseModel);
                 }
 
                 user = await userManager.FindByLoginAsync(LogInProvider.Apple, model.Name);
@@ -272,7 +322,12 @@ namespace Disco.BLL.Services
 
                     var jwtToken = tokenService.GenerateAccessToken(user);
 
-                    return Ok(user, jwtToken);
+                    var userResponseResult = mapper.Map<UserResponseModel>(user);
+                    userResponseResult.RefreshToken = user.RefreshToken;
+                    userResponseResult.AccessToken = jwtToken;
+                    userResponseResult.User = user;
+
+                    return Ok(userResponseResult);
                 }
 
                 user = new User
@@ -304,18 +359,20 @@ namespace Disco.BLL.Services
 
                 var jwt = tokenService.GenerateAccessToken(user);
 
-                return Ok(user, jwt);
+                var userResponse = mapper.Map<UserResponseModel>(user);
+                userResponse.RefreshToken = user.RefreshToken;
+                userResponse.AccessToken = jwt;
+                userResponse.User = user;
+
+                return Ok(userResponse);
 
             }
             return null;
         }
 
-        public async Task<string> ForgotPassword(string email)
+        public async Task<IActionResult> ForgotPassword(string email)
         {
             var user = await userManager.FindByEmailAsync(email);
-
-            if (user == null)
-                return "user not found";
 
             var blobContainerClient = blobServiceClient.GetBlobContainerClient("templates");
             var blobClient = blobContainerClient.GetBlobClient("index.html");
@@ -332,10 +389,10 @@ namespace Disco.BLL.Services
             model.IsHtmlTemplate = true;
 
             emailService.EmailConfirmation(model);
-            return passwordToken;
+            return Ok(passwordToken);
         }
 
-        public async Task<UserResponseModel> ResetPassword(ResetPasswordRequestModel model)
+        public async Task<IActionResult> ResetPassword(ResetPasswordRequestModel model)
         {
             var user = await userManager.FindByEmailAsync(model.Email);
             
@@ -345,7 +402,7 @@ namespace Disco.BLL.Services
             return Ok(user);
         }
 
-        public async Task<UserResponseModel> Google(IGoogleAuthProvider googleAuthProvider)
+        public async Task<IActionResult> Google(IGoogleAuthProvider googleAuthProvider)
         {
             var googleResponse = await googleAuthService.GetUserData(googleAuthProvider);
 
@@ -369,7 +426,12 @@ namespace Disco.BLL.Services
             var jwt = tokenService.GenerateAccessToken(user);
             var refreshToken = tokenService.GenerateRefreshToken();
 
-            return Ok(user, jwt,refreshToken);
+            var userResponse = mapper.Map<UserResponseModel>(user);
+            userResponse.RefreshToken = refreshToken;
+            userResponse.AccessToken = jwt;
+            userResponse.User = user;
+
+            return Ok(userResponse);
         }
     }
 }

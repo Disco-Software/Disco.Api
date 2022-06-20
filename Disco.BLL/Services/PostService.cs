@@ -2,6 +2,7 @@
 using Azure.Storage.Blobs;
 using Disco.BLL.DTO;
 using Disco.BLL.Extensions;
+using Disco.BLL.Handlers;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
 using Disco.BLL.Models.Posts;
@@ -12,6 +13,7 @@ using Disco.DAL.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -24,7 +26,7 @@ using System.Threading.Tasks;
 
 namespace Disco.BLL.Services
 {
-    public class PostService : PostApiRequestHandlerBase,IPostService
+    public class PostService : ApiRequestHandlerBase, IPostService
     {
         private readonly ApiDbContext ctx;
         private readonly PostRepository postRepository;
@@ -57,7 +59,7 @@ namespace Disco.BLL.Services
             httpContextAccessor = _httpContextAccessor;
         }
 
-        public async Task<PostResponseModel> CreatePostAsync(CreatePostModel model)
+        public async Task<IActionResult> CreatePostAsync(CreatePostModel model)
         {
             var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
            
@@ -85,13 +87,15 @@ namespace Disco.BLL.Services
                 {
                     var name = model.PostSongNames.First();
                     var image = model.PostSongImages.First();
-                    
+                    var executorName = model.ExecutorNames.First();
+
                     var song = await songService.CreatePostSongAsync(
-                         new CreateSongModel { SongFile = postSong, SongImage = image, Name = name, PostId = post.Id });
+                         new CreateSongModel { SongFile = postSong, SongImage = image, Name = name, ExecutorName = executorName, PostId = post.Id });
                    
                     model.PostSongNames.Remove(name);
                     model.PostSongImages.Remove(image);
-                    
+                    model.ExecutorNames.Remove(executorName);
+
                     post.PostSongs.Add(song);
                 }
             if (model.PostVideos != null)
@@ -114,7 +118,7 @@ namespace Disco.BLL.Services
         public async Task DeletePostAsync(int postId) =>
            await postRepository.Remove(postId);
 
-        public async Task<List<Post>> GetAllUserPosts(int userId)
+        public async Task<ActionResult<List<Post>>> GetAllUserPosts(int userId)
         {
             var posts = postRepository
                 .GetAll(p => p.Profile.UserId == userId)
@@ -124,7 +128,7 @@ namespace Disco.BLL.Services
             return posts;
         }
 
-        public async Task<List<Post>> GetAllPosts(int userId)
+        public async Task<ActionResult<List<Post>>> GetAllPosts(int userId)
         {
             var result = postRepository.GetAll(userId)
                 .Result

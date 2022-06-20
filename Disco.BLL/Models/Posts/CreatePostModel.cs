@@ -14,6 +14,7 @@ namespace Disco.BLL.Models.Posts
         public List<IFormFile> PostSongs { get; set; }
         public List<IFormFile> PostSongImages { get; set; }
         public List<string> PostSongNames { get; set; }
+        public List<string> ExecutorNames { get; set; }
         public List<IFormFile> PostVideos { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace Disco.Api.Controllers.Stories
             serviceManager = _serviceManager;
 
         [Microsoft.AspNetCore.Mvc.HttpPost("create")]
-        public async Task<Story> Create([FromForm] CreateStoryModel model) =>
+        public async Task<IActionResult> Create([FromForm] CreateStoryModel model) =>
             await serviceManager.StoryService.CreateStoryAsync(model);  
 
         [Microsoft.AspNetCore.Mvc.HttpDelete("{id:int}")]
@@ -31,11 +31,11 @@ namespace Disco.Api.Controllers.Stories
             await serviceManager.StoryService.DeleteStoryAsync(id);
 
         [Microsoft.AspNetCore.Mvc.HttpGet("get/{id:int}")]
-        public async Task<Story> GetStory([FromRoute] int id) =>
+        public async Task<ActionResult<Story>> GetStory([FromRoute] int id) =>
             await serviceManager.StoryService.GetStoryAsync(id);
 
         [Microsoft.AspNetCore.Mvc.HttpGet("all/{id:int}")]
-        public async Task<List<Story>> GetStoriesAsync([FromRoute] int id) =>
+        public async Task<ActionResult<List<Story>>> GetStoriesAsync([FromRoute] int id) =>
             await serviceManager.StoryService.GetAllStoryAsync(id);
 
     }

@@ -27,7 +27,7 @@ namespace Disco.Api.Hubs
         {
             var likes = await serviceManager.LikeSevice.CreateLikeAsync(postId);
 
-           await Clients.All.SendAsync("create", likes.Count);
+           await Clients.Caller.SendAsync("create", likes.Count);
         }
 
         [HubMethodName("remove")]
@@ -35,7 +35,7 @@ namespace Disco.Api.Hubs
         {
             var likes = await serviceManager.LikeSevice.RemoveLikeAsync(postId);
 
-            await Clients.All.SendAsync("remove", likes.Count);
+            await Clients.Caller.SendAsync("remove", likes.Count);
         }
     }
 }

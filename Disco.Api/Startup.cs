@@ -41,6 +41,8 @@ using Disco.Api.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Azure.Storage.Queues;
 using Azure.Core.Extensions;
+using Microsoft.AspNetCore.Http;
+using Disco.BLL.Validatars;
 
 namespace Disco.Api
 {
@@ -92,7 +94,10 @@ namespace Disco.Api
                 builder.AddBlobServiceClient(Configuration.GetConnectionString("BlobStorage"));
             });
 
-            services.AddSignalR();
+            services.AddSignalR(s =>
+            {
+                s.EnableDetailedErrors = true;
+            });
             services.AddOptions<AuthenticationOptions>();
             services.Configure<EmailOptions>(Configuration.GetSection("EmailSettings"));
             services.Configure<BLL.Configurations.GoogleOptions>(Configuration.GetSection("Google"));
@@ -136,6 +141,8 @@ namespace Disco.Api
             services.AddHttpContextAccessor();
             services.AddHttpClient();
 
+            services.AddLogging();
+
             services.AddScoped<IServiceManager, ServiceManager>();
 
             services.AddOptions<PushNotificationOptions>()
@@ -144,12 +151,6 @@ namespace Disco.Api
             services.AddOptions<AuthenticationOptions>()
                 .Configure(Configuration.GetSection("Auth:Jwt").Bind)
                 .ValidateDataAnnotations();
-            services.AddLogging();
-
-            services.AddCors(cors =>
-            {
-                cors.AddPolicy(name: "app", builder => builder.WithOrigins("http://discoapi20211205192712.azurewebsites.net/swagger/index.html"));
-            });
 
             var mapperConfig = new MapperConfiguration(ms =>
             {
@@ -192,7 +193,7 @@ namespace Disco.Api
             app.ApplicationServices.CreateScope();
             app.UseAuthorization();
             app.UseAuthentication();
-            
+
             app.UseCors(s =>
             {
                 s.SetIsOriginAllowed(o => true)

@@ -26,7 +26,7 @@ namespace Disco.Api.Controllers.Posts
             serviceManager = _serviceManager;
 
         [HttpPost("create")]
-        public async Task<PostResponseModel> Create([FromForm] CreatePostModel model) =>
+        public async Task<IActionResult> Create([FromForm] CreatePostModel model) =>
              await serviceManager.PostService.CreatePostAsync(model);
 
         [HttpDelete("{postId:int}")]
@@ -34,11 +34,11 @@ namespace Disco.Api.Controllers.Posts
             await serviceManager.PostService.DeletePostAsync(postId);
 
         [HttpGet("{userId:int}")]
-        public async Task<List<Post>> GetAllUserPosts([FromRoute] int userId) =>
+        public async Task<ActionResult<List<Post>>> GetAllUserPosts([FromRoute] int userId) =>
             await serviceManager.PostService.GetAllUserPosts(userId);
 
         [HttpGet("{userId:int}/line")]
-        public async Task<List<Post>> GetAllPosts([FromRoute] int userId) =>
+        public async Task<ActionResult<List<Post>>> GetAllPosts([FromRoute] int userId) =>
             await serviceManager.PostService.GetAllPosts(userId);
     }
 }
