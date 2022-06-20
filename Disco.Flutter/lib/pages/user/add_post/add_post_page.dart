@@ -1,10 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/dialogs/add_audio/add_audio.dart';
+import 'package:disco_app/pages/user/add_post/widgets/add_post_appbar.dart';
+import 'package:disco_app/providers/add_post_provider.dart';
 import 'package:disco_app/res/colors.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/src/provider.dart';
 
 class AddPostPage extends StatelessWidget {
   const AddPostPage({Key? key}) : super(key: key);
@@ -13,28 +17,7 @@ class AddPostPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff1C142E),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1C142D),
-        centerTitle: true,
-        title: const Text(
-          "Add post",
-          style: TextStyle(
-            fontSize: 24,
-          ),
-          textAlign: TextAlign.start,
-        ),
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-            padding: const EdgeInsets.only(left: 10.0),
-            onPressed: () {
-              context.router.push(const HomeRoute());
-            },
-            icon: SvgPicture.asset(
-              "assets/ic_back_button.svg",
-              width: 32,
-              height: 30,
-            )),
-      ),
+      appBar: addPostAppBar(context),
       body: Column(children: [
         const Spacer(
           flex: 3,
@@ -46,8 +29,19 @@ class AddPostPage extends StatelessWidget {
             showDialog(
               context: context,
               builder: (ctx) => AddAudio(
-                onSelectAudioTap: () {},
-                onRecordTap: () {},
+                onSelectAudioTap: () async {
+                  await _selectFile(context, (result) {
+                    context
+                        .read<AddPostProvider>()
+                        .currentCreatedPost
+                        .postSongs
+                        .add(result?.files.single.path ?? '');
+                  });
+                },
+                onRecordTap: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.router.push(const RecordAudioRoute());
+                },
               ),
             );
           },
@@ -56,19 +50,49 @@ class AddPostPage extends StatelessWidget {
         AddPostButton(
           icon: SvgPicture.asset('assets/ic_video.svg'),
           text: 'Video',
-          onTap: () {},
+          onTap: () async {
+            await _selectFile(context, (result) {
+              context
+                  .read<AddPostProvider>()
+                  .currentCreatedPost
+                  .postVideos
+                  .add(result?.files.single.path ?? '');
+            });
+          },
         ),
         const Spacer(),
         AddPostButton(
           icon: SvgPicture.asset('assets/ic_picture.svg'),
           text: 'Picture',
-          onTap: () {},
+          onTap: () async {
+            await _selectFile(context, (result) {
+              context
+                  .read<AddPostProvider>()
+                  .currentCreatedPost
+                  .postImages
+                  .add(result?.files.single.path ?? '');
+            });
+          },
         ),
         const Spacer(
           flex: 3,
         ),
       ]),
     );
+  }
+
+  Future<void> _selectFile(
+      BuildContext context, Function(FilePickerResult? result) saveCallback) async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      saveCallback(result);
+
+      Navigator.of(context, rootNavigator: true).pop();
+      context.router.push(const SelectFilesRoute());
+    } else {
+      // User canceled the picker
+    }
   }
 }
 

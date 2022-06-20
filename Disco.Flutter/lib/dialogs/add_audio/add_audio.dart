@@ -65,22 +65,27 @@ class MusicSelectionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          width: 87,
-          height: 78,
-          padding: const EdgeInsets.all(24.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5.0),
-            color: const Color(0xFF3D1F63),
-            boxShadow: const [
-              BoxShadow(
-                offset: Offset(0, 4),
-                blurRadius: 5.0,
-                color: Color(0xFFA044FF),
-              )
-            ],
+        InkWell(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          onTap: onTap,
+          child: Container(
+            width: 87,
+            height: 78,
+            padding: const EdgeInsets.all(24.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5.0),
+              color: const Color(0xFF3D1F63),
+              boxShadow: const [
+                BoxShadow(
+                  offset: Offset(0, 4),
+                  blurRadius: 5.0,
+                  color: Color(0xFFA044FF),
+                )
+              ],
+            ),
+            child: icon,
           ),
-          child: icon,
         ),
         const SizedBox(height: 16),
         Text(

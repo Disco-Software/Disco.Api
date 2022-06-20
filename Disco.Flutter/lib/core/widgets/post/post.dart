@@ -6,17 +6,15 @@ import 'package:disco_app/core/widgets/post/widgets/post_author.dart';
 import 'package:disco_app/core/widgets/post/widgets/song_body.dart';
 import 'package:disco_app/core/widgets/post/widgets/video_body.dart';
 import 'package:disco_app/core/widgets/post_button.dart';
-import 'package:disco_app/data/local/local_storage.dart';
 import 'package:disco_app/data/network/network_models/post_network.dart';
-import 'package:disco_app/res/strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/io_client.dart';
+import 'package:http/src/client.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:signalr_core/signalr_core.dart';
-
-import '../../../injection.dart';
+import 'package:signalr_netcore/signalr_client.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 const String serverUrl = 'https://devdiscoapi.azurewebsites.net/hub/like';
 const String token =
@@ -65,9 +63,10 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
     final builder = HubConnectionBuilder()
         .withUrl(
           serverUrl,
-          HttpConnectionOptions(
+          options: HttpConnectionOptions(
             accessTokenFactory: () async => token,
-            client: IOClient(HttpClient()..badCertificateCallback = (x, y, z) => true),
+            requestTimeout: 100000,
+            transport: IOClient(HttpClient()..badCertificateCallback = (x, y, z) => true),
           ),
         )
         .withAutomaticReconnect();
@@ -81,7 +80,7 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
     //     .withAutomaticReconnect()
     //     .build();
     hubConnection.onclose(
-      (error) => print('Connection close'),
+      ({error}) => print('Connection close'),
     );
     hubConnection.on('create', (args) {
       print('LOL1 ${args}');
@@ -166,32 +165,60 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
             children: [
               PostButton(
                   onTap: () async {
-                    final builder = HubConnectionBuilder().withUrl(
-                      serverUrl,
-                      HttpConnectionOptions(
-                        accessTokenFactory: () async =>
-                            await getIt.get<SecureStorageRepository>().read(key: Strings.token),
-                        client: IOClient(HttpClient()..badCertificateCallback = (x, y, z) => true),
-                        logging: (level, message) => print(message),
-                      ),
-                    );
-                    final hubConnection = builder.build()..serverTimeoutInMilliseconds = 100000;
-                    await hubConnection.start();
-                    // print('HEH ${hubConnection.state}');
-                    if (hubConnection.state == HubConnectionState.connected) {
-                      final obj = hubConnection.invoke('create', args: [widget.post.id ?? 0]);
-                    }
+                    final token =
+                        'access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJuYmYiOjE2NTQ1MDA4MTYsImV4cCI6MTY1NDU3MjgxNiwiaXNzIjoiZGlzY28tYXBpIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdC9EaXNjby5BcGkifQ.yllYJLRvmmKXMi1yA2r1-zMemqa99WcGgAc4-nMRodM';
+                    final id = 'id=1daTrQ2lzlVk2C7oQWxVpg';
+                    'wss://devdiscoapi.azurewebsites.net/hub/like?&';
 
-                    hubConnection.on('create', (args) {
-                      print('LOL1 ${args}');
+                    final channel = WebSocketChannel.connect(
+                      Uri.parse('wss://devdiscoapi.azurewebsites.net/hub/like?$token'),
+                    );
+
+                    channel.sink.add('');
+
+                    channel.stream.listen((event) {
+                      print('LOL228 $event');
                     });
 
-                    hubConnection.onclose(
-                      (error) => print('Connection close123'),
-                    );
-                    // print('OBJECT 888 $obj');
-
-                    // setState(() {});
+                    // Logger.root.level = Level.ALL;
+                    // final logger = Logger("PostModel");
+                    // final logMessagesSub =
+                    //     Logger.root.onRecord.listen((msg) => print('LOGLOL${msg.message}'));
+                    // final builder = HubConnectionBuilder()
+                    //     .withUrl(
+                    //   serverUrl,
+                    //   options: HttpConnectionOptions(
+                    //     httpClient: WebSupportingHttpClient(logger,
+                    //         httpClientCreateCallback: _httpClientCreateCallback),
+                    //     logMessageContent: true,
+                    //     transport: HttpTransportType.WebSockets,
+                    //     accessTokenFactory: () async =>
+                    //         await getIt.get<SecureStorageRepository>().read(key: Strings.token),
+                    //     logger: Logger("SignalR - transport"),
+                    //   ),
+                    // )
+                    //     .withAutomaticReconnect(retryDelays: [2000, 5000, 10000, 20000]);
+                    // final hubConnection = builder.build();
+                    // await hubConnection.start();
+                    // // print('HEH ${hubConnection.state}');
+                    // if (hubConnection.state == HubConnectionState.Connected) {
+                    //   final obj = hubConnection.invoke('create', args: [widget.post.id ?? 0]);
+                    // }
+                    //
+                    // hubConnection.onreconnecting(({error}) {
+                    //   print("onreconnecting called");
+                    // });
+                    //
+                    // hubConnection.on('create', (args) {
+                    //   print('LOL1 ${args}');
+                    // });
+                    //
+                    // hubConnection.onclose(
+                    //   ({error}) => print('Connection close123'),
+                    // );
+                    // // print('OBJECT 888 $obj');
+                    //
+                    // // setState(() {});
                   },
                   imagePath: "assets/ic_star.svg"),
               Padding(
@@ -279,4 +306,16 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
   }
 
   void _hanldeNewLikes(List<Object> arguments) {}
+
+  void _httpClientCreateCallback(Client httpClient) {
+    HttpOverrides.global = HttpOverrideCertificateVerificationInDev();
+  }
+}
+
+class HttpOverrideCertificateVerificationInDev extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+  }
 }

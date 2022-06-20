@@ -11,4 +11,5 @@ class DcColors {
   static const violet = Color(0xFF825DCD);
   static const bottomBarLeft = Color(0xFF7028BA);
   static const darkViolet = Color(0xFF29193E);
+  static const dark = Color(0xFF1C142E);
 }

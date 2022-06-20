@@ -27,7 +27,7 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
       listener: (ctx, state) {
         WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
           if (state is FacebookRegistratedState || state is AppleRegistratedState) {
-            context.router.navigate(const HomeRoute());
+            context.router.navigate(HomeRoute());
           }
         });
       },

@@ -16,9 +16,8 @@ class SecureStorageRepository {
 
   Future<String> read({required String key}) async {
     String value;
-    debugPrint('SecureStorageRepository --> read');
     value = await secureStorage.read(key: key) ?? '';
-    debugPrint('SecureStorageRepository --> reded value: $value');
+    debugPrint('SecureStorageRepository --> readed value: $value');
     return value;
   }
 
