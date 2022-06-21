@@ -47,6 +47,14 @@ namespace Disco.BLL.Mapper
             CreateMap<FacebookModel, User>();
             CreateMap<CreateFriendModel, Friend>();
             CreateMap<DAL.Entities.Profile, ProfileModel>();
+            CreateMap<User, UserResponseModel>()
+                .ForMember(source => source.RefreshToken, opt => opt.Ignore())
+                .ForMember(source => source.AccessToken, opt => opt.Ignore());
+            CreateMap<DAL.Entities.Profile, ProfileModel>();
+            CreateMap<ProfileModel, FriendResponseModel>()
+                .ForMember(source => source.UserProfile, opt => opt.Ignore())
+                .ForMember(source => source.FriendProfile, opt => opt.Ignore())
+                .ForMember(source => source.FriendId, opt => opt.Ignore());
         }
     }
 }

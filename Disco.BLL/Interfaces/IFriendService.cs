@@ -12,10 +12,9 @@ namespace Disco.BLL.Interfaces
 {
     public interface IFriendService
     {
-        Task<FriendResponseModel> CreateFriendAsync(CreateFriendModel model);
+        Task<IActionResult> CreateFriendAsync(CreateFriendModel model);
         Task DeleteFriend(int id);
-        Task<FriendResponseModel> GetFriendAsync(int id);
-        Task<List<FriendResponseModel>> GetAllFriends(int id);
-        Task<FriendResponseModel> IsConfirmFriendAsync(ConfirmationFriendModel model);
+        Task<IActionResult> GetFriendAsync(int id);
+        Task<IActionResult> GetAllFriends(int id);
     }
 }

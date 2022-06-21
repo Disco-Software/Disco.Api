@@ -25,7 +25,7 @@ namespace Disco.DAL.Repositories
                 .Include(p => p.Profile)
                 .ThenInclude(s => s.Stories)
                 .Include(p => p.Profile)
-                .ThenInclude(f => f.Friends)
+                .ThenInclude(f => f.Followers)
                 .FirstOrDefaultAsync();
 
     }
