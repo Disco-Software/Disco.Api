@@ -42,32 +42,6 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff1C142E),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1C142D),
-        centerTitle: false,
-        title: const Text(
-          "DISCO",
-          style: TextStyle(
-            fontSize: 32,
-            fontFamily: 'Colonna',
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.start,
-        ),
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-              padding: const EdgeInsets.only(right: 32),
-              onPressed: () {
-                /// context.read<MainPageBloc>().add(InitialEvent(id: 1));
-              },
-              icon: SvgPicture.asset(
-                "assets/ic_search.svg",
-                width: 32,
-                height: 30,
-              )),
-        ],
-      ),
       body: _SuccessStateWidget(
         controller: _refreshController,
       ),
@@ -92,19 +66,45 @@ class _SuccessStateWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: const Color(0xff1C142E),
-        body: Column(
-          children: [
-            const SizedBox(height: 6),
-            BlocBuilder<StoriesBloc, StoriesState>(
-              builder: (context, state) {
-                if (state is SuccessStoriesState) {
-                  if (state.stories.isNotEmpty) {
-                    return SizedBox(
-                        height: 110,
-                        child: ListView.builder(
+        body: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return [
+              SliverAppBar(
+                backgroundColor: const Color(0xFF1C142D),
+                centerTitle: false,
+                title: const Text(
+                  "DISCO",
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontFamily: 'Colonna',
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+                automaticallyImplyLeading: true,
+                actions: [
+                  IconButton(
+                      padding: const EdgeInsets.only(right: 32),
+                      onPressed: () {
+                        /// context.read<MainPageBloc>().add(InitialEvent(id: 1));
+                      },
+                      icon: SvgPicture.asset(
+                        "assets/ic_search.svg",
+                        width: 32,
+                        height: 30,
+                      )),
+                ],
+              ),
+              BlocBuilder<StoriesBloc, StoriesState>(
+                builder: (context, state) {
+                  if (state is SuccessStoriesState) {
+                    if (state.stories.isNotEmpty) {
+                      return SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 110,
+                          child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: state.stories.length,
-                            itemBuilder: (context, index) {
+                            itemBuilder: (ctx, index) {
                               if (index == 0) {
                                 return Padding(
                                   padding: const EdgeInsets.only(left: 12, right: 8),
@@ -125,77 +125,80 @@ class _SuccessStateWidget extends StatelessWidget {
                                   ),
                                 );
                               }
-                            }));
-                  } else {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8, top: 8),
-                      child: Row(
-                        children: [
-                          const SizedBox(
-                            width: 12,
+                            },
+                            itemCount: state.stories.length,
                           ),
-                          UnicornImage(
-                            title: "Your story",
-                            imageUrl: state.userImageUrl,
-                            shouldHaveGradientBorder: false,
-                            shouldHavePlus: true,
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                }
-                return const SizedBox();
-              },
-            ),
-            const SizedBox(height: 11),
-            BlocBuilder<MainPageBloc, MainPageState>(
-              builder: (context, state) {
-                if (state is SuccessPostsState) {
-                  return Expanded(
-                    child: SmartRefresher(
-                      controller: controller,
-                      onRefresh: () {
-                        context.read<MainPageBloc>().add(LoadPostsEvent(
-                              hasLoading: false,
-                              onLoaded: () {
-                                controller.refreshCompleted();
-                              },
-                            ));
-                      },
-                      footer: Container(
-                        color: Colors.red,
-                      ),
-                      child: state.posts.isNotEmpty
-                          ? ListView.builder(
-                              itemCount: state.posts.length,
-                              itemBuilder: (context, index) {
-                                if (index == state.posts.length - 1) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: 100.0),
-                                    child: UnicornPost(post: state.posts[index]),
-                                  );
-                                }
-                                return UnicornPost(post: state.posts[index]);
-                              })
-                          : const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 80, vertical: 200),
-                              child: Text(
-                                'You don\'t have posts yet',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                ),
+                        ),
+                      );
+                    } else {
+                      return SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 8, top: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                width: 12,
                               ),
-                            ),
-                    ),
-                  );
-                }
-                return const Center(child: CircularProgressIndicator());
-              },
+                              UnicornImage(
+                                title: "Your story",
+                                imageUrl: state.userImageUrl,
+                                shouldHaveGradientBorder: false,
+                                shouldHavePlus: true,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                  return const SliverToBoxAdapter(child: SizedBox());
+                },
+              ),
+            ];
+          },
+          body: SmartRefresher(
+            controller: controller,
+            onRefresh: () {
+              context.read<MainPageBloc>().add(LoadPostsEvent(
+                    hasLoading: false,
+                    onLoaded: () {
+                      controller.refreshCompleted();
+                    },
+                  ));
+            },
+            child: CustomScrollView(
+              slivers: [
+                const SliverToBoxAdapter(),
+                BlocBuilder<MainPageBloc, MainPageState>(
+                  builder: (context, state) {
+                    if (state is SuccessPostsState) {
+                      return SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (ctx, index) {
+                            if (index == state.posts.length - 1) {
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 100.0),
+                                child: UnicornPost(post: state.posts[index]),
+                              );
+                            }
+                            return UnicornPost(post: state.posts[index]);
+                          },
+                          childCount: state.posts.length,
+                        ),
+                      );
+                    } else {
+                      return const SliverToBoxAdapter(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
             ),
-            const SizedBox(height: 80.0),
-          ],
+          ),
         ));
   }
 }

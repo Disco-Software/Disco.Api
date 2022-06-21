@@ -1,5 +1,6 @@
 class PostSong {
   String? name;
+  String? executorName;
   String? imageUrl;
   String? source;
   int? postId;
@@ -12,6 +13,7 @@ class PostSong {
     imageUrl = json['imageUrl'];
     source = json['source'];
     postId = json['postId'];
+    executorName = json['executorName'];
     id = json['id'];
   }
 
@@ -21,6 +23,7 @@ class PostSong {
     data['imageUrl'] = imageUrl;
     data['source'] = source;
     data['postId'] = postId;
+    data['executorName'] = executorName;
     data['id'] = id;
     return data;
   }

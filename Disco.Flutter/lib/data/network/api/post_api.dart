@@ -16,4 +16,9 @@ class PostApi {
       await dio.get("user/posts/$id/line").then((response) {
         return response.data;
       });
+
+  Future<dynamic> createPost(FormData post) =>
+      dio.post("user/posts/create", data: post).then((response) {
+        return response.data;
+      });
 }

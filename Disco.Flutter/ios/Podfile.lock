@@ -53,6 +53,8 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
+  - image_picker_ios (0.0.1):
+    - Flutter
   - just_audio (0.0.1):
     - Flutter
   - path_provider_ios (0.0.1):
@@ -77,6 +79,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_facebook_auth (from `.symlinks/plugins/flutter_facebook_auth/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
@@ -107,6 +110,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_facebook_auth/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  image_picker_ios:
+    :path: ".symlinks/plugins/image_picker_ios/ios"
   just_audio:
     :path: ".symlinks/plugins/just_audio/ios"
   path_provider_ios:
@@ -133,6 +138,7 @@ SPEC CHECKSUMS:
   flutter_facebook_auth: dbc47556cbdc61ced50e14473bd32461386a1425
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  image_picker_ios: b786a5dcf033a8336a657191401bfdf12017dabb
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   path_provider_ios: 7d7ce634493af4477d156294792024ec3485acd5
   SDWebImage: 0905f1b7760fc8ac4198cae0036600d67478751e

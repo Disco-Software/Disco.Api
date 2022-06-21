@@ -5,6 +5,7 @@ class CreatePostModel {
   List<String> postSongImages;
   List<String> postSongNames;
   List<String> postVideos;
+  List<String> executorNames;
 
   CreatePostModel({
     required this.description,
@@ -13,5 +14,6 @@ class CreatePostModel {
     required this.postImages,
     required this.postSongImages,
     required this.postSongNames,
+    required this.executorNames,
   });
 }

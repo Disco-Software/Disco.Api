@@ -25,6 +25,7 @@ class ImageBody extends StatelessWidget {
                 ],
               ),
             ),
+            fit: BoxFit.cover,
             imageUrl: postImage.source ?? '',
           ),
         ),

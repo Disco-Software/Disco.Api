@@ -107,6 +107,7 @@ class _SongBodyState extends State<SongBody> {
                 ],
               ),
             ),
+            fit: BoxFit.cover,
             imageUrl: widget.postSong.imageUrl ?? '',
             errorWidget: (context, url, error) => const SizedBox(),
           )
