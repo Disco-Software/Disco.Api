@@ -42,6 +42,7 @@ namespace Disco.BLL.Services
         private readonly Lazy<IVideoService> videoService;
         private readonly Lazy<ILikeSevice> likeSevice;
         private readonly Lazy<ITokenService> tokenService;
+        private readonly Lazy<IProfileService> profileService;
         public ServiceManager(ApiDbContext _ctx,
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
@@ -77,6 +78,7 @@ namespace Disco.BLL.Services
             storyService = new Lazy<IStoryService>(() => new StoryService(repositoryManager.Value.StoryRepository, _userManager, _ctx,_blobServiceClient,storyImageService.Value,storyVideoService.Value,_mapper,httpContextAccessor));
             storyImageService = new Lazy<IStoryImageService> (() => new StoryImageService(repositoryManager.Value.StoryImageRepository, repositoryManager.Value.StoryRepository, _userManager, _blobServiceClient, _mapper, httpContextAccessor));
             storyVideoService = new Lazy<IStoryVideoService>(() => new StoryVideoService(repositoryManager.Value.StoryVideoRepository, repositoryManager.Value.StoryRepository, _userManager, _blobServiceClient, _mapper, httpContextAccessor));
+            profileService = new Lazy<IProfileService>(() => new ProfileService(_ctx,_userManager,_blobServiceClient,repositoryManager.Value.ProfileRepository,httpContextAccessor));
         }
         public IAuthenticationService AuthentificationService => authentificationService.Value;
 
@@ -115,5 +117,7 @@ namespace Disco.BLL.Services
 
        public ITokenService TokenService => 
             tokenService.Value;
+
+       public IProfileService ProfileService => profileService.Value;
     }
 }

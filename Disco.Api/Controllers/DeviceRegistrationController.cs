@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Disco.Api.Controllers.PushNotifications
+namespace Disco.Api.Controllers
 {
     [Route("api/device-registration")]
     [ApiController]

@@ -1,5 +1,4 @@
 ﻿using Disco.Api;
-using Disco.Api.Controllers.Authentification;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models;
 using Disco.DAL.EF;
@@ -27,6 +26,7 @@ namespace Disco.Tests.Base
                 .WithWebHostBuilder(webHostBuilder => {
                     webHostBuilder.ConfigureServices(services =>
                     {
+                        services.AddHttpClient();
                     });
                 });
             httpClient = appFactory.CreateClient();

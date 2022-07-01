@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Disco.Api.Controllers.Authentification
+namespace Disco.Api.Controllers
 {
     [ApiController]
     [Route("api/user/authentication")]

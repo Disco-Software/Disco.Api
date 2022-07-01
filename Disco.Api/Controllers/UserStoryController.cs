@@ -10,21 +10,21 @@ using Disco.DAL.Entities;
 using Disco.BLL.Models.Stories;
 using System.Collections.Generic;
 
-namespace Disco.Api.Controllers.Stories
+namespace Disco.Api.Controllers
 {
     [Route("api/user/story")]
     [ApiController]
     [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
-    public class StoryController : ControllerBase
+    public class UserStoryController : ControllerBase
     {
         private readonly IServiceManager serviceManager;
 
-        public StoryController(IServiceManager _serviceManager) =>
+        public UserStoryController(IServiceManager _serviceManager) =>
             serviceManager = _serviceManager;
 
         [Microsoft.AspNetCore.Mvc.HttpPost("create")]
         public async Task<IActionResult> Create([FromForm] CreateStoryModel model) =>
-            await serviceManager.StoryService.CreateStoryAsync(model);  
+            await serviceManager.StoryService.CreateStoryAsync(model);
 
         [Microsoft.AspNetCore.Mvc.HttpDelete("{id:int}")]
         public async Task Delete([FromRoute] int id) =>

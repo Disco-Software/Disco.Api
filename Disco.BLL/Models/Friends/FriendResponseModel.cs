@@ -7,8 +7,8 @@ namespace Disco.BLL.Models.Friends
 {
     public class FriendResponseModel
     {
-        public Profile UserProfile { get; set; }
-        public Profile FriendProfile { get; set; }
+        public DAL.Entities.Profile UserProfile { get; set; }
+        public DAL.Entities.Profile FriendProfile { get; set; }
         public int FriendId { get; set; }
         public bool IsConfirmed { get; set; }
     }

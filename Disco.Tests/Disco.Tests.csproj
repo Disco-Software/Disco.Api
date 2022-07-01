@@ -20,8 +20,4 @@
     <ProjectReference Include="..\Disco.DAL\Disco.DAL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>

@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Disco.Api.Controllers.Posts
+namespace Disco.Api.Controllers
 {
     [ApiController]
     [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]

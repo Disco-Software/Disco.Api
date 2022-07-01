@@ -16,16 +16,15 @@ namespace Disco.Tests.Tests
     [TestClass]
     public class AuthenticationControllerTest : IntegrationTest
     {
-        public LoginModel logInModel;
         public AuthenticationControllerTest()
         {
-            httpClient.BaseAddress = new Uri("https://discoapi20211205192712.azurewebsites.net/api/");
+            httpClient.BaseAddress = new Uri("https://devdiscoapi.azurewebsites.net/api/");
         }
         
         [TestMethod]
         public async Task LogIn_ReturnsSuccessResponse()
         {
-            logInModel = new LoginModel { Email = "stas_1999_nr@ukr.net", Password = "StasZeus2021!" };
+            var logInModel = new LoginModel { Email = "stas_1999_nr@ukr.net", Password = "StasZeus2021!" };
             var json = JsonConvert.SerializeObject(logInModel);
             var buffer = Encoding.UTF8.GetBytes(json);
 
@@ -44,8 +43,8 @@ namespace Disco.Tests.Tests
         [TestMethod]
         public async Task LogIn_ReturnsUserNotFoundResponse()
         {
-            logInModel = new LoginModel { Email = "stas_1999_nr@gmail.com", Password = "StasZeus2021!" };
-            var json = JsonConvert.SerializeObject(logInModel);
+            var loginModel = new LoginModel { Email = "stas_1999_nr@gmail.com", Password = "StasZeus2021!" };
+            var json = JsonConvert.SerializeObject(loginModel);
             var buffer = Encoding.UTF8.GetBytes(json);
 
             var bytes = new ByteArrayContent(buffer);
@@ -55,15 +54,13 @@ namespace Disco.Tests.Tests
 
             var result = await response.Content.ReadAsStringAsync();
 
-            var userDTO = JsonConvert.DeserializeObject<UserResponseModel>(result);
-
-            Assert.IsTrue(userDTO.AccessToken == "user not found");
+            Assert.IsTrue(result == "user not found");
         }
 
         [TestMethod]
         public async Task LogIn_ReturnsPasswordIsNotValidResponse()
         {
-            logInModel = new LoginModel { Email = "stas_1999_nr@ukr.net", Password = "kds;afjlkdsajf" };
+            var logInModel = new LoginModel { Email = "stas_1999_nr@ukr.net", Password = "kds;afjlkdsajf" };
             
             var json = JsonConvert.SerializeObject(logInModel);
             var buffer = Encoding.UTF8.GetBytes(json);
@@ -75,15 +72,13 @@ namespace Disco.Tests.Tests
 
             var result = await response.Content.ReadAsStringAsync();
 
-            var userDTO = JsonConvert.DeserializeObject<UserResponseModel>(result);
-
-            Assert.IsTrue(userDTO.AccessToken == "Password is not valid");
+            Assert.IsTrue(result == "Password is not valid");
         }
 
         [TestMethod]
         public async Task LogIn_ReturnsNullResponse()
         {
-            logInModel = new LoginModel { Email = "", Password = "" };
+            var logInModel = new LoginModel { Email = "", Password = "" };
             var json = JsonConvert.SerializeObject(logInModel);
             var buffer = Encoding.UTF8.GetBytes(json);
 
@@ -94,9 +89,7 @@ namespace Disco.Tests.Tests
 
             var result = await response.Content.ReadAsStringAsync();
 
-            var userDTO = JsonConvert.DeserializeObject<UserResponseModel>(result);
-
-            Assert.IsTrue(userDTO.AccessToken == "Log in form can not be a null");
+            Assert.IsTrue(result == "Log in form can not be a null");
         }
 
         [TestMethod]
@@ -119,7 +112,7 @@ namespace Disco.Tests.Tests
         [TestMethod]
         public async Task ForgotPassword_ReturnsErrorResponse()
         {
-            var model = new ForgotPasswordModel { Email = "stas_1999_nr@ukr.net" };
+            var model = new ForgotPasswordModel { Email = "stas_1999_nr" };
             var json = JsonConvert.SerializeObject(model);
             var buffer = Encoding.UTF8.GetBytes(json);
 

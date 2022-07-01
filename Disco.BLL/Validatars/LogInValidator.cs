@@ -1,5 +1,7 @@
 ﻿using Disco.BLL.Models.Authentication;
+using Disco.DAL.Entities;
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;

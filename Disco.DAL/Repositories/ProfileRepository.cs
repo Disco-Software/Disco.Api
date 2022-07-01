@@ -1,4 +1,5 @@
-﻿using Disco.DAL.EF;
+﻿
+using Disco.DAL.EF;
 using Disco.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,6 +19,15 @@ namespace Disco.DAL.Repositories
                     .Include(u => u.User)
                     .Where(p => p.Id == id)
                     .FirstOrDefaultAsync();
+
+        public async override Task<Profile> Update(Profile newItem)
+        {
+            var profile = ctx.Profiles.Update(newItem).Entity;
+            
+            await ctx.SaveChangesAsync();
+            
+            return profile;
+        }
 
     }
 }

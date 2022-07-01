@@ -24,6 +24,7 @@ namespace Disco.BLL.Interfaces
         IStoryImageService StoryImageService { get; }
         IStoryVideoService StoryVideoService { get; }
         ITokenService TokenService { get; }
+        IProfileService ProfileService { get; }
         IRepositoryManager RepositoryManager { get; }
     }
 }

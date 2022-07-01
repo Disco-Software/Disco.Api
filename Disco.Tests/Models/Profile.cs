@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Disco.DAL.Entities
+namespace Disco.Tests.Models
 {
-    public class Profile : Base.BaseEntity<int>
+    public class Profile
     {
+        public int Id { get; set; }
         public string Status { get; set; }
-        public string Cread { get; set; } = string.Empty;
         public string Photo { get; set; }
         public List<Post> Posts { get; set; } = new List<Post>();
         public List<Friend> Followers { get; set; } = new List<Friend>();
@@ -17,5 +14,6 @@ namespace Disco.DAL.Entities
 
         public int UserId { get; set; }
         public User User { get; set; }
+
     }
 }

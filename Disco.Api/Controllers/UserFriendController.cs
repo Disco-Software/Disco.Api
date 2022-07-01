@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Disco.Api.Controllers.Friend
+namespace Disco.Api.Controllers
 {
     [Route("api/user/friends")]
     [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
