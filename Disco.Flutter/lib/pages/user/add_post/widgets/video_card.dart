@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:auto_route/auto_route.dart';
+import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/providers/add_post_provider.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,7 +24,26 @@ class VideoCard extends StatefulWidget {
 
 class _VideoCardState extends State<VideoCard> {
   late VideoPlayerController _controller;
-  bool _shouldShowPlayButton = true;
+  bool _shouldShowShadowLayer = true;
+
+  final Widget _switchedPause = Padding(
+    key: const ValueKey(1),
+    padding: const EdgeInsets.all(4.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset('assets/ic_rectangle_big.png'),
+        Image.asset('assets/ic_rectangle_big.png'),
+      ],
+    ),
+  );
+
+  final Widget _switchedPlay = SvgPicture.asset(
+    'assets/ic_play_button.svg',
+    height: 60,
+    width: 60,
+    key: const ValueKey(2),
+  );
 
   @override
   void initState() {
@@ -54,16 +75,18 @@ class _VideoCardState extends State<VideoCard> {
               flex: 5,
               child: Consumer<AddPostProvider>(builder: (ctx, data, child) {
                 return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (_controller.value.isPlaying) {
-                        _controller.pause();
-                        _shouldShowPlayButton = true;
-                      } else {
-                        _controller.play();
-                        _shouldShowPlayButton = false;
-                      }
-                    });
+                  onTap: () async {
+                    if (_shouldShowShadowLayer) {
+                      _shouldShowShadowLayer = false;
+                    } else {
+                      _shouldShowShadowLayer = true;
+                      Future.delayed(const Duration(seconds: 2), () {
+                        setState(() {
+                          _shouldShowShadowLayer = false;
+                        });
+                      });
+                    }
+                    setState(() {});
                   },
                   child: Stack(
                     children: [
@@ -81,116 +104,72 @@ class _VideoCardState extends State<VideoCard> {
                               )
                             : Container(),
                       ),
-                      if (_shouldShowPlayButton)
-                        Center(
-                          child: SvgPicture.asset(
-                            'assets/ic_play_button.svg',
-                            height: 92,
-                            width: 92,
-                          ),
+                      if (_shouldShowShadowLayer)
+                        Container(
+                          color: Colors.black.withOpacity(0.3),
                         ),
-                      if (!_shouldShowPlayButton)
+                      if (_shouldShowShadowLayer)
+                        GestureDetector(
+                          child: Center(
+                            child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 300),
+                              transitionBuilder: (child, animation) => FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              ),
+                              child: _controller.value.isPlaying ? _switchedPause : _switchedPlay,
+                            ),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              if (_controller.value.isPlaying) {
+                                _controller.pause();
+                                _shouldShowShadowLayer = true;
+                              } else {
+                                _controller.play();
+
+                                _shouldShowShadowLayer = false;
+                              }
+                            });
+                          },
+                        ),
+                      if (_shouldShowShadowLayer)
                         Align(
                           child: AnimatedBuilder(
                             builder: (context, index) => Row(
                               children: [
-                                _VideoScrubber(
-                                  controller: _controller,
-                                  child: LinearPercentIndicator(
-                                    width: 200,
-                                    lineHeight: 9,
-                                    percent: _getVideoPositionPercent(),
-                                    barRadius: const Radius.circular(7),
-                                    linearGradient: const LinearGradient(
-                                        colors: [Color(0xFFE08D11), Color(0xFFF6EA7D)]),
-                                    backgroundColor: const Color(0xFFC9D6FF),
-                                    widgetIndicator: Container(
-                                      width: 11.0,
-                                      height: 20.0,
-                                      decoration: BoxDecoration(
-                                          color: DcColors.darkWhite,
-                                          borderRadius: BorderRadius.circular(20.0)),
+                                Row(
+                                  children: [
+                                    _VideoScrubber(
+                                      controller: _controller,
+                                      child: LinearPercentIndicator(
+                                        width: 200,
+                                        lineHeight: 9,
+                                        percent: _getVideoPositionPercent(),
+                                        barRadius: const Radius.circular(7),
+                                        linearGradient: const LinearGradient(
+                                            colors: [Color(0xFFE08D11), Color(0xFFF6EA7D)]),
+                                        backgroundColor: const Color(0xFFC9D6FF),
+                                        widgetIndicator: Container(
+                                          width: 11.0,
+                                          height: 20.0,
+                                          decoration: BoxDecoration(
+                                              color: DcColors.darkWhite,
+                                              borderRadius: BorderRadius.circular(20.0)),
+                                        ),
+                                      ),
                                     ),
-                                    trailing: IconButton(
+                                    IconButton(
                                       icon: const Icon(
                                         CupertinoIcons.fullscreen,
                                         size: 15.0,
                                       ),
                                       onPressed: () {
-                                        showGeneralDialog(
-                                            context: context,
-                                            pageBuilder: (ctx, animation, secondAnimation) =>
-                                                Material(
-                                                  child: Stack(
-                                                    children: [
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          setState(() {
-                                                            if (_controller.value.isPlaying) {
-                                                              _controller.pause();
-                                                              _shouldShowPlayButton = true;
-                                                            } else {
-                                                              _controller.play();
-                                                              _shouldShowPlayButton = false;
-                                                            }
-                                                          });
-                                                        },
-                                                        child: Stack(
-                                                          children: [
-                                                            Container(
-                                                              color: Colors.black,
-                                                              child: Column(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment.center,
-                                                                children: [
-                                                                  AspectRatio(
-                                                                    aspectRatio: _controller
-                                                                        .value.aspectRatio,
-                                                                    child: VideoPlayer(_controller),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      if (_shouldShowPlayButton)
-                                                        Center(
-                                                          child: SvgPicture.asset(
-                                                            'assets/ic_play_button.svg',
-                                                            height: 100,
-                                                            width: 100,
-                                                          ),
-                                                        ),
-                                                      Align(
-                                                        alignment: Alignment.topCenter,
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.only(
-                                                            top: 20.0,
-                                                            right: 5.0,
-                                                          ),
-                                                          child: Row(
-                                                            children: [
-                                                              const Spacer(),
-                                                              IconButton(
-                                                                  onPressed: () {
-                                                                    Navigator.of(context,
-                                                                            rootNavigator: true)
-                                                                        .pop();
-                                                                  },
-                                                                  icon: const Icon(
-                                                                    CupertinoIcons.clear,
-                                                                  )),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ));
+                                        context.router.push(FullScreenVideoRoute(
+                                            source: widget.source, controller: _controller));
                                       },
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ],
                               mainAxisAlignment: MainAxisAlignment.center,

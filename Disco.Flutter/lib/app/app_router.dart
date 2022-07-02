@@ -7,6 +7,7 @@ import 'package:disco_app/pages/start/splash_page.dart';
 import 'package:disco_app/pages/user/add_post/add_post_page.dart';
 import 'package:disco_app/pages/user/add_post/record_audio_page.dart';
 import 'package:disco_app/pages/user/add_post/select_files_page.dart';
+import 'package:disco_app/pages/user/add_post/widgets/fullscreen_video.dart';
 import 'package:disco_app/pages/user/chat/chat.dart';
 import 'package:disco_app/pages/user/home_page.dart';
 import 'package:disco_app/pages/user/main/main_page.dart';
@@ -40,7 +41,8 @@ import 'package:disco_app/pages/user/saved/saved_item_page/saved_item.dart';
         children: [
           AutoRoute(path: '', page: AddPostPage),
           AutoRoute(path: 'record-audio', page: RecordAudioPage),
-          AutoRoute(path: 'select-audio', page: SelectFilesPage)
+          AutoRoute(path: 'select-audio', page: SelectFilesPage),
+          AutoRoute(path: 'fullscreen-video', page: FullScreenVideoPage),
         ],
       ),
       AutoRoute(path: "chat", page: ChatPage),
