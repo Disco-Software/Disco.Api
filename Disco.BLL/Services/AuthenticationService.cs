@@ -132,14 +132,15 @@ namespace Disco.BLL.Services
 
         public async Task<IActionResult> Register(RegistrationModel userInfo)
         {
-            var validator = await RegistrationValidator.Create(userManager).ValidateAsync(userInfo);
+            var validator = await RegistrationValidator
+                .Create(userManager)
+                .ValidateAsync(userInfo);
 
-            if (validator.Errors.Count > 0)
+            if(validator.Errors.Count > 0)
                 return BadRequest(validator);
 
-            var user = await userManager.FindByEmailAsync(userInfo.Email);
-
             var userResult = mapper.Map<User>(userInfo);
+            
             userResult.PasswordHash = userManager.PasswordHasher.HashPassword(userResult, userInfo.Password);
             userResult.Profile = new DAL.Entities.Profile { Status = StatusProvider.NewArtist };
             userResult.NormalizedEmail = userManager.NormalizeEmail(userResult.Email);
@@ -150,15 +151,16 @@ namespace Disco.BLL.Services
             var identityResult = await userManager.CreateAsync(userResult);
             if (!identityResult.Succeeded)
                 return BadRequest("Password mast have a upper case lower case and 6 leters");
+            
             await ctx.SaveChangesAsync();
 
             await signInManager.SignInAsync(userResult, true);
-            var jwt = tokenService.GenerateAccessToken(user);
+            var jwt = tokenService.GenerateAccessToken(userResult);
 
-            var userResponseModel = mapper.Map<UserResponseModel>(user);
-            userResponseModel.RefreshToken = user.RefreshToken;
+            var userResponseModel = mapper.Map<UserResponseModel>(userResult);
+            userResponseModel.RefreshToken = userResult.RefreshToken;
             userResponseModel.AccessToken = jwt;
-            userResponseModel.User = user;
+            userResponseModel.User = userResult;
 
             return Ok(userResponseModel);
         }
