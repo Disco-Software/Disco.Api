@@ -33,31 +33,29 @@ class AddPostPage extends StatelessWidget {
         AddPostButton(
           icon: SvgPicture.asset('assets/ic_music.svg'),
           text: 'Music',
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (ctx) => AddAudio(
-                onSelectAudioTap: () async {
-                  await _selectFile(
-                    shouldPop: true,
-                    context: context,
-                    saveCallback: (result) {
-                      post.postSongs.add(result?.files.single.path ?? '');
-                      post.postSongImages.add(Strings.defaultSongImage);
-                      post.postSongNames.add(Strings.defaultSongName);
-                      post.executorNames.add(Strings.defaultSinger);
-                    },
-                    type: FileType.custom,
-                    allowedExtensions: ['mp3', 'mp4', 'wav', 'aac'],
-                  );
-                },
-                onRecordTap: () {
-                  Navigator.of(context, rootNavigator: true).pop();
-                  context.router.push(const RecordAudioRoute());
-                },
-              ),
-            );
-          },
+          onTap: () => showDialog(
+            context: context,
+            builder: (ctx) => AddAudio(
+              onSelectAudioTap: () async {
+                await _selectFile(
+                  shouldPop: true,
+                  context: context,
+                  saveCallback: (result) {
+                    post.postSongs.add(result?.files.single.path ?? '');
+                    post.postSongImages.add(Strings.defaultSongImage);
+                    post.postSongNames.add(Strings.defaultSongName);
+                    post.executorNames.add(Strings.defaultSinger);
+                  },
+                  type: FileType.custom,
+                  allowedExtensions: ['mp3', 'mp4', 'wav', 'aac'],
+                );
+              },
+              onRecordTap: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.router.push(const RecordAudioRoute());
+              },
+            ),
+          ),
         ),
         const Spacer(),
         AddPostButton(
