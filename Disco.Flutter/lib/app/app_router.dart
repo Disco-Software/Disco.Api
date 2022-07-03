@@ -22,6 +22,7 @@ import 'package:disco_app/pages/user/saved/saved_item_page/saved_item.dart';
     AutoRoute(path: "/log-in", page: LoginPage),
     AutoRoute(path: "/search", page: SearchRegistrationPage),
     AutoRoute(path: "/registration", page: RegistrationPage),
+    AutoRoute(path: '/fullscreen-video', page: FullScreenVideoPage),
     AutoRoute(
       path: ':itemId',
       page: SavedItem,
@@ -42,7 +43,6 @@ import 'package:disco_app/pages/user/saved/saved_item_page/saved_item.dart';
           AutoRoute(path: '', page: AddPostPage),
           AutoRoute(path: 'record-audio', page: RecordAudioPage),
           AutoRoute(path: 'select-audio', page: SelectFilesPage),
-          AutoRoute(path: 'fullscreen-video', page: FullScreenVideoPage),
         ],
       ),
       AutoRoute(path: "chat", page: ChatPage),

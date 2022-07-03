@@ -13,16 +13,16 @@ import '../pages/authentication/registration/registration.dart' as _i6;
 import '../pages/authentication/search_registration/search_registration_page.dart'
     as _i5;
 import '../pages/start/splash_page.dart' as _i3;
-import '../pages/user/add_post/add_post_page.dart' as _i13;
-import '../pages/user/add_post/record_audio_page.dart' as _i14;
-import '../pages/user/add_post/select_files_page.dart' as _i15;
-import '../pages/user/add_post/widgets/fullscreen_video.dart' as _i16;
-import '../pages/user/chat/chat.dart' as _i11;
-import '../pages/user/home_page.dart' as _i8;
-import '../pages/user/main/main_page.dart' as _i9;
-import '../pages/user/profile/profile.dart' as _i12;
-import '../pages/user/saved/saved.dart' as _i10;
-import '../pages/user/saved/saved_item_page/saved_item.dart' as _i7;
+import '../pages/user/add_post/add_post_page.dart' as _i14;
+import '../pages/user/add_post/record_audio_page.dart' as _i15;
+import '../pages/user/add_post/select_files_page.dart' as _i16;
+import '../pages/user/add_post/widgets/fullscreen_video.dart' as _i7;
+import '../pages/user/chat/chat.dart' as _i12;
+import '../pages/user/home_page.dart' as _i9;
+import '../pages/user/main/main_page.dart' as _i10;
+import '../pages/user/profile/profile.dart' as _i13;
+import '../pages/user/saved/saved.dart' as _i11;
+import '../pages/user/saved/saved_item_page/saved_item.dart' as _i8;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter([_i2.GlobalKey<_i2.NavigatorState>? navigatorKey])
@@ -50,6 +50,13 @@ class AppRouter extends _i1.RootStackRouter {
         builder: (_) {
           return const _i6.RegistrationPage();
         }),
+    FullScreenVideoRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
+        routeData: routeData,
+        builder: (data) {
+          final args = data.argsAs<FullScreenVideoRouteArgs>();
+          return _i7.FullScreenVideoPage(
+              key: args.key, source: args.source, controller: args.controller);
+        }),
     SavedItemRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (data) {
@@ -57,14 +64,14 @@ class AppRouter extends _i1.RootStackRouter {
           final args = data.argsAs<SavedItemRouteArgs>(
               orElse: () =>
                   SavedItemRouteArgs(itemId: pathParams.getInt('itemId')));
-          return _i7.SavedItem(key: args.key, itemId: args.itemId);
+          return _i8.SavedItem(key: args.key, itemId: args.itemId);
         }),
     HomeRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (data) {
           final args =
               data.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
-          return _i8.HomePage(
+          return _i9.HomePage(
               key: args.key, shouldLoadData: args.shouldLoadData);
         }),
     FeedRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
@@ -72,13 +79,13 @@ class AppRouter extends _i1.RootStackRouter {
         builder: (data) {
           final args =
               data.argsAs<FeedRouteArgs>(orElse: () => const FeedRouteArgs());
-          return _i9.MainPage(
+          return _i10.MainPage(
               key: args.key, shouldLoadData: args.shouldLoadData);
         }),
     SavedItemsRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i10.SavedItemsPage();
+          return const _i11.SavedItemsPage();
         }),
     AddPostRouter.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
@@ -88,34 +95,27 @@ class AppRouter extends _i1.RootStackRouter {
     ChatRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i11.ChatPage();
+          return const _i12.ChatPage();
         }),
     ProfileRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i12.ProfilePage();
+          return const _i13.ProfilePage();
         }),
     AddPostRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i13.AddPostPage();
+          return const _i14.AddPostPage();
         }),
     RecordAudioRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i14.RecordAudioPage();
+          return const _i15.RecordAudioPage();
         }),
     SelectFilesRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i15.SelectFilesPage();
-        }),
-    FullScreenVideoRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
-        routeData: routeData,
-        builder: (data) {
-          final args = data.argsAs<FullScreenVideoRouteArgs>();
-          return _i16.FullScreenVideoPage(
-              key: args.key, source: args.source, controller: args.controller);
+          return const _i16.SelectFilesPage();
         })
   };
 
@@ -125,6 +125,7 @@ class AppRouter extends _i1.RootStackRouter {
         _i1.RouteConfig(LoginRoute.name, path: '/log-in'),
         _i1.RouteConfig(SearchRegistrationRoute.name, path: '/search'),
         _i1.RouteConfig(RegistrationRoute.name, path: '/registration'),
+        _i1.RouteConfig(FullScreenVideoRoute.name, path: '/fullscreen-video'),
         _i1.RouteConfig(SavedItemRoute.name, path: ':itemId'),
         _i1.RouteConfig(HomeRoute.name, path: '/home', children: [
           _i1.RouteConfig(FeedRoute.name, path: 'feed'),
@@ -132,8 +133,7 @@ class AppRouter extends _i1.RootStackRouter {
           _i1.RouteConfig(AddPostRouter.name, path: 'addPost', children: [
             _i1.RouteConfig(AddPostRoute.name, path: ''),
             _i1.RouteConfig(RecordAudioRoute.name, path: 'record-audio'),
-            _i1.RouteConfig(SelectFilesRoute.name, path: 'select-audio'),
-            _i1.RouteConfig(FullScreenVideoRoute.name, path: 'fullscreen-video')
+            _i1.RouteConfig(SelectFilesRoute.name, path: 'select-audio')
           ]),
           _i1.RouteConfig(ChatRoute.name, path: 'chat'),
           _i1.RouteConfig(ProfileRoute.name, path: 'profile')
@@ -163,6 +163,30 @@ class RegistrationRoute extends _i1.PageRouteInfo<void> {
   const RegistrationRoute() : super(name, path: '/registration');
 
   static const String name = 'RegistrationRoute';
+}
+
+class FullScreenVideoRoute extends _i1.PageRouteInfo<FullScreenVideoRouteArgs> {
+  FullScreenVideoRoute(
+      {_i2.Key? key,
+      required String source,
+      required _i17.VideoPlayerController controller})
+      : super(name,
+            path: '/fullscreen-video',
+            args: FullScreenVideoRouteArgs(
+                key: key, source: source, controller: controller));
+
+  static const String name = 'FullScreenVideoRoute';
+}
+
+class FullScreenVideoRouteArgs {
+  const FullScreenVideoRouteArgs(
+      {this.key, required this.source, required this.controller});
+
+  final _i2.Key? key;
+
+  final String source;
+
+  final _i17.VideoPlayerController controller;
 }
 
 class SavedItemRoute extends _i1.PageRouteInfo<SavedItemRouteArgs> {
@@ -262,28 +286,4 @@ class SelectFilesRoute extends _i1.PageRouteInfo<void> {
   const SelectFilesRoute() : super(name, path: 'select-audio');
 
   static const String name = 'SelectFilesRoute';
-}
-
-class FullScreenVideoRoute extends _i1.PageRouteInfo<FullScreenVideoRouteArgs> {
-  FullScreenVideoRoute(
-      {_i2.Key? key,
-      required String source,
-      required _i17.VideoPlayerController controller})
-      : super(name,
-            path: 'fullscreen-video',
-            args: FullScreenVideoRouteArgs(
-                key: key, source: source, controller: controller));
-
-  static const String name = 'FullScreenVideoRoute';
-}
-
-class FullScreenVideoRouteArgs {
-  const FullScreenVideoRouteArgs(
-      {this.key, required this.source, required this.controller});
-
-  final _i2.Key? key;
-
-  final String source;
-
-  final _i17.VideoPlayerController controller;
 }
