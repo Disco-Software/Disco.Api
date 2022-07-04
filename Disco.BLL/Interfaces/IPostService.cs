@@ -15,7 +15,7 @@ namespace Disco.BLL.Interfaces
     public interface IPostService
     {
         Task<IActionResult> CreatePostAsync(CreatePostModel model);
-        Task<ActionResult<List<Post>>> GetAllUserPosts(int userId);
+        Task<ActionResult<List<Post>>> GetAllUserPosts(GetAllPostsModel model);
         Task<ActionResult<List<Post>>> GetAllPosts(GetAllPostsModel model);
         Task DeletePostAsync(int postId);
     }
