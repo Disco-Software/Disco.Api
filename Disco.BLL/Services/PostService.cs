@@ -127,13 +127,11 @@ namespace Disco.BLL.Services
             return posts;
         }
 
-        public async Task<ActionResult<List<Post>>> GetAllPosts(int userId)
+        public async Task<ActionResult<List<Post>>> GetAllPosts(GetAllPostsModel model)
         {
-            var result = postRepository.GetAll(userId)
-                .Result
-                .OrderByDescending(t => t.Id)
-                .ToList();
-            return result;
+            var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
+
+            return await postRepository.GetAll(user.Id, model.PageSize, model.PageNumber);
         }
 
     }
