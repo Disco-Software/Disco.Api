@@ -6,6 +6,7 @@ using Disco.BLL.Models.Facebook;
 using Disco.BLL.Models.Friends;
 using Disco.BLL.Models.Images;
 using Disco.BLL.Models.Posts;
+using Disco.BLL.Models.Roles;
 using Disco.BLL.Models.Songs;
 using Disco.BLL.Models.Stories;
 using Disco.BLL.Models.StoryImages;
@@ -55,6 +56,7 @@ namespace Disco.BLL.Mapper
                 .ForMember(source => source.UserProfile, opt => opt.Ignore())
                 .ForMember(source => source.FriendProfile, opt => opt.Ignore())
                 .ForMember(source => source.FriendId, opt => opt.Ignore());
+            CreateMap<CreateRoleModel, Role>();
         }
     }
 }

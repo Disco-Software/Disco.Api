@@ -113,6 +113,11 @@ namespace Disco.BLL.Services
             if (passwordVarification == PasswordVerificationResult.Failed)
                 return BadRequest("Password is not valid");
 
+            user.RoleName = ctx.UserRoles
+                .Join(ctx.Roles, r => r.RoleId,u => u.Id, (u,r) => new {Role = r, UserRole = u})
+                .Where(r => r.UserRole.UserId == user.Id)
+                .FirstOrDefaultAsync().Result.Role.Name;
+
             await signInManager.SignInAsync(user, true);
             var jwt = tokenService.GenerateAccessToken(user);
             var refreshToken = tokenService.GenerateRefreshToken();
@@ -148,9 +153,13 @@ namespace Disco.BLL.Services
             userResult.RefreshToken = tokenService.GenerateRefreshToken();
             userResult.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
 
+            var roleResult = await userManager.AddToRoleAsync(userResult, "User");
+            if (!roleResult.Succeeded)
+                return BadRequest(roleResult.Errors);
+
             var identityResult = await userManager.CreateAsync(userResult);
             if (!identityResult.Succeeded)
-                return BadRequest("Password mast have a upper case lower case and 6 leters");
+                return BadRequest(identityResult.Errors);
             
             await ctx.SaveChangesAsync();
 

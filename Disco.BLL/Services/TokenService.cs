@@ -24,7 +24,10 @@ namespace Disco.BLL.Services
             var jwtSecurityToken = new JwtSecurityToken(
                 authenticationOptions.Value.Issuer,
                 authenticationOptions.Value.Audience,
-                new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) },
+                new[] { 
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Role, user.RoleName)
+                },
                 DateTime.UtcNow,
                 DateTime.UtcNow.AddHours(authenticationOptions.Value.ExpiresAfterMitutes),
                 new SigningCredentials(
