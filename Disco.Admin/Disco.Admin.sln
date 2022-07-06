@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Admin", "Disco.Admin\Disco.Admin.csproj", "{4C1A44F4-14B9-4DAA-ABE1-F8493FF1CC6E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Admin", "Disco.Admin\Disco.Admin.csproj", "{B7501954-88E1-4CA0-88D7-DBE1934EFECD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4C1A44F4-14B9-4DAA-ABE1-F8493FF1CC6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4C1A44F4-14B9-4DAA-ABE1-F8493FF1CC6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4C1A44F4-14B9-4DAA-ABE1-F8493FF1CC6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4C1A44F4-14B9-4DAA-ABE1-F8493FF1CC6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7501954-88E1-4CA0-88D7-DBE1934EFECD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7501954-88E1-4CA0-88D7-DBE1934EFECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7501954-88E1-4CA0-88D7-DBE1934EFECD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7501954-88E1-4CA0-88D7-DBE1934EFECD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

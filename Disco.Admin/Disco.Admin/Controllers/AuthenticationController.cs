@@ -2,9 +2,11 @@
 
 namespace Disco.Admin.Controllers
 {
+    [Route("authentication")]
     public class AuthenticationController : Controller
     {
-        public IActionResult Index()
+        [Route("log-in")]
+        public async Task<IActionResult> LogIn()
         {
             return View();
         }

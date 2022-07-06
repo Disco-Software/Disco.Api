@@ -23,7 +23,7 @@ namespace Disco.DAL.Repositories
             await ctx.SaveChangesAsync();
         }
 
-        public async Task<List<Story>> GetAll(int profileId)
+        public async Task<List<Story>> GetAll(int profileId, int pageNumber, int pageSize)
         {
             var storyList = new List<Story>();
 
@@ -67,7 +67,10 @@ namespace Disco.DAL.Repositories
                 storyList.AddRange(friend.ProfileFriend.Stories);
             }
 
-           return storyList.OrderByDescending(d => d.DateOfCreation).ToList();
+           return storyList.OrderByDescending(d => d.DateOfCreation)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
         }
 
         public override async Task Remove(int id)
