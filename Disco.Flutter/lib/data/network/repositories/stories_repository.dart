@@ -8,7 +8,7 @@ class StoriesRepository {
 
   StoriesRepository({required this.storiesApi});
 
-  Future<List<StoriesModel>?> fetchStories(int id) async =>
-      await storiesApi.fetchStories(id).then(
-          (stories) => stories?.map((e) => StoriesModel.fromJson(e)).toList());
+  Future<List<StoriesModel>?> fetchStories(int pageNumber, int pageSize) async => await storiesApi
+      .fetchStories(pageNumber, pageSize)
+      .then((stories) => stories?.map((e) => StoriesModel.fromJson(e)).toList());
 }

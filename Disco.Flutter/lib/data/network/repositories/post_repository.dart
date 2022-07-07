@@ -10,8 +10,8 @@ class PostRepository {
 
   PostRepository({required this.postApi});
 
-  Future<List<Post>?> getAllPosts(int userId) async {
-    return postApi.getAllPosts(userId).then((posts) {
+  Future<List<Post>?> getAllPosts(int pageNumber, int pageSize) async {
+    return postApi.getAllPosts(pageNumber, pageSize).then((posts) {
       return posts?.map((e) => Post.fromJson(e)).toList();
     });
   }

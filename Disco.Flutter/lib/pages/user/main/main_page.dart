@@ -1,49 +1,32 @@
 import 'package:disco_app/core/widgets/post/post.dart';
 import 'package:disco_app/core/widgets/unicorn_image.dart';
+import 'package:disco_app/data/network/network_models/post_network.dart';
 import 'package:disco_app/pages/user/main/bloc/main_bloc.dart';
 import 'package:disco_app/pages/user/main/bloc/main_event.dart';
-import 'package:disco_app/pages/user/main/bloc/main_state.dart';
 import 'package:disco_app/pages/user/main/bloc/stories_bloc.dart';
+import 'package:disco_app/pages/user/main/bloc/stories_event.dart';
 import 'package:disco_app/pages/user/main/bloc/stories_state.dart';
+import 'package:disco_app/res/numbers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import 'bloc/stories_event.dart';
+import 'bloc/main_state.dart';
 
 const String title = 'Your story';
 
-class MainPage extends StatefulWidget {
-  MainPage({Key? key, this.shouldLoadData = true}) : super(key: key);
+class MainPage extends StatelessWidget {
+  const MainPage({Key? key, this.shouldLoadData = true}) : super(key: key);
   final bool shouldLoadData;
-
-  @override
-  State<MainPage> createState() => _MainPageState();
-}
-
-class _MainPageState extends State<MainPage> {
-  final RefreshController _refreshController = RefreshController(initialRefresh: false);
-
-  @override
-  void initState() {
-    if (widget.shouldLoadData) {
-      context.read<StoriesBloc>().add(LoadStoriesEvent());
-      context.read<MainPageBloc>().add(LoadPostsEvent(
-            hasLoading: true,
-            onLoaded: () {},
-          ));
-    }
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff1C142E),
       body: _SuccessStateWidget(
-        controller: _refreshController,
+        shouldLoadData: shouldLoadData,
       ),
     );
   }
@@ -57,10 +40,29 @@ class _MainPageState extends State<MainPage> {
 
 // onSearch() {}
 
-class _SuccessStateWidget extends StatelessWidget {
-  final RefreshController controller;
+class _SuccessStateWidget extends StatefulWidget {
+  final bool shouldLoadData;
 
-  const _SuccessStateWidget({Key? key, required this.controller}) : super(key: key);
+  _SuccessStateWidget({Key? key, required this.shouldLoadData}) : super(key: key);
+
+  @override
+  State<_SuccessStateWidget> createState() => _SuccessStateWidgetState();
+}
+
+class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
+  final List<Post> _posts = [];
+  int _postNumberPage = 1;
+  bool isLastBlocPaginationPage = false;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<MainPageBloc>().add(LoadPostsEvent(pageNumber: 1, hasLoading: true));
+    context.read<StoriesBloc>().add(LoadStoriesEvent(
+          pageNumber: 1,
+        ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,46 +159,66 @@ class _SuccessStateWidget extends StatelessWidget {
               ),
             ];
           },
-          body: SmartRefresher(
-            controller: controller,
-            onRefresh: () {
-              context.read<MainPageBloc>().add(LoadPostsEvent(
-                    hasLoading: false,
-                    onLoaded: () {
-                      controller.refreshCompleted();
-                    },
-                  ));
+          body: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollInfo) {
+              if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent) {
+                context
+                    .read<MainPageBloc>()
+                    .add(LoadPostsEvent(pageNumber: _postNumberPage, hasLoading: false));
+              }
+
+              print(
+                  'SUPER METRICS  --> ${scrollInfo.metrics.pixels} === ${scrollInfo.metrics.maxScrollExtent}');
+              return true;
             },
-            child: CustomScrollView(
-              slivers: [
-                const SliverToBoxAdapter(),
-                BlocBuilder<MainPageBloc, MainPageState>(
-                  builder: (context, state) {
-                    if (state is SuccessPostsState) {
-                      return SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (ctx, index) {
-                            if (index == state.posts.length - 1) {
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 100.0),
-                                child: UnicornPost(post: state.posts[index]),
-                              );
-                            }
-                            return UnicornPost(post: state.posts[index]);
-                          },
-                          childCount: state.posts.length,
-                        ),
-                      );
-                    } else {
-                      return const SliverToBoxAdapter(
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ],
+            child: SmartRefresher(
+              controller: _refreshController,
+              onRefresh: () {
+                context.read<MainPageBloc>().add(LoadPostsEvent(
+                      hasLoading: false,
+                      onLoaded: (_) {
+                        _refreshController.refreshCompleted();
+                      },
+                      pageNumber: 1,
+                    ));
+              },
+              child: CustomScrollView(
+                slivers: [
+                  const SliverToBoxAdapter(),
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (ctx, index) {
+                        return UnicornPost(post: _posts[index]);
+                      },
+                      childCount: _posts.length,
+                    ),
+                  ),
+                  const SliverPadding(padding: EdgeInsets.only(bottom: 50.0)),
+                  BlocConsumer<MainPageBloc, MainPageState>(
+                    listener: (context, state) {
+                      if (state is SuccessPostsState) {
+                        _posts.addAll(state.posts);
+                        setState(() {});
+                        if (state.posts.length < Numbers.pageSize) {
+                          context.read<MainPageBloc>().isLastPage = true;
+                        } else {
+                          _postNumberPage++;
+                        }
+                      }
+                    },
+                    builder: (context, state) {
+                      if (state is LoadingState) {
+                        return const SliverToBoxAdapter(
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      } else {
+                        return const SliverToBoxAdapter(child: SizedBox());
+                      }
+                    },
+                  ),
+                  const SliverToBoxAdapter(child: SizedBox(height: 200.0)),
+                ],
+              ),
             ),
           ),
         ));

@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:disco_app/data/network/network_models/post_network.dart';
 
 abstract class MainPageEvent {}
 
@@ -10,11 +10,13 @@ class InitialEvent implements MainPageEvent {
 
 class LoadPostsEvent implements MainPageEvent {
   final bool hasLoading;
-  final VoidCallback onLoaded;
+  final Function(List<Post>)? onLoaded;
+  final int pageNumber;
 
   LoadPostsEvent({
     required this.hasLoading,
-    required this.onLoaded,
+    this.onLoaded,
+    required this.pageNumber,
   });
 }
 

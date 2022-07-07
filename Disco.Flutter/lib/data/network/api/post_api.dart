@@ -12,8 +12,13 @@ class PostApi {
         return response.data;
       });
 
-  Future<List<dynamic>?> getAllPosts(int id) async =>
-      await dio.get("user/posts/$id/line").then((response) {
+  Future<List<dynamic>?> getAllPosts(int pageNumber, int pageSize) async => await dio.get(
+        "user/posts/line",
+        queryParameters: {
+          'pageNumber': '$pageNumber',
+          'pageSize': '$pageSize',
+        },
+      ).then((response) {
         return response.data;
       });
 

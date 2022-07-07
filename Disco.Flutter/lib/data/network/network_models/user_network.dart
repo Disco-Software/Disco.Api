@@ -36,6 +36,7 @@ class User {
   String? normalizedUserName;
   String? email;
   String? normalizedEmail;
+  String? roleName;
   bool? emailConfirmed;
   String? passwordHash;
   String? securityStamp;
@@ -66,11 +67,13 @@ class User {
       this.lockoutEnd,
       this.lockoutEnabled,
       this.accessFailedCount,
+      this.roleName,
       this.profile});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userName = json['userName'];
+    roleName = json['roleName'];
     normalizedUserName = json['normalizedUserName'];
     email = json['email'];
     normalizedEmail = json['normalizedEmail'];
@@ -92,6 +95,7 @@ class User {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['userName'] = userName;
+    data['roleName'] = roleName;
     data['normalizedUserName'] = normalizedUserName;
     data['email'] = email;
     data['normalizedEmail'] = normalizedEmail;

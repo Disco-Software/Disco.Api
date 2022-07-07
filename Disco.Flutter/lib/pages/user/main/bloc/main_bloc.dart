@@ -1,18 +1,18 @@
-import 'package:disco_app/data/local/local_storage.dart';
+import 'package:disco_app/data/network/network_models/post_network.dart';
 import 'package:disco_app/data/network/repositories/post_repository.dart';
 import 'package:disco_app/data/network/repositories/stories_repository.dart';
-import 'package:disco_app/res/strings.dart';
+import 'package:disco_app/res/numbers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../injection.dart';
 import 'main_event.dart';
 import 'main_state.dart';
 
 class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
   final PostRepository postRepository;
   final StoriesRepository storiesRepository;
+  bool isLastPage = false;
 
   MainPageBloc({required this.postRepository, required this.storiesRepository})
       : super(LoadingState()) {
@@ -21,16 +21,22 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
     });
   }
 
-  Future<void> _loadPosts(MainPageEvent event, Emitter<MainPageState> emit) async {
+  Future<void> _loadPosts(LoadPostsEvent event, Emitter<MainPageState> emit) async {
     try {
-      if ((event as LoadPostsEvent).hasLoading) emit(LoadingState());
-      final userId = await getIt.get<SecureStorageRepository>().read(key: Strings.userId);
-      final posts = await postRepository.getAllPosts(int.parse(userId));
+      emit(LoadingState());
+      // final userId = await getIt.get<SecureStorageRepository>().read(key: Strings.userId);
+
+      final posts = isLastPage
+          ? <Post>[]
+          : await postRepository.getAllPosts(event.pageNumber, Numbers.pageSize);
+
       emit(SuccessPostsState(
         posts: posts ?? [],
         hasLoading: event.hasLoading,
       ));
-      event.onLoaded();
+      if (event.onLoaded != null) {
+        event.onLoaded!(posts ?? []);
+      }
     } catch (err) {
       emit(ErrorState());
       debugPrint('$err');
