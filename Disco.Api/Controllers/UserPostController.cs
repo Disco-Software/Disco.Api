@@ -33,12 +33,12 @@ namespace Disco.Api.Controllers
         public async Task Delete([FromRoute] int postId) =>
             await serviceManager.PostService.DeletePostAsync(postId);
 
-        [HttpGet("{userId:int}")]
-        public async Task<ActionResult<List<Post>>> GetAllUserPosts([FromRoute] int userId) =>
-            await serviceManager.PostService.GetAllUserPosts(userId);
+        [HttpGet]
+        public async Task<ActionResult<List<Post>>> GetAllUserPosts([FromQuery] GetAllPostsModel model) =>
+            await serviceManager.PostService.GetAllUserPosts(model);
 
-        [HttpGet("{userId:int}/line")]
-        public async Task<ActionResult<List<Post>>> GetAllPosts([FromRoute] int userId) =>
-            await serviceManager.PostService.GetAllPosts(userId);
+        [HttpGet("line")]
+        public async Task<ActionResult<List<Post>>> GetAllPosts([FromQuery] GetAllPostsModel model) =>
+            await serviceManager.PostService.GetAllPosts(model);
     }
 }

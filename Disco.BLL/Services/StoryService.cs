@@ -101,7 +101,7 @@ namespace Disco.BLL.Services
         public async Task<ActionResult<Story>> GetStoryAsync(int id) => 
             await storyRepository.Get(id);
 
-        public async Task<ActionResult<List<Story>>> GetAllStoryAsync(int profileId)
+        public async Task<ActionResult<List<Story>>> GetAllStoryAsync(GetAllStoriesModel model)
         {
             var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
 
@@ -113,7 +113,7 @@ namespace Disco.BLL.Services
                 .Collection(s => s.Stories)
                 .LoadAsync();
 
-            return await storyRepository.GetAll(profileId);
+            return await storyRepository.GetAll(user.Profile.Id,model.PageNumber,model.PageSize);
         }
     }
 }

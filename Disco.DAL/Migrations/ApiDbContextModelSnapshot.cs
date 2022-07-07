@@ -328,6 +328,9 @@ namespace Disco.DAL.Migrations
                     b.Property<DateTime>("RefreshTokenExpiress")
                         .HasColumnType("date");
 
+                    b.Property<string>("RoleName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 

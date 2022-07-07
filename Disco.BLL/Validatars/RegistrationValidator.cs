@@ -18,7 +18,7 @@ namespace Disco.BLL.Validatars
                 .MustAsync(async (name, token) =>
                 {
                     var user = await userManager.FindByNameAsync(name);
-                    return user != null;
+                    return user == null;
                 })
                 .WithMessage("this user already created");
 
@@ -26,7 +26,7 @@ namespace Disco.BLL.Validatars
                 .MustAsync(async (email, token) =>
                 {
                     var user = await userManager.FindByEmailAsync(email);
-                    return user != null;
+                    return user == null;
                 })
                 .WithMessage("This email already registered");
         }

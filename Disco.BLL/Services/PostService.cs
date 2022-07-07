@@ -30,7 +30,6 @@ namespace Disco.BLL.Services
         private readonly ApiDbContext ctx;
         private readonly PostRepository postRepository;
         private readonly UserManager<User> userManager;
-        private readonly BlobServiceClient blobServiceClient;
         private readonly IImageService imageService;
         private readonly ISongService songService;
         private readonly IVideoService videoService;
@@ -40,7 +39,6 @@ namespace Disco.BLL.Services
             PostRepository _postRepository,
             ApiDbContext _ctx,
             UserManager<User> _userManager,
-            BlobServiceClient _blobServiceClient,
             IMapper _mapper,
             IImageService _imageService,
             ISongService _songService,
@@ -50,7 +48,6 @@ namespace Disco.BLL.Services
             postRepository = _postRepository;
             ctx = _ctx;
             userManager = _userManager;
-            blobServiceClient = _blobServiceClient;
             mapper = _mapper;
             imageService = _imageService;
             songService = _songService;
@@ -117,24 +114,18 @@ namespace Disco.BLL.Services
         public async Task DeletePostAsync(int postId) =>
            await postRepository.Remove(postId);
 
-        public async Task<ActionResult<List<Post>>> GetAllUserPosts(int userId)
+        public async Task<ActionResult<List<Post>>> GetAllUserPosts(GetAllPostsModel model)
         {
-            var posts = postRepository
-                .GetAll(p => p.Profile.UserId == userId)
-                .Result
-                .OrderByDescending(d => d.DateOfCreation)
-                .ToList();
-            return posts;
+            var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
+
+            return await postRepository.GetAllUserPosts(user.Id, model.PageSize, model.PageNumber);
         }
 
-        public async Task<ActionResult<List<Post>>> GetAllPosts(int userId)
+        public async Task<ActionResult<List<Post>>> GetAllPosts(GetAllPostsModel model)
         {
-            var result = postRepository.GetAll(userId)
-                .Result
-                .OrderByDescending(t => t.Id)
-                .ToList();
-            return result;
-        }
+            var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
 
+            return await postRepository.GetAll(user.Id, model.PageSize, model.PageNumber);
+        }
     }
 }

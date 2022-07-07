@@ -13,6 +13,6 @@ namespace Disco.BLL.Interfaces
         Task<IActionResult> CreateStoryAsync(CreateStoryModel model);
         Task DeleteStoryAsync(int id);
         Task<ActionResult<Story>> GetStoryAsync(int id);
-        Task<ActionResult<List<Story>>> GetAllStoryAsync(int profileId);
+        Task<ActionResult<List<Story>>> GetAllStoryAsync(GetAllStoriesModel model);
     }
 }

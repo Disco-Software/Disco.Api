@@ -34,9 +34,9 @@ namespace Disco.Api.Controllers
         public async Task<ActionResult<Story>> GetStory([FromRoute] int id) =>
             await serviceManager.StoryService.GetStoryAsync(id);
 
-        [Microsoft.AspNetCore.Mvc.HttpGet("all/{id:int}")]
-        public async Task<ActionResult<List<Story>>> GetStoriesAsync([FromRoute] int id) =>
-            await serviceManager.StoryService.GetAllStoryAsync(id);
+        [Microsoft.AspNetCore.Mvc.HttpGet("all")]
+        public async Task<ActionResult<List<Story>>> GetStoriesAsync([FromQuery] GetAllStoriesModel model) =>
+            await serviceManager.StoryService.GetAllStoryAsync(model);
 
     }
 }

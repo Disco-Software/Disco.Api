@@ -9,6 +9,7 @@ namespace Disco.DAL.Entities
 {
     public class User : IdentityUser<int>
     {
+        public string RoleName { get; set; }
         public string RefreshToken { get; set; }
         [Column(TypeName = "date")]
         public DateTime RefreshTokenExpiress { get; set; }

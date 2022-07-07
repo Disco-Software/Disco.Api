@@ -53,7 +53,8 @@ namespace Disco.DAL.Repositories
             await ctx.SaveChangesAsync();
         }
 
-        public async Task<List<Post>> GetAll(int userId)
+
+        public async Task<List<Post>> GetAll(int userId, int pageSize, int pageNumber)
         {
             var posts = new List<Post>();
 
@@ -106,9 +107,25 @@ namespace Disco.DAL.Repositories
                 posts.AddRange(friend.ProfileFriend.Posts);
             }
 
-            posts.OrderByDescending(d => d.DateOfCreation).ToList();
+            return posts.OrderByDescending(d => d.DateOfCreation)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+        }
 
-            return posts;
+        public async Task<List<Post>> GetAllUserPosts(int userId, int pageSize, int pageNumber)
+        {
+            var user = await ctx.Users
+                .Include(p => p.Profile)
+                .ThenInclude(p => p.Posts)
+                .Where(u => u.Id == userId)
+                .FirstOrDefaultAsync();
+
+           return user.Profile.Posts
+                .OrderByDescending(d => d.DateOfCreation)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
         }
 
         public override Task<List<Post>> GetAll(Expression<Func<Post, bool>> expression)

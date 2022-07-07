@@ -113,6 +113,11 @@ namespace Disco.BLL.Services
             if (passwordVarification == PasswordVerificationResult.Failed)
                 return BadRequest("Password is not valid");
 
+            user.RoleName = ctx.UserRoles
+                .Join(ctx.Roles, r => r.RoleId,u => u.Id, (u,r) => new {Role = r, UserRole = u})
+                .Where(r => r.UserRole.UserId == user.Id)
+                .FirstOrDefaultAsync().Result.Role.Name;
+
             await signInManager.SignInAsync(user, true);
             var jwt = tokenService.GenerateAccessToken(user);
             var refreshToken = tokenService.GenerateRefreshToken();
@@ -132,14 +137,15 @@ namespace Disco.BLL.Services
 
         public async Task<IActionResult> Register(RegistrationModel userInfo)
         {
-            var validator = await RegistrationValidator.Create(userManager).ValidateAsync(userInfo);
+            var validator = await RegistrationValidator
+                .Create(userManager)
+                .ValidateAsync(userInfo);
 
-            if (validator.Errors.Count > 0)
+            if(validator.Errors.Count > 0)
                 return BadRequest(validator);
 
-            var user = await userManager.FindByEmailAsync(userInfo.Email);
-
             var userResult = mapper.Map<User>(userInfo);
+            
             userResult.PasswordHash = userManager.PasswordHasher.HashPassword(userResult, userInfo.Password);
             userResult.Profile = new DAL.Entities.Profile { Status = StatusProvider.NewArtist };
             userResult.NormalizedEmail = userManager.NormalizeEmail(userResult.Email);
@@ -147,18 +153,23 @@ namespace Disco.BLL.Services
             userResult.RefreshToken = tokenService.GenerateRefreshToken();
             userResult.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
 
+            var roleResult = await userManager.AddToRoleAsync(userResult, "User");
+            if (!roleResult.Succeeded)
+                return BadRequest(roleResult.Errors);
+
             var identityResult = await userManager.CreateAsync(userResult);
             if (!identityResult.Succeeded)
-                return BadRequest("Password mast have a upper case lower case and 6 leters");
+                return BadRequest(identityResult.Errors);
+            
             await ctx.SaveChangesAsync();
 
             await signInManager.SignInAsync(userResult, true);
-            var jwt = tokenService.GenerateAccessToken(user);
+            var jwt = tokenService.GenerateAccessToken(userResult);
 
-            var userResponseModel = mapper.Map<UserResponseModel>(user);
-            userResponseModel.RefreshToken = user.RefreshToken;
+            var userResponseModel = mapper.Map<UserResponseModel>(userResult);
+            userResponseModel.RefreshToken = userResult.RefreshToken;
             userResponseModel.AccessToken = jwt;
-            userResponseModel.User = user;
+            userResponseModel.User = userResult;
 
             return Ok(userResponseModel);
         }

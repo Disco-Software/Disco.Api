@@ -27,6 +27,7 @@ namespace Disco.BLL.Services
     {
         private readonly Lazy<IAuthenticationService> authentificationService;
         private readonly Lazy<IPostService> postService;
+        private readonly Lazy<IRoleService> roleService;
         private readonly Lazy<IFacebookAuthService> facebookAuthService;
         private readonly Lazy<IRegisterDeviceService> registerDeviceService;
         private readonly Lazy<IEmailService> emailService;
@@ -46,6 +47,7 @@ namespace Disco.BLL.Services
         public ServiceManager(ApiDbContext _ctx,
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
+            RoleManager<Role> _roleManager,
             BlobServiceClient _blobServiceClient,
             IMapper _mapper,
             IOptions<PushNotificationOptions> pushNotificationOptions,
@@ -69,12 +71,13 @@ namespace Disco.BLL.Services
                 configuration["NotificationHub:HubName"]);
             registerDeviceService = new Lazy<IRegisterDeviceService>(() => new RegisterDeviceService(notificationHub));
             pushNotificationService = new Lazy<IPushNotificationService>(() => new PushNotificationService(notificationHub));
+            roleService = new Lazy<IRoleService>(() => new RoleService(_ctx, _roleManager,_mapper));
             friendService = new Lazy<IFriendService>(() => new FriendService(_ctx, repositoryManager.Value.FriendRepository, _userManager, _mapper, pushNotificationService.Value,notificationHub, httpContextAccessor));
             imageService = new Lazy<IImageService>(() => new ImageService(repositoryManager.Value.PostRepository, repositoryManager.Value.ImageRepository, _blobServiceClient, _mapper));
             songService = new Lazy<ISongService>(() => new SongService(repositoryManager.Value.SongRepository, repositoryManager.Value.PostRepository, _blobServiceClient, _mapper, httpContextAccessor));
             videoService = new Lazy<IVideoService>(() => new VideoService(repositoryManager.Value.VideoRepository, repositoryManager.Value.PostRepository, _blobServiceClient, _mapper));
             likeSevice = new Lazy<ILikeSevice>(() => new LikeService(_ctx, repositoryManager.Value.PostRepository, repositoryManager.Value.LikeRepository,_userManager, httpContextAccessor));
-            postService = new Lazy<IPostService>(() => new PostService(repositoryManager.Value.PostRepository, _ctx, _userManager, _blobServiceClient, _mapper, imageService.Value, songService.Value, videoService.Value, httpContextAccessor));
+            postService = new Lazy<IPostService>(() => new PostService(repositoryManager.Value.PostRepository, _ctx, _userManager, _mapper, imageService.Value, songService.Value, videoService.Value, httpContextAccessor));
             storyService = new Lazy<IStoryService>(() => new StoryService(repositoryManager.Value.StoryRepository, _userManager, _ctx,_blobServiceClient,storyImageService.Value,storyVideoService.Value,_mapper,httpContextAccessor));
             storyImageService = new Lazy<IStoryImageService> (() => new StoryImageService(repositoryManager.Value.StoryImageRepository, repositoryManager.Value.StoryRepository, _userManager, _blobServiceClient, _mapper, httpContextAccessor));
             storyVideoService = new Lazy<IStoryVideoService>(() => new StoryVideoService(repositoryManager.Value.StoryVideoRepository, repositoryManager.Value.StoryRepository, _userManager, _blobServiceClient, _mapper, httpContextAccessor));
@@ -119,5 +122,7 @@ namespace Disco.BLL.Services
             tokenService.Value;
 
        public IProfileService ProfileService => profileService.Value;
+
+       public IRoleService RoleService => roleService.Value;
     }
 }
