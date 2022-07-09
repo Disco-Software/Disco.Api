@@ -152,11 +152,8 @@ class _SongBodyState extends State<SongBody> {
                     provider.setSongIndex(widget.currentPageIndex);
                     provider.setCarouselController(widget.carouselController);
                     if (provider.player.playing) {
-                      print('lolPAUSE');
                       provider.player.pause();
                     } else {
-                      print('lolPLAY');
-
                       provider.player.play();
                     }
                   },

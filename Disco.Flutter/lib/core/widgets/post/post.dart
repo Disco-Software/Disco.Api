@@ -83,7 +83,7 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
       ({error}) => print('Connection close'),
     );
     hubConnection.on('create', (args) {
-      print('LOL1 ${args}');
+      print('HUBCONNECTION:  args');
     });
   }
 
@@ -165,10 +165,10 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
             children: [
               PostButton(
                   onTap: () async {
-                    final token =
-                        'access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJuYmYiOjE2NTQ1MDA4MTYsImV4cCI6MTY1NDU3MjgxNiwiaXNzIjoiZGlzY28tYXBpIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdC9EaXNjby5BcGkifQ.yllYJLRvmmKXMi1yA2r1-zMemqa99WcGgAc4-nMRodM';
-                    final id = 'id=1daTrQ2lzlVk2C7oQWxVpg';
-                    'wss://devdiscoapi.azurewebsites.net/hub/like?&';
+                    // const token =
+                    //     'access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJuYmYiOjE2NTQ1MDA4MTYsImV4cCI6MTY1NDU3MjgxNiwiaXNzIjoiZGlzY28tYXBpIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdC9EaXNjby5BcGkifQ.yllYJLRvmmKXMi1yA2r1-zMemqa99WcGgAc4-nMRodM';
+                    // const id = 'id=1daTrQ2lzlVk2C7oQWxVpg';
+                    // 'wss://devdiscoapi.azurewebsites.net/hub/like?&';
 
                     final channel = WebSocketChannel.connect(
                       Uri.parse('wss://devdiscoapi.azurewebsites.net/hub/like?$token'),

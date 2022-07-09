@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                           ? data.songTitles[data.currentSongIndex]
                                           : '',
                                       style: GoogleFonts.aBeeZee(
-                                          fontSize: 24.0, color: Color(0xFFE6E0D2)),
+                                          fontSize: 24.0, color: const Color(0xFFE6E0D2)),
                                     ),
                                   ),
                                   Text(

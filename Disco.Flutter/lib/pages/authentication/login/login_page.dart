@@ -121,8 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 34),
                         const Text(
-                            'By continuing, you agree to accept our' +
-                                'Privacy Policy & Terms of Service',
+                            'By continuing, you agree to accept our Privacy Policy & Terms of Service',
                             textAlign: TextAlign.center,
                             style: TextStyle(color: DcColors.darkWhite)),
                         const SizedBox(height: 50),

@@ -1,3 +1,4 @@
 class Numbers {
-  static const pageSize = 2;
+  static const postsPageSize = 5;
+  static const storiesPageSize = 5;
 }

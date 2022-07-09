@@ -8,10 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
-import 'data/network/repositories/post_repository.dart';
-import 'data/network/repositories/stories_repository.dart';
-import 'pages/user/main/bloc/main_bloc.dart';
-import 'pages/user/main/bloc/stories_bloc.dart';
+import 'pages/user/main/bloc/posts_cubit.dart';
+import 'pages/user/main/bloc/stories_cubit.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,18 +20,9 @@ void main() {
       ChangeNotifierProvider(create: (_) => AddPostProvider()),
     ],
     child: MultiBlocProvider(providers: [
-      BlocProvider<MainPageBloc>(
-          create: (_) => MainPageBloc(
-              postRepository: getIt.get<PostRepository>(),
-              storiesRepository: getIt.get<StoriesRepository>())),
-      BlocProvider<StoriesBloc>(
-        create: (_) => StoriesBloc(
-            postRepository: getIt.get<PostRepository>(),
-            storiesRepository: getIt.get<StoriesRepository>()),
-      ),
-      BlocProvider(
-        create: (context) => SearchCubit(),
-      )
+      BlocProvider<PostsCubit>(create: (_) => PostsCubit(postRepository: getIt())),
+      BlocProvider<StoriesCubit>(create: (_) => StoriesCubit(storiesRepository: getIt())),
+      BlocProvider(create: (context) => SearchCubit())
     ], child: MyApp()),
   ));
 }
