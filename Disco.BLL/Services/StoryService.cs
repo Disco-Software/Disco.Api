@@ -23,7 +23,6 @@ namespace Disco.BLL.Services
         private readonly StoryRepository storyRepository;
         private readonly UserManager<User> userManager;
         private readonly ApiDbContext ctx;
-        private readonly BlobServiceClient blobServiceClient;
         private readonly IStoryImageService storyImageService;
         private readonly IStoryVideoService storyVideoService;
         private readonly IMapper mapper;
@@ -32,7 +31,6 @@ namespace Disco.BLL.Services
             StoryRepository _storyRepository,
             UserManager<User> _userManager,
             ApiDbContext _ctx,
-            BlobServiceClient _blobServiceClient,
             IStoryImageService _storyImageService,
             IStoryVideoService _storyVideoService,
             IMapper _mapper,
@@ -41,7 +39,6 @@ namespace Disco.BLL.Services
             storyRepository = _storyRepository;
             userManager = _userManager;
             ctx = _ctx;
-            blobServiceClient = _blobServiceClient;
             storyImageService = _storyImageService;
             storyVideoService = _storyVideoService;
             mapper = _mapper;

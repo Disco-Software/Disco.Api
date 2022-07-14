@@ -94,10 +94,8 @@ namespace Disco.Api
                 builder.AddBlobServiceClient(Configuration.GetConnectionString("BlobStorage"));
             });
 
-            services.AddSignalR(s =>
-            {
-                s.EnableDetailedErrors = true;
-            });
+            services.AddSignalR();
+
             services.AddOptions<AuthenticationOptions>();
             services.Configure<EmailOptions>(Configuration.GetSection("EmailSettings"));
             services.Configure<BLL.Configurations.GoogleOptions>(Configuration.GetSection("Google"));
@@ -175,7 +173,10 @@ namespace Disco.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
+            app.UseExceptionHandler("/Error");
+            app.UseHsts();
+
             app.UseSwagger(c =>
             {
                 c.SerializeAsV2 = true;
@@ -194,17 +195,19 @@ namespace Disco.Api
             app.UseAuthorization();
             app.UseAuthentication();
 
-            app.UseCors(s =>
-            {
-                s.SetIsOriginAllowed(o => true)
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-            });
+            app.UseWebSockets();
+
+            //app.UseCors(s =>
+            //{
+            //    s.SetIsOriginAllowed(o => true)
+            //        .AllowAnyHeader()
+            //        .AllowAnyMethod();
+            //});
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<LikeHub>("/hub/like");
+                endpoints.MapHub<LikeHub>("/like");
             });
         }
     }

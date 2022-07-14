@@ -152,10 +152,15 @@ namespace Disco.BLL.Services
             userResult.NormalizedUserName = userManager.NormalizeName(userResult.UserName);
             userResult.RefreshToken = tokenService.GenerateRefreshToken();
             userResult.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
-
+            
             var roleResult = await userManager.AddToRoleAsync(userResult, "User");
             if (!roleResult.Succeeded)
                 return BadRequest(roleResult.Errors);
+
+            userResult.RoleName = ctx.UserRoles
+                    .Join(ctx.Roles, r => r.RoleId, u => u.Id, (u, r) => new { Role = r, UserRole = u })
+                    .Where(r => r.UserRole.UserId == userResult.Id)
+                    .FirstOrDefaultAsync().Result.Role.Name;
 
             var identityResult = await userManager.CreateAsync(userResult);
             if (!identityResult.Succeeded)
@@ -195,7 +200,12 @@ namespace Disco.BLL.Services
                 await ctx.Entry(user)
                         .Reference(p => p.Profile)
                         .LoadAsync();
-               
+                
+                user.RoleName = ctx.UserRoles
+                     .Join(ctx.Roles, r => r.RoleId, u => u.Id, (u, r) => new { Role = r, UserRole = u })
+                     .Where(r => r.UserRole.UserId == user.Id)
+                     .FirstOrDefaultAsync().Result.Role.Name;
+
                 user.Email = userInfo.Email;
                 user.UserName = userInfo.FirstName;
                 user.Profile.Photo = userInfo.Picture.Data.Url;
@@ -216,7 +226,17 @@ namespace Disco.BLL.Services
             user = await userManager.FindByEmailAsync(userInfo.Email);
             if(user != null)
             {
-               await userManager.AddLoginAsync(user, new UserLoginInfo(LogInProvider.Facebook, userInfo.Id, "FacebookId"));
+               await ctx.Entry(user)
+                    .Reference(p => p.Profile)
+                    .LoadAsync();
+
+                user.RoleName = ctx.UserRoles
+                        .Join(ctx.Roles, r => r.RoleId, u => u.Id, (u, r) => new { Role = r, UserRole = u })
+                        .Where(r => r.UserRole.UserId == user.Id)
+                        .FirstOrDefaultAsync().Result.Role.Name;
+
+
+                await userManager.AddLoginAsync(user, new UserLoginInfo(LogInProvider.Facebook, userInfo.Id, "FacebookId"));
 
                 var jwt = tokenService.GenerateAccessToken(user);
                 var refreshToken = tokenService.GenerateRefreshToken();
@@ -229,28 +249,33 @@ namespace Disco.BLL.Services
                 return Ok(userResponseModel);
             }
 
-
-            user = new User
-            {
-                UserName = userInfo.FirstName,
-                Email = string.IsNullOrWhiteSpace(userInfo.Email) ? userInfo.Email : userInfo.Name,
-                PasswordHash = userManager.PasswordHasher.HashPassword(user, userInfo.Id),
-                Profile = new DAL.Entities.Profile
-                {
-                    Photo = userInfo.Picture.Data.Url,
-                    Status = StatusProvider.NewArtist,
-                }
-            };
+            user = new User();
+            user.UserName = userInfo.Name.Replace(" ", "_");
+            user.Email = userInfo.Email;
+            user.NormalizedEmail = userManager.NormalizeEmail(userInfo.Email);
+            user.NormalizedUserName = userManager.NormalizeName(userInfo.Name);
+            
+            user.Profile = new DAL.Entities.Profile();
+            user.Profile.Status = StatusProvider.NewArtist;
+            user.Profile.Photo = userInfo.Picture.Data.Url;
 
             user.RefreshToken = tokenService.GenerateRefreshToken();
             user.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
             user.NormalizedEmail = userManager.NormalizeEmail(user.Email);
             user.NormalizedUserName = userManager.NormalizeName(user.UserName);
+
+            var ideintityResult = await userManager.CreateAsync(user);
+
+            ideintityResult = await userManager.AddLoginAsync(user, new UserLoginInfo(LogInProvider.Facebook, userInfo.Id, "FacebookId"));
+
+            var roleResult = await userManager.AddToRoleAsync(user, "User");
+            if (!roleResult.Succeeded)
+                return BadRequest(roleResult.Errors);
             
-           var ideintityResult = await userManager.CreateAsync(user);
-
-           ideintityResult = await userManager.AddLoginAsync(user, new UserLoginInfo(LogInProvider.Facebook, userInfo.Id, "FacebookId"));
-
+            user.RoleName = ctx.UserRoles
+                  .Join(ctx.Roles, r => r.RoleId, u => u.Id, (u, r) => new { Role = r, UserRole = u })
+                  .Where(r => r.UserRole.UserId == user.Id)
+                  .FirstOrDefaultAsync().Result.Role.Name;
 
             var jwtToken = tokenService.GenerateAccessToken(user);
 

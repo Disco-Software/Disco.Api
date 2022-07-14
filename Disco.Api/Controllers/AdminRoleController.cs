@@ -1,9 +1,11 @@
 ﻿using Disco.BLL.Constants;
 using Disco.BLL.Interfaces;
 using Disco.BLL.Models.Roles;
+using Disco.DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Disco.Api.Controllers
@@ -25,5 +27,9 @@ namespace Disco.Api.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] CreateRoleModel model) =>
             await serviceManager.RoleService.CreateRoleAsync(model);
+
+        [HttpGet]
+        public async Task<ActionResult<List<Role>>> GetAllRoles() => 
+            await serviceManager.RoleService.GetAllRoles(new GetAllRolesModel { PageNumber = 1, PageSize = 10});  
     }
 }

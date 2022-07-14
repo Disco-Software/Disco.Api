@@ -22,20 +22,18 @@ namespace Disco.Api.Hubs
         public LikeHub(IServiceManager _serviceManager) =>
             serviceManager = _serviceManager;
         
-        [HubMethodName("create")]
         public async Task AddLike(int postId)
         {
             var likes = await serviceManager.LikeSevice.CreateLikeAsync(postId);
 
-           await Clients.All.SendAsync("create", likes.Count);
+           await Clients.All.SendAsync("onLike", likes.Count);
         }
 
-        [HubMethodName("remove")]
         public async Task RemoveLike(int postId)
         {
             var likes = await serviceManager.LikeSevice.RemoveLikeAsync(postId);
 
-            await Clients.Caller.SendAsync("remove", likes.Count);
+            await Clients.Caller.SendAsync("onRemoveLike", likes.Count);
         }
     }
 }

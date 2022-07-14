@@ -45,7 +45,6 @@ namespace Disco.BLL.Mapper
             CreateMap<CreateStoryVideoModel, StoryVideo>()
                 .ForMember(source => source.Source, opt => opt.Ignore());
             CreateMap<RegistrationModel, User>();
-            CreateMap<FacebookModel, User>();
             CreateMap<CreateFriendModel, Friend>();
             CreateMap<DAL.Entities.Profile, ProfileModel>();
             CreateMap<User, UserResponseModel>()
@@ -57,6 +56,9 @@ namespace Disco.BLL.Mapper
                 .ForMember(source => source.FriendProfile, opt => opt.Ignore())
                 .ForMember(source => source.FriendId, opt => opt.Ignore());
             CreateMap<CreateRoleModel, Role>();
+            CreateMap<FacebookModel, User>()
+                .ForMember(source => source.UserName, f => f.Ignore())
+                .ForMember(source => source.Email, e => e.Ignore());
         }
     }
 }

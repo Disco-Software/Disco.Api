@@ -11,7 +11,7 @@ namespace Disco.BLL.Interfaces
         IAuthenticationService AuthentificationService { get; }
         IFacebookAuthService FacebookAuthService { get; }
         IGoogleAuthService GoogleAuthService { get; }
-        IRoleService RoleService { get; }
+        IAdminRoleService RoleService { get; }
         IPostService PostService { get; }
         IRegisterDeviceService RegisterDeviceService { get; }
         IEmailService EmailService { get; }
@@ -26,6 +26,8 @@ namespace Disco.BLL.Interfaces
         IStoryVideoService StoryVideoService { get; }
         ITokenService TokenService { get; }
         IProfileService ProfileService { get; }
+        IAdminAuthenticationService AdminAuthenticationService { get; }
+        IAdminUserService AdminUserService { get; }
         IRepositoryManager RepositoryManager { get; }
     }
 }
