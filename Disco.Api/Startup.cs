@@ -43,6 +43,7 @@ using Azure.Storage.Queues;
 using Azure.Core.Extensions;
 using Microsoft.AspNetCore.Http;
 using Disco.BLL.Validatars;
+using Disco.Api.AppSetup;
 
 namespace Disco.Api
 {
@@ -58,84 +59,17 @@ namespace Disco.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("1.0", new Microsoft.OpenApi.Models.OpenApiInfo
-                {
-                    Contact = new Microsoft.OpenApi.Models.OpenApiContact
-                    {
-                        Email = "developer.disco@gmail.com",
-                        Name = "Станислав",
-                        Url = new Uri("https://www.facebook.com/stas.korchevskyy/")
-                    },
-                    Title = "Disco.Api",
-                    Description = "This Api is for front-end and mobile developers who are developing Disco.",
-                    Version = "1.0",
-                });
-            });
-            services.AddSwaggerGen();
-            services.AddDbContext<ApiDbContext>(o => 
-                o.UseSqlServer(Configuration.GetConnectionString("DevelopmentConnection"), 
-                b => b.MigrationsAssembly("../Disco.DAL")));
-            
+            services.ConfigureSwagger();
 
-            services.AddIdentityCore<User>(options =>
-            {
-                options.Password.RequiredLength = 6;
-                options.Password.RequireLowercase = true;
-                options.Password.RequireUppercase = true;
-            }).AddRoles<Role>()
-            .AddEntityFrameworkStores<ApiDbContext>();
-            services.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<ApiDbContext>()
-                .AddDefaultTokenProviders();
-            services.AddAzureClients(builder =>
-            {
-                builder.AddBlobServiceClient(Configuration.GetConnectionString("BlobStorage"));
-            });
-
+            services.ConfigureDbContext(Configuration);
+            services.ConfigureIdentity();
+            services.ConfigureAzureServices(Configuration);
             services.AddSignalR();
-
             services.AddOptions<AuthenticationOptions>();
             services.Configure<EmailOptions>(Configuration.GetSection("EmailSettings"));
             services.Configure<BLL.Configurations.GoogleOptions>(Configuration.GetSection("Google"));
-            services.ConfigureApplicationCookie(s =>
-            {
-                s.Cookie.HttpOnly = true;
-                s.ExpireTimeSpan = TimeSpan.FromMinutes(3000);
-            });
+            services.ConfigureAuthentication(Configuration);
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultChallengeScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
-                options.DefaultForbidScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-           .AddCookie()
-           .AddGoogleOpenIdConnect(options =>
-            {
-               options.ClientId = Configuration["Google:ClientId"];
-               options.ClientSecret = Configuration["Google:SecretKey"];
-            }).AddJwtBearer(AuthScheme.UserToken, options =>
-            {
-               options.SaveToken = true;
-               options.RequireHttpsMetadata = false;
-               options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-               {
-                 ValidateIssuer = true,
-                 ValidateAudience = true,
-                 ValidateIssuerSigningKey = true,
-                 ValidateLifetime = true,
-                 ValidIssuer = Configuration["Auth:Jwt:Issuer"],
-                 ValidAudience = Configuration["Auth:Jwt:Audience"],
-                 IssuerSigningKey = new SymmetricSecurityKey(
-                 Convert.FromBase64String(Configuration["Auth:Jwt:SigningKey"]))
-               };
-            }).AddFacebook(facebookOptions =>
-            {
-               facebookOptions.AppId = Configuration["Facebook:AppId"];
-               facebookOptions.AppSecret = Configuration["Facebook:SecretKey"];
-            });
             services.AddHttpContextAccessor();
             services.AddHttpClient();
 
@@ -150,13 +84,8 @@ namespace Disco.Api
                 .Configure(Configuration.GetSection("Auth:Jwt").Bind)
                 .ValidateDataAnnotations();
 
-            var mapperConfig = new MapperConfiguration(ms =>
-            {
-                ms.AddProfile(new MapProfile());
-            });
+            services.ConfigureAutoMapper();
 
-            IMapper mapper = mapperConfig.CreateMapper();
-            services.AddSingleton(mapper);
             services.AddControllers()
                 .AddControllersAsServices()
                 .AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()))
