@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Configurations
+namespace Disco.Business.Configurations
 {
     public class FacebookOptions
     {

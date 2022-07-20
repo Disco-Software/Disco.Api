@@ -1,4 +1,4 @@
-﻿using Disco.BLL.Constants;
+﻿using Disco.Business.Constants;
 using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Configuration;

@@ -1,9 +1,9 @@
-﻿using Disco.BLL.Constants;
+﻿using Disco.Business.Constants;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.BLL.Dto.PushNotifications
+namespace Disco.Business.Dto.PushNotifications
 {
     public class PushNotificationBaseDto
     {

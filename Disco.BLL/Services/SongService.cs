@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
-using Disco.BLL.Interfaces;
-using Disco.BLL.Dto.Songs;
-using Disco.DAL.EF;
-using Disco.DAL.Models;
-using Disco.DAL.Repositories;
+using Disco.Business.Interfaces;
+using Disco.Business.Dto.Songs;
+using Disco.Domain.EF;
+using Disco.Domain.Models;
+using Disco.Domain.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Services
+namespace Disco.Business.Services
 {
     public class SongService : ISongService
     {

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.BLL.Dto.Facebook
+namespace Disco.Business.Dto.Facebook
 {
     public class FacebookDto
     {

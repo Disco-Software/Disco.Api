@@ -1,10 +1,10 @@
-﻿using Disco.DAL.Interfaces;
-using Disco.DAL.Repositories;
+﻿using Disco.Domain.Interfaces;
+using Disco.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.BLL.Interfaces
+namespace Disco.Business.Interfaces
 {
     public interface IServiceManager
     {

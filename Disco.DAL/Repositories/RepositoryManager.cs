@@ -1,10 +1,10 @@
-﻿using Disco.DAL.EF;
-using Disco.DAL.Interfaces;
+﻿using Disco.Domain.EF;
+using Disco.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.DAL.Repositories
+namespace Disco.Domain.Repositories
 {
     public class RepositoryManager : IRepositoryManager
     {

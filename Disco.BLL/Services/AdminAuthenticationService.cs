@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
-using Disco.BLL.Configurations;
-using Disco.BLL.Handlers;
-using Disco.BLL.Interfaces;
-using Disco.BLL.Dto;
-using Disco.BLL.Dto.Authentication;
-using Disco.BLL.Dto.EmailNotifications;
-using Disco.BLL.Validatars;
-using Disco.DAL.EF;
-using Disco.DAL.Models;
-using Disco.DAL.Repositories;
+using Disco.Business.Configurations;
+using Disco.Business.Handlers;
+using Disco.Business.Interfaces;
+using Disco.Business.Dto;
+using Disco.Business.Dto.Authentication;
+using Disco.Business.Dto.EmailNotifications;
+using Disco.Business.Validatars;
+using Disco.Domain.EF;
+using Disco.Domain.Models;
+using Disco.Domain.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +22,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Services
+namespace Disco.Business.Services
 {
     public class AdminAuthenticationService : ApiRequestHandlerBase, IAdminAuthenticationService
     {

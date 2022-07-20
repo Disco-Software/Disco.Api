@@ -1,6 +1,6 @@
-﻿using Disco.BLL.Dto;
-using Disco.BLL.Dto;
-using Disco.BLL.Dto.Authentication;
+﻿using Disco.Business.Dto;
+using Disco.Business.Dto;
+using Disco.Business.Dto.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;

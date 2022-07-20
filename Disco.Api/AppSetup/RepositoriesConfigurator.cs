@@ -1,4 +1,4 @@
-﻿using Disco.DAL.Repositories;
+﻿using Disco.Domain.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Disco.Api.AppSetup

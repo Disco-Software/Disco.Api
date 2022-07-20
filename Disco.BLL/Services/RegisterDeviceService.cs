@@ -1,7 +1,7 @@
-﻿using Disco.BLL.Constants;
-using Disco.BLL.Interfaces;
-using Disco.BLL.Dto;
-using Disco.BLL.Dto.PushNotifications;
+﻿using Disco.Business.Constants;
+using Disco.Business.Interfaces;
+using Disco.Business.Dto;
+using Disco.Business.Dto.PushNotifications;
 using Microsoft.Azure.NotificationHubs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Services
+namespace Disco.Business.Services
 {
     public class RegisterDeviceService : IRegisterDeviceService
     {

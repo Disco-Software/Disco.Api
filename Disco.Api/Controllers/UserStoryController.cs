@@ -1,12 +1,12 @@
-﻿using Disco.BLL.Interfaces;
+﻿using Disco.Business.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.HttpSys;
 using AuthorizeAttribute = Microsoft.AspNetCore.Authorization.AuthorizeAttribute;
-using Disco.BLL.Constants;
+using Disco.Business.Constants;
 using System.Threading.Tasks;
-using Disco.DAL.Models;
-using Disco.BLL.Dto.Stories;
+using Disco.Domain.Models;
+using Disco.Business.Dto.Stories;
 using System.Collections.Generic;
 
 namespace Disco.Api.Controllers

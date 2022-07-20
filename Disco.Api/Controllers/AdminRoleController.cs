@@ -1,7 +1,7 @@
-﻿using Disco.BLL.Constants;
-using Disco.BLL.Interfaces;
-using Disco.BLL.Dto.Roles;
-using Disco.DAL.Models;
+﻿using Disco.Business.Constants;
+using Disco.Business.Interfaces;
+using Disco.Business.Dto.Roles;
+using Disco.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

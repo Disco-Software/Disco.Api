@@ -1,5 +1,5 @@
-﻿using Disco.DAL.EF;
-using Disco.DAL.Models;
+﻿using Disco.Domain.EF;
+using Disco.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.DAL.Repositories
+namespace Disco.Domain.Repositories
 {
     public class FriendRepository : Base.BaseRepository<Friend, int>
     {

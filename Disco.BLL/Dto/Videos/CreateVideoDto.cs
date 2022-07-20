@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.BLL.Dto.Videos
+namespace Disco.Business.Dto.Videos
 {
     public class CreateVideoDto
     {

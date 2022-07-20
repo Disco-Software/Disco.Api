@@ -1,10 +1,10 @@
-﻿using Disco.DAL.Models;
+﻿using Disco.Domain.Models;
 using System.Security.Claims;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.BLL.Interfaces
+namespace Disco.Business.Interfaces
 {
     public interface ITokenService
     {

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.BLL.Dto.Profile
+namespace Disco.Business.Dto.Profile
 {
     public class UpdateProfileDto
     {

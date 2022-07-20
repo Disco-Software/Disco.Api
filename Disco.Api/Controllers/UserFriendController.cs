@@ -1,10 +1,10 @@
-﻿using Disco.BLL.Constants;
-using Disco.BLL.Dto;
-using Disco.BLL.Interfaces;
-using Disco.BLL.Dto;
-using Disco.BLL.Dto.Friends;
-using Disco.BLL.Services;
-using Disco.DAL.Models;
+﻿using Disco.Business.Constants;
+using Disco.Business.Dto;
+using Disco.Business.Interfaces;
+using Disco.Business.Dto;
+using Disco.Business.Dto.Friends;
+using Disco.Business.Services;
+using Disco.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

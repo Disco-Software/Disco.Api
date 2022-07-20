@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.BLL.Dto.Apple
+namespace Disco.Business.Dto.Apple
 {
     public class AppleLogInDto
     {

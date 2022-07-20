@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Disco.DAL.Models;
-using Disco.DAL.EF;
+using Disco.Domain.Models;
+using Disco.Domain.EF;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace Disco.DAL.Repositories
+namespace Disco.Domain.Repositories
 {
     public class LikeRepository : Base.BaseRepository<Like, int>
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Disco.DAL.Migrations
+namespace Disco.Domain.Migrations
 {
     public partial class AddCreadPropMigration : Migration
     {

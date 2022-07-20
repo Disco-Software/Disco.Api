@@ -1,11 +1,11 @@
-﻿using Disco.BLL.Dto.Videos;
-using Disco.DAL.Models;
+﻿using Disco.Business.Dto.Videos;
+using Disco.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Interfaces
+namespace Disco.Business.Interfaces
 {
     public interface IVideoService
     {

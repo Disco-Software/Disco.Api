@@ -1,6 +1,6 @@
-﻿using Disco.BLL.Configurations;
-using Disco.BLL.Interfaces;
-using Disco.DAL.Models;
+﻿using Disco.Business.Configurations;
+using Disco.Business.Interfaces;
+using Disco.Domain.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -10,7 +10,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Disco.BLL.Services
+namespace Disco.Business.Services
 {
     public class TokenService : ITokenService
     {

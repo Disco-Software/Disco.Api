@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.BLL.Dto.Friends
+namespace Disco.Business.Dto.Friends
 {
     public class ConfirmationFriendDto
     {

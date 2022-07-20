@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Disco.DAL.Models
+namespace Disco.Domain.Models
 {
     public class User : IdentityUser<int>
     {

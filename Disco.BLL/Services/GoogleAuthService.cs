@@ -1,6 +1,6 @@
-﻿using Disco.BLL.Interfaces;
-using Disco.BLL.Dto.Authentication;
-using Disco.BLL.Dto.Google;
+﻿using Disco.Business.Interfaces;
+using Disco.Business.Dto.Authentication;
+using Disco.Business.Dto.Google;
 using Google.Apis.Auth.AspNetCore3;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.PeopleService.v1;
@@ -13,7 +13,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Services
+namespace Disco.Business.Services
 {
     public class GoogleAuthService : IGoogleAuthService
     {

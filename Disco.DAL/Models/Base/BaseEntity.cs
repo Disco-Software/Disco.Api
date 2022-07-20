@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.DAL.Models.Base
+namespace Disco.Domain.Models.Base
 {
     public abstract class BaseEntity<T>
     {

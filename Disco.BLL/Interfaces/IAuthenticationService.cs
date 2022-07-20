@@ -1,10 +1,10 @@
-﻿using Disco.BLL.Dto;
-using Disco.BLL.Dto;
-using Disco.BLL.Dto.Apple;
-using Disco.BLL.Dto.Authentication;
-using Disco.BLL.Dto.Facebook;
-using Disco.BLL.Dto.Google;
-using Disco.DAL.Models;
+﻿using Disco.Business.Dto;
+using Disco.Business.Dto;
+using Disco.Business.Dto.Apple;
+using Disco.Business.Dto.Authentication;
+using Disco.Business.Dto.Facebook;
+using Disco.Business.Dto.Google;
+using Disco.Domain.Models;
 using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Interfaces
+namespace Disco.Business.Interfaces
 {
     public interface IAuthenticationService
     {

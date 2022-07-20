@@ -1,4 +1,4 @@
-﻿namespace Disco.BLL.Dto.Facebook
+﻿namespace Disco.Business.Dto.Facebook
 {
     public partial class Data
     {

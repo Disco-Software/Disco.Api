@@ -1,8 +1,8 @@
-﻿using Disco.BLL.Constants;
-using Disco.BLL.Interfaces;
-using Disco.DAL.EF;
-using Disco.DAL.Models;
-using Disco.DAL.Repositories;
+﻿using Disco.Business.Constants;
+using Disco.Business.Interfaces;
+using Disco.Domain.EF;
+using Disco.Domain.Models;
+using Disco.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

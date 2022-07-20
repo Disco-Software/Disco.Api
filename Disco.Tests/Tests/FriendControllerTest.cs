@@ -1,4 +1,4 @@
-﻿using Disco.BLL.Dto.Friends;
+﻿using Disco.Business.Dto.Friends;
 using Disco.Tests.Base;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;

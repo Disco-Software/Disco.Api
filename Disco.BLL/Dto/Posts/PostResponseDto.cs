@@ -1,9 +1,9 @@
-﻿using Disco.DAL.Models;
+﻿using Disco.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.BLL.Dto.Posts
+namespace Disco.Business.Dto.Posts
 {
     public class PostResponseDto
     {

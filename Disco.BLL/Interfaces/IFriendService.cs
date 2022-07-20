@@ -1,14 +1,14 @@
-﻿using Disco.BLL.Dto;
-using Disco.BLL.Dto;
-using Disco.BLL.Dto.Friends;
-using Disco.DAL.Models;
+﻿using Disco.Business.Dto;
+using Disco.Business.Dto;
+using Disco.Business.Dto.Friends;
+using Disco.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Interfaces
+namespace Disco.Business.Interfaces
 {
     public interface IFriendService
     {

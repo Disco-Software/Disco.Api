@@ -1,9 +1,9 @@
-﻿using Disco.DAL.Models;
+﻿using Disco.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.BLL.Dto.Authentication
+namespace Disco.Business.Dto.Authentication
 {
     public class UserResponseDto
     {

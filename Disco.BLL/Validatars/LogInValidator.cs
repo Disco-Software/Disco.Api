@@ -1,12 +1,12 @@
-﻿using Disco.BLL.Dto.Authentication;
-using Disco.DAL.Models;
+﻿using Disco.Business.Dto.Authentication;
+using Disco.Domain.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.BLL.Validatars
+namespace Disco.Business.Validatars
 {
     public class LogInValidator : AbstractValidator<LoginDto>
     {

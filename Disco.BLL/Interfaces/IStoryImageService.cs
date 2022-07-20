@@ -1,11 +1,11 @@
-﻿using Disco.BLL.Dto.StoryImages;
-using Disco.DAL.Models;
+﻿using Disco.Business.Dto.StoryImages;
+using Disco.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Interfaces
+namespace Disco.Business.Interfaces
 {
     public interface IStoryImageService
     {

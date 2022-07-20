@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.BLL.Dto.Google
+namespace Disco.Business.Dto.Google
 {
     public class GoogleLogInDto
     {

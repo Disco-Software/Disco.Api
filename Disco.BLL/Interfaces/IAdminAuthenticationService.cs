@@ -1,12 +1,12 @@
-﻿using Disco.BLL.Dto;
-using Disco.BLL.Dto.Authentication;
+﻿using Disco.Business.Dto;
+using Disco.Business.Dto.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Interfaces
+namespace Disco.Business.Interfaces
 {
     public interface IAdminAuthenticationService
     {

@@ -1,25 +1,25 @@
 ﻿using AutoMapper;
-using Disco.BLL.Dto;
-using Disco.BLL.Dto;
-using Disco.BLL.Dto.Authentication;
-using Disco.BLL.Dto.Facebook;
-using Disco.BLL.Dto.Friends;
-using Disco.BLL.Dto.Images;
-using Disco.BLL.Dto.Posts;
-using Disco.BLL.Dto.Roles;
-using Disco.BLL.Dto.Songs;
-using Disco.BLL.Dto.Stories;
-using Disco.BLL.Dto.StoryImages;
-using Disco.BLL.Dto.StoryVideos;
-using Disco.BLL.Dto.Videos;
-using Disco.DAL.Models;
+using Disco.Business.Dto;
+using Disco.Business.Dto;
+using Disco.Business.Dto.Authentication;
+using Disco.Business.Dto.Facebook;
+using Disco.Business.Dto.Friends;
+using Disco.Business.Dto.Images;
+using Disco.Business.Dto.Posts;
+using Disco.Business.Dto.Roles;
+using Disco.Business.Dto.Songs;
+using Disco.Business.Dto.Stories;
+using Disco.Business.Dto.StoryImages;
+using Disco.Business.Dto.StoryVideos;
+using Disco.Business.Dto.Videos;
+using Disco.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Disco.BLL.Mapper
+namespace Disco.Business.Mapper
 {
     public class MapProfile : AutoMapper.Profile
     {
@@ -46,11 +46,11 @@ namespace Disco.BLL.Mapper
                 .ForMember(source => source.Source, opt => opt.Ignore());
             CreateMap<RegistrationDto, User>();
             CreateMap<CreateFriendDto, Friend>();
-            CreateMap<DAL.Models.Profile, ProfileDto>();
+            CreateMap<Domain.Models.Profile, ProfileDto>();
             CreateMap<User, UserResponseDto>()
                 .ForMember(source => source.RefreshToken, opt => opt.Ignore())
                 .ForMember(source => source.AccessToken, opt => opt.Ignore());
-            CreateMap<DAL.Models.Profile, ProfileDto>();
+            CreateMap<Domain.Models.Profile, ProfileDto>();
             CreateMap<ProfileDto, FriendResponseDto>()
                 .ForMember(source => source.UserProfile, opt => opt.Ignore())
                 .ForMember(source => source.FriendProfile, opt => opt.Ignore())

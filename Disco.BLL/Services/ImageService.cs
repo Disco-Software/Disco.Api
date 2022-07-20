@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
-using Disco.BLL.Interfaces;
-using Disco.BLL.Dto.Images;
-using Disco.DAL.Models;
-using Disco.DAL.Repositories;
+using Disco.Business.Interfaces;
+using Disco.Business.Dto.Images;
+using Disco.Domain.Models;
+using Disco.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Services
+namespace Disco.Business.Services
 {
     public class ImageService : IImageService
     {

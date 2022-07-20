@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.BLL.Dto.Stories
+namespace Disco.Business.Dto.Stories
 {
     public class CreateStoryDto
     {

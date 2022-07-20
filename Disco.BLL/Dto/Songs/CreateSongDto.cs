@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.BLL.Dto.Songs
+namespace Disco.Business.Dto.Songs
 {
     public class CreateSongDto
     {

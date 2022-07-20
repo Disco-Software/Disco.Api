@@ -1,8 +1,8 @@
-﻿using Disco.BLL.Configurations;
-using Disco.BLL.Interfaces;
-using Disco.BLL.Dto;
-using Disco.BLL.Dto.EmailNotifications;
-using Disco.DAL.EF;
+﻿using Disco.Business.Configurations;
+using Disco.Business.Interfaces;
+using Disco.Business.Dto;
+using Disco.Business.Dto.EmailNotifications;
+using Disco.Domain.EF;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -15,7 +15,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Services
+namespace Disco.Business.Services
 {
     public class EmailService : IEmailService
     {

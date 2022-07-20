@@ -1,5 +1,5 @@
-﻿using Disco.BLL.Interfaces;
-using Disco.BLL.Services;
+﻿using Disco.Business.Interfaces;
+using Disco.Business.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Disco.Api.AppSetup

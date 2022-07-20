@@ -1,4 +1,4 @@
-﻿using Disco.DAL.EF;
+﻿using Disco.Domain.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

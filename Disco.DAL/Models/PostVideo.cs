@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.DAL.Models
+namespace Disco.Domain.Models
 {
     public class PostVideo : Base.BaseEntity<int>
     {

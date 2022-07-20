@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Disco.BLL.Handlers;
-using Disco.BLL.Interfaces;
-using Disco.BLL.Dto.Roles;
-using Disco.DAL.EF;
-using Disco.DAL.Models;
+using Disco.Business.Handlers;
+using Disco.Business.Interfaces;
+using Disco.Business.Dto.Roles;
+using Disco.Domain.EF;
+using Disco.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Services
+namespace Disco.Business.Services
 {
     public class AdminRoleService : ApiRequestHandlerBase, IAdminRoleService
     {

@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
-using Disco.BLL.Configurations;
-using Disco.BLL.Interfaces;
-using Disco.DAL.EF;
-using Disco.DAL.Models;
-using Disco.DAL.Interfaces;
-using Disco.DAL.Repositories;
+using Disco.Business.Configurations;
+using Disco.Business.Interfaces;
+using Disco.Domain.EF;
+using Disco.Domain.Models;
+using Disco.Domain.Interfaces;
+using Disco.Domain.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -21,7 +21,7 @@ using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 
-namespace Disco.BLL.Services
+namespace Disco.Business.Services
 {
     public class ServiceManager : IServiceManager
     {

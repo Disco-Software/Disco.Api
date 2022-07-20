@@ -1,6 +1,6 @@
-﻿using Disco.BLL.Interfaces;
-using Disco.BLL.Dto;
-using Disco.BLL.Dto.Authentication;
+﻿using Disco.Business.Interfaces;
+using Disco.Business.Dto;
+using Disco.Business.Dto.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

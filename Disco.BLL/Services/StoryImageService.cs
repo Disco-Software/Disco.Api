@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
-using Disco.BLL.Interfaces;
-using Disco.BLL.Dto.StoryImages;
-using Disco.DAL.Models;
-using Disco.DAL.Repositories;
+using Disco.Business.Interfaces;
+using Disco.Business.Dto.StoryImages;
+using Disco.Domain.Models;
+using Disco.Domain.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Services
+namespace Disco.Business.Services
 {
     public class StoryImageService : IStoryImageService
     {

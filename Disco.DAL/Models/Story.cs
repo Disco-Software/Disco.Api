@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Disco.DAL.Models
+namespace Disco.Domain.Models
 {
     public class Story : Base.BaseEntity<int>
     {

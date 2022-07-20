@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.BLL.Constants
+namespace Disco.Business.Constants
 {
     public static class AuthScheme
 

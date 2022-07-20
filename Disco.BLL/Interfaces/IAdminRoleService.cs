@@ -1,12 +1,12 @@
-﻿using Disco.BLL.Dto.Roles;
-using Disco.DAL.Models;
+﻿using Disco.Business.Dto.Roles;
+using Disco.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Interfaces
+namespace Disco.Business.Interfaces
 {
     public interface IAdminRoleService
     {

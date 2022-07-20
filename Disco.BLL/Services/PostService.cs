@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
-using Disco.BLL.Dto;
-using Disco.BLL.Handlers;
-using Disco.BLL.Interfaces;
-using Disco.BLL.Dto;
-using Disco.BLL.Dto.Posts;
-using Disco.BLL.Dto.Songs;
-using Disco.DAL.EF;
-using Disco.DAL.Models;
-using Disco.DAL.Repositories;
+using Disco.Business.Dto;
+using Disco.Business.Handlers;
+using Disco.Business.Interfaces;
+using Disco.Business.Dto;
+using Disco.Business.Dto.Posts;
+using Disco.Business.Dto.Songs;
+using Disco.Domain.EF;
+using Disco.Domain.Models;
+using Disco.Domain.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +23,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Services
+namespace Disco.Business.Services
 {
     public class PostService : ApiRequestHandlerBase, IPostService
     {

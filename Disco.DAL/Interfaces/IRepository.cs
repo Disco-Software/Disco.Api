@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.DAL.Interfaces
+namespace Disco.Domain.Interfaces
 {
     public interface IRepository<T,TKey>
     {

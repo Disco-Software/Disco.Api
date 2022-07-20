@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
-using Disco.BLL.Constants;
-using Disco.BLL.Dto;
-using Disco.BLL.Handlers;
-using Disco.BLL.Interfaces;
-using Disco.BLL.Dto;
-using Disco.BLL.Dto.Friends;
-using Disco.DAL.EF;
-using Disco.DAL.Models;
-using Disco.DAL.Repositories;
+using Disco.Business.Constants;
+using Disco.Business.Dto;
+using Disco.Business.Handlers;
+using Disco.Business.Interfaces;
+using Disco.Business.Dto;
+using Disco.Business.Dto.Friends;
+using Disco.Domain.EF;
+using Disco.Domain.Models;
+using Disco.Domain.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Services
+namespace Disco.Business.Services
 {
     public class FriendService : ApiRequestHandlerBase, IFriendService
     {

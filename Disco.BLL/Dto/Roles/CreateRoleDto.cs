@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.BLL.Dto.Roles
+namespace Disco.Business.Dto.Roles
 {
     public class CreateRoleDto
     {

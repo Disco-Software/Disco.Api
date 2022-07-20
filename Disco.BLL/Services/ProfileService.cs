@@ -1,10 +1,10 @@
 ﻿using Azure.Storage.Blobs;
-using Disco.BLL.Handlers;
-using Disco.BLL.Interfaces;
-using Disco.BLL.Dto.Profile;
-using Disco.DAL.EF;
-using Disco.DAL.Models;
-using Disco.DAL.Repositories;
+using Disco.Business.Handlers;
+using Disco.Business.Interfaces;
+using Disco.Business.Dto.Profile;
+using Disco.Domain.EF;
+using Disco.Domain.Models;
+using Disco.Domain.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Services
+namespace Disco.Business.Services
 {
     public class ProfileService : ApiRequestHandlerBase, IProfileService
     {

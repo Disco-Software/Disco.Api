@@ -1,5 +1,5 @@
-﻿using Disco.DAL.EF;
-using Disco.DAL.Interfaces;
+﻿using Disco.Domain.EF;
+using Disco.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.DAL.Repositories.Base
+namespace Disco.Domain.Repositories.Base
 {
     public class BaseRepository<T, Tkey> : IRepository<T, Tkey>
         where T : Models.Base.BaseEntity<Tkey>

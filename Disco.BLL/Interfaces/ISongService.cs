@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Disco.BLL.Dto.Songs;
-using Disco.DAL.Models;
+using Disco.Business.Dto.Songs;
+using Disco.Domain.Models;
 
-namespace Disco.BLL.Interfaces
+namespace Disco.Business.Interfaces
 {
     public interface ISongService
     {

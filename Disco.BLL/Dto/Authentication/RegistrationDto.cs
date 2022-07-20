@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Dto.Authentication
+namespace Disco.Business.Dto.Authentication
 {
     public class RegistrationDto
     {

@@ -40,7 +40,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Disco.BLL\Disco.BLL.csproj" />
-    <ProjectReference Include="..\Disco.DAL\Disco.DAL.csproj" />
+    <ProjectReference Include="..\Disco.DAL\Disco.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

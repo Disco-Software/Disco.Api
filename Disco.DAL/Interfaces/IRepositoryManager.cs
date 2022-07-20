@@ -1,9 +1,9 @@
-﻿using Disco.DAL.Repositories;
+﻿using Disco.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.DAL.Interfaces
+namespace Disco.Domain.Interfaces
 {
     public interface IRepositoryManager
     {

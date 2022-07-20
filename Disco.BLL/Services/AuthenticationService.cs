@@ -1,20 +1,20 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
-using Disco.BLL.Configurations;
-using Disco.BLL.Constants;
-using Disco.BLL.Dto;
-using Disco.BLL.Handlers;
-using Disco.BLL.Interfaces;
-using Disco.BLL.Dto;
-using Disco.BLL.Dto.Apple;
-using Disco.BLL.Dto.Authentication;
-using Disco.BLL.Dto.EmailNotifications;
-using Disco.BLL.Dto.Facebook;
-using Disco.BLL.Dto.Google;
-using Disco.BLL.Validatars;
-using Disco.DAL.EF;
-using Disco.DAL.Models;
-using Disco.DAL.Repositories;
+using Disco.Business.Configurations;
+using Disco.Business.Constants;
+using Disco.Business.Dto;
+using Disco.Business.Handlers;
+using Disco.Business.Interfaces;
+using Disco.Business.Dto;
+using Disco.Business.Dto.Apple;
+using Disco.Business.Dto.Authentication;
+using Disco.Business.Dto.EmailNotifications;
+using Disco.Business.Dto.Facebook;
+using Disco.Business.Dto.Google;
+using Disco.Business.Validatars;
+using Disco.Domain.EF;
+using Disco.Domain.Models;
+using Disco.Domain.Repositories;
 using FluentValidation.Results;
 using Google.Apis.Auth.AspNetCore3;
 using Google.Apis.Auth.OAuth2;
@@ -41,7 +41,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Services
+namespace Disco.Business.Services
 {
     public class AuthenticationService : ApiRequestHandlerBase, IAuthenticationService
     {
@@ -147,7 +147,7 @@ namespace Disco.BLL.Services
             var userResult = mapper.Map<User>(userInfo);
             
             userResult.PasswordHash = userManager.PasswordHasher.HashPassword(userResult, userInfo.Password);
-            userResult.Profile = new DAL.Models.Profile { Status = StatusProvider.NewArtist };
+            userResult.Profile = new Domain.Models.Profile { Status = StatusProvider.NewArtist };
             userResult.NormalizedEmail = userManager.NormalizeEmail(userResult.Email);
             userResult.NormalizedUserName = userManager.NormalizeName(userResult.UserName);
             userResult.RefreshToken = tokenService.GenerateRefreshToken();
@@ -255,7 +255,7 @@ namespace Disco.BLL.Services
             user.NormalizedEmail = userManager.NormalizeEmail(userInfo.Email);
             user.NormalizedUserName = userManager.NormalizeName(userInfo.Name);
             
-            user.Profile = new DAL.Models.Profile();
+            user.Profile = new Domain.Models.Profile();
             user.Profile.Status = StatusProvider.NewArtist;
             user.Profile.Photo = userInfo.Picture.Data.Url;
 
@@ -374,7 +374,7 @@ namespace Disco.BLL.Services
                 user.NormalizedEmail = userManager.NormalizeEmail(model.Email);
                 user.NormalizedUserName = userManager.NormalizeName(model.Name);
 
-                var profile = new DAL.Models.Profile
+                var profile = new Domain.Models.Profile
                 {
                     User = user,
                     UserId = user.Id,
@@ -449,7 +449,7 @@ namespace Disco.BLL.Services
             {
                 UserName = userName.DisplayName,
                 Email = email.Value,
-                Profile = new DAL.Models.Profile
+                Profile = new Domain.Models.Profile
                 {
                     Photo = photo.Url,
                     Status = StatusProvider.NewArtist

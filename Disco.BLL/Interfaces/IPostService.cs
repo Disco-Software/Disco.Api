@@ -1,7 +1,7 @@
-﻿using Disco.BLL.Dto;
-using Disco.BLL.Dto;
-using Disco.BLL.Dto.Posts;
-using Disco.DAL.Models;
+﻿using Disco.Business.Dto;
+using Disco.Business.Dto;
+using Disco.Business.Dto.Posts;
+using Disco.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,7 +10,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.BLL.Interfaces
+namespace Disco.Business.Interfaces
 {
     public interface IPostService
     {
