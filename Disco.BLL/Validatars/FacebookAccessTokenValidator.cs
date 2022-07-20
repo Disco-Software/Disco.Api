@@ -1,4 +1,4 @@
-﻿using Disco.BLL.Models.Facebook;
+﻿using Disco.BLL.Dto.Facebook;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Disco.BLL.Validatars
 {
-    public class FacebookAccessTokenValidator : AbstractValidator<FacebookRequestModel>
+    public class FacebookAccessTokenValidator : AbstractValidator<FacebookRequestDto>
     {
         public FacebookAccessTokenValidator()
         {

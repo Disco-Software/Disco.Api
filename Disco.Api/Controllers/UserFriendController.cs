@@ -1,10 +1,10 @@
 ﻿using Disco.BLL.Constants;
-using Disco.BLL.DTO;
+using Disco.BLL.Dto;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models;
-using Disco.BLL.Models.Friends;
+using Disco.BLL.Dto;
+using Disco.BLL.Dto.Friends;
 using Disco.BLL.Services;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,25 +21,35 @@ namespace Disco.Api.Controllers
     [ApiController]
     public class UserFriendController : ControllerBase
     {
-        private readonly IServiceManager serviceManager;
+        private readonly IFriendService friendService;
 
-        public UserFriendController(IServiceManager _serviceManager) =>
-            serviceManager = _serviceManager;
+        public UserFriendController(IFriendService _friendService)
+        {
+            friendService = _friendService;
+        }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create([FromBody] CreateFriendModel model) =>
-            await serviceManager.FriendService.CreateFriendAsync(model);
+        public async Task<IActionResult> Create([FromBody] CreateFriendDto model)
+        {
+            return await friendService.CreateFriendAsync(model);
+        }
 
         [HttpGet("get/{friendId:int}")]
-        public async Task<IActionResult> GetFriend([FromRoute] int friendId) =>
-            await serviceManager.FriendService.GetFriendAsync(friendId);
+        public async Task<IActionResult> GetFriend([FromRoute] int friendId)
+        {
+            return await friendService.GetFriendAsync(friendId);
+        }
 
         [HttpGet("{userId:int}")]
-        public async Task<IActionResult> GetAll([FromRoute] int userId) =>
-            await serviceManager.FriendService.GetAllFriends(userId);
+        public async Task<IActionResult> GetAll([FromRoute] int userId)
+        {
+            return await friendService.GetAllFriends(userId);
+        }
 
         [HttpDelete("{friendId:int}")]
-        public async Task DeleteFriend([FromRoute] int friendId) =>
-            await serviceManager.FriendService.DeleteFriend(friendId);
+        public async Task DeleteFriend([FromRoute] int friendId)
+        {
+            await friendService.DeleteFriend(friendId);
+        }
     }
 }

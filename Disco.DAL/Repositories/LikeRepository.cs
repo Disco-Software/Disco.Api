@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Disco.DAL.EF;
 using System.Threading.Tasks;
 using System.Linq;

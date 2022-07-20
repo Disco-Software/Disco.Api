@@ -1,5 +1,5 @@
-﻿using Disco.BLL.Models.Stories;
-using Disco.DAL.Entities;
+﻿using Disco.BLL.Dto.Stories;
+using Disco.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,9 +10,9 @@ namespace Disco.BLL.Interfaces
 {
     public interface IStoryService
     {
-        Task<IActionResult> CreateStoryAsync(CreateStoryModel model);
+        Task<IActionResult> CreateStoryAsync(CreateStoryDto model);
         Task DeleteStoryAsync(int id);
         Task<ActionResult<Story>> GetStoryAsync(int id);
-        Task<ActionResult<List<Story>>> GetAllStoryAsync(GetAllStoriesModel model);
+        Task<ActionResult<List<Story>>> GetAllStoryAsync(GetAllStoriesDto model);
     }
 }

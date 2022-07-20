@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models.Videos;
-using Disco.DAL.Entities;
+using Disco.BLL.Dto.Videos;
+using Disco.DAL.Models;
 using Disco.DAL.Repositories;
 using System;
 using System.Collections.Generic;
@@ -30,7 +30,7 @@ namespace Disco.BLL.Services
             mapper = _mapper;
         }
 
-        public async Task<PostVideo> CreateVideoAsync(CreateVideoModel model)
+        public async Task<PostVideo> CreateVideoAsync(CreateVideoDto model)
         {
             var post = await postRepository.Get(model.PostId);
             var uniqueVideoName = Guid.NewGuid().ToString() + "_" + model.VideoFile.FileName.Replace(' ', '_');

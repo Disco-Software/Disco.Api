@@ -1,5 +1,5 @@
 ﻿using Disco.DAL.EF;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

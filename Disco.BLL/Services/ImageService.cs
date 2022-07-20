@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models.Images;
-using Disco.DAL.Entities;
+using Disco.BLL.Dto.Images;
+using Disco.DAL.Models;
 using Disco.DAL.Repositories;
 using System;
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace Disco.BLL.Services
         }
 
 
-        public async Task<PostImage> CreatePostImage(CreateImageModel model)
+        public async Task<PostImage> CreatePostImage(CreateImageDto model)
         {
             var uniqueImageName = Guid.NewGuid().ToString() + "_" + model.ImageFile.FileName.Replace(' ', '_');
 

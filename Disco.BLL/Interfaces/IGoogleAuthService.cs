@@ -1,5 +1,5 @@
-﻿using Disco.BLL.Models.Authentication;
-using Disco.BLL.Models.Google;
+﻿using Disco.BLL.Dto.Authentication;
+using Disco.BLL.Dto.Google;
 using Google.Apis.Auth.AspNetCore3;
 using Google.Apis.PeopleService.v1.Data;
 using System;

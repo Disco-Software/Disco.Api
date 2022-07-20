@@ -1,6 +1,6 @@
-﻿using Disco.BLL.Models;
-using Disco.BLL.Models.Authentication;
-using Disco.DAL.Entities;
+﻿using Disco.BLL.Dto;
+using Disco.BLL.Dto.Authentication;
+using Disco.DAL.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Disco.BLL.Validatars
 {
-    public class RegistrationValidator : AbstractValidator<RegistrationModel>
+    public class RegistrationValidator : AbstractValidator<RegistrationDto>
     {
         private RegistrationValidator(
             UserManager<User> userManager)

@@ -1,5 +1,5 @@
-﻿using Disco.BLL.Models;
-using Disco.BLL.Models.PushNotifications;
+﻿using Disco.BLL.Dto;
+using Disco.BLL.Dto.PushNotifications;
 using Microsoft.Azure.NotificationHubs;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace Disco.BLL.Interfaces
 {
     public interface IRegisterDeviceService
     {
-        Task<DeviceRegistrationModel> RegisterDevice(DeviceRegistrationModel model);
-        Task<Installation> GetInstallation(DeviceRegistrationModel model);
+        Task<DeviceRegistrationDto> RegisterDevice(DeviceRegistrationDto model);
+        Task<Installation> GetInstallation(DeviceRegistrationDto model);
     }
 }

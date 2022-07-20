@@ -2,9 +2,9 @@
 using Azure.Storage.Blobs;
 using Disco.BLL.Handlers;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models.Stories;
+using Disco.BLL.Dto.Stories;
 using Disco.DAL.EF;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Disco.DAL.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -46,7 +46,7 @@ namespace Disco.BLL.Services
         }
         
 
-        public async Task<IActionResult> CreateStoryAsync(CreateStoryModel model)
+        public async Task<IActionResult> CreateStoryAsync(CreateStoryDto model)
         {
             var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
 
@@ -67,7 +67,7 @@ namespace Disco.BLL.Services
                 foreach (var image in model.StoryImages)
                 {
                     var storyImage = await storyImageService.CreateStoryImageAsync(
-                        new Models.StoryImages.CreateStoryImageModel { StoryImageFile = image });
+                        new Dto.StoryImages.CreateStoryImageDto { StoryImageFile = image });
                     story.StoryImages.Add(storyImage);
                 }
 
@@ -75,7 +75,7 @@ namespace Disco.BLL.Services
                 foreach (var video in model.StoryVideos)
                 {
                     var storyImage = await storyVideoService.CreateStoryVideoAsync(
-                        new Models.StoryVideos.CreateStoryVideoModel { VideoFile = video });
+                        new Dto.StoryVideos.CreateStoryVideoDto { VideoFile = video });
                     story.StoryVideos.Add(storyImage);
                 }
 
@@ -98,7 +98,7 @@ namespace Disco.BLL.Services
         public async Task<ActionResult<Story>> GetStoryAsync(int id) => 
             await storyRepository.Get(id);
 
-        public async Task<ActionResult<List<Story>>> GetAllStoryAsync(GetAllStoriesModel model)
+        public async Task<ActionResult<List<Story>>> GetAllStoryAsync(GetAllStoriesDto model)
         {
             var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
 

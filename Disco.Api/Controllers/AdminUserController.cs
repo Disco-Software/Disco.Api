@@ -1,7 +1,7 @@
 ﻿using Disco.BLL.Constants;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models.Authentication;
-using Disco.DAL.Entities;
+using Disco.BLL.Dto.Authentication;
+using Disco.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,23 +17,29 @@ namespace Disco.Api.Controllers
          Roles = "Admin")]
     public class AdminUserController : ControllerBase
     {
-        private readonly IServiceManager serviceManager;
+        private readonly IAdminUserService adminUserService;
 
-        public AdminUserController(IServiceManager serviceManager)
+        public AdminUserController(IAdminUserService adminUserService)
         {
-            this.serviceManager = serviceManager;
+            this.adminUserService = adminUserService;
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create([FromBody] RegistrationModel model) =>
-            await serviceManager.AdminUserService.CreateUserAsync(model);
+        public async Task<IActionResult> Create([FromBody] RegistrationDto model)
+        {
+            return await adminUserService.CreateUserAsync(model);
+        }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Remove([FromRoute] int id) =>
-            await serviceManager.AdminUserService.RemoveUserAsync(id);
+        public async Task<IActionResult> Remove([FromRoute] int id)
+        {
+           return await adminUserService.RemoveUserAsync(id);
+        }
 
         [HttpGet]
-        public async Task<ActionResult<List<User>>> GetAll() =>
-            await serviceManager.AdminUserService.GetAllUsers(1, 10);
+        public async Task<ActionResult<List<User>>> GetAll()
+        {
+            return await adminUserService.GetAllUsers(1, 10);
+        }
     }
 }

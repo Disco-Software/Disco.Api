@@ -1,6 +1,6 @@
 ﻿using Disco.BLL.Interfaces;
-using Disco.BLL.Models;
-using Disco.BLL.Models.PushNotifications;
+using Disco.BLL.Dto;
+using Disco.BLL.Dto.PushNotifications;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,13 +14,17 @@ namespace Disco.Api.Controllers
     [ApiController]
     public class DeviceRegistrationController : ControllerBase
     {
-        private readonly IServiceManager serviceManager;
+        private readonly IRegisterDeviceService registerDeviceService;
 
-        public DeviceRegistrationController(IServiceManager _serviceManager) =>
-            serviceManager = _serviceManager;
+        public DeviceRegistrationController(IRegisterDeviceService registerDeviceService)
+        {
+            this.registerDeviceService = registerDeviceService;
+        }
 
         [HttpPost]
-        public async Task<DeviceRegistrationModel> DeviceRegistration([FromBody] DeviceRegistrationModel model) =>
-            await serviceManager.RegisterDeviceService.RegisterDevice(model);
+        public async Task<DeviceRegistrationDto> DeviceRegistration([FromBody] DeviceRegistrationDto model)
+        {
+            return await registerDeviceService.RegisterDevice(model);
+        }
     }
 }

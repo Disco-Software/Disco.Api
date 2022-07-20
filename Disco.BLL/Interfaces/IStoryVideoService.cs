@@ -1,5 +1,5 @@
-﻿using Disco.BLL.Models.StoryVideos;
-using Disco.DAL.Entities;
+﻿using Disco.BLL.Dto.StoryVideos;
+using Disco.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +9,7 @@ namespace Disco.BLL.Interfaces
 {
     public interface IStoryVideoService
     {
-        Task<StoryVideo> CreateStoryVideoAsync(CreateStoryVideoModel model);
+        Task<StoryVideo> CreateStoryVideoAsync(CreateStoryVideoDto model);
         Task Remove(int id);
     }
 }

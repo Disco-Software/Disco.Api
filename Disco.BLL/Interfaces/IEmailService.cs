@@ -1,5 +1,5 @@
-﻿using Disco.BLL.Models;
-using Disco.BLL.Models.EmailNotifications;
+﻿using Disco.BLL.Dto;
+using Disco.BLL.Dto.EmailNotifications;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,6 +9,6 @@ namespace Disco.BLL.Interfaces
 {
     public interface IEmailService
     {
-         void EmailConfirmation(EmailConfirmationModel model);
+         void EmailConfirmation(EmailConfirmationDto model);
     }
 }

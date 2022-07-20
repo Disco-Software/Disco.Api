@@ -1,18 +1,19 @@
 ﻿using AutoMapper;
 using Disco.BLL.Constants;
-using Disco.BLL.DTO;
+using Disco.BLL.Dto;
 using Disco.BLL.Handlers;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models;
-using Disco.BLL.Models.Friends;
+using Disco.BLL.Dto;
+using Disco.BLL.Dto.Friends;
 using Disco.DAL.EF;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Disco.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.NotificationHubs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,30 +28,33 @@ namespace Disco.BLL.Services
         private readonly FriendRepository repository;
         private readonly UserManager<User> userManager;
         private readonly IMapper mapper;
+        private readonly IConfiguration configuration;
         private readonly IPushNotificationService pushNotificationService;
         private readonly INotificationHubClient notificationHubClient;
         private readonly IHttpContextAccessor httpContextAccessor;
         public FriendService(
             ApiDbContext _ctx,
-            FriendRepository _repository, 
+            FriendRepository _repository,
             UserManager<User> _userManager,
             IMapper _mapper,
-            IPushNotificationService _pushNotificationService,
-            INotificationHubClient _notificationHubClient,
+            IConfiguration _configuration,
             IHttpContextAccessor _httpContextAccessor)
         {
             ctx = _ctx;
             repository = _repository;
             userManager = _userManager;
             mapper = _mapper;
-            pushNotificationService = _pushNotificationService;
-            notificationHubClient = _notificationHubClient;
+            configuration = _configuration;
+            notificationHubClient = NotificationHubClient.CreateClientFromConnectionString(
+                configuration[Strings.NOTIFICATION_CONNECTION_STRING],
+                configuration[Strings.NOTIFICATION_NAME]);
             httpContextAccessor = _httpContextAccessor;
         }
 
-        public async Task<IActionResult> CreateFriendAsync(CreateFriendModel model)
+        public async Task<IActionResult> CreateFriendAsync(CreateFriendDto model)
         {
             var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
+            
             await ctx.Entry(user)
                 .Reference(p => p.Profile)
                 .LoadAsync();
@@ -61,6 +65,7 @@ namespace Disco.BLL.Services
 
 
             var friend = await userManager.FindByIdAsync(model.FriendId.ToString());
+           
             await ctx.Entry(friend)
                 .Reference(f => f.Profile)
                 .LoadAsync();
@@ -98,18 +103,9 @@ namespace Disco.BLL.Services
                 instalation.Tags = tags;
 
                await notificationHubClient.CreateOrUpdateInstallationAsync(instalation);
-
-                //await pushNotificationService.SendNewFriendNotificationAsync(new Models.PushNotifications.NewFriendNotificationModel
-                //{
-                //    FriendId = user.Id,
-                //    Title = "You have a new follower",
-                //    Body = "Please confirm your new friend",
-                //    NotificationType = NotificationTypes.NewFollower,
-                //    Tags = $"user-{friend.Id}",
-                //});
             }
 
-            return Ok(new FriendResponseModel { FriendId = friend.Id, IsConfirmed = true, FriendProfile = friend.Profile, UserProfile = user.Profile});
+            return Ok(new FriendResponseDto { FriendId = friend.Id, IsConfirmed = true, FriendProfile = friend.Profile, UserProfile = user.Profile});
         }
 
         public async Task DeleteFriend(int id) =>
@@ -118,10 +114,10 @@ namespace Disco.BLL.Services
         public async Task<IActionResult> GetAllFriends(int id)
         {
            var friends = await repository.GetAllFriends(id);
-            var friendModels = new List<FriendResponseModel>();
+            var friendModels = new List<FriendResponseDto>();
             foreach (var friend in friends)
             {
-                var friendModel = new FriendResponseModel
+                var friendModel = new FriendResponseDto
                 {
                     FriendProfile = friend.ProfileFriend,
                     UserProfile = friend.UserProfile,
@@ -140,9 +136,9 @@ namespace Disco.BLL.Services
             if (friend == null)
                 throw new Exception("freind not found");
 
-            var userProfileModel = mapper.Map<ProfileModel>(friend.UserProfile);
+            var userProfileModel = mapper.Map<ProfileDto>(friend.UserProfile);
 
-            return Ok(new FriendResponseModel { FriendId = friend.ProfileFriend.Id, UserProfile = friend.UserProfile, IsConfirmed = true, FriendProfile = friend.ProfileFriend});
+            return Ok(new FriendResponseDto { FriendId = friend.ProfileFriend.Id, UserProfile = friend.UserProfile, IsConfirmed = true, FriendProfile = friend.ProfileFriend});
         }
     }
 }

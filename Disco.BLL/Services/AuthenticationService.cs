@@ -2,18 +2,18 @@
 using Azure.Storage.Blobs;
 using Disco.BLL.Configurations;
 using Disco.BLL.Constants;
-using Disco.BLL.DTO;
+using Disco.BLL.Dto;
 using Disco.BLL.Handlers;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models;
-using Disco.BLL.Models.Apple;
-using Disco.BLL.Models.Authentication;
-using Disco.BLL.Models.EmailNotifications;
-using Disco.BLL.Models.Facebook;
-using Disco.BLL.Models.Google;
+using Disco.BLL.Dto;
+using Disco.BLL.Dto.Apple;
+using Disco.BLL.Dto.Authentication;
+using Disco.BLL.Dto.EmailNotifications;
+using Disco.BLL.Dto.Facebook;
+using Disco.BLL.Dto.Google;
 using Disco.BLL.Validatars;
 using Disco.DAL.EF;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Disco.DAL.Repositories;
 using FluentValidation.Results;
 using Google.Apis.Auth.AspNetCore3;
@@ -86,7 +86,7 @@ namespace Disco.BLL.Services
             httpContextAccessor = _httpContextAccessor;
         }
 
-        public async Task<IActionResult> LogIn(LoginModel model)
+        public async Task<IActionResult> LogIn(LoginDto model)
         {
             var validator = await LogInValidator
                 .Create()
@@ -127,7 +127,7 @@ namespace Disco.BLL.Services
 
             await ctx.SaveChangesAsync();   
 
-            var userResponseModel = mapper.Map<UserResponseModel>(user);
+            var userResponseModel = mapper.Map<UserResponseDto>(user);
             userResponseModel.RefreshToken = refreshToken;
             userResponseModel.AccessToken = jwt;
             userResponseModel.User = user;
@@ -135,7 +135,7 @@ namespace Disco.BLL.Services
             return Ok(userResponseModel);
         }
 
-        public async Task<IActionResult> Register(RegistrationModel userInfo)
+        public async Task<IActionResult> Register(RegistrationDto userInfo)
         {
             var validator = await RegistrationValidator
                 .Create(userManager)
@@ -147,7 +147,7 @@ namespace Disco.BLL.Services
             var userResult = mapper.Map<User>(userInfo);
             
             userResult.PasswordHash = userManager.PasswordHasher.HashPassword(userResult, userInfo.Password);
-            userResult.Profile = new DAL.Entities.Profile { Status = StatusProvider.NewArtist };
+            userResult.Profile = new DAL.Models.Profile { Status = StatusProvider.NewArtist };
             userResult.NormalizedEmail = userManager.NormalizeEmail(userResult.Email);
             userResult.NormalizedUserName = userManager.NormalizeName(userResult.UserName);
             userResult.RefreshToken = tokenService.GenerateRefreshToken();
@@ -171,7 +171,7 @@ namespace Disco.BLL.Services
             await signInManager.SignInAsync(userResult, true);
             var jwt = tokenService.GenerateAccessToken(userResult);
 
-            var userResponseModel = mapper.Map<UserResponseModel>(userResult);
+            var userResponseModel = mapper.Map<UserResponseDto>(userResult);
             userResponseModel.RefreshToken = userResult.RefreshToken;
             userResponseModel.AccessToken = jwt;
             userResponseModel.User = userResult;
@@ -179,7 +179,7 @@ namespace Disco.BLL.Services
             return Ok(userResponseModel);
         }
 
-        public async Task<IActionResult> Facebook(FacebookRequestModel facebookRequestModel)
+        public async Task<IActionResult> Facebook(FacebookRequestDto facebookRequestModel)
         {
             var validator = await FacebookAccessTokenValidator
                 .Create()
@@ -215,7 +215,7 @@ namespace Disco.BLL.Services
                 var jwt = tokenService.GenerateAccessToken(user);
                 var refreshToken = tokenService.GenerateRefreshToken();
 
-                var userResponseModel = mapper.Map<UserResponseModel>(user);
+                var userResponseModel = mapper.Map<UserResponseDto>(user);
                 userResponseModel.AccessToken = jwt;
                 userResponseModel.RefreshToken = refreshToken;
                 userResponseModel.User = user;
@@ -241,7 +241,7 @@ namespace Disco.BLL.Services
                 var jwt = tokenService.GenerateAccessToken(user);
                 var refreshToken = tokenService.GenerateRefreshToken();
 
-                var userResponseModel = mapper.Map<UserResponseModel>(user);
+                var userResponseModel = mapper.Map<UserResponseDto>(user);
                 userResponseModel.RefreshToken = refreshToken;
                 userResponseModel.AccessToken = jwt;
                 userResponseModel.User = user;
@@ -255,7 +255,7 @@ namespace Disco.BLL.Services
             user.NormalizedEmail = userManager.NormalizeEmail(userInfo.Email);
             user.NormalizedUserName = userManager.NormalizeName(userInfo.Name);
             
-            user.Profile = new DAL.Entities.Profile();
+            user.Profile = new DAL.Models.Profile();
             user.Profile.Status = StatusProvider.NewArtist;
             user.Profile.Photo = userInfo.Picture.Data.Url;
 
@@ -279,7 +279,7 @@ namespace Disco.BLL.Services
 
             var jwtToken = tokenService.GenerateAccessToken(user);
 
-            var userResponse = mapper.Map<UserResponseModel>(user);
+            var userResponse = mapper.Map<UserResponseDto>(user);
             userResponse.AccessToken = jwtToken;
             userResponse.RefreshToken = user.RefreshToken;
             userResponse.User = user;
@@ -287,7 +287,7 @@ namespace Disco.BLL.Services
             return Ok(userResponse);
         }
 
-        public async Task<IActionResult> RefreshToken(RefreshTokenRequestModel model)
+        public async Task<IActionResult> RefreshToken(RefreshTokenDto model)
         {
             var user = await userRepository.GetUserByRefreshTokenAsync(model.RefreshToken);
                            
@@ -303,7 +303,7 @@ namespace Disco.BLL.Services
 
                 var jwtToken = tokenService.GenerateAccessToken(user);
 
-                var userResponseModel = mapper.Map<UserResponseModel>(user);
+                var userResponseModel = mapper.Map<UserResponseDto>(user);
                 userResponseModel.RefreshToken = user.RefreshToken;
                 userResponseModel.AccessToken = jwtToken;
                 userResponseModel.User = user;
@@ -313,7 +313,7 @@ namespace Disco.BLL.Services
 
             var jwt = tokenService.GenerateAccessToken(user);
 
-            var userResponse = mapper.Map<UserResponseModel>(user);
+            var userResponse = mapper.Map<UserResponseDto>(user);
             userResponse.RefreshToken = user.RefreshToken;
             userResponse.AccessToken = jwt;
             userResponse.User = user;
@@ -321,7 +321,7 @@ namespace Disco.BLL.Services
             return Ok(userResponse);
         }
 
-        public async Task<IActionResult> Apple(AppleLogInModel model)
+        public async Task<IActionResult> Apple(AppleLogInDto model)
         {
             User user;
             if (!string.IsNullOrWhiteSpace(model.Email))
@@ -337,7 +337,7 @@ namespace Disco.BLL.Services
 
                     var jwtToken = tokenService.GenerateAccessToken(user);
 
-                    var userResponseModel = mapper.Map<UserResponseModel>(user);
+                    var userResponseModel = mapper.Map<UserResponseDto>(user);
                     userResponseModel.RefreshToken = user.RefreshToken;
                     userResponseModel.AccessToken = jwtToken;
                     userResponseModel.User = user;
@@ -357,7 +357,7 @@ namespace Disco.BLL.Services
 
                     var jwtToken = tokenService.GenerateAccessToken(user);
 
-                    var userResponseResult = mapper.Map<UserResponseModel>(user);
+                    var userResponseResult = mapper.Map<UserResponseDto>(user);
                     userResponseResult.RefreshToken = user.RefreshToken;
                     userResponseResult.AccessToken = jwtToken;
                     userResponseResult.User = user;
@@ -374,7 +374,7 @@ namespace Disco.BLL.Services
                 user.NormalizedEmail = userManager.NormalizeEmail(model.Email);
                 user.NormalizedUserName = userManager.NormalizeName(model.Name);
 
-                var profile = new DAL.Entities.Profile
+                var profile = new DAL.Models.Profile
                 {
                     User = user,
                     UserId = user.Id,
@@ -394,7 +394,7 @@ namespace Disco.BLL.Services
 
                 var jwt = tokenService.GenerateAccessToken(user);
 
-                var userResponse = mapper.Map<UserResponseModel>(user);
+                var userResponse = mapper.Map<UserResponseDto>(user);
                 userResponse.RefreshToken = user.RefreshToken;
                 userResponse.AccessToken = jwt;
                 userResponse.User = user;
@@ -417,7 +417,7 @@ namespace Disco.BLL.Services
             var html = (new WebClient()).DownloadString(uri);
             var passwordToken = await userManager.GeneratePasswordResetTokenAsync(user);
             string url = $"disco://disco.app/token/{passwordToken}";
-            EmailConfirmationModel model = new EmailConfirmationModel();
+            EmailConfirmationDto model = new EmailConfirmationDto();
             model.MessageHeader = "Email confirmation";
             model.MessageBody = html.Replace("[token]", passwordToken).Replace("[email]", user.Email);
             model.ToEmail = email;
@@ -427,7 +427,7 @@ namespace Disco.BLL.Services
             return Ok(passwordToken);
         }
 
-        public async Task<IActionResult> ResetPassword(ResetPasswordRequestModel model)
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto model)
         {
             var user = await userManager.FindByEmailAsync(model.Email);
             
@@ -449,7 +449,7 @@ namespace Disco.BLL.Services
             {
                 UserName = userName.DisplayName,
                 Email = email.Value,
-                Profile = new DAL.Entities.Profile
+                Profile = new DAL.Models.Profile
                 {
                     Photo = photo.Url,
                     Status = StatusProvider.NewArtist
@@ -461,7 +461,7 @@ namespace Disco.BLL.Services
             var jwt = tokenService.GenerateAccessToken(user);
             var refreshToken = tokenService.GenerateRefreshToken();
 
-            var userResponse = mapper.Map<UserResponseModel>(user);
+            var userResponse = mapper.Map<UserResponseDto>(user);
             userResponse.RefreshToken = refreshToken;
             userResponse.AccessToken = jwt;
             userResponse.User = user;

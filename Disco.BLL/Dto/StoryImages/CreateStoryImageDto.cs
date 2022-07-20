@@ -1,0 +1,13 @@
+﻿using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Disco.BLL.Dto.StoryImages
+{
+    public class CreateStoryImageDto
+    {
+       public IFormFile StoryImageFile { get; set; }
+       public int StoryId { get; set;}
+    }
+}

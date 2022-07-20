@@ -1,5 +1,5 @@
-﻿using Disco.BLL.Models.Roles;
-using Disco.DAL.Entities;
+﻿using Disco.BLL.Dto.Roles;
+using Disco.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,8 +10,8 @@ namespace Disco.BLL.Interfaces
 {
     public interface IAdminRoleService
     {
-        Task<IActionResult> CreateRoleAsync(CreateRoleModel model);
+        Task<IActionResult> CreateRoleAsync(CreateRoleDto model);
         Task<IActionResult> RemoveRoleAsync(string name);
-        Task<ActionResult<List<Role>>> GetAllRoles(GetAllRolesModel model);
+        Task<ActionResult<List<Role>>> GetAllRoles(GetAllRolesDto model);
     }
 }

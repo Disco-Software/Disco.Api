@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Disco.BLL.Handlers;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models.Authentication;
+using Disco.BLL.Dto.Authentication;
 using Disco.BLL.Validatars;
 using Disco.DAL.EF;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +31,7 @@ namespace Disco.BLL.Services
             mapper = _mapper;
         }
 
-        public async Task<IActionResult> CreateUserAsync(RegistrationModel model)
+        public async Task<IActionResult> CreateUserAsync(RegistrationDto model)
         {
             var validator = await RegistrationValidator
                 .Create(userManager)

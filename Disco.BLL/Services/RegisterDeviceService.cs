@@ -1,7 +1,9 @@
-﻿using Disco.BLL.Interfaces;
-using Disco.BLL.Models;
-using Disco.BLL.Models.PushNotifications;
+﻿using Disco.BLL.Constants;
+using Disco.BLL.Interfaces;
+using Disco.BLL.Dto;
+using Disco.BLL.Dto.PushNotifications;
 using Microsoft.Azure.NotificationHubs;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -13,10 +15,16 @@ namespace Disco.BLL.Services
     public class RegisterDeviceService : IRegisterDeviceService
     {
         private readonly NotificationHubClient notificationHubClient;
-        public RegisterDeviceService(NotificationHubClient _notificationHubClient) =>
-            notificationHubClient = _notificationHubClient;
+        private readonly IConfiguration configuration;
+        public RegisterDeviceService(IConfiguration _configuration)
+        {
+            configuration = _configuration;
+            notificationHubClient = NotificationHubClient.CreateClientFromConnectionString(
+                configuration[Strings.NOTIFICATION_CONNECTION_STRING],
+                configuration[Strings.NOTIFICATION_NAME]);
+        }
 
-        public async Task<Installation> GetInstallation(DeviceRegistrationModel model)
+        public async Task<Installation> GetInstallation(DeviceRegistrationDto model)
         {
             try
             {
@@ -33,7 +41,7 @@ namespace Disco.BLL.Services
             }
         }
 
-        public async Task<DeviceRegistrationModel> RegisterDevice(DeviceRegistrationModel model)
+        public async Task<DeviceRegistrationDto> RegisterDevice(DeviceRegistrationDto model)
         {
             if (!string.IsNullOrWhiteSpace(model.InstallationId))
             {
@@ -55,7 +63,7 @@ namespace Disco.BLL.Services
                 Platform = model.Platform.Value
             });
 
-            return new DeviceRegistrationModel
+            return new DeviceRegistrationDto
             {
                 InstallationId = instalationId,
                 Platform = model.Platform.Value,

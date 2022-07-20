@@ -1,8 +1,8 @@
 ﻿using Disco.Api;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models;
+using Disco.BLL.Dto;
 using Disco.DAL.EF;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

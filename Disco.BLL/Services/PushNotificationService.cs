@@ -1,7 +1,8 @@
 ﻿using Disco.BLL.Constants;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models.PushNotifications;
+using Disco.BLL.Dto.PushNotifications;
 using Microsoft.Azure.NotificationHubs;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,9 +13,13 @@ namespace Disco.BLL.Services
     public class PushNotificationService : IPushNotificationService
     {
         private readonly NotificationHubClient notificationHubClient;
-
-        public PushNotificationService(NotificationHubClient _notificationHubClient) =>
-            notificationHubClient = _notificationHubClient;
+        private readonly IConfiguration configuration;
+        public PushNotificationService(IConfiguration _configuration)
+        {
+            notificationHubClient = NotificationHubClient.CreateClientFromConnectionString(configuration[
+                Strings.NOTIFICATION_CONNECTION_STRING],
+                configuration[Strings.NOTIFICATION_NAME]);
+        }
 
 
         /// <summary>
@@ -22,7 +27,7 @@ namespace Disco.BLL.Services
         /// </summary>
         /// <param name="model">base params of notification</param>
         /// <returns></returns>
-        public async Task SendNotificationAsync(PushNotificationBaseModel model)
+        public async Task SendNotificationAsync(PushNotificationBaseDto model)
         {
             var notificationPayload = $"\"title\":\"{model.Title}\",\"body\":\"{model.Body}\"";
             var dataPayload = $"\"type\":\"{model.NotificationType}\",\"id\":\"{model.Id}\"";
@@ -34,7 +39,7 @@ namespace Disco.BLL.Services
             var appleTask = notificationHubClient.SendAppleNativeNotificationAsync(applePayload, model.Tag);
             await Task.WhenAll(androidTask, appleTask);
         }
-        public async Task SendNotificationAsync(NewFriendNotificationModel model)
+        public async Task SendNotificationAsync(NewFriendNotificationDto model)
         {
             var notificationPayload = $"\"title\":\"{model.Title}\",\"body\":\"{model.Body}\"";
             var dataPayload = $"\"type\":\"{model.NotificationType}\",\"id\":\"{model.Id}\"";
@@ -47,9 +52,9 @@ namespace Disco.BLL.Services
             await Task.WhenAll(androidTask, appleTask);
         }
 
-        public async Task SendNewFriendNotificationAsync(NewFriendNotificationModel model)
+        public async Task SendNewFriendNotificationAsync(NewFriendNotificationDto model)
         {
-            await SendNotificationAsync(new NewFriendNotificationModel
+            await SendNotificationAsync(new NewFriendNotificationDto
             {
                 Title = model.Title,
                 Body = model.Body,
@@ -59,7 +64,7 @@ namespace Disco.BLL.Services
             });
         }
 
-        public async Task SendFriendConfirmationNotificationAsync(PushNotificationBaseModel model)
+        public async Task SendFriendConfirmationNotificationAsync(PushNotificationBaseDto model)
         {
             throw new NotImplementedException();
         }

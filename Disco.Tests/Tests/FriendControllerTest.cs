@@ -1,4 +1,4 @@
-﻿using Disco.BLL.Models.Friends;
+﻿using Disco.BLL.Dto.Friends;
 using Disco.Tests.Base;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
@@ -22,7 +22,7 @@ namespace Disco.Tests.Tests
         [TestMethod]
         public async Task AddFriend_ReturnsSuccessResponse()
         {
-            CreateFriendModel model = new CreateFriendModel { FriendId = 2 };
+            CreateFriendDto model = new CreateFriendDto { FriendId = 2 };
 
             var json = JsonConvert.SerializeObject(model);
             var buffer = Encoding.UTF8.GetBytes(json);
@@ -34,14 +34,14 @@ namespace Disco.Tests.Tests
             var response = await httpClient.PostAsync("user/friends/create", bytes);
             var result = await response.Content.ReadAsStringAsync();
 
-            var jsonResponse = JsonConvert.DeserializeObject<FriendResponseModel>(result);
+            var jsonResponse = JsonConvert.DeserializeObject<FriendResponseDto>(result);
 
             Assert.AreEqual(jsonResponse.FriendId, model.FriendId);
         }
         [TestMethod]
         public async Task AddFriend_ReturnsErrorResponse()
         {
-            var model = new CreateFriendModel { FriendId = 2 };
+            var model = new CreateFriendDto { FriendId = 2 };
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using Disco.BLL.DTO;
+﻿using Disco.BLL.Dto;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models;
-using Disco.BLL.Models.Facebook;
+using Disco.BLL.Dto;
+using Disco.BLL.Dto.Facebook;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -30,7 +30,7 @@ namespace Disco.BLL.Services
             httpClientFactory = _httpClientFactory;
         }
 
-        public async Task<FacebookModel> GetUserInfo(string accessToken)
+        public async Task<FacebookDto> GetUserInfo(string accessToken)
         {
             var result = await httpClientFactory.CreateClient().GetAsync($"https://graph.facebook.com/v11.0/me?fields=id%2Cname%2Cemail%2Cfirst_name%2Cmiddle_name%2Clast_name%2Cpicture%2Cabout&access_token={accessToken}");
 
@@ -38,7 +38,7 @@ namespace Disco.BLL.Services
             {
                 var response = await result.Content.ReadAsStringAsync();
 
-                return JsonConvert.DeserializeObject<FacebookModel>(response);
+                return JsonConvert.DeserializeObject<FacebookDto>(response);
             }
             else
                 return null;

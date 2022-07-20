@@ -1,18 +1,18 @@
 ﻿using AutoMapper;
-using Disco.BLL.DTO;
-using Disco.BLL.Models;
-using Disco.BLL.Models.Authentication;
-using Disco.BLL.Models.Facebook;
-using Disco.BLL.Models.Friends;
-using Disco.BLL.Models.Images;
-using Disco.BLL.Models.Posts;
-using Disco.BLL.Models.Roles;
-using Disco.BLL.Models.Songs;
-using Disco.BLL.Models.Stories;
-using Disco.BLL.Models.StoryImages;
-using Disco.BLL.Models.StoryVideos;
-using Disco.BLL.Models.Videos;
-using Disco.DAL.Entities;
+using Disco.BLL.Dto;
+using Disco.BLL.Dto;
+using Disco.BLL.Dto.Authentication;
+using Disco.BLL.Dto.Facebook;
+using Disco.BLL.Dto.Friends;
+using Disco.BLL.Dto.Images;
+using Disco.BLL.Dto.Posts;
+using Disco.BLL.Dto.Roles;
+using Disco.BLL.Dto.Songs;
+using Disco.BLL.Dto.Stories;
+using Disco.BLL.Dto.StoryImages;
+using Disco.BLL.Dto.StoryVideos;
+using Disco.BLL.Dto.Videos;
+using Disco.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -25,38 +25,38 @@ namespace Disco.BLL.Mapper
     {
         public MapProfile()
         {
-            CreateMap<CreatePostModel, Post>()
+            CreateMap<CreatePostDto, Post>()
                 .ForMember(source => source.PostImages, opt => opt.Ignore())
                 .ForMember(source => source.PostSongs, opt => opt.Ignore())
                 .ForMember(source => source.PostVideos, opt => opt.Ignore());
-            CreateMap<Post, PostResponseModel>();
-            CreateMap<CreateImageModel, PostImage>()
+            CreateMap<Post, PostResponseDto>();
+            CreateMap<CreateImageDto, PostImage>()
                 .ForMember(source => source.Source, opt => opt.Ignore());
-            CreateMap<CreateSongModel, PostSong>()
+            CreateMap<CreateSongDto, PostSong>()
                 .ForMember(source => source.Source, opt => opt.Ignore());
-            CreateMap<CreateVideoModel, PostVideo>()
+            CreateMap<CreateVideoDto, PostVideo>()
                 .ForMember(source => source.VideoSource, opt => opt.Ignore());
-            CreateMap<CreateStoryModel,Story>()
+            CreateMap<CreateStoryDto,Story>()
                 .ForMember(source => source.StoryImages, opt => opt.Ignore())
                 .ForMember(source => source.StoryVideos, opt => opt.Ignore())
                 .ForMember(source => source.DateOfCreation, opt => opt.Ignore());
-            CreateMap<CreateStoryImageModel, StoryImage>()
+            CreateMap<CreateStoryImageDto, StoryImage>()
                 .ForMember(source => source.Source, opt => opt.Ignore());
-            CreateMap<CreateStoryVideoModel, StoryVideo>()
+            CreateMap<CreateStoryVideoDto, StoryVideo>()
                 .ForMember(source => source.Source, opt => opt.Ignore());
-            CreateMap<RegistrationModel, User>();
-            CreateMap<CreateFriendModel, Friend>();
-            CreateMap<DAL.Entities.Profile, ProfileModel>();
-            CreateMap<User, UserResponseModel>()
+            CreateMap<RegistrationDto, User>();
+            CreateMap<CreateFriendDto, Friend>();
+            CreateMap<DAL.Models.Profile, ProfileDto>();
+            CreateMap<User, UserResponseDto>()
                 .ForMember(source => source.RefreshToken, opt => opt.Ignore())
                 .ForMember(source => source.AccessToken, opt => opt.Ignore());
-            CreateMap<DAL.Entities.Profile, ProfileModel>();
-            CreateMap<ProfileModel, FriendResponseModel>()
+            CreateMap<DAL.Models.Profile, ProfileDto>();
+            CreateMap<ProfileDto, FriendResponseDto>()
                 .ForMember(source => source.UserProfile, opt => opt.Ignore())
                 .ForMember(source => source.FriendProfile, opt => opt.Ignore())
                 .ForMember(source => source.FriendId, opt => opt.Ignore());
-            CreateMap<CreateRoleModel, Role>();
-            CreateMap<FacebookModel, User>()
+            CreateMap<CreateRoleDto, Role>();
+            CreateMap<FacebookDto, User>()
                 .ForMember(source => source.UserName, f => f.Ignore())
                 .ForMember(source => source.Email, e => e.Ignore());
         }

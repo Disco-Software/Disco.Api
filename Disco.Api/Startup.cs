@@ -5,8 +5,8 @@ using Disco.BLL.Interfaces;
 using Disco.BLL.Mapper;
 using Disco.BLL.Services;
 using Disco.DAL.EF;
-using Disco.DAL.Entities;
-using Disco.DAL.Entities.Base;
+using Disco.DAL.Models;
+using Disco.DAL.Models.Base;
 using Disco.DAL.Interfaces;
 using Disco.DAL.Repositories;
 using Disco.DAL.Repositories.Base;
@@ -75,7 +75,8 @@ namespace Disco.Api
 
             services.AddLogging();
 
-            services.AddScoped<IServiceManager, ServiceManager>();
+            services.ConfigureRepositories();
+            services.ConfigureServices();
 
             services.AddOptions<PushNotificationOptions>()
                 .Configure(Configuration.GetSection("NotificationHub").Bind)

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Disco.BLL.Handlers;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models.Roles;
+using Disco.BLL.Dto.Roles;
 using Disco.DAL.EF;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +31,7 @@ namespace Disco.BLL.Services
             mapper = _mapper;
         }
 
-        public async Task<IActionResult> CreateRoleAsync(CreateRoleModel model)
+        public async Task<IActionResult> CreateRoleAsync(CreateRoleDto model)
         {
            var role = mapper.Map<Role>(model);
             role.Name = model.RoleName;
@@ -54,7 +54,7 @@ namespace Disco.BLL.Services
             return Ok($"Role: {role.Name} was removed");
         }
 
-        public async Task<ActionResult<List<Role>>> GetAllRoles(GetAllRolesModel model)
+        public async Task<ActionResult<List<Role>>> GetAllRoles(GetAllRolesDto model)
         {
            return await ctx.Roles
                 .OrderBy(x => x.Name)

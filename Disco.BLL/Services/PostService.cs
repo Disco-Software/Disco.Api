@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
-using Disco.BLL.DTO;
+using Disco.BLL.Dto;
 using Disco.BLL.Handlers;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models;
-using Disco.BLL.Models.Posts;
-using Disco.BLL.Models.Songs;
+using Disco.BLL.Dto;
+using Disco.BLL.Dto.Posts;
+using Disco.BLL.Dto.Songs;
 using Disco.DAL.EF;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Disco.DAL.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -55,7 +55,7 @@ namespace Disco.BLL.Services
             httpContextAccessor = _httpContextAccessor;
         }
 
-        public async Task<IActionResult> CreatePostAsync(CreatePostModel model)
+        public async Task<IActionResult> CreatePostAsync(CreatePostDto model)
         {
             var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
            
@@ -75,7 +75,7 @@ namespace Disco.BLL.Services
                 foreach (var file in model.PostImages)
                 {
                     var image = await imageService.CreatePostImage(
-                        new Models.Images.CreateImageModel { ImageFile = file });
+                        new Dto.Images.CreateImageDto { ImageFile = file });
                     post.PostImages.Add(image);
                 }
             if (model.PostSongs != null)
@@ -86,7 +86,7 @@ namespace Disco.BLL.Services
                     var executorName = model.ExecutorNames.First();
 
                     var song = await songService.CreatePostSongAsync(
-                         new CreateSongModel { SongFile = postSong, SongImage = image, Name = name, ExecutorName = executorName, PostId = post.Id });
+                         new CreateSongDto { SongFile = postSong, SongImage = image, Name = name, ExecutorName = executorName, PostId = post.Id });
                    
                     model.PostSongNames.Remove(name);
                     model.PostSongImages.Remove(image);
@@ -98,7 +98,7 @@ namespace Disco.BLL.Services
                 foreach (var video in model.PostVideos)
                 {
                     var postVideo = await videoService.CreateVideoAsync(
-                        new Models.Videos.CreateVideoModel { VideoFile = video });
+                        new Dto.Videos.CreateVideoDto { VideoFile = video });
                     post.PostVideos.Add(postVideo);
                 }
 
@@ -114,14 +114,14 @@ namespace Disco.BLL.Services
         public async Task DeletePostAsync(int postId) =>
            await postRepository.Remove(postId);
 
-        public async Task<ActionResult<List<Post>>> GetAllUserPosts(GetAllPostsModel model)
+        public async Task<ActionResult<List<Post>>> GetAllUserPosts(GetAllPostsDto model)
         {
             var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
 
             return await postRepository.GetAllUserPosts(user.Id, model.PageSize, model.PageNumber);
         }
 
-        public async Task<ActionResult<List<Post>>> GetAllPosts(GetAllPostsModel model)
+        public async Task<ActionResult<List<Post>>> GetAllPosts(GetAllPostsDto model)
         {
             var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
 

@@ -3,12 +3,12 @@ using Azure.Storage.Blobs;
 using Disco.BLL.Configurations;
 using Disco.BLL.Handlers;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models;
-using Disco.BLL.Models.Authentication;
-using Disco.BLL.Models.EmailNotifications;
+using Disco.BLL.Dto;
+using Disco.BLL.Dto.Authentication;
+using Disco.BLL.Dto.EmailNotifications;
 using Disco.BLL.Validatars;
 using Disco.DAL.EF;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Disco.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -61,7 +61,7 @@ namespace Disco.BLL.Services
             emailService = _emailService;
         }
 
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordModel model)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto model)
         {
             var user = await userManager.FindByEmailAsync(model.Email);
 
@@ -73,7 +73,7 @@ namespace Disco.BLL.Services
             var html = (new WebClient()).DownloadString(uri);
             var passwordToken = await userManager.GeneratePasswordResetTokenAsync(user);
             string url = $"disco://disco.app/token/{passwordToken}";
-            EmailConfirmationModel emailModel = new EmailConfirmationModel();
+            EmailConfirmationDto emailModel = new EmailConfirmationDto();
             emailModel.MessageHeader = "Email confirmation";
             emailModel.MessageBody = html.Replace("[token]", passwordToken).Replace("[email]", user.Email);
             emailModel.ToEmail = model.Email;
@@ -83,7 +83,7 @@ namespace Disco.BLL.Services
             return Ok(passwordToken);
         }
 
-        public async Task<IActionResult> LogIn(LoginModel model)
+        public async Task<IActionResult> LogIn(LoginDto model)
         {
             var validator = await LogInValidator
                 .Create()
@@ -128,7 +128,7 @@ namespace Disco.BLL.Services
 
             await ctx.SaveChangesAsync();
 
-            var userResponseModel = mapper.Map<UserResponseModel>(user);
+            var userResponseModel = mapper.Map<UserResponseDto>(user);
             userResponseModel.RefreshToken = refreshToken;
             userResponseModel.AccessToken = jwt;
             userResponseModel.User = user;
@@ -136,7 +136,7 @@ namespace Disco.BLL.Services
             return Ok(userResponseModel);
         }
 
-        public async Task<IActionResult> RefreshToken(RefreshTokenRequestModel model)
+        public async Task<IActionResult> RefreshToken(RefreshTokenDto model)
         {
             var user = await userRepository.GetUserByRefreshTokenAsync(model.RefreshToken);
 
@@ -156,7 +156,7 @@ namespace Disco.BLL.Services
 
                 var jwtToken = tokenService.GenerateAccessToken(user);
 
-                var userResponseModel = mapper.Map<UserResponseModel>(user);
+                var userResponseModel = mapper.Map<UserResponseDto>(user);
                 userResponseModel.RefreshToken = user.RefreshToken;
                 userResponseModel.AccessToken = jwtToken;
                 userResponseModel.User = user;
@@ -166,7 +166,7 @@ namespace Disco.BLL.Services
 
             var jwt = tokenService.GenerateAccessToken(user);
 
-            var userResponse = mapper.Map<UserResponseModel>(user);
+            var userResponse = mapper.Map<UserResponseDto>(user);
             userResponse.RefreshToken = user.RefreshToken;
             userResponse.AccessToken = jwt;
             userResponse.User = user;
@@ -174,7 +174,7 @@ namespace Disco.BLL.Services
             return Ok(userResponse);
         }
 
-        public async Task<IActionResult> ResetPassword(ResetPasswordRequestModel model)
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto model)
         {
             var user = await userManager.FindByEmailAsync(model.Email);
 

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Disco.DAL.Repositories.Base
 {
     public class BaseRepository<T, Tkey> : IRepository<T, Tkey>
-        where T : Entities.Base.BaseEntity<Tkey>
+        where T : Models.Base.BaseEntity<Tkey>
         where Tkey : struct
     {
         protected ApiDbContext ctx;

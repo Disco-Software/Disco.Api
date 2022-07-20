@@ -1,7 +1,7 @@
 ﻿using Disco.BLL.Constants;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models.Roles;
-using Disco.DAL.Entities;
+using Disco.BLL.Dto.Roles;
+using Disco.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,19 +17,23 @@ namespace Disco.Api.Controllers
     [ApiController]
     public class AdminRoleController : ControllerBase
     {
-        private readonly IServiceManager serviceManager;
+        private readonly IAdminRoleService adminRoleService;
 
-        public AdminRoleController(IServiceManager _serviceManager)
+        public AdminRoleController(IAdminRoleService _adminRoleService)
         {
-            this.serviceManager = _serviceManager;
+            this.adminRoleService = _adminRoleService;
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create([FromBody] CreateRoleModel model) =>
-            await serviceManager.RoleService.CreateRoleAsync(model);
+        public async Task<IActionResult> Create([FromBody] CreateRoleDto model)
+        {
+            return await adminRoleService.CreateRoleAsync(model);
+        }
 
         [HttpGet]
-        public async Task<ActionResult<List<Role>>> GetAllRoles() => 
-            await serviceManager.RoleService.GetAllRoles(new GetAllRolesModel { PageNumber = 1, PageSize = 10});  
+        public async Task<ActionResult<List<Role>>> GetAllRoles()
+        {
+            return await adminRoleService.GetAllRoles(new GetAllRolesDto { PageNumber = 1, PageSize = 10});
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Disco.DAL.Entities;
+﻿using Disco.DAL.Models;
 using System.Security.Claims;
 using System;
 using System.Collections.Generic;

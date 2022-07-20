@@ -1,4 +1,4 @@
-﻿using Disco.BLL.Models.PushNotifications;
+﻿using Disco.BLL.Dto.PushNotifications;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,9 +8,9 @@ namespace Disco.BLL.Interfaces
 {
     public interface IPushNotificationService
     {
-        Task SendNotificationAsync(PushNotificationBaseModel model);
+        Task SendNotificationAsync(PushNotificationBaseDto model);
 
-        Task SendNewFriendNotificationAsync(NewFriendNotificationModel model);
-        Task SendFriendConfirmationNotificationAsync(PushNotificationBaseModel model);
+        Task SendNewFriendNotificationAsync(NewFriendNotificationDto model);
+        Task SendFriendConfirmationNotificationAsync(PushNotificationBaseDto model);
     }
 }

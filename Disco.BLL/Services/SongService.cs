@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models.Songs;
+using Disco.BLL.Dto.Songs;
 using Disco.DAL.EF;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Disco.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -35,7 +35,7 @@ namespace Disco.BLL.Services
             httpContextAccessor = _httpContextAccessor;
         }
 
-        public async Task<PostSong> CreatePostSongAsync(CreateSongModel model)
+        public async Task<PostSong> CreatePostSongAsync(CreateSongDto model)
         {
             var post = await postRepository.Get(model.PostId);
             

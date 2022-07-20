@@ -1,4 +1,4 @@
-﻿using Disco.DAL.Entities;
+﻿using Disco.DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

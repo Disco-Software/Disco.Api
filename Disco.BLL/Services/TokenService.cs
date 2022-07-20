@@ -1,6 +1,6 @@
 ﻿using Disco.BLL.Configurations;
 using Disco.BLL.Interfaces;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;

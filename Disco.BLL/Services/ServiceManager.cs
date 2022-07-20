@@ -3,7 +3,7 @@ using Azure.Storage.Blobs;
 using Disco.BLL.Configurations;
 using Disco.BLL.Interfaces;
 using Disco.DAL.EF;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Disco.DAL.Interfaces;
 using Disco.DAL.Repositories;
 using Microsoft.AspNetCore.Hosting;
@@ -65,16 +65,16 @@ namespace Disco.BLL.Services
             repositoryManager = new Lazy<IRepositoryManager>(() => new RepositoryManager(_ctx));
             facebookAuthService = new Lazy<IFacebookAuthService>(() => new FacebookAuthService(configuration, httpClientFactory));
             googleAuthService = new Lazy<IGoogleAuthService>(() => new GoogleAuthService(httpClientFactory));
-            emailService = new Lazy<IEmailService>(() => new EmailService(_emailOptions,_logger));
+            emailService = new Lazy<IEmailService>(() => new EmailService(_emailOptions));
             tokenService = new Lazy<ITokenService>(() => new TokenService(authenticationOptions));
             authentificationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_ctx, _userManager, _signInManager, _blobServiceClient, repositoryManager.Value.UserRepository,httpContextAccessor,tokenService.Value,googleAuthService.Value ,facebookAuthService.Value, emailService.Value,authenticationOptions,_googleOptions,_mapper));
             var notificationHub = NotificationHubClient.CreateClientFromConnectionString(
                 configuration["ConnectionStrings:AzureNotificationHubConnection"],
                 configuration["NotificationHub:HubName"]);
-            registerDeviceService = new Lazy<IRegisterDeviceService>(() => new RegisterDeviceService(notificationHub));
-            pushNotificationService = new Lazy<IPushNotificationService>(() => new PushNotificationService(notificationHub));
+            registerDeviceService = new Lazy<IRegisterDeviceService>(() => new RegisterDeviceService(configuration));
+            pushNotificationService = new Lazy<IPushNotificationService>(() => new PushNotificationService(configuration));
             roleService = new Lazy<IAdminRoleService>(() => new AdminRoleService(_ctx, _roleManager,_mapper));
-            friendService = new Lazy<IFriendService>(() => new FriendService(_ctx, repositoryManager.Value.FriendRepository, _userManager, _mapper, pushNotificationService.Value,notificationHub, httpContextAccessor));
+            friendService = new Lazy<IFriendService>(() => new FriendService(_ctx, repositoryManager.Value.FriendRepository, _userManager, _mapper, configuration, httpContextAccessor));
             imageService = new Lazy<IImageService>(() => new ImageService(repositoryManager.Value.PostRepository, repositoryManager.Value.ImageRepository, _blobServiceClient, _mapper));
             songService = new Lazy<ISongService>(() => new SongService(repositoryManager.Value.SongRepository, repositoryManager.Value.PostRepository, _blobServiceClient, _mapper, httpContextAccessor));
             videoService = new Lazy<IVideoService>(() => new VideoService(repositoryManager.Value.VideoRepository, repositoryManager.Value.PostRepository, _blobServiceClient, _mapper));

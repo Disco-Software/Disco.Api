@@ -1,7 +1,7 @@
 ﻿using Disco.BLL.Configurations;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models;
-using Disco.BLL.Models.EmailNotifications;
+using Disco.BLL.Dto;
+using Disco.BLL.Dto.EmailNotifications;
 using Disco.DAL.EF;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -20,14 +20,12 @@ namespace Disco.BLL.Services
     public class EmailService : IEmailService
     {
         private readonly IOptions<EmailOptions> emailOptions;
-        private readonly ILogger logger;
-        public EmailService(IOptions<EmailOptions> _emailOptions, ILogger _logger)
+        public EmailService(IOptions<EmailOptions> _emailOptions)
         {
             emailOptions = _emailOptions;
-            logger = _logger;
         }
 
-        public void EmailConfirmation(EmailConfirmationModel model)
+        public void EmailConfirmation(EmailConfirmationDto model)
         {
             MailMessage mailMessage = new MailMessage();
             mailMessage.From = new MailAddress(emailOptions.Value.Mail, "Disco");

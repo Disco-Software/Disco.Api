@@ -1,9 +1,9 @@
 ﻿using Azure.Storage.Blobs;
 using Disco.BLL.Handlers;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models.Profile;
+using Disco.BLL.Dto.Profile;
 using Disco.DAL.EF;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Disco.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -36,7 +36,7 @@ namespace Disco.BLL.Services
             httpContextAccessor = _httpContextAccessor;
         }
 
-        public async Task<IActionResult> UpdateProfileAsync(UpdateProfileModel model)
+        public async Task<IActionResult> UpdateProfileAsync(UpdateProfileDto model)
         {
             var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
 

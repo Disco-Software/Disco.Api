@@ -1,6 +1,6 @@
 ﻿using Disco.BLL.Interfaces;
-using Disco.BLL.Models;
-using Disco.BLL.Models.Authentication;
+using Disco.BLL.Dto;
+using Disco.BLL.Dto.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -11,27 +11,35 @@ namespace Disco.Api.Controllers
     [ApiController]
     public class AdminAuthenticationController : ControllerBase
     {
-        private readonly IServiceManager serviceManager;
+        private readonly IAdminAuthenticationService adminAuthenticationService;
 
-        public AdminAuthenticationController(IServiceManager _serviceManager)
+        public AdminAuthenticationController(IAdminAuthenticationService _adminAuthenticationService)
         {
-            serviceManager = _serviceManager;
+            adminAuthenticationService = _adminAuthenticationService;
         }
 
         [HttpPost("log-in")]
-        public async Task<IActionResult> LogIn([FromForm] LoginModel model) =>
-            await serviceManager.AdminAuthenticationService.LogIn(model);
+        public async Task<IActionResult> LogIn([FromForm] LoginDto model)
+        {
+            return await adminAuthenticationService.LogIn(model);
+        }
 
         [HttpPut("refresh")]
-        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestModel refreshTokenRequestModel) =>
-            await serviceManager.AdminAuthenticationService.RefreshToken(refreshTokenRequestModel);
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenRequestModel)
+        {
+            return await adminAuthenticationService.RefreshToken(refreshTokenRequestModel);
+        }
 
         [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model) =>
-            await serviceManager.AdminAuthenticationService.ForgotPassword(model);
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto model)
+        {
+            return await adminAuthenticationService.ForgotPassword(model);
+        }
 
         [HttpPut("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestModel model) =>
-            await serviceManager.AdminAuthenticationService.ResetPassword(model);
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model)
+        {
+            return await adminAuthenticationService.ResetPassword(model);
+        }
     }
 }

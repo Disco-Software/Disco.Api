@@ -1,5 +1,5 @@
-﻿using Disco.BLL.Models.StoryImages;
-using Disco.DAL.Entities;
+﻿using Disco.BLL.Dto.StoryImages;
+using Disco.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +9,7 @@ namespace Disco.BLL.Interfaces
 {
     public interface IStoryImageService
     {
-        Task<StoryImage> CreateStoryImageAsync(CreateStoryImageModel model);
+        Task<StoryImage> CreateStoryImageAsync(CreateStoryImageDto model);
         Task RemoveStoryImageAsync(int id);
     }
 }

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models.StoryImages;
-using Disco.DAL.Entities;
+using Disco.BLL.Dto.StoryImages;
+using Disco.DAL.Models;
 using Disco.DAL.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -38,7 +38,7 @@ namespace Disco.BLL.Services
             httpContextAccessor = _httpContextAccessor;
         }
 
-        public async Task<StoryImage> CreateStoryImageAsync(CreateStoryImageModel model)
+        public async Task<StoryImage> CreateStoryImageAsync(CreateStoryImageDto model)
         {
             var story = await storyRepository.Get(model.StoryId);
 

@@ -1,5 +1,5 @@
-﻿using Disco.BLL.Models;
-using Disco.BLL.Models.Authentication;
+﻿using Disco.BLL.Dto;
+using Disco.BLL.Dto.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,9 +10,9 @@ namespace Disco.BLL.Interfaces
 {
     public interface IAdminAuthenticationService
     {
-        public Task<IActionResult> LogIn(LoginModel model);
-        public Task<IActionResult> RefreshToken(RefreshTokenRequestModel model);
-        public Task<IActionResult> ForgotPassword(Models.Authentication.ForgotPasswordModel model);
-        public Task<IActionResult> ResetPassword(Models.Authentication.ResetPasswordRequestModel model);
+        public Task<IActionResult> LogIn(LoginDto model);
+        public Task<IActionResult> RefreshToken(RefreshTokenDto model);
+        public Task<IActionResult> ForgotPassword(Dto.Authentication.ForgotPasswordDto model);
+        public Task<IActionResult> ResetPassword(Dto.Authentication.ResetPasswordDto model);
     }
 }

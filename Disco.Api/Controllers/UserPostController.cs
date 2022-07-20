@@ -1,9 +1,9 @@
 ﻿using Disco.BLL.Constants;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models;
-using Disco.BLL.Models.Posts;
+using Disco.BLL.Dto;
+using Disco.BLL.Dto.Posts;
 using Disco.BLL.Services;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,25 +20,35 @@ namespace Disco.Api.Controllers
     [Route("api/user/posts")]
     public class UserPostController : Controller
     {
-        private readonly IServiceManager serviceManager;
+        private readonly IPostService postService;
 
-        public UserPostController(IServiceManager _serviceManager) =>
-            serviceManager = _serviceManager;
+        public UserPostController(IPostService _postService)
+        {
+            postService = _postService;
+        }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create([FromForm] CreatePostModel model) =>
-             await serviceManager.PostService.CreatePostAsync(model);
+        public async Task<IActionResult> Create([FromForm] CreatePostDto model)
+        {
+            return await postService.CreatePostAsync(model);
+        }
 
         [HttpDelete("{postId:int}")]
-        public async Task Delete([FromRoute] int postId) =>
-            await serviceManager.PostService.DeletePostAsync(postId);
+        public async Task Delete([FromRoute] int postId)
+        {
+            await postService.DeletePostAsync(postId);
+        }
 
         [HttpGet]
-        public async Task<ActionResult<List<Post>>> GetAllUserPosts([FromQuery] GetAllPostsModel model) =>
-            await serviceManager.PostService.GetAllUserPosts(model);
+        public async Task<ActionResult<List<Post>>> GetAllUserPosts([FromQuery] GetAllPostsDto model)
+        {
+            return await postService.GetAllUserPosts(model);
+        }
 
         [HttpGet("line")]
-        public async Task<ActionResult<List<Post>>> GetAllPosts([FromQuery] GetAllPostsModel model) =>
-            await serviceManager.PostService.GetAllPosts(model);
+        public async Task<ActionResult<List<Post>>> GetAllPosts([FromQuery] GetAllPostsDto model)
+        {
+            return await postService.GetAllPosts(model);
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Disco.DAL.EF;
-using Disco.DAL.Entities;
+using Disco.DAL.Models;
 using Disco.DAL.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 using System;

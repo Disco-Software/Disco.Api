@@ -1,7 +1,7 @@
-﻿using Disco.BLL.DTO;
-using Disco.BLL.Models;
-using Disco.BLL.Models.Posts;
-using Disco.DAL.Entities;
+﻿using Disco.BLL.Dto;
+using Disco.BLL.Dto;
+using Disco.BLL.Dto.Posts;
+using Disco.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,9 +14,9 @@ namespace Disco.BLL.Interfaces
 {
     public interface IPostService
     {
-        Task<IActionResult> CreatePostAsync(CreatePostModel model);
-        Task<ActionResult<List<Post>>> GetAllUserPosts(GetAllPostsModel model);
-        Task<ActionResult<List<Post>>> GetAllPosts(GetAllPostsModel model);
+        Task<IActionResult> CreatePostAsync(CreatePostDto model);
+        Task<ActionResult<List<Post>>> GetAllUserPosts(GetAllPostsDto model);
+        Task<ActionResult<List<Post>>> GetAllPosts(GetAllPostsDto model);
         Task DeletePostAsync(int postId);
     }
 }

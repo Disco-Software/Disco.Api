@@ -1,5 +1,5 @@
-﻿using Disco.BLL.Models.Images;
-using Disco.DAL.Entities;
+﻿using Disco.BLL.Dto.Images;
+using Disco.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +9,7 @@ namespace Disco.BLL.Interfaces
 {
     public interface IImageService
     {
-        Task<PostImage> CreatePostImage(CreateImageModel model);
+        Task<PostImage> CreatePostImage(CreateImageDto model);
         Task RemoveImage(int id);
     }
 }

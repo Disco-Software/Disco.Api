@@ -1,4 +1,4 @@
-﻿using Disco.BLL.Models.Profile;
+﻿using Disco.BLL.Dto.Profile;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,6 @@ namespace Disco.BLL.Interfaces
 {
     public interface IProfileService
     {
-        Task<IActionResult> UpdateProfileAsync(UpdateProfileModel model);
+        Task<IActionResult> UpdateProfileAsync(UpdateProfileDto model);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Disco.BLL.Constants;
 using Disco.BLL.Interfaces;
-using Disco.BLL.Models.Profile;
+using Disco.BLL.Dto.Profile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,15 +13,17 @@ namespace Disco.Api.Controllers
     [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
     public class UserProfileController : ControllerBase
     {
-        private readonly IServiceManager serviceManager;
+        private readonly IProfileService profileService;
 
-        public UserProfileController(IServiceManager serviceManager)
+        public UserProfileController(IProfileService profileService)
         {
-            this.serviceManager = serviceManager;
+            profileService = profileService;
         }
 
         [HttpPut("update")]
-        public async Task<IActionResult> Update([FromForm] UpdateProfileModel model) =>
-            await serviceManager.ProfileService.UpdateProfileAsync(model);
+        public async Task<IActionResult> Update([FromForm] UpdateProfileDto model)
+        {
+            return await profileService.UpdateProfileAsync(model);
+        }
     }
 }
