@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
 using Disco.Business.Interfaces;
-using Disco.Business.Dto.StoryImages;
+using Disco.Business.Dtos.StoryImages;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

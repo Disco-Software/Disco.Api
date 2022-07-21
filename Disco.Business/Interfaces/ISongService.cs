@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Disco.Business.Dto.Songs;
+using Disco.Business.Dtos.Songs;
 using Disco.Domain.Models;
 
 namespace Disco.Business.Interfaces

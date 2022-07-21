@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Disco.Business.Handlers;
 using Disco.Business.Interfaces;
-using Disco.Business.Dto.Roles;
+using Disco.Business.Dtos.Roles;
 using Disco.Domain.EF;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Identity;

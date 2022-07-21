@@ -1,14 +1,14 @@
-﻿using Disco.Business.Dto.Authentication;
-using Disco.Business.Dto.Facebook;
-using Disco.Business.Dto.Friends;
-using Disco.Business.Dto.Images;
-using Disco.Business.Dto.Posts;
-using Disco.Business.Dto.Roles;
-using Disco.Business.Dto.Songs;
-using Disco.Business.Dto.Stories;
-using Disco.Business.Dto.StoryImages;
-using Disco.Business.Dto.StoryVideos;
-using Disco.Business.Dto.Videos;
+﻿using Disco.Business.Dtos.Authentication;
+using Disco.Business.Dtos.Facebook;
+using Disco.Business.Dtos.Friends;
+using Disco.Business.Dtos.Images;
+using Disco.Business.Dtos.Posts;
+using Disco.Business.Dtos.Roles;
+using Disco.Business.Dtos.Songs;
+using Disco.Business.Dtos.Stories;
+using Disco.Business.Dtos.StoryImages;
+using Disco.Business.Dtos.StoryVideos;
+using Disco.Business.Dtos.Videos;
 using Disco.Domain.Models;
 
 namespace Disco.Business.Mapper

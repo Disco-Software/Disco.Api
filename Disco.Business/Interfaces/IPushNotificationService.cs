@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dto.PushNotifications;
+﻿using Disco.Business.Dtos.PushNotifications;
 using System.Threading.Tasks;
 
 namespace Disco.Business.Interfaces

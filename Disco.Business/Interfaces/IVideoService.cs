@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dto.Videos;
+﻿using Disco.Business.Dtos.Videos;
 using Disco.Domain.Models;
 using System.Threading.Tasks;
 

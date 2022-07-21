@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dto.Roles;
+﻿using Disco.Business.Dtos.Roles;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;

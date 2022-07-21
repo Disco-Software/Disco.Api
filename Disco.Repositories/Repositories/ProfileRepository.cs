@@ -2,20 +2,16 @@
 using Disco.Domain.EF;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
+using Disco.Domain.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories
 {
-    public class ProfileRepository : IProfileRepository
+    public class ProfileRepository : BaseRepository<Profile, int>, IProfileRepository
     {
-        private readonly ApiDbContext ctx;
-
-        public ProfileRepository(ApiDbContext _ctx)
-        {
-            ctx = _ctx;
-        }
+        public ProfileRepository(ApiDbContext ctx) : base(ctx) { }
 
         public async Task<Profile> GetAsync(int id)
         {
@@ -25,7 +21,7 @@ namespace Disco.Domain.Repositories
                   .FirstOrDefaultAsync();
         }
 
-        public async Task<Profile> Update(Profile newItem)
+        public override async Task<Profile> Update(Profile newItem)
         {
             var profile = ctx.Profiles.Update(newItem).Entity;
             

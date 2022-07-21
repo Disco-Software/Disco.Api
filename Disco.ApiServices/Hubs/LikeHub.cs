@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
-namespace Disco.Api.Hubs
+namespace Disco.ApiServices.Hubs
 {
     [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
     public class LikeHub : Hub

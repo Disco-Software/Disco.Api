@@ -1,13 +1,13 @@
 ﻿using Disco.Business.Constants;
 using Disco.Business.Interfaces;
-using Disco.Business.Dto.Posts;
+using Disco.Business.Dtos.Posts;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Disco.Api.Controllers
+namespace Disco.ApiServices.Controllers
 {
     [ApiController]
     [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]

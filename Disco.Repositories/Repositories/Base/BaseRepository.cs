@@ -18,7 +18,7 @@ namespace Disco.Domain.Repositories.Base
         public BaseRepository(ApiDbContext _ctx) =>
             ctx = _ctx;
 
-        public virtual async Task Add(T item)
+        public virtual async Task AddAsync(T item)
         {
             await ctx.Set<T>().AddAsync(item);
             await ctx.SaveChangesAsync();

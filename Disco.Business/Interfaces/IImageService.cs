@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dto.Images;
+﻿using Disco.Business.Dtos.Images;
 using Disco.Domain.Models;
 using System.Threading.Tasks;
 

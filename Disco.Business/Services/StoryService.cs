@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Disco.Business.Handlers;
 using Disco.Business.Interfaces;
-using Disco.Business.Dto.Stories;
+using Disco.Business.Dtos.Stories;
 using Disco.Domain.EF;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Http;
@@ -63,7 +63,7 @@ namespace Disco.Business.Services
                 foreach (var image in model.StoryImages)
                 {
                     var storyImage = await storyImageService.CreateStoryImageAsync(
-                        new Dto.StoryImages.CreateStoryImageDto { StoryImageFile = image });
+                        new Dtos.StoryImages.CreateStoryImageDto { StoryImageFile = image });
                     story.StoryImages.Add(storyImage);
                 }
 
@@ -71,7 +71,7 @@ namespace Disco.Business.Services
                 foreach (var video in model.StoryVideos)
                 {
                     var storyImage = await storyVideoService.CreateStoryVideoAsync(
-                        new Dto.StoryVideos.CreateStoryVideoDto { VideoFile = video });
+                        new Dtos.StoryVideos.CreateStoryVideoDto { VideoFile = video });
                     story.StoryVideos.Add(storyImage);
                 }
 

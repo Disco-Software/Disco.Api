@@ -4,10 +4,10 @@ using AuthorizeAttribute = Microsoft.AspNetCore.Authorization.AuthorizeAttribute
 using Disco.Business.Constants;
 using System.Threading.Tasks;
 using Disco.Domain.Models;
-using Disco.Business.Dto.Stories;
+using Disco.Business.Dtos.Stories;
 using System.Collections.Generic;
 
-namespace Disco.Api.Controllers
+namespace Disco.ApiServices.Controllers
 {
     [Route("api/user/story")]
     [ApiController]

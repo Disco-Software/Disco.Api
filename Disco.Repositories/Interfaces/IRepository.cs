@@ -7,7 +7,7 @@ namespace Disco.Domain.Interfaces
 {
     public interface IRepository<T,TKey>
     {
-        Task Add(T item);
+        Task AddAsync(T item);
         Task Remove(TKey id);
         Task<T> Get(TKey id);
         Task<List<T>> GetAll(Expression<Func<T,bool>> expression);

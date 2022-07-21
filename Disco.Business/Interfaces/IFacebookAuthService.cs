@@ -1,5 +1,5 @@
-﻿using Disco.Business.Dto;
-using Disco.Business.Dto.Facebook;
+﻿using Disco.Business.Dtos;
+using Disco.Business.Dtos.Facebook;
 using System.Threading.Tasks;
 
 namespace Disco.Business.Interfaces

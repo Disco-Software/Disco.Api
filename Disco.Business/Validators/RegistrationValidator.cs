@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dto.Authentication;
+﻿using Disco.Business.Dtos.Authentication;
 using Disco.Domain.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;

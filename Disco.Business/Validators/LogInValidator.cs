@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dto.Authentication;
+﻿using Disco.Business.Dtos.Authentication;
 using FluentValidation;
 
 namespace Disco.Business.Validators

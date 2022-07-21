@@ -1,6 +1,6 @@
 ﻿using Disco.Business.Constants;
 using Disco.Business.Interfaces;
-using Disco.Business.Dto.PushNotifications;
+using Disco.Business.Dtos.PushNotifications;
 using Microsoft.Azure.NotificationHubs;
 using Microsoft.Extensions.Configuration;
 using System;

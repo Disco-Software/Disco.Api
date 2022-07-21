@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Disco.Business.Handlers;
 using Disco.Business.Interfaces;
-using Disco.Business.Dto.Posts;
-using Disco.Business.Dto.Songs;
+using Disco.Business.Dtos.Posts;
+using Disco.Business.Dtos.Songs;
 using Disco.Domain.EF;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Http;
@@ -66,7 +66,7 @@ namespace Disco.Business.Services
                 foreach (var file in model.PostImages)
                 {
                     var image = await imageService.CreatePostImage(
-                        new Dto.Images.CreateImageDto { ImageFile = file });
+                        new Dtos.Images.CreateImageDto { ImageFile = file });
                     post.PostImages.Add(image);
                 }
             if (model.PostSongs != null)
@@ -89,7 +89,7 @@ namespace Disco.Business.Services
                 foreach (var video in model.PostVideos)
                 {
                     var postVideo = await videoService.CreateVideoAsync(
-                        new Dto.Videos.CreateVideoDto { VideoFile = video });
+                        new Dtos.Videos.CreateVideoDto { VideoFile = video });
                     post.PostVideos.Add(postVideo);
                 }
 

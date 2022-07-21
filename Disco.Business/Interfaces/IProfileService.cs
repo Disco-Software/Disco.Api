@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dto.Profile;
+﻿using Disco.Business.Dtos.Profile;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

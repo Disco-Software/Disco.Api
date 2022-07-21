@@ -1,9 +1,9 @@
 ﻿using Disco.Business.Interfaces;
-using Disco.Business.Dto.PushNotifications;
+using Disco.Business.Dtos.PushNotifications;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace Disco.Api.Controllers
+namespace Disco.ApiServices.Controllers
 {
     [Route("api/device-registration")]
     [ApiController]

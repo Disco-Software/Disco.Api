@@ -12,10 +12,10 @@ using Azure.Storage.Blobs;
 using Microsoft.Extensions.Azure;
 using Azure.Storage.Queues;
 using Azure.Core.Extensions;
-using Disco.Api.AppSetup;
-using Disco.Api.Hubs;
+using Disco.ApiServices.Hubs;
 using Disco.Business;
 using Disco.Domain;
+using Disco.Api.AppSetup;
 
 namespace Disco.Api
 {

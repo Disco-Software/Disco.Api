@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dto.Posts;
+﻿using Disco.Business.Dtos.Posts;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;

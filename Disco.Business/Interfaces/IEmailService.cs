@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dto.EmailNotifications;
+﻿using Disco.Business.Dtos.EmailNotifications;
 
 namespace Disco.Business.Interfaces
 {

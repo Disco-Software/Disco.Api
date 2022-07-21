@@ -1,6 +1,6 @@
-﻿using Disco.Business.Dto.Apple;
-using Disco.Business.Dto.Authentication;
-using Disco.Business.Dto.Facebook;
+﻿using Disco.Business.Dtos.Apple;
+using Disco.Business.Dtos.Authentication;
+using Disco.Business.Dtos.Facebook;
 using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

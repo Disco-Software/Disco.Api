@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dto.Authentication;
+﻿using Disco.Business.Dtos.Authentication;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;

@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
 using Disco.Business.Interfaces;
-using Disco.Business.Dto.StoryVideos;
+using Disco.Business.Dtos.StoryVideos;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
 using Disco.Domain.Interfaces;
+using System.Text;
 
 namespace Disco.Business.Services
 {

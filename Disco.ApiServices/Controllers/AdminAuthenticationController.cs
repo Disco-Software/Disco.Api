@@ -1,9 +1,9 @@
 ﻿using Disco.Business.Interfaces;
-using Disco.Business.Dto.Authentication;
+using Disco.Business.Dtos.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace Disco.Api.Controllers
+namespace Disco.ApiServices.Controllers
 {
     [Route("api/admin/authentication")]
     [ApiController]

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
 using Disco.Business.Interfaces;
-using Disco.Business.Dto.Videos;
+using Disco.Business.Dtos.Videos;
 using Disco.Domain.Models;
 using System;
 using System.Threading.Tasks;

@@ -17,7 +17,7 @@ namespace Disco.Domain.Repositories
 
         public async Task<int> AddAsync(Friend currentUserFriend)
         {
-            ctx.Friends.Add(currentUserFriend);
+            await ctx.Friends.AddAsync(currentUserFriend);
             
             currentUserFriend.IsFriend = true;
             
@@ -25,7 +25,7 @@ namespace Disco.Domain.Repositories
             
             return currentUserFriend.Id;
         }
-        public async Task<Friend> Get(int id) =>
+        public override async Task<Friend> Get(int id) =>
             await ctx.Friends
                 .Include(u => u.UserProfile)
                 .ThenInclude(u => u.User)
@@ -33,7 +33,7 @@ namespace Disco.Domain.Repositories
                 .ThenInclude(f => f.User)
                 .Where(f => f.Id == id)
                 .FirstOrDefaultAsync();
-        public async Task Remove(int id)
+        public override async Task Remove(int id)
         {
           var friend = await ctx.Friends
                 .Include(u => u.UserProfile)

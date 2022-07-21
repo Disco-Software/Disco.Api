@@ -1,27 +1,23 @@
 ﻿using Disco.Domain.EF;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
+using Disco.Domain.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories
 {
-    public class StoryVideoRepository : IStoryVideoRepository
+    public class StoryVideoRepository : BaseRepository<StoryVideo, int>, IStoryVideoRepository
     {
-        private readonly ApiDbContext ctx;
+        public StoryVideoRepository(ApiDbContext ctx) : base(ctx) { }
 
-        public StoryVideoRepository(ApiDbContext _ctx)
-        {
-            ctx = _ctx;
-        }
-
-        public async Task AddAsync(StoryVideo storyVideo)
+        public override async Task AddAsync(StoryVideo storyVideo)
         {
             await ctx.StoryVideos.AddAsync(storyVideo);
         }
 
-        public async Task Remove(int id)
+        public override async Task Remove(int id)
         {
             var storyVideo = await ctx.StoryVideos
                 .Include(s => s.Story)

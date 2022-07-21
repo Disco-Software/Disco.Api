@@ -1,7 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using Disco.Business.Handlers;
 using Disco.Business.Interfaces;
-using Disco.Business.Dto.Profile;
+using Disco.Business.Dtos.Profile;
 using Disco.Domain.EF;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Http;

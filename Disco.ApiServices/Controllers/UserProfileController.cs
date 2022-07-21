@@ -1,11 +1,11 @@
 ﻿using Disco.Business.Constants;
 using Disco.Business.Interfaces;
-using Disco.Business.Dto.Profile;
+using Disco.Business.Dtos.Profile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace Disco.Api.Controllers
+namespace Disco.ApiServices.Controllers
 {
     [Route("api/user/profile")]
     [ApiController]

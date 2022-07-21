@@ -1,27 +1,18 @@
 ﻿using Disco.Domain.EF;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
+using Disco.Domain.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories
 {
-    public class ImageRepository : IImageRepository
+    public class ImageRepository : BaseRepository<PostImage, int>, IImageRepository
     {
-        private readonly ApiDbContext ctx;
+        public ImageRepository(ApiDbContext _ctx) : base(_ctx) { }
 
-        public ImageRepository(ApiDbContext _ctx)
-        {
-            ctx = _ctx;
-        }
-
-        public async Task AddAsync(PostImage item)
-        {
-            await ctx.PostImages.AddAsync(item);
-        }
-
-        public async Task Remove(int id)
+        public override async Task Remove(int id)
         {
             var video = await ctx.PostVideos
                 .Include(p => p.Post)

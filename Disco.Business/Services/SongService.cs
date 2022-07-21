@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
 using Disco.Business.Interfaces;
-using Disco.Business.Dto.Songs;
+using Disco.Business.Dtos.Songs;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using System;

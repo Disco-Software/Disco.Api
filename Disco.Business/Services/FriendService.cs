@@ -2,7 +2,7 @@
 using Disco.Business.Constants;
 using Disco.Business.Handlers;
 using Disco.Business.Interfaces;
-using Disco.Business.Dto.Friends;
+using Disco.Business.Dtos.Friends;
 using Disco.Domain.EF;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Http;

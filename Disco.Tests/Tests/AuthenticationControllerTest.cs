@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dto.Authentication;
+﻿using Disco.Business.Dtos.Authentication;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;

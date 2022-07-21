@@ -1,13 +1,13 @@
 ﻿using Disco.Business.Constants;
 using Disco.Business.Interfaces;
-using Disco.Business.Dto.Roles;
+using Disco.Business.Dtos.Roles;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Disco.Api.Controllers
+namespace Disco.ApiServices.Controllers
 {
     [Route("api/admin/roles")]
     [Authorize(

@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dto.PushNotifications;
+﻿using Disco.Business.Dtos.PushNotifications;
 using Microsoft.Azure.NotificationHubs;
 using System.Threading.Tasks;
 

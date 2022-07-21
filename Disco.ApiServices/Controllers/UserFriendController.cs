@@ -1,11 +1,11 @@
 ﻿using Disco.Business.Constants;
 using Disco.Business.Interfaces;
-using Disco.Business.Dto.Friends;
+using Disco.Business.Dtos.Friends;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace Disco.Api.Controllers
+namespace Disco.ApiServices.Controllers
 {
     [Route("api/user/friends")]
     [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]

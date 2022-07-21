@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dto.Friends;
+﻿using Disco.Business.Dtos.Friends;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

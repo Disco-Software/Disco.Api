@@ -1,6 +1,6 @@
-﻿using Disco.Business.Dto;
+﻿using Disco.Business.Dtos;
 using Disco.Business.Interfaces;
-using Disco.Business.Dto.Facebook;
+using Disco.Business.Dtos.Facebook;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Net.Http;

@@ -1,6 +1,6 @@
 ﻿using Disco.Business.Configurations;
 using Disco.Business.Interfaces;
-using Disco.Business.Dto.EmailNotifications;
+using Disco.Business.Dtos.EmailNotifications;
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;

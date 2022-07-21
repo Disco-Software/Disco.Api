@@ -1,6 +1,7 @@
 ﻿using Disco.Domain.EF;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
+using Disco.Domain.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +9,9 @@ using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories
 {
-    public class StoryRepository : IStoryRepository
+    public class StoryRepository : BaseRepository<Story, int>, IStoryRepository
     {
-        private readonly ApiDbContext ctx;
-
-        public StoryRepository(ApiDbContext _ctx) 
-        {
-            ctx = _ctx;
-        }
+        public StoryRepository(ApiDbContext ctx) : base(ctx) { }
 
         public async Task AddAsync(Story story, Profile profile)
         {
@@ -76,7 +72,7 @@ namespace Disco.Domain.Repositories
                 .ToList();
         }
 
-        public async Task Remove(int id)
+        public override async Task Remove(int id)
         {
             var story = await ctx.Stories
                 .Include(i => i.StoryImages)
@@ -87,7 +83,7 @@ namespace Disco.Domain.Repositories
             ctx.Stories.Remove(story);
         }
 
-        public Task<Story> Get(int id)
+        public override Task<Story> Get(int id)
         {
             var story = ctx.Stories
                 .Include(i => i.StoryImages)

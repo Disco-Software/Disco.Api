@@ -1,6 +1,7 @@
 ﻿using Disco.Domain.EF;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
+using Disco.Domain.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,15 +10,9 @@ using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories
 {
-    public class PostRepository : IPostRepository
+    public class PostRepository : BaseRepository<Post,int>, IPostRepository
     {
-        private readonly ApiDbContext ctx;
-
-        public PostRepository(
-            ApiDbContext _ctx)
-        {
-            ctx = _ctx;
-        }
+        public PostRepository(ApiDbContext ctx) : base(ctx) { }
 
         public async Task AddAsync(Post post, User user)
         {
@@ -30,7 +25,7 @@ namespace Disco.Domain.Repositories
             await ctx.SaveChangesAsync();
         }
 
-        public async Task Remove(int id)
+        public override async Task Remove(int id)
         {
             var post = await ctx.Posts
                 .Include(p => p.Profile)
@@ -122,7 +117,7 @@ namespace Disco.Domain.Repositories
                 .ToList();
         }
 
-        public Task<Post> Get(int id)
+        public override Task<Post> Get(int id)
         {
            return ctx.Posts
                 .Include(i => i.PostImages)
