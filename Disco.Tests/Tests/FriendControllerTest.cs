@@ -1,5 +1,4 @@
 ﻿using Disco.Business.Dto.Friends;
-using Disco.Tests.Base;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
@@ -7,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Disco.Tests.Tests.Base;
 
 namespace Disco.Tests.Tests
 {

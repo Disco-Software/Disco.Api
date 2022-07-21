@@ -31,27 +31,20 @@ namespace Disco.Business.Services
         private readonly ApiDbContext ctx;
         private readonly UserManager<User> userManager;
         private readonly BlobServiceClient blobServiceClient;
-        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IMapper mapper;
         private readonly IUserRepository userRepository;
         private readonly ITokenService tokenService;
         private readonly IGoogleAuthService googleAuthService;
         private readonly IFacebookAuthService facebookAuthService;
-        private readonly IOptions<AuthenticationOptions> authenticationOptions;
         private readonly IEmailService emailService;
-        private readonly IOptions<GoogleOptions> googleOptions;
         public AuthenticationService(ApiDbContext _ctx,
             UserManager<User> _userManager,
-            SignInManager<User> _signInManager,
             BlobServiceClient _blobServiceClient,
             IUserRepository _userRepository,
-            IHttpContextAccessor _httpContextAccessor,
             ITokenService _tokenService,
             IGoogleAuthService _googleAuthService,
             IFacebookAuthService _facebookAuthService,
             IEmailService _emailService,
-            IOptions<AuthenticationOptions> _authenticationOptions,
-            IOptions<GoogleOptions> _googleOptions,
             IMapper _mapper)
         {
             ctx = _ctx;
@@ -60,11 +53,9 @@ namespace Disco.Business.Services
             userRepository = _userRepository;
             facebookAuthService = _facebookAuthService;
             mapper = _mapper;
-            authenticationOptions = _authenticationOptions;
             tokenService = _tokenService;
             googleAuthService = _googleAuthService;
             emailService = _emailService;
-            httpContextAccessor = _httpContextAccessor;
         }
 
         public async Task<IActionResult> LogIn(LoginDto model)
@@ -76,43 +67,51 @@ namespace Disco.Business.Services
             if (validator.Errors.Count > 0)
                 return BadRequest(validator);
 
-            var user = await userManager.FindByEmailAsync(model.Email);
-           
-            await ctx.Entry(user)
-                .Reference(p => p.Profile)
-                .LoadAsync();
-            
-            await ctx.Entry(user.Profile)
-                .Collection(p => p.Posts)
-                .LoadAsync();
+            try
+            {
+                var user = await userManager.FindByEmailAsync(model.Email);
 
-            await ctx.Entry(user.Profile)
-                .Collection(f => f.Followers)
-                .LoadAsync();
-                        
-            var passwordVarification = userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password);
-            if (passwordVarification == PasswordVerificationResult.Failed)
-                return BadRequest("Password is not valid");
+                await ctx.Entry(user)
+                    .Reference(p => p.Profile)
+                    .LoadAsync();
 
-            user.RoleName = ctx.UserRoles
-                .Join(ctx.Roles, r => r.RoleId,u => u.Id, (u,r) => new {Role = r, UserRole = u})
-                .Where(r => r.UserRole.UserId == user.Id)
-                .FirstOrDefaultAsync().Result.Role.Name;
+                await ctx.Entry(user.Profile)
+                    .Collection(p => p.Posts)
+                    .LoadAsync();
 
-            var jwt = tokenService.GenerateAccessToken(user);
-            var refreshToken = tokenService.GenerateRefreshToken();
+                await ctx.Entry(user.Profile)
+                    .Collection(f => f.Followers)
+                    .LoadAsync();
 
-            user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
+                var passwordVarification = userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password);
+                if (passwordVarification == PasswordVerificationResult.Failed)
+                    return BadRequest("Password is not valid");
 
-            await ctx.SaveChangesAsync();   
+                user.RoleName = ctx.UserRoles
+                    .Join(ctx.Roles, r => r.RoleId, u => u.Id, (u, r) => new { Role = r, UserRole = u })
+                    .Where(r => r.UserRole.UserId == user.Id)
+                    .FirstOrDefaultAsync().Result.Role.Name;
 
-            var userResponseModel = mapper.Map<UserResponseDto>(user);
-            userResponseModel.RefreshToken = refreshToken;
-            userResponseModel.AccessToken = jwt;
-            userResponseModel.User = user;
+                var jwt = tokenService.GenerateAccessToken(user);
+                var refreshToken = tokenService.GenerateRefreshToken();
 
-            return Ok(userResponseModel);
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
+
+                await ctx.SaveChangesAsync();
+
+                var userResponseModel = mapper.Map<UserResponseDto>(user);
+                userResponseModel.RefreshToken = refreshToken;
+                userResponseModel.AccessToken = jwt;
+                userResponseModel.User = user;
+
+                return Ok(userResponseModel);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
         }
 
         public async Task<IActionResult> Register(RegistrationDto userInfo)

@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Business", "Disco.Bus
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Domain", "Disco.Repositories\Disco.Domain.csproj", "{21515EC4-09A5-4089-BAD4-0B4822330414}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.ApiServices", "Disco.ApiServices\Disco.ApiServices.csproj", "{398A2392-8C83-4CAB-8AE1-6C2B997F2532}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{21515EC4-09A5-4089-BAD4-0B4822330414}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21515EC4-09A5-4089-BAD4-0B4822330414}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21515EC4-09A5-4089-BAD4-0B4822330414}.Release|Any CPU.Build.0 = Release|Any CPU
-		{398A2392-8C83-4CAB-8AE1-6C2B997F2532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{398A2392-8C83-4CAB-8AE1-6C2B997F2532}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{398A2392-8C83-4CAB-8AE1-6C2B997F2532}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{398A2392-8C83-4CAB-8AE1-6C2B997F2532}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

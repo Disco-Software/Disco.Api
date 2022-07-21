@@ -6,7 +6,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Disco.Tests.Base;
+using Disco.Tests.Tests.Base;
+
 namespace Disco.Tests.Tests
 {
     [TestClass]
