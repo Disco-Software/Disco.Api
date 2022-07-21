@@ -1,49 +1,21 @@
-using AutoMapper;
 using Disco.Business.Configurations;
-using Disco.Business.Constants;
-using Disco.Business.Interfaces;
-using Disco.Business.Mapper;
-using Disco.Business.Services;
-using Disco.Domain.EF;
-using Disco.Domain.Models;
-using Disco.Domain.Models.Base;
-using Disco.Domain.Interfaces;
-using Disco.Domain.Repositories;
-using Disco.Domain.Repositories.Base;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.NotificationHubs;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Mail;
 using System.Reflection;
-using System.Threading.Tasks;
-using FluentValidation;
 using FluentValidation.AspNetCore;
-using Google.Apis.Auth.AspNetCore3;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Azure.Storage.Blobs;
 using Microsoft.Extensions.Azure;
-using Disco.Api.Hubs;
-using Microsoft.AspNetCore.SignalR;
 using Azure.Storage.Queues;
 using Azure.Core.Extensions;
-using Microsoft.AspNetCore.Http;
-using Disco.Business.Validatars;
 using Disco.Api.AppSetup;
+using Disco.Api.Hubs;
+using Disco.Business;
+using Disco.Domain;
 
 namespace Disco.Api
 {
@@ -67,7 +39,7 @@ namespace Disco.Api
             services.AddSignalR();
             services.AddOptions<AuthenticationOptions>();
             services.Configure<EmailOptions>(Configuration.GetSection("EmailSettings"));
-            services.Configure<Business.Configurations.GoogleOptions>(Configuration.GetSection("Google"));
+            services.Configure<GoogleOptions>(Configuration.GetSection("Google"));
             services.ConfigureAuthentication(Configuration);
 
             services.AddHttpContextAccessor();

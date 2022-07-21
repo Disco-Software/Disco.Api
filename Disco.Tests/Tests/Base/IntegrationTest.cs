@@ -1,17 +1,7 @@
 ﻿using Disco.Api;
-using Disco.Business.Interfaces;
-using Disco.Business.Dto;
-using Disco.Domain.EF;
-using Disco.Domain.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Disco.Tests.Base

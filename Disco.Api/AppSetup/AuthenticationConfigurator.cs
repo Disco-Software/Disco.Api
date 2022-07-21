@@ -1,10 +1,10 @@
 ﻿using Disco.Business.Constants;
-using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using System;
+using Google.Apis.Auth.AspNetCore3;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Disco.Api.AppSetup
 {

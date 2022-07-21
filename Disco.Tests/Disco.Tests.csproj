@@ -16,8 +16,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Disco.Api\Disco.Api.csproj" />
-    <ProjectReference Include="..\Disco.BLL\Disco.BLL.csproj" />
-    <ProjectReference Include="..\Disco.DAL\Disco.Domain.csproj" />
+    <ProjectReference Include="..\Disco.Business\Disco.Business.csproj" />
+    <ProjectReference Include="..\Disco.Repositories\Disco.Domain.csproj" />
   </ItemGroup>
 
 </Project>
