@@ -28,6 +28,10 @@ namespace Disco.Domain.Repositories
 
             var profile = await ctx.Profiles
                 .Include(u => u.User)
+                .Include(u => u.Stories)
+                .ThenInclude(s => s.StoryImages)
+                .Include(u => u.Stories)
+                .ThenInclude(s => s.StoryVideos)
                 .Include(f => f.Followers)
                 .ThenInclude(p => p.ProfileFriend)
                 .ThenInclude(s => s.Stories)
@@ -54,12 +58,10 @@ namespace Disco.Domain.Repositories
             foreach (var friend in profile.Followers)
             {
                 friend.ProfileFriend = await ctx.Profiles
-                    .Include(p => p.Posts)
-                    .ThenInclude(i => i.PostImages)
-                    .Include(p => p.Posts)
-                    .ThenInclude(s => s.PostSongs)
-                    .Include(p => p.Posts)
-                    .ThenInclude(v => v.PostVideos)
+                    .Include(p => p.Stories)
+                    .ThenInclude(i => i.StoryImages)
+                    .Include(p => p.Stories)
+                    .ThenInclude(s => s.StoryVideos)
                     .Include(u => u.User)
                     .Where(f => f.Id == friend.FriendProfileId)
                     .FirstOrDefaultAsync();

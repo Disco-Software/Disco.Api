@@ -106,7 +106,9 @@ namespace Disco.Business.Services
                 .Collection(s => s.Stories)
                 .LoadAsync();
 
-            return await storyRepository.GetAllAsync(user.Profile.Id,model.PageNumber,model.PageSize);
+            var stories = await storyRepository.GetAllAsync(user.Profile.Id, model.PageNumber, model.PageSize);
+
+            return stories;
         }
     }
 }
