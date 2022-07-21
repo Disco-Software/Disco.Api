@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Disco.BLL.Mapper;
+using Disco.Business.Mapper;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Disco.Api.AppSetup

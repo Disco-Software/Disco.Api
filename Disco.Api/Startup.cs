@@ -1,48 +1,20 @@
-using AutoMapper;
-using Disco.BLL.Configurations;
-using Disco.BLL.Constants;
-using Disco.BLL.Interfaces;
-using Disco.BLL.Mapper;
-using Disco.BLL.Services;
-using Disco.DAL.EF;
-using Disco.DAL.Entities;
-using Disco.DAL.Entities.Base;
-using Disco.DAL.Interfaces;
-using Disco.DAL.Repositories;
-using Disco.DAL.Repositories.Base;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Disco.Business.Configurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.NotificationHubs;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Mail;
 using System.Reflection;
-using System.Threading.Tasks;
-using FluentValidation;
 using FluentValidation.AspNetCore;
-using Google.Apis.Auth.AspNetCore3;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Azure.Storage.Blobs;
 using Microsoft.Extensions.Azure;
-using Disco.Api.Hubs;
-using Microsoft.AspNetCore.SignalR;
 using Azure.Storage.Queues;
 using Azure.Core.Extensions;
-using Microsoft.AspNetCore.Http;
-using Disco.BLL.Validatars;
+using Disco.ApiServices.Hubs;
+using Disco.Business;
+using Disco.Domain;
 using Disco.Api.AppSetup;
 
 namespace Disco.Api
@@ -67,7 +39,7 @@ namespace Disco.Api
             services.AddSignalR();
             services.AddOptions<AuthenticationOptions>();
             services.Configure<EmailOptions>(Configuration.GetSection("EmailSettings"));
-            services.Configure<BLL.Configurations.GoogleOptions>(Configuration.GetSection("Google"));
+            services.Configure<GoogleOptions>(Configuration.GetSection("Google"));
             services.ConfigureAuthentication(Configuration);
 
             services.AddHttpContextAccessor();
@@ -75,7 +47,8 @@ namespace Disco.Api
 
             services.AddLogging();
 
-            services.AddScoped<IServiceManager, ServiceManager>();
+            services.ConfigureRepositories();
+            services.ConfigureServices();
 
             services.AddOptions<PushNotificationOptions>()
                 .Configure(Configuration.GetSection("NotificationHub").Bind)

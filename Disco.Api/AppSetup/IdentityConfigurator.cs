@@ -1,5 +1,5 @@
-﻿using Disco.DAL.EF;
-using Disco.DAL.Entities;
+﻿using Disco.Domain.EF;
+using Disco.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 

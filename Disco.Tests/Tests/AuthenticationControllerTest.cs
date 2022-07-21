@@ -1,16 +1,13 @@
-﻿using Disco.BLL.DTO;
-using Disco.BLL.Models;
-using Disco.BLL.Models.Authentication;
-using Microsoft.AspNetCore.Http;
+﻿using Disco.Business.Dtos.Authentication;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Disco.Tests.Base;
+using Disco.Tests.Tests.Base;
+
 namespace Disco.Tests.Tests
 {
     [TestClass]
@@ -24,7 +21,7 @@ namespace Disco.Tests.Tests
         [TestMethod]
         public async Task LogIn_ReturnsSuccessResponse()
         {
-            var logInModel = new LoginModel { Email = "stas_1999_nr@ukr.net", Password = "StasZeus2021!" };
+            var logInModel = new LoginDto { Email = "stas_1999_nr@ukr.net", Password = "StasZeus2021!" };
             var json = JsonConvert.SerializeObject(logInModel);
             var buffer = Encoding.UTF8.GetBytes(json);
 
@@ -35,7 +32,7 @@ namespace Disco.Tests.Tests
 
             var result = await response.Content.ReadAsStringAsync();
 
-            var userDTO = JsonConvert.DeserializeObject<UserResponseModel>(result);
+            var userDTO = JsonConvert.DeserializeObject<UserResponseDto>(result);
 
             Assert.IsNotNull(userDTO);
         }
@@ -43,7 +40,7 @@ namespace Disco.Tests.Tests
         [TestMethod]
         public async Task LogIn_ReturnsUserNotFoundResponse()
         {
-            var loginModel = new LoginModel { Email = "stas_1999_nr@gmail.com", Password = "StasZeus2021!" };
+            var loginModel = new LoginDto { Email = "stas_1999_nr@gmail.com", Password = "StasZeus2021!" };
             var json = JsonConvert.SerializeObject(loginModel);
             var buffer = Encoding.UTF8.GetBytes(json);
 
@@ -60,7 +57,7 @@ namespace Disco.Tests.Tests
         [TestMethod]
         public async Task LogIn_ReturnsPasswordIsNotValidResponse()
         {
-            var logInModel = new LoginModel { Email = "stas_1999_nr@ukr.net", Password = "kds;afjlkdsajf" };
+            var logInModel = new LoginDto { Email = "stas_1999_nr@ukr.net", Password = "kds;afjlkdsajf" };
             
             var json = JsonConvert.SerializeObject(logInModel);
             var buffer = Encoding.UTF8.GetBytes(json);
@@ -78,7 +75,7 @@ namespace Disco.Tests.Tests
         [TestMethod]
         public async Task LogIn_ReturnsNullResponse()
         {
-            var logInModel = new LoginModel { Email = "", Password = "" };
+            var logInModel = new LoginDto { Email = "", Password = "" };
             var json = JsonConvert.SerializeObject(logInModel);
             var buffer = Encoding.UTF8.GetBytes(json);
 
@@ -95,7 +92,7 @@ namespace Disco.Tests.Tests
         [TestMethod]
         public async Task ForgotPassword_ReturnsSuccessResponse()
         {
-            var model = new ForgotPasswordModel { Email = "stas_1999_nr@ukr.net" };
+            var model = new ForgotPasswordDto { Email = "stas_1999_nr@ukr.net" };
             var json = JsonConvert.SerializeObject(model);
             var buffer = Encoding.UTF8.GetBytes(json);
 
@@ -112,7 +109,7 @@ namespace Disco.Tests.Tests
         [TestMethod]
         public async Task ForgotPassword_ReturnsErrorResponse()
         {
-            var model = new ForgotPasswordModel { Email = "stas_1999_nr" };
+            var model = new ForgotPasswordDto { Email = "stas_1999_nr" };
             var json = JsonConvert.SerializeObject(model);
             var buffer = Encoding.UTF8.GetBytes(json);
 
