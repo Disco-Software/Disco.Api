@@ -1,4 +1,5 @@
 ﻿using Disco.Domain.EF;
+using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,20 +11,25 @@ using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories
 {
-    public class StoryRepository : Base.BaseRepository<Story, int>
+    public class StoryRepository : IStoryRepository
     {
-        public StoryRepository(ApiDbContext ctx) : base(ctx) { }
+        private readonly ApiDbContext ctx;
 
-        public async Task Add(Story item, Profile profile)
+        public StoryRepository(ApiDbContext _ctx) 
         {
-            await ctx.Stories.AddAsync(item);
+            ctx = _ctx;
+        }
+
+        public async Task AddAsync(Story story, Profile profile)
+        {
+            await ctx.Stories.AddAsync(story);
            
-            profile.Stories.Add(item);
+            profile.Stories.Add(story);
 
             await ctx.SaveChangesAsync();
         }
 
-        public async Task<List<Story>> GetAll(int profileId, int pageNumber, int pageSize)
+        public async Task<List<Story>> GetAllAsync(int profileId, int pageNumber, int pageSize)
         {
             var storyList = new List<Story>();
 
@@ -73,7 +79,7 @@ namespace Disco.Domain.Repositories
                 .ToList();
         }
 
-        public override async Task Remove(int id)
+        public async Task Remove(int id)
         {
             var story = await ctx.Stories
                 .Include(i => i.StoryImages)
@@ -84,7 +90,7 @@ namespace Disco.Domain.Repositories
             ctx.Stories.Remove(story);
         }
 
-        public override Task<Story> Get(int id)
+        public Task<Story> Get(int id)
         {
             var story = ctx.Stories
                 .Include(i => i.StoryImages)

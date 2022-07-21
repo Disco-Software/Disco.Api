@@ -22,24 +22,25 @@ using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
     public class PostService : ApiRequestHandlerBase, IPostService
     {
         private readonly ApiDbContext ctx;
-        private readonly PostRepository postRepository;
         private readonly UserManager<User> userManager;
+        private readonly IPostRepository postRepository;
         private readonly IImageService imageService;
         private readonly ISongService songService;
         private readonly IVideoService videoService;
         private readonly IMapper mapper;
         private readonly IHttpContextAccessor httpContextAccessor;
         public PostService(
-            PostRepository _postRepository,
             ApiDbContext _ctx,
             UserManager<User> _userManager,
             IMapper _mapper,
+            IPostRepository _postRepository,
             IImageService _imageService,
             ISongService _songService,
             IVideoService _videoService,
@@ -125,7 +126,7 @@ namespace Disco.Business.Services
         {
             var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
 
-            return await postRepository.GetAll(user.Id, model.PageSize, model.PageNumber);
+            return await postRepository.GetAllUserPosts(user.Id, model.PageSize, model.PageNumber);
         }
     }
 }

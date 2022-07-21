@@ -6,12 +6,17 @@ using Disco.Domain.EF;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Disco.Domain.Interfaces;
 
 namespace Disco.Domain.Repositories
 {
-    public class LikeRepository : Base.BaseRepository<Like, int>
+    public class LikeRepository : ILikeRepository
     {
-        public LikeRepository(ApiDbContext _ctx) : base(_ctx) { }
+        private readonly ApiDbContext ctx;
+        public LikeRepository(ApiDbContext _ctx)
+        {
+            ctx = _ctx;
+        }
 
         public async Task AddAsync(Like item, int postId)
         {
@@ -29,7 +34,7 @@ namespace Disco.Domain.Repositories
             await ctx.SaveChangesAsync();
         }
 
-        public override async Task Remove(int id)
+        public async Task Remove(int id)
         {
             var like = await ctx.Like
                 .Where(l => l.Id == id)

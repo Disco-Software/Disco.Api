@@ -10,24 +10,25 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
     public class StoryVideoService : IStoryVideoService
     {
-        private readonly StoryVideoRepository storyVideoRepository;
-        private readonly StoryRepository storyRepository;
         private readonly UserManager<User> userManager;
         private readonly BlobServiceClient blobServiceClient;
         private readonly IMapper mapper;
+        private readonly IStoryVideoRepository storyVideoRepository;
+        private readonly IStoryRepository storyRepository;
         private readonly IHttpContextAccessor httpContextAccessor;
         
         public StoryVideoService(
-            StoryVideoRepository _storyVideoRepository,
-            StoryRepository _storyRepository,
             UserManager<User> _userManager,
             BlobServiceClient _blobServiceClient,
             IMapper _mapper,
+            IStoryVideoRepository _storyVideoRepository,
+            IStoryRepository _storyRepository,
             IHttpContextAccessor _httpContextAccessor)
         {
             storyVideoRepository = _storyVideoRepository;

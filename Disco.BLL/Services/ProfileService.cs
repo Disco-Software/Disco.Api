@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
@@ -20,13 +21,13 @@ namespace Disco.Business.Services
         private readonly ApiDbContext ctx;
         private readonly UserManager<User> userManager;
         private readonly BlobServiceClient blobServiceClient;
-        private readonly ProfileRepository profileRepository;
+        private readonly IProfileRepository profileRepository;
         private readonly IHttpContextAccessor httpContextAccessor;
         public ProfileService(
             ApiDbContext _ctx,
             UserManager<User> _userManager,
             BlobServiceClient _blobServiceClient,
-            ProfileRepository _profileRepository,
+            IProfileRepository _profileRepository,
             IHttpContextAccessor _httpContextAccessor)
         {
             ctx = _ctx;

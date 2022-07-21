@@ -1,19 +1,40 @@
 ﻿using Disco.Domain.EF;
+using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories
 {
-    public class SongRepository : Base.BaseRepository<PostSong, int>
+    public class SongRepository : ISongRepository
     {
-        public SongRepository(ApiDbContext _ctx) : base(_ctx) { }
+        private readonly ApiDbContext ctx;
 
-        public override async Task Add(PostSong item)
+        public SongRepository(ApiDbContext _ctx) 
         {
-            await ctx.PostSongs.AddAsync(item);
+            ctx = _ctx;
+        }
+
+        public async Task AddAsync(PostSong song)
+        {
+            await ctx.PostSongs.AddAsync(song);
+        }
+
+        public async Task Remove(int id)
+        {
+            var song = await ctx.PostSongs
+                .Include(p => p.Post)
+                .Where(s => s.Id == id)
+                .FirstOrDefaultAsync();
+
+            song.Post.PostSongs.Remove(song);
+            ctx.PostSongs.Remove(song);
+
+            await ctx.SaveChangesAsync();
         }
     }
 }

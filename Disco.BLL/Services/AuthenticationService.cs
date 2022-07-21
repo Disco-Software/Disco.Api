@@ -40,6 +40,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
@@ -47,11 +48,10 @@ namespace Disco.Business.Services
     {
         private readonly ApiDbContext ctx;
         private readonly UserManager<User> userManager;
-        private readonly SignInManager<User> signInManager;
         private readonly BlobServiceClient blobServiceClient;
-        private readonly UserRepository userRepository;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IMapper mapper;
+        private readonly IUserRepository userRepository;
         private readonly ITokenService tokenService;
         private readonly IGoogleAuthService googleAuthService;
         private readonly IFacebookAuthService facebookAuthService;
@@ -62,7 +62,7 @@ namespace Disco.Business.Services
             UserManager<User> _userManager,
             SignInManager<User> _signInManager,
             BlobServiceClient _blobServiceClient,
-            UserRepository _userRepository,
+            IUserRepository _userRepository,
             IHttpContextAccessor _httpContextAccessor,
             ITokenService _tokenService,
             IGoogleAuthService _googleAuthService,
@@ -74,7 +74,6 @@ namespace Disco.Business.Services
         {
             ctx = _ctx;
             userManager = _userManager;
-            signInManager = _signInManager;
             blobServiceClient = _blobServiceClient;
             userRepository = _userRepository;
             facebookAuthService = _facebookAuthService;
@@ -118,7 +117,6 @@ namespace Disco.Business.Services
                 .Where(r => r.UserRole.UserId == user.Id)
                 .FirstOrDefaultAsync().Result.Role.Name;
 
-            await signInManager.SignInAsync(user, true);
             var jwt = tokenService.GenerateAccessToken(user);
             var refreshToken = tokenService.GenerateRefreshToken();
 
@@ -168,7 +166,6 @@ namespace Disco.Business.Services
             
             await ctx.SaveChangesAsync();
 
-            await signInManager.SignInAsync(userResult, true);
             var jwt = tokenService.GenerateAccessToken(userResult);
 
             var userResponseModel = mapper.Map<UserResponseDto>(userResult);

@@ -19,24 +19,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
     public class FriendService : ApiRequestHandlerBase, IFriendService
     {
         private readonly ApiDbContext ctx;
-        private readonly FriendRepository repository;
         private readonly UserManager<User> userManager;
         private readonly IMapper mapper;
+        private readonly IFriendRepository repository;
         private readonly IConfiguration configuration;
         private readonly IPushNotificationService pushNotificationService;
         private readonly INotificationHubClient notificationHubClient;
         private readonly IHttpContextAccessor httpContextAccessor;
         public FriendService(
             ApiDbContext _ctx,
-            FriendRepository _repository,
             UserManager<User> _userManager,
             IMapper _mapper,
+            IFriendRepository _repository,
             IConfiguration _configuration,
             IHttpContextAccessor _httpContextAccessor)
         {
@@ -113,7 +114,7 @@ namespace Disco.Business.Services
 
         public async Task<IActionResult> GetAllFriends(int id)
         {
-           var friends = await repository.GetAllFriends(id);
+           var friends = await repository.GetAllFriends(id, 1, 10);
             var friendModels = new List<FriendResponseDto>();
             foreach (var friend in friends)
             {

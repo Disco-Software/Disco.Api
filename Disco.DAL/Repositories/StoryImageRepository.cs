@@ -1,4 +1,5 @@
 ﻿using Disco.Domain.EF;
+using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,14 +10,21 @@ using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories
 {
-    public class StoryImageRepository : Base.BaseRepository<StoryImage,int>
+    public class StoryImageRepository : IStoryImageRepository
     {
-        public StoryImageRepository(ApiDbContext _ctx) : base(_ctx) { }
+        private readonly ApiDbContext ctx;
 
-        public async Task AddAsync(StoryImage item) =>
-           await ctx.StoriesImages.AddAsync(item);
+        public StoryImageRepository(ApiDbContext _ctx) 
+        {
+            ctx = _ctx;
+        }
 
-        public override async Task Remove(int id)
+        public async Task AddAsync(StoryImage item)
+        {
+            await ctx.StoriesImages.AddAsync(item);
+        }
+
+        public async Task Remove(int id)
         {
            var storyImage = await ctx.StoriesImages
                 .Include(s => s.Story)

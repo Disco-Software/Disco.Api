@@ -11,21 +11,22 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
     public class SongService : ISongService
     {
-        private readonly SongRepository songRepository;
-        private readonly PostRepository postRepository;
         private readonly BlobServiceClient blobServiceClient;
         private readonly IMapper mapper;
+        private readonly ISongRepository songRepository;
+        private readonly IPostRepository postRepository;
         private readonly IHttpContextAccessor httpContextAccessor;
         public SongService(
-            SongRepository _songRepository, 
-            PostRepository _postRepository,
             BlobServiceClient _blobServiceClient,
             IMapper _mapper,
+            ISongRepository _songRepository,
+            IPostRepository _postRepository,
             IHttpContextAccessor _httpContextAccessor)
         {
             songRepository = _songRepository;
@@ -65,7 +66,7 @@ namespace Disco.Business.Services
             song.Source = blobSongClient.Uri.AbsoluteUri;
             song.Name = model.Name;
 
-            await songRepository.Add(song);
+            await songRepository.AddAsync(song);
 
             return song;
         }

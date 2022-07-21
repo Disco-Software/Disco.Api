@@ -8,21 +8,24 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
     public class ImageService : IImageService
     {
-        private readonly PostRepository postRepository;
-        private readonly ImageRepository imageRepository;
         private readonly BlobServiceClient blobServiceClient;
         private readonly IMapper mapper;
+        private readonly IPostRepository postRepository;
+        private readonly IImageRepository imageRepository;
+
+
 
         public ImageService(
-            PostRepository _postRepository,
-            ImageRepository _imageRepository,
             BlobServiceClient _blobServiceClient,
-            IMapper _mapper)
+            IMapper _mapper, 
+            IPostRepository _postRepository,
+            IImageRepository _imageRepository)
         {
             postRepository = _postRepository;
             imageRepository = _imageRepository;
@@ -50,7 +53,7 @@ namespace Disco.Business.Services
             var postImage = mapper.Map<PostImage>(model);
             postImage.Source = blobClient.Uri.AbsoluteUri;
 
-            await imageRepository.Add(postImage);
+            await imageRepository.AddAsync(postImage);
 
             return postImage;
         }

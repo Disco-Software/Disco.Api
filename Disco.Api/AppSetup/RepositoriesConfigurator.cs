@@ -1,4 +1,5 @@
-﻿using Disco.Domain.Repositories;
+﻿using Disco.Domain.Interfaces;
+using Disco.Domain.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Disco.Api.AppSetup
@@ -7,17 +8,17 @@ namespace Disco.Api.AppSetup
     {
         public static void ConfigureRepositories(this IServiceCollection serviceDescriptors)
         {
-            serviceDescriptors.AddTransient<FriendRepository>();
-            serviceDescriptors.AddTransient<ImageRepository>();
-            serviceDescriptors.AddTransient<LikeRepository>();
-            serviceDescriptors.AddTransient<PostRepository>();
-            serviceDescriptors.AddTransient<ProfileRepository>();
-            serviceDescriptors.AddTransient<SongRepository>();
-            serviceDescriptors.AddTransient<StoryImageRepository>();
-            serviceDescriptors.AddTransient<StoryRepository>();
-            serviceDescriptors.AddTransient<StoryVideoRepository>();
-            serviceDescriptors.AddTransient<UserRepository>();
-            serviceDescriptors.AddTransient<VideoRepository>();
+            serviceDescriptors.AddTransient<IFriendRepository, FriendRepository>();
+            serviceDescriptors.AddTransient<IImageRepository,ImageRepository>();
+            serviceDescriptors.AddTransient<ILikeRepository,LikeRepository>();
+            serviceDescriptors.AddTransient<IPostRepository,PostRepository>();
+            serviceDescriptors.AddTransient<IProfileRepository,ProfileRepository>();
+            serviceDescriptors.AddTransient<ISongRepository,SongRepository>();
+            serviceDescriptors.AddTransient<IStoryImageRepository,StoryImageRepository>();
+            serviceDescriptors.AddTransient<IStoryRepository,StoryRepository>();
+            serviceDescriptors.AddTransient<IStoryVideoRepository,StoryVideoRepository>();
+            serviceDescriptors.AddTransient<IUserRepository,UserRepository>();
+            serviceDescriptors.AddTransient<IVideoRepository,VideoRepository>();
         }
     }
 }

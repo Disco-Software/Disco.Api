@@ -1,4 +1,5 @@
 ﻿using Disco.Domain.EF;
+using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,31 +11,26 @@ using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories
 {
-    public class FriendRepository : Base.BaseRepository<Friend, int>
+    public class FriendRepository : IFriendRepository
     {
-        public FriendRepository(ApiDbContext _ctx) : base(_ctx) { }
+        private readonly ApiDbContext ctx;
+
+        public FriendRepository(ApiDbContext _ctx)
+        {
+            ctx = _ctx;
+        }
 
         public async Task<int> AddAsync(Friend currentUserFriend)
         {
             ctx.Friends.Add(currentUserFriend);
+            
             currentUserFriend.IsFriend = true;
+            
             await ctx.SaveChangesAsync();
+            
             return currentUserFriend.Id;
         }
-        public async Task ConfirmFriendAsync(Friend item)
-        {            
-            if (item.IsConfirmed == false)
-                ctx.Friends.Remove(item);
-
-            item.IsConfirmed = true;
-            item.IsFriend = true;
-            
-            ctx.Friends.Update(item);
-            
-            await ctx.SaveChangesAsync();
-        }
-
-        public override async Task<Friend> Get(int id) =>
+        public async Task<Friend> Get(int id) =>
             await ctx.Friends
                 .Include(u => u.UserProfile)
                 .ThenInclude(u => u.User)
@@ -42,8 +38,7 @@ namespace Disco.Domain.Repositories
                 .ThenInclude(f => f.User)
                 .Where(f => f.Id == id)
                 .FirstOrDefaultAsync();
-
-        public override async Task Remove(int id)
+        public async Task Remove(int id)
         {
           var friend = await ctx.Friends
                 .Include(u => u.UserProfile)
@@ -53,10 +48,10 @@ namespace Disco.Domain.Repositories
                 .Where(f => f.Id == id)
                 .FirstOrDefaultAsync();
             ctx.Friends.Remove(friend);
-           await ctx.SaveChangesAsync();
+           
+            await ctx.SaveChangesAsync();
         }
-
-        public async Task<List<Friend>> GetAllFriends(int id)
+        public async Task<List<Friend>> GetAllFriends(int id, int pageNumber, int pageSize)
         {
             return await ctx.Friends
                 .Include(u => u.UserProfile)
@@ -66,6 +61,9 @@ namespace Disco.Domain.Repositories
                 .Include(f => f.ProfileFriend)
                 .ThenInclude(u => u.User)
                 .Where(f => f.UserProfileId == id)
+                .OrderBy(n => n.ProfileFriend.User.UserName)
+                .Take((pageNumber - 1) * pageSize)
+                .Skip(pageSize)
                 .ToListAsync();
         }
     }

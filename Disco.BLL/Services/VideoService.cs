@@ -8,21 +8,23 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
     public class VideoService : IVideoService
     {
-        private readonly VideoRepository videoRepository;
-        private readonly PostRepository postRepository;
         private readonly BlobServiceClient blobServiceClient;
         private readonly IMapper mapper;
+        private readonly IVideoRepository videoRepository;
+        private readonly IPostRepository postRepository;
+
 
         public VideoService(
-            VideoRepository _videoRepository,
-            PostRepository _postRepository,
             BlobServiceClient _blobServiceClient,
-            IMapper _mapper)
+            IMapper _mapper,
+            IVideoRepository _videoRepository,
+            IPostRepository _postRepository)
         {
             videoRepository = _videoRepository;
             postRepository = _postRepository;
@@ -50,7 +52,7 @@ namespace Disco.Business.Services
             var video = mapper.Map<PostVideo>(model);
             video.VideoSource = blobClient.Uri.AbsoluteUri;
 
-            await videoRepository.Add(video);
+            await videoRepository.AddAsync(video);
 
             return video;
         }

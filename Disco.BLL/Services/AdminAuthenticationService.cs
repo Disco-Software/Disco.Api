@@ -21,6 +21,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
@@ -28,11 +29,10 @@ namespace Disco.Business.Services
     {
         private readonly ApiDbContext ctx;
         private readonly UserManager<User> userManager;
-        private readonly SignInManager<User> signInManager;
-        private readonly UserRepository userRepository;
         private readonly BlobServiceClient blobServiceClient;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IMapper mapper;
+        private readonly IUserRepository userRepository;
         private readonly ITokenService tokenService;
         private readonly IOptions<AuthenticationOptions> authenticationOptions;
         private readonly IEmailService emailService;
@@ -41,17 +41,16 @@ namespace Disco.Business.Services
             ApiDbContext _ctx, 
             UserManager<User> _userManager, 
             SignInManager<User> _signInManager, 
-            UserRepository _userRepository, 
             BlobServiceClient _blobServiceClient,
             IHttpContextAccessor _httpContextAccessor, 
-            IMapper _mapper, 
+            IMapper _mapper,
+            IUserRepository _userRepository,
             ITokenService _tokenService, 
             IOptions<AuthenticationOptions> _authenticationOptions, 
             IEmailService _emailService)
         {
             ctx = _ctx;
             userManager = _userManager;
-            signInManager = _signInManager;
             userRepository = _userRepository;
             blobServiceClient = _blobServiceClient;
             httpContextAccessor = _httpContextAccessor;
@@ -119,7 +118,6 @@ namespace Disco.Business.Services
             if (!roleResult == true)
                 return BadRequest("You need to have role Admin to login");
 
-            await signInManager.SignInAsync(user, true);
             var jwt = tokenService.GenerateAccessToken(user);
             var refreshToken = tokenService.GenerateRefreshToken();
 

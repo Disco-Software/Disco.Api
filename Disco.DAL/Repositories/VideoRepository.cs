@@ -1,19 +1,41 @@
 ﻿using Disco.Domain.EF;
+using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories
 {
-    public class VideoRepository : Base.BaseRepository<PostVideo, int>
+    public class VideoRepository : IVideoRepository
     {
-        public VideoRepository(ApiDbContext _ctx) : base(_ctx) { }
+        private readonly ApiDbContext ctx;
 
-        public override async Task Add(PostVideo item)
+        public VideoRepository(
+            ApiDbContext _ctx)
         {
-            await ctx.PostVideos.AddAsync(item);
+            ctx = _ctx;
+        }
+
+        public async Task AddAsync(PostVideo postVideo)
+        {
+            await ctx.PostVideos.AddAsync(postVideo);
+        }
+
+        public async Task Remove(int id)
+        {
+            var video = await ctx.PostVideos
+                .Include(p => p.Post)
+                .Where(s => s.Id == id)
+                .FirstOrDefaultAsync();
+            
+            video.Post.PostVideos.Remove(video);
+            ctx.PostVideos.Remove(video);
+
+            await ctx.SaveChangesAsync();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Disco.Domain.EF;
+using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,31 +13,28 @@ using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories
 {
-    public class PostRepository : Base.BaseRepository<Post, int>
+    public class PostRepository : IPostRepository
     {
-        private readonly UserManager<User> userManager;
+        private readonly ApiDbContext ctx;
 
-        public PostRepository(ApiDbContext _ctx) : base(_ctx) { }
-
-        public PostRepository(ApiDbContext _ctx, UserManager<User> _userManager) : base(_ctx)
+        public PostRepository(
+            ApiDbContext _ctx)
         {
             ctx = _ctx;
-            userManager = _userManager;
         }
 
-        public async Task<Post> AddAsync(Post post, User user)
+        public async Task AddAsync(Post post, User user)
         {
             if(user == null)
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException("user is null");
             
             await ctx.Posts.AddAsync(post);
             user.Profile.Posts.Add(post);
+            
             await ctx.SaveChangesAsync();
-
-            return post;
         }
 
-        public async override Task Remove(int id)
+        public async Task Remove(int id)
         {
             var post = await ctx.Posts
                 .Include(p => p.Profile)
@@ -53,8 +51,7 @@ namespace Disco.Domain.Repositories
             await ctx.SaveChangesAsync();
         }
 
-
-        public async Task<List<Post>> GetAll(int userId, int pageSize, int pageNumber)
+        public async Task<List<Post>> GetAllPosts(int userId, int pageSize, int pageNumber)
         {
             var posts = new List<Post>();
 
@@ -107,7 +104,8 @@ namespace Disco.Domain.Repositories
                 posts.AddRange(friend.ProfileFriend.Posts);
             }
 
-            return posts.OrderByDescending(d => d.DateOfCreation)
+            return posts
+                .OrderByDescending(d => d.DateOfCreation)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
@@ -128,21 +126,7 @@ namespace Disco.Domain.Repositories
                 .ToList();
         }
 
-        public override Task<List<Post>> GetAll(Expression<Func<Post, bool>> expression)
-        {
-            if (expression != null)
-               return ctx.Posts
-                    .Include(i => i.PostImages)
-                    .Include(s => s.PostSongs)
-                    .Include(v => v.PostVideos)
-                    .OrderByDescending(d => d.DateOfCreation)
-                    .Where(expression)
-                    .ToListAsync();
-
-            return ctx.Posts.ToListAsync();
-        }
-
-        public override Task<Post> Get(int id)
+        public Task<Post> Get(int id)
         {
            return ctx.Posts
                 .Include(i => i.PostImages)

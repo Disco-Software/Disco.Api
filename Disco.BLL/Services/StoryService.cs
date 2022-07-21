@@ -15,22 +15,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
     public class StoryService : ApiRequestHandlerBase, IStoryService
     {
-        private readonly StoryRepository storyRepository;
         private readonly UserManager<User> userManager;
         private readonly ApiDbContext ctx;
+        private readonly IStoryRepository storyRepository;
         private readonly IStoryImageService storyImageService;
         private readonly IStoryVideoService storyVideoService;
         private readonly IMapper mapper;
         private readonly IHttpContextAccessor httpContextAccessor;
         public StoryService(
-            StoryRepository _storyRepository,
             UserManager<User> _userManager,
             ApiDbContext _ctx,
+            IStoryRepository _storyRepository,
             IStoryImageService _storyImageService,
             IStoryVideoService _storyVideoService,
             IMapper _mapper,
@@ -82,7 +83,7 @@ namespace Disco.Business.Services
             story.DateOfCreation = DateTime.UtcNow;
 
             user.Profile.Stories.Add(story);
-            await storyRepository.Add(story);
+            await storyRepository.AddAsync(story, user.Profile);
 
             return Ok(story);
         }
@@ -110,7 +111,7 @@ namespace Disco.Business.Services
                 .Collection(s => s.Stories)
                 .LoadAsync();
 
-            return await storyRepository.GetAll(user.Profile.Id,model.PageNumber,model.PageSize);
+            return await storyRepository.GetAllAsync(user.Profile.Id,model.PageNumber,model.PageSize);
         }
     }
 }

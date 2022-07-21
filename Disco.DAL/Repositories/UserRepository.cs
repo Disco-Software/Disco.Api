@@ -1,4 +1,5 @@
 ﻿using Disco.Domain.EF;
+using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
 using Disco.Domain.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly ApiDbContext ctx;
 
@@ -18,8 +19,9 @@ namespace Disco.Domain.Repositories
             ctx = _ctx;
         }
 
-        public async Task<User> GetUserByRefreshTokenAsync(string refreshToken) =>
-            await ctx.Users
+        public async Task<User> GetUserByRefreshTokenAsync(string refreshToken)
+        {
+            return await ctx.Users
                 .Include(p => p.Profile)
                 .ThenInclude(p => p.Posts)
                 .Include(p => p.Profile)
@@ -27,6 +29,7 @@ namespace Disco.Domain.Repositories
                 .Include(p => p.Profile)
                 .ThenInclude(f => f.Followers)
                 .FirstOrDefaultAsync();
+        }
 
     }
 }
