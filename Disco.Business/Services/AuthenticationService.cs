@@ -50,7 +50,6 @@ namespace Disco.Business.Services
             IEmailService emailService,
             IMapper mapper)
         {
-            _ctx = ctx;
             _userManager = userManager;
             _blobServiceClient = blobServiceClient;
             _userService = userService;

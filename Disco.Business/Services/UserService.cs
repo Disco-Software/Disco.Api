@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -49,6 +50,21 @@ namespace Disco.Business.Services
         public async Task<User> GetUserByRefreshTokenAsync(string refreshToken)
         {
             return await _userRepository.GetUserByRefreshTokenAsync(refreshToken);
+        }
+
+        public async Task LoadUserInfoAsync(User user)
+        {
+            await _userRepository.GetUserInfosAsync(user);
+        }
+
+        public async Task<User> GetUserAsync(ClaimsPrincipal claimsPrincipal)
+        {
+            var user = await _userManager.GetUserAsync(claimsPrincipal);
+            
+            await _userRepository.GetUserInfosAsync(user);
+            user.RoleName = _userRepository.GetUserRole(user);
+
+            return user;
         }
     }
 }
