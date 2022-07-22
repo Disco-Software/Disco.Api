@@ -75,7 +75,7 @@ namespace Disco.Business.Services
         public async Task<IActionResult> LogIn(LoginDto model)
         {
             var validator = await LogInValidator
-                .Create()
+                .Create(userManager)
                 .ValidateAsync(model);
 
             if (validator.Errors.Count > 0)

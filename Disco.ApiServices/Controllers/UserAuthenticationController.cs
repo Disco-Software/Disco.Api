@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Google.Apis.Auth.AspNetCore3;
 using Google.Apis.PeopleService.v1;
+using Disco.Business.Validators;
+using Microsoft.AspNetCore.Identity;
+using Disco.Domain.Models;
 
 namespace Disco.ApiServices.Controllers
 {
@@ -14,11 +17,18 @@ namespace Disco.ApiServices.Controllers
     [Route("api/user/authentication")]
     public class UserAuthenticationController : Controller
     {
-        private readonly IAuthenticationService authenticationService;
+        private readonly UserManager<User> _userManager;
+        private readonly IAuthenticationService _authenticationService;
+        private readonly IUserService _userService;
 
-        public UserAuthenticationController(IAuthenticationService authenticationService)
+        public UserAuthenticationController(
+            UserManager<User> userManager,
+            IAuthenticationService authenticationService,
+            IUserService userService)
         {
-            this.authenticationService = authenticationService;
+            _userManager = userManager;
+            _authenticationService = authenticationService;
+            _userService = userService;
         }
 
         /// <summary>
@@ -29,50 +39,76 @@ namespace Disco.ApiServices.Controllers
         [HttpPost("log-in"), AllowAnonymous]
         public async Task<IActionResult> LogIn([FromBody] LoginDto model)
         {
-            return await authenticationService.LogIn(model);
+            var validator = await LogInValidator
+                .Create(_userManager)
+                .ValidateAsync(model);
+
+            if (!validator.IsValid)
+                return BadRequest(validator.Errors);
+
+            var user = await _userService.GetUserByEmailAsync(model.Email);
+
+            var passwordValidator = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password);
+            if (passwordValidator == PasswordVerificationResult.Failed)
+                return BadRequest("Wrong password");
+
+            var loginResponse = await _authenticationService.LogIn(user, model.Password);
+
+            return Ok(loginResponse);
         }
 
         [HttpPost("log-in/facebook"), AllowAnonymous]
         public async Task<IActionResult> Facebook([FromBody] FacebookRequestDto model)
         {
-            return await authenticationService.Facebook(model);
+            return await _authenticationService.Facebook(model);
         }
 
         [HttpPost("log-in/google"), AllowAnonymous,
          GoogleScopedAuthorize(PeopleServiceService.ScopeConstants.UserinfoProfile)]
         public async Task<IActionResult> Google([FromServices] IGoogleAuthProvider googleAuthProvider)
         {
-            return await authenticationService.Google(googleAuthProvider);
+            return await _authenticationService.Google(googleAuthProvider);
         }
 
         [HttpPost("log-in/apple"), AllowAnonymous]
         public async Task<IActionResult> Apple([FromBody] AppleLogInDto model)
         {
-            return await authenticationService.Apple(model);
+            return await _authenticationService.Apple(model);
         }
 
         [HttpPut("refresh")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto model)
         {
-            return await authenticationService.RefreshToken(model);
+            return await _authenticationService.RefreshToken(model);
         }
 
         [HttpPost("registration")]
         public async Task<IActionResult> Registration([FromBody] RegistrationDto model)
         {
-            return await authenticationService.Register(model);
+            var validator = await RegistrationValidator
+                .Create(_userManager)
+                .ValidateAsync(model);
+
+            if (!validator.IsValid)
+            {
+                return BadRequest(validator.Errors);
+            }
+
+            var userResponseDto = await _authenticationService.Register(model);
+
+            return Ok(userResponseDto);
         }
 
         [HttpPost("forgot-password"), AllowAnonymous]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto model)
         {
-            return await authenticationService.ForgotPassword(model.Email);
+            return await _authenticationService.ForgotPassword(model.Email);
         }
 
         [HttpPut("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model)
         {
-            return await authenticationService.ResetPassword(model);
+            return await _authenticationService.ResetPassword(model);
         }
     }
 }
