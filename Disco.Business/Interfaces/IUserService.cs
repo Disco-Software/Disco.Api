@@ -1,4 +1,5 @@
-﻿using Disco.Domain.Models;
+﻿using Disco.Business.Dtos.Authentication;
+using Disco.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +11,7 @@ namespace Disco.Business.Interfaces
     {
         Task<User> GetUserByEmailAsync(string email);
         string GetUserRole(User user);
+        Task<User> GetUserByRefreshTokenAsync(string refreshToken);
         Task SaveRefreshTokenAsync(User user, string refreshToken);
     }
 }

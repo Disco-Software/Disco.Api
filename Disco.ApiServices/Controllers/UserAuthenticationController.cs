@@ -19,15 +19,18 @@ namespace Disco.ApiServices.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IFacebookAuthService _facebookAuthService;
         private readonly IUserService _userService;
 
         public UserAuthenticationController(
             UserManager<User> userManager,
             IAuthenticationService authenticationService,
+            IFacebookAuthService facebookAuthService,
             IUserService userService)
         {
             _userManager = userManager;
             _authenticationService = authenticationService;
+            _facebookAuthService = facebookAuthService;
             _userService = userService;
         }
 
@@ -50,7 +53,7 @@ namespace Disco.ApiServices.Controllers
 
             var passwordValidator = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password);
             if (passwordValidator == PasswordVerificationResult.Failed)
-                return BadRequest("Wrong password");
+                return BadRequest(validator.Errors);
 
             var loginResponse = await _authenticationService.LogIn(user, model.Password);
 
@@ -60,7 +63,20 @@ namespace Disco.ApiServices.Controllers
         [HttpPost("log-in/facebook"), AllowAnonymous]
         public async Task<IActionResult> Facebook([FromBody] FacebookRequestDto model)
         {
-            return await _authenticationService.Facebook(model);
+            var validator = await FacebookAccessTokenValidator
+                .Create()
+                .ValidateAsync(model);
+
+            if (!validator.IsValid)
+            {
+                return BadRequest(validator.Errors);
+            }
+
+            var userInfo = await _facebookAuthService.GetUserInfo(model.AccessToken);
+
+            var response = await _authenticationService.Facebook(userInfo);
+
+            return Ok(response);
         }
 
         [HttpPost("log-in/google"), AllowAnonymous,
@@ -73,13 +89,22 @@ namespace Disco.ApiServices.Controllers
         [HttpPost("log-in/apple"), AllowAnonymous]
         public async Task<IActionResult> Apple([FromBody] AppleLogInDto model)
         {
-            return await _authenticationService.Apple(model);
+            var user = await _authenticationService.Apple(model);
+
+            return Ok(user);
         }
 
         [HttpPut("refresh")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto model)
         {
-            return await _authenticationService.RefreshToken(model);
+            var user = await _userService.GetUserByRefreshTokenAsync(model.RefreshToken);
+
+            if(user == null) 
+                return BadRequest();
+
+           var result = await _authenticationService.RefreshToken(user, model);
+
+            return Ok(result);
         }
 
         [HttpPost("registration")]
@@ -102,13 +127,27 @@ namespace Disco.ApiServices.Controllers
         [HttpPost("forgot-password"), AllowAnonymous]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto model)
         {
-            return await _authenticationService.ForgotPassword(model.Email);
+            var user = await _userService.GetUserByEmailAsync(model.Email);
+
+            if (user == null)
+                BadRequest("User is null");
+
+            var confirmationDto = await _authenticationService.ForgotPassword(user);
+
+            return Ok(confirmationDto);
         }
 
         [HttpPut("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model)
         {
-            return await _authenticationService.ResetPassword(model);
+            var user = await _userService.GetUserByEmailAsync(model.Email);
+
+            if (user == null)
+                return BadRequest();
+
+            var restPasswordDto = await _authenticationService.ResetPassword(user, model);
+
+            return Ok(restPasswordDto);
         }
     }
 }

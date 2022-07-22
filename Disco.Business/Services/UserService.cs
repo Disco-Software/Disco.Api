@@ -45,5 +45,10 @@ namespace Disco.Business.Services
         {
             await _userRepository.SaveRefreshTokenAsync(user, refreshToken);
         }
+
+        public async Task<User> GetUserByRefreshTokenAsync(string refreshToken)
+        {
+            return await _userRepository.GetUserByRefreshTokenAsync(refreshToken);
+        }
     }
 }

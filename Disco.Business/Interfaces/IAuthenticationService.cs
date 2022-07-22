@@ -12,11 +12,11 @@ namespace Disco.Business.Interfaces
     {
         Task<UserResponseDto> LogIn(User user, string password);
         Task<UserResponseDto> Register(RegistrationDto dto);
-        Task<IActionResult> RefreshToken(RefreshTokenDto model);
-        Task<IActionResult> Facebook(FacebookRequestDto facebookRequestModel);
-        Task<IActionResult> Apple(AppleLogInDto model);
-        Task<IActionResult> ForgotPassword(string email);
-        Task<IActionResult> ResetPassword(ResetPasswordDto model);
+        Task<UserResponseDto> RefreshToken(User user, RefreshTokenDto model);
+        Task<UserResponseDto> Facebook(FacebookDto dto);
+        Task<UserResponseDto> Apple(AppleLogInDto model);
+        Task<string> ForgotPassword(User user);
+        Task<UserResponseDto> ResetPassword(User user, ResetPasswordDto model);
         Task<IActionResult> Google(IGoogleAuthProvider googleAuthProvider);
     }
 }
