@@ -12,27 +12,20 @@ namespace Disco.Business.Services
 {
     public class LikeService : ILikeSevice
     {
-        private readonly PostRepository postRepository;
-        private readonly LikeRepository likeRepository;
-        private readonly UserManager<User> userManager;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly PostRepository _postRepository;
+        private readonly LikeRepository _likeRepository;
 
         public LikeService(
-            PostRepository _postRepository,
-            LikeRepository _likeRepository,
-            UserManager<User> _userManager,
-            IHttpContextAccessor _httpContextAccessor)
+            PostRepository postRepository,
+            LikeRepository likeRepository)
         {
-            postRepository = _postRepository;
-            likeRepository = _likeRepository;
-            userManager = _userManager;
-            httpContextAccessor = _httpContextAccessor;
+            this._postRepository = postRepository;
+            this._likeRepository = likeRepository;
         }
 
-        public async Task<List<Like>> CreateLikeAsync(int postId)
+        public async Task<List<Like>> CreateLikeAsync(User user, int postId)
         {
-            var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
-            var post = await postRepository.Get(postId);
+            var post = await _postRepository.Get(postId);
            
             var like = new Like
             {
@@ -41,21 +34,20 @@ namespace Disco.Business.Services
                 PostId = postId,
             };
 
-            await likeRepository.AddAsync(like, postId);
+            await _likeRepository.AddAsync(like, postId);
 
             return post.Likes;
         }
 
-        public async Task<List<Like>> RemoveLikeAsync(int postId)
+        public async Task<List<Like>> RemoveLikeAsync(User user, int postId)
         {
-            var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
-            var post = await postRepository.Get(postId);
+            var post = await _postRepository.Get(postId);
             
             var like = post.Likes
                 .Where(u => u.UserName == user.UserName)
                 .FirstOrDefault();
 
-           await likeRepository.Remove(like.Id);
+           await _likeRepository.Remove(like.Id);
 
             return post.Likes;
         }

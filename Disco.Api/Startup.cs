@@ -99,17 +99,10 @@ namespace Disco.Api
 
             app.UseWebSockets();
 
-            //app.UseCors(s =>
-            //{
-            //    s.SetIsOriginAllowed(o => true)
-            //        .AllowAnyHeader()
-            //        .AllowAnyMethod();
-            //});
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<LikeHub>("/like");
+                endpoints.MapHub<LikeHub>("/hub/like");
             });
         }
     }

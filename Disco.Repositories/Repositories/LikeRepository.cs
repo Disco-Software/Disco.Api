@@ -11,14 +11,11 @@ namespace Disco.Domain.Repositories
 {
     public class LikeRepository : BaseRepository<Like, int>, ILikeRepository
     {
-        public LikeRepository(ApiDbContext _ctx) : base(_ctx)
-        {
-            ctx = _ctx;
-        }
+        public LikeRepository(ApiDbContext ctx) : base(ctx) { }
 
         public async Task AddAsync(Like item, int postId)
         {
-            var post = await ctx.Posts
+            var post = await _ctx.Posts
                 .Include(x => x.Likes)
                 .Where(p => p.Id == postId)
                 .FirstOrDefaultAsync();
@@ -27,21 +24,21 @@ namespace Disco.Domain.Repositories
                 throw new Exception("post not found");
 
             post.Likes.Add(item);
-            await ctx.Like.AddAsync(item);
+            await _ctx.Like.AddAsync(item);
 
-            await ctx.SaveChangesAsync();
+            await _ctx.SaveChangesAsync();
         }
 
         public override async Task Remove(int id)
         {
-            var like = await ctx.Like
+            var like = await _ctx.Like
                 .Where(l => l.Id == id)
                 .FirstOrDefaultAsync();
 
-            ctx.Remove(like);
+            _ctx.Remove(like);
             like.Post.Likes.Remove(like);
 
-            await ctx.SaveChangesAsync();
+            await _ctx.SaveChangesAsync();
         }
     }
 }

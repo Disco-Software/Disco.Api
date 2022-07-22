@@ -1,7 +1,9 @@
 ﻿using Disco.Business.Constants;
 using Disco.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
+using System;
 using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Hubs
@@ -9,22 +11,33 @@ namespace Disco.ApiServices.Hubs
     [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
     public class LikeHub : Hub
     {
-        private readonly ILikeSevice likeSevice;
-        public LikeHub(ILikeSevice _likeSevice)
+        private readonly ILikeSevice _likeSevice;
+        private readonly IUserService _userService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public LikeHub(
+            ILikeSevice likeSevice,
+            IUserService userService,
+            IHttpContextAccessor httpContextAccessor)
         {
-            likeSevice = _likeSevice;
+            this._likeSevice = likeSevice;
+            this._userService = userService;
+            this._httpContextAccessor = httpContextAccessor;
         }
-        
+
         public async Task AddLike(int postId)
         {
-            var likes = await likeSevice.CreateLikeAsync(postId);
+            var user = await _userService.GetUserAsync(_httpContextAccessor.HttpContext.User);
+
+            var likes = await _likeSevice.CreateLikeAsync(user, postId);
 
            await Clients.All.SendAsync("onLike", likes.Count);
         }
 
         public async Task RemoveLike(int postId)
         {
-            var likes = await likeSevice.RemoveLikeAsync(postId);
+            var user = await _userService.GetUserAsync(_httpContextAccessor.HttpContext.User);
+
+            var likes = await _likeSevice.RemoveLikeAsync(user, postId);
 
             await Clients.Caller.SendAsync("onRemoveLike", likes.Count);
         }
