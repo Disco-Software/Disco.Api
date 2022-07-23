@@ -1,20 +1,10 @@
-﻿using Disco.Api;
-using Disco.BLL.Interfaces;
-using Disco.BLL.Models;
-using Disco.DAL.EF;
-using Disco.DAL.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using System.Net.Http;
+using Disco.ApiServices;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Disco.Tests.Base
+namespace Disco.Tests.Tests.Base
 {
     [TestClass]
     public class IntegrationTest
@@ -23,12 +13,7 @@ namespace Disco.Tests.Base
         public IntegrationTest()
         {
             var appFactory = new WebApplicationFactory<Startup>()
-                .WithWebHostBuilder(webHostBuilder => {
-                    webHostBuilder.ConfigureServices(services =>
-                    {
-                        services.AddHttpClient();
-                    });
-                });
+                .WithWebHostBuilder(webHostBuilder => webHostBuilder.ConfigureServices(services => services.AddHttpClient()));
             httpClient = appFactory.CreateClient();
         }
     }

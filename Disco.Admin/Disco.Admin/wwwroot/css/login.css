@@ -1,0 +1,66 @@
+﻿body {
+  background: radial-gradient(100% 100% at 100% 0%, #29193E 0%, #0F0C1B 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+}
+
+.login{
+    display:flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-form{
+    width : 25%;
+}
+
+.login-form__group{
+    margin-bottom: 20px !important;
+}
+
+.login-form__label {
+    margin-left: 50px;
+    margin-bottom: 10px;
+    font-family: 'ABeeZee';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #E6E0D2;
+}
+
+.login-form__input {
+    width: 80%;
+    border: 2px solid #E5E5E5;
+    border-radius: 25px;
+    background-color:transparent;
+    color : white;
+}
+.login-form__input:focus{
+    background-color:transparent;
+    color: white;
+}
+.login-form__h3 {
+    font-family: 'Colonna MT', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 72px;
+    line-height: 76px;
+    background: linear-gradient(37.66deg, #FFF170 -1.12%, #DE871F 57.99%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    text-shadow: 0px 4px 7px rgba(160, 68, 255, 0.7);
+    text-align: center;
+}
+
+.login-form__submit {
+    height: 5vh;
+    margin-top:40px;
+    width: 50%;
+    color: white;
+    background: #825DCD;
+    box-shadow: 0px 4px 9px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+}

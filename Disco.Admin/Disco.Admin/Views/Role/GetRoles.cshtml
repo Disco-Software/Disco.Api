@@ -1,0 +1,31 @@
+﻿@model List<Role>
+@{
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="offset-10 col-2">
+        <button class="btn admin-header__button">
+            <i class="fa fa-plus"></i>
+            <span>Create</span>
+        </button>
+    </div>
+</div>
+
+@foreach (var role in Model)
+{
+    <div class="row admin">
+        <div class="col-12 admin">
+            <p class="admin-body__p">@role.Id</p>
+            <p class="admin-body__p">@role.Name</p>
+            <div class="admin-body-options">
+                <button class="btn">
+                    <i class="fa fa-cog"></i>
+                </button>
+                <button class="btn">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>   
+}

@@ -2,3 +2,10 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+$(document).ready(function () {
+    $('ul.navbar-nav > li').click(function (e) {
+        e.preventDefault();
+        $('ul.navbar-nav > li').removeClass('active');
+        $(this).addClass('active');
+    });
+})
