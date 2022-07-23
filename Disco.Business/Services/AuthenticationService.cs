@@ -110,17 +110,10 @@ namespace Disco.Business.Services
         public async Task<UserResponseDto> Facebook(FacebookDto dto)
         {
             var user = await _userManager.FindByLoginAsync(LogInProvider.Facebook, dto.Id);
-
             if(user != null)
             {
-                await _ctx.Entry(user)
-                        .Reference(p => p.Profile)
-                        .LoadAsync();
-                
-                user.RoleName = _ctx.UserRoles
-                     .Join(_ctx.Roles, r => r.RoleId, u => u.Id, (u, r) => new { Role = r, UserRole = u })
-                     .Where(r => r.UserRole.UserId == user.Id)
-                     .FirstOrDefaultAsync().Result.Role.Name;
+                await _userService.LoadUserInfoAsync(user);
+                user.RoleName =  _userService.GetUserRole(user);
 
                 user.Email = dto.Email;
                 user.UserName = dto.FirstName;
@@ -142,10 +135,7 @@ namespace Disco.Business.Services
             user = await _userManager.FindByEmailAsync(dto.Email);
             if(user != null)
             {
-               await _ctx.Entry(user)
-                    .Reference(p => p.Profile)
-                    .LoadAsync();
-
+                await _userService.LoadUserInfoAsync(user);
                 user.RoleName = _userService.GetUserRole(user);
 
                 await _userManager.AddLoginAsync(user, new UserLoginInfo(LogInProvider.Facebook, dto.Id, "FacebookId"));
