@@ -116,19 +116,19 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                   SizedBox(
                                     height: 30.0,
                                     width: 200.0,
-                                    child: Marquee(
-                                      scrollAxis: Axis.horizontal,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      blankSpace: 50.0,
-                                      velocity: 100.0,
-                                      startPadding: 10.0,
-                                      onDone: () {},
-                                      text: data.songTitles.isNotEmpty
-                                          ? data.songTitles[data.currentSongIndex]
-                                          : '',
-                                      style: GoogleFonts.aBeeZee(
-                                          fontSize: 24.0, color: const Color(0xFFE6E0D2)),
-                                    ),
+                                    child: data.songTitles.isNotEmpty
+                                        ? Marquee(
+                                            scrollAxis: Axis.horizontal,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            blankSpace: 50.0,
+                                            velocity: 100.0,
+                                            startPadding: 10.0,
+                                            onDone: () {},
+                                            text: data.songTitles[data.currentSongIndex],
+                                            style: GoogleFonts.aBeeZee(
+                                                fontSize: 24.0, color: const Color(0xFFE6E0D2)),
+                                          )
+                                        : const SizedBox(),
                                   ),
                                   Text(
                                     data.singer,

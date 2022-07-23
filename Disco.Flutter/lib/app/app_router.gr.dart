@@ -5,24 +5,26 @@
 // **************************************************************************
 
 import 'package:auto_route/auto_route.dart' as _i1;
+import 'package:flutter/cupertino.dart' as _i18;
 import 'package:flutter/material.dart' as _i2;
-import 'package:video_player/video_player.dart' as _i17;
+import 'package:video_player/video_player.dart' as _i19;
 
 import '../pages/authentication/login/login_page.dart' as _i4;
 import '../pages/authentication/registration/registration.dart' as _i6;
 import '../pages/authentication/search_registration/search_registration_page.dart'
     as _i5;
 import '../pages/start/splash_page.dart' as _i3;
-import '../pages/user/add_post/add_post_page.dart' as _i14;
-import '../pages/user/add_post/record_audio_page.dart' as _i15;
-import '../pages/user/add_post/select_files_page.dart' as _i16;
+import '../pages/user/add_post/add_post_page.dart' as _i15;
+import '../pages/user/add_post/record_audio_page.dart' as _i16;
+import '../pages/user/add_post/select_files_page.dart' as _i17;
 import '../pages/user/add_post/widgets/fullscreen_video.dart' as _i7;
-import '../pages/user/chat/chat.dart' as _i12;
-import '../pages/user/home_page.dart' as _i9;
-import '../pages/user/main/main_page.dart' as _i10;
-import '../pages/user/profile/profile.dart' as _i13;
-import '../pages/user/saved/saved.dart' as _i11;
-import '../pages/user/saved/saved_item_page/saved_item.dart' as _i8;
+import '../pages/user/chat/chat.dart' as _i13;
+import '../pages/user/home_page.dart' as _i10;
+import '../pages/user/main/main_page.dart' as _i11;
+import '../pages/user/main/pages/story_page.dart' as _i8;
+import '../pages/user/profile/profile.dart' as _i14;
+import '../pages/user/saved/saved.dart' as _i12;
+import '../pages/user/saved/saved_item_page/saved_item.dart' as _i9;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter([_i2.GlobalKey<_i2.NavigatorState>? navigatorKey])
@@ -57,6 +59,12 @@ class AppRouter extends _i1.RootStackRouter {
           return _i7.FullScreenVideoPage(
               key: args.key, source: args.source, controller: args.controller);
         }),
+    StoryRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
+        routeData: routeData,
+        builder: (data) {
+          final args = data.argsAs<StoryRouteArgs>();
+          return _i8.StoryPage(index: args.index, key: args.key);
+        }),
     SavedItemRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (data) {
@@ -64,14 +72,14 @@ class AppRouter extends _i1.RootStackRouter {
           final args = data.argsAs<SavedItemRouteArgs>(
               orElse: () =>
                   SavedItemRouteArgs(itemId: pathParams.getInt('itemId')));
-          return _i8.SavedItem(key: args.key, itemId: args.itemId);
+          return _i9.SavedItem(key: args.key, itemId: args.itemId);
         }),
     HomeRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (data) {
           final args =
               data.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
-          return _i9.HomePage(
+          return _i10.HomePage(
               key: args.key, shouldLoadData: args.shouldLoadData);
         }),
     FeedRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
@@ -79,13 +87,13 @@ class AppRouter extends _i1.RootStackRouter {
         builder: (data) {
           final args =
               data.argsAs<FeedRouteArgs>(orElse: () => const FeedRouteArgs());
-          return _i10.MainPage(
+          return _i11.MainPage(
               key: args.key, shouldLoadData: args.shouldLoadData);
         }),
     SavedItemsRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i11.SavedItemsPage();
+          return const _i12.SavedItemsPage();
         }),
     AddPostRouter.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
@@ -95,27 +103,27 @@ class AppRouter extends _i1.RootStackRouter {
     ChatRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i12.ChatPage();
+          return const _i13.ChatPage();
         }),
     ProfileRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i13.ProfilePage();
+          return const _i14.ProfilePage();
         }),
     AddPostRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i14.AddPostPage();
+          return const _i15.AddPostPage();
         }),
     RecordAudioRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i15.RecordAudioPage();
+          return const _i16.RecordAudioPage();
         }),
     SelectFilesRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i16.SelectFilesPage();
+          return const _i17.SelectFilesPage();
         })
   };
 
@@ -126,6 +134,7 @@ class AppRouter extends _i1.RootStackRouter {
         _i1.RouteConfig(SearchRegistrationRoute.name, path: '/search'),
         _i1.RouteConfig(RegistrationRoute.name, path: '/registration'),
         _i1.RouteConfig(FullScreenVideoRoute.name, path: '/fullscreen-video'),
+        _i1.RouteConfig(StoryRoute.name, path: '/story'),
         _i1.RouteConfig(SavedItemRoute.name, path: ':itemId'),
         _i1.RouteConfig(HomeRoute.name, path: '/home', children: [
           _i1.RouteConfig(FeedRoute.name, path: 'feed'),
@@ -167,9 +176,9 @@ class RegistrationRoute extends _i1.PageRouteInfo<void> {
 
 class FullScreenVideoRoute extends _i1.PageRouteInfo<FullScreenVideoRouteArgs> {
   FullScreenVideoRoute(
-      {_i2.Key? key,
+      {_i18.Key? key,
       required String source,
-      required _i17.VideoPlayerController controller})
+      required _i19.VideoPlayerController controller})
       : super(name,
             path: '/fullscreen-video',
             args: FullScreenVideoRouteArgs(
@@ -182,15 +191,31 @@ class FullScreenVideoRouteArgs {
   const FullScreenVideoRouteArgs(
       {this.key, required this.source, required this.controller});
 
-  final _i2.Key? key;
+  final _i18.Key? key;
 
   final String source;
 
-  final _i17.VideoPlayerController controller;
+  final _i19.VideoPlayerController controller;
+}
+
+class StoryRoute extends _i1.PageRouteInfo<StoryRouteArgs> {
+  StoryRoute({required int index, _i18.Key? key})
+      : super(name,
+            path: '/story', args: StoryRouteArgs(index: index, key: key));
+
+  static const String name = 'StoryRoute';
+}
+
+class StoryRouteArgs {
+  const StoryRouteArgs({required this.index, this.key});
+
+  final int index;
+
+  final _i18.Key? key;
 }
 
 class SavedItemRoute extends _i1.PageRouteInfo<SavedItemRouteArgs> {
-  SavedItemRoute({_i2.Key? key, required int itemId})
+  SavedItemRoute({_i18.Key? key, required int itemId})
       : super(name,
             path: ':itemId',
             args: SavedItemRouteArgs(key: key, itemId: itemId),
@@ -202,14 +227,14 @@ class SavedItemRoute extends _i1.PageRouteInfo<SavedItemRouteArgs> {
 class SavedItemRouteArgs {
   const SavedItemRouteArgs({this.key, required this.itemId});
 
-  final _i2.Key? key;
+  final _i18.Key? key;
 
   final int itemId;
 }
 
 class HomeRoute extends _i1.PageRouteInfo<HomeRouteArgs> {
   HomeRoute(
-      {_i2.Key? key,
+      {_i18.Key? key,
       bool shouldLoadData = true,
       List<_i1.PageRouteInfo>? children})
       : super(name,
@@ -223,13 +248,13 @@ class HomeRoute extends _i1.PageRouteInfo<HomeRouteArgs> {
 class HomeRouteArgs {
   const HomeRouteArgs({this.key, this.shouldLoadData = true});
 
-  final _i2.Key? key;
+  final _i18.Key? key;
 
   final bool shouldLoadData;
 }
 
 class FeedRoute extends _i1.PageRouteInfo<FeedRouteArgs> {
-  FeedRoute({_i2.Key? key, bool shouldLoadData = true})
+  FeedRoute({_i18.Key? key, bool shouldLoadData = true})
       : super(name,
             path: 'feed',
             args: FeedRouteArgs(key: key, shouldLoadData: shouldLoadData));
@@ -240,7 +265,7 @@ class FeedRoute extends _i1.PageRouteInfo<FeedRouteArgs> {
 class FeedRouteArgs {
   const FeedRouteArgs({this.key, this.shouldLoadData = true});
 
-  final _i2.Key? key;
+  final _i18.Key? key;
 
   final bool shouldLoadData;
 }

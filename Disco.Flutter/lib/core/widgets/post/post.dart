@@ -6,17 +6,22 @@ import 'package:disco_app/core/widgets/post/widgets/post_author.dart';
 import 'package:disco_app/core/widgets/post/widgets/song_body.dart';
 import 'package:disco_app/core/widgets/post/widgets/video_body.dart';
 import 'package:disco_app/core/widgets/post_button.dart';
+import 'package:disco_app/data/local/local_storage.dart';
 import 'package:disco_app/data/network/network_models/post_network.dart';
+import 'package:disco_app/res/strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/io_client.dart';
 import 'package:http/src/client.dart';
+import 'package:logging/logging.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:signalr_netcore/signalr_client.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-const String serverUrl = 'https://devdiscoapi.azurewebsites.net/hub/like';
+import '../../../injection.dart';
+
+const String serverUrl = 'https://devdiscoapi.azurewebsites.net/like';
 const String token =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJuYmYiOjE2NTQxOTk2OTMsImV4cCI6MTY1NDI3MTY5MywiaXNzIjoiZGlzY28tYXBpIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdC9EaXNjby5BcGkifQ.o0pUMkhRb5hm3ziPDNv1QCcLs-shMhAkc2dHGw_MkWI';
 
@@ -110,7 +115,9 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
               if (widget.post.postSongs != null && widget.post.postSongs!.isNotEmpty)
                 ...widget.post.postSongs!
                     .map((postSong) => SongBody(
-                          userName: widget.post.profile?.user?.userName ?? "",
+                          userName: widget.post.postSongs?[_currentPageIndex].executorName ??
+                              widget.post.profile?.user?.userName ??
+                              "",
                           postSong: postSong,
                           songSources:
                               widget.post.postSongs?.map((e) => e.source ?? '').toList() ?? [],
@@ -180,45 +187,44 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
                       print('LOL228 $event');
                     });
 
-                    // Logger.root.level = Level.ALL;
-                    // final logger = Logger("PostModel");
-                    // final logMessagesSub =
-                    //     Logger.root.onRecord.listen((msg) => print('LOGLOL${msg.message}'));
-                    // final builder = HubConnectionBuilder()
-                    //     .withUrl(
-                    //   serverUrl,
-                    //   options: HttpConnectionOptions(
-                    //     httpClient: WebSupportingHttpClient(logger,
-                    //         httpClientCreateCallback: _httpClientCreateCallback),
-                    //     logMessageContent: true,
-                    //     transport: HttpTransportType.WebSockets,
-                    //     accessTokenFactory: () async =>
-                    //         await getIt.get<SecureStorageRepository>().read(key: Strings.token),
-                    //     logger: Logger("SignalR - transport"),
-                    //   ),
-                    // )
-                    //     .withAutomaticReconnect(retryDelays: [2000, 5000, 10000, 20000]);
-                    // final hubConnection = builder.build();
-                    // await hubConnection.start();
-                    // // print('HEH ${hubConnection.state}');
-                    // if (hubConnection.state == HubConnectionState.Connected) {
-                    //   final obj = hubConnection.invoke('create', args: [widget.post.id ?? 0]);
-                    // }
-                    //
-                    // hubConnection.onreconnecting(({error}) {
-                    //   print("onreconnecting called");
-                    // });
-                    //
-                    // hubConnection.on('create', (args) {
-                    //   print('LOL1 ${args}');
-                    // });
-                    //
-                    // hubConnection.onclose(
-                    //   ({error}) => print('Connection close123'),
-                    // );
-                    // // print('OBJECT 888 $obj');
-                    //
-                    // // setState(() {});
+                    Logger.root.level = Level.ALL;
+                    final logger = Logger("PostModel");
+                    final logMessagesSub =
+                        Logger.root.onRecord.listen((msg) => print('LOGLOL${msg.message}'));
+                    final builder = HubConnectionBuilder()
+                        .withUrl(
+                      serverUrl,
+                      options: HttpConnectionOptions(
+                        httpClient: WebSupportingHttpClient(logger,
+                            httpClientCreateCallback: _httpClientCreateCallback),
+                        logMessageContent: true,
+                        transport: HttpTransportType.WebSockets,
+                        accessTokenFactory: () async =>
+                            await getIt.get<SecureStorageRepository>().read(key: Strings.token),
+                        logger: Logger("SignalR - transport"),
+                      ),
+                    )
+                        .withAutomaticReconnect(retryDelays: [2000, 5000, 10000, 20000]);
+                    final hubConnection = builder.build();
+                    await hubConnection.start();
+                    // print('HEH ${hubConnection.state}');
+                    hubConnection.on('onLike', (args) {
+                      print('LOL1 ${args}');
+                    });
+                    if (hubConnection.state == HubConnectionState.Connected) {
+                      final obj = hubConnection.invoke('AddPost', args: [widget.post.id ?? 0]);
+                    }
+
+                    hubConnection.onreconnecting(({error}) {
+                      print("onreconnecting called");
+                    });
+
+                    hubConnection.onclose(
+                      ({error}) => print('Connection close123'),
+                    );
+                    // print('OBJECT 888 $obj');
+
+                    // setState(() {});
                   },
                   imagePath: "assets/ic_star.svg"),
               Padding(

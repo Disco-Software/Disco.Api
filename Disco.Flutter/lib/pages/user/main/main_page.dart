@@ -1,11 +1,13 @@
+import 'package:auto_route/src/router/auto_router_x.dart';
+import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/core/widgets/post/post.dart';
 import 'package:disco_app/core/widgets/unicorn_image.dart';
 import 'package:disco_app/data/network/network_models/post_network.dart';
-import 'package:disco_app/data/network/network_models/story_network.dart';
 import 'package:disco_app/pages/user/main/bloc/posts_cubit.dart';
 import 'package:disco_app/pages/user/main/bloc/stories_cubit.dart';
 import 'package:disco_app/pages/user/main/bloc/stories_state.dart';
 import 'package:disco_app/res/numbers.dart';
+import 'package:disco_app/res/strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,9 +53,11 @@ class _SuccessStateWidget extends StatefulWidget {
 class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
   final List<Post> _posts = [];
-  final List<StoriesModel> _stories = [];
+
+  // final List<StoriesModel> _stories = [];
   int _postNumberPage = 1;
-  int _storiesNumberPage = 1;
+
+  // int _storiesNumberPage = 1;
   bool isLastBlocPaginationPage = false;
 
   @override
@@ -98,18 +102,18 @@ class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
               ),
               BlocConsumer<StoriesCubit, StoriesState>(
                 listener: (context, state) {
-                  if (state is SuccessStoriesState) {
-                    _stories.addAll(state.stories);
-                    setState(() {});
-                    if (state.stories.length < Numbers.storiesPageSize) {
-                      context.read<StoriesCubit>().isLastPage = true;
-                    } else {
-                      _storiesNumberPage++;
-                    }
-                  }
+                  // if (state is SuccessStoriesState) {
+                  //   _stories.addAll(state.stories);
+                  //   setState(() {});
+                  //   if (state.stories.length < Numbers.storiesPageSize) {
+                  //     context.read<StoriesCubit>().isLastPage = true;
+                  //   } else {
+                  //     _storiesNumberPage++;
+                  //   }
+                  // }
                 },
                 builder: (context, state) {
-                  if (_stories.isNotEmpty) {
+                  if (context.read<StoriesCubit>().stories.isNotEmpty) {
                     return SliverToBoxAdapter(
                       child: Stack(
                         children: [
@@ -119,9 +123,8 @@ class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
                               onNotification: (ScrollNotification scrollInfo) {
                                 if (scrollInfo is ScrollEndNotification &&
                                     !context.read<StoriesCubit>().isLastPage) {
-                                  context
-                                      .read<StoriesCubit>()
-                                      .loadStories(pageNumber: _storiesNumberPage);
+                                  context.read<StoriesCubit>().loadStories(
+                                      pageNumber: context.read<StoriesCubit>().pageNumber);
                                 }
                                 return true;
                               },
@@ -130,30 +133,46 @@ class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
                                       scrollDirection: Axis.horizontal,
                                       itemBuilder: (ctx, index) {
                                         if (index == 0) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(left: 12, right: 8),
-                                            child: UnicornImage(
-                                              title: "Your story",
-                                              imageUrl: (state is SuccessStoriesState)
-                                                  ? state.userImageUrl
-                                                  : '',
-                                              shouldHaveGradientBorder: false,
-                                              shouldHavePlus: true,
+                                          return GestureDetector(
+                                            onTap: () {},
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(left: 12, right: 8),
+                                              child: UnicornImage(
+                                                title: "Your story",
+                                                imageUrl: (state is SuccessStoriesState)
+                                                    ? state.userImageUrl
+                                                    : '',
+                                                shouldHaveGradientBorder: false,
+                                                shouldHavePlus: true,
+                                              ),
                                             ),
                                           );
                                         } else {
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                                            child: UnicornImage(
-                                              imageUrl: _stories[index - 1].profile?.photo ??
-                                                  "assets/ic_photo.png",
-                                              title:
-                                                  _stories[index - 1].profile?.user?.userName ?? "",
+                                          return GestureDetector(
+                                            onTap: () =>
+                                                context.router.push(StoryRoute(index: index - 1)),
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                                              child: UnicornImage(
+                                                imageUrl: context
+                                                        .read<StoriesCubit>()
+                                                        .stories[index - 1]
+                                                        .profile
+                                                        ?.photo ??
+                                                    Strings.defaultStoryImage,
+                                                title: context
+                                                        .read<StoriesCubit>()
+                                                        .stories[index - 1]
+                                                        .profile
+                                                        ?.user
+                                                        ?.userName ??
+                                                    "",
+                                              ),
                                             ),
                                           );
                                         }
                                       },
-                                      itemCount: _stories.length + 1,
+                                      itemCount: context.read<StoriesCubit>().stories.length + 1,
                                     )
                                   : const Center(child: CircularProgressIndicator()),
                             ),

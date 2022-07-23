@@ -14,8 +14,9 @@ class StoriesCubit extends Cubit<StoriesState> {
   final StoriesRepository storiesRepository;
 
   StoriesCubit({required this.storiesRepository}) : super(InitialStoriesState());
-
   bool isLastPage = false;
+  List<StoriesModel> stories = [];
+  int pageNumber = 0;
 
   Future<void> loadStories({required int pageNumber, bool isInitial = false}) async {
     if (isInitial) {
@@ -23,12 +24,19 @@ class StoriesCubit extends Cubit<StoriesState> {
     }
     try {
       emit(LoadingStoriesState());
-      final stories = isLastPage
+      final _stories = isLastPage
           ? <StoriesModel>[]
           : await storiesRepository.fetchStories(pageNumber, Numbers.storiesPageSize);
       final userImageUrl = await getIt.get<SecureStorageRepository>().read(key: Strings.userPhoto);
+      stories.addAll(_stories ?? []);
+
+      if (_stories != null && _stories.length < Numbers.storiesPageSize) {
+        isLastPage = true;
+      } else {
+        pageNumber++;
+      }
       emit(SuccessStoriesState(
-        stories: stories ?? [],
+        stories: _stories ?? [],
         userImageUrl: userImageUrl,
       ));
     } catch (err) {

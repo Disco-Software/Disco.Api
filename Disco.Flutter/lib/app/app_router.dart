@@ -11,6 +11,7 @@ import 'package:disco_app/pages/user/add_post/widgets/fullscreen_video.dart';
 import 'package:disco_app/pages/user/chat/chat.dart';
 import 'package:disco_app/pages/user/home_page.dart';
 import 'package:disco_app/pages/user/main/main_page.dart';
+import 'package:disco_app/pages/user/main/pages/story_page.dart';
 import 'package:disco_app/pages/user/profile/profile.dart';
 import 'package:disco_app/pages/user/saved/saved.dart';
 import 'package:disco_app/pages/user/saved/saved_item_page/saved_item.dart';
@@ -23,6 +24,7 @@ import 'package:disco_app/pages/user/saved/saved_item_page/saved_item.dart';
     AutoRoute(path: "/search", page: SearchRegistrationPage),
     AutoRoute(path: "/registration", page: RegistrationPage),
     AutoRoute(path: '/fullscreen-video', page: FullScreenVideoPage),
+    AutoRoute(path: '/story', page: StoryPage),
     AutoRoute(
       path: ':itemId',
       page: SavedItem,
