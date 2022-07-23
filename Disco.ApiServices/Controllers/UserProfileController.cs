@@ -12,17 +12,24 @@ namespace Disco.ApiServices.Controllers
     [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
     public class UserProfileController : ControllerBase
     {
-        private readonly IProfileService profileService;
-
-        public UserProfileController(IProfileService profileService)
+        private readonly IProfileService _profileService;
+        private readonly IUserService _userService;
+        public UserProfileController(
+            IProfileService profileService,
+            IUserService userService)
         {
-            profileService = profileService;
+            _profileService = profileService;
+            _userService = userService;
         }
 
         [HttpPut("update")]
         public async Task<IActionResult> Update([FromForm] UpdateProfileDto model)
         {
-            return await profileService.UpdateProfileAsync(model);
+            var user = await _userService.GetUserAsync(HttpContext.User);
+
+            var profile = await _profileService.UpdateProfileAsync(user, model);
+
+            return Ok(user);
         }
     }
 }
