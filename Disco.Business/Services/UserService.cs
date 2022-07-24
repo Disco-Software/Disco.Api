@@ -66,5 +66,15 @@ namespace Disco.Business.Services
 
             return user;
         }
+
+        public async Task<User> GetUserByIdAsync(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+
+            await _userRepository.GetUserInfosAsync(user);
+            user.RoleName = _userRepository.GetUserRole(user);
+
+            return user;
+        }
     }
 }

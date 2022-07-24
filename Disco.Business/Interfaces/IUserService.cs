@@ -16,5 +16,6 @@ namespace Disco.Business.Interfaces
         Task<User> GetUserByRefreshTokenAsync(string refreshToken);
         Task SaveRefreshTokenAsync(User user, string refreshToken);
         Task<User> GetUserAsync(ClaimsPrincipal claimsPrincipal);
+        Task<User> GetUserByIdAsync(int id);
     }
 }
