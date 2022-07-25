@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Disco.Repositories\Disco.Domain.csproj" />
+    <ProjectReference Include="..\Disco.Domain\Disco.Domain.csproj" />
   </ItemGroup>
 
 </Project>
