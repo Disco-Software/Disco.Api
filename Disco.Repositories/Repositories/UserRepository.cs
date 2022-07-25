@@ -3,6 +3,7 @@ using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -55,6 +56,15 @@ namespace Disco.Domain.Repositories
             user.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
 
             await ctx.SaveChangesAsync();
+        }
+
+        public async Task<List<User>> GetAllUsers(int pageNumber, int pageSize)
+        {
+            return await ctx.Users
+                .OrderByDescending(d => d.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
         }
     }
 }

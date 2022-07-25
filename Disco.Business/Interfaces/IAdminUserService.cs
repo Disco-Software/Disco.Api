@@ -8,8 +8,8 @@ namespace Disco.Business.Interfaces
 {
     public interface IAdminUserService
     {
-        Task<IActionResult> CreateUserAsync(RegistrationDto model);
-        Task<IActionResult> RemoveUserAsync(int id);
-        Task<ActionResult<List<User>>> GetAllUsers(int pageNumber, int pageSize);
+        Task<User> CreateUserAsync(RegistrationDto model);
+        Task RemoveUserAsync(int id);
+        Task<List<User>> GetAllUsers(int pageNumber, int pageSize);
     }
 }

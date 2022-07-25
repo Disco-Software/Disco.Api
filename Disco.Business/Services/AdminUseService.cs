@@ -11,63 +11,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Disco.Business.Validators;
+using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
-    public class AdminUserService : ApiRequestHandlerBase, IAdminUserService
+    public class AdminUserService : IAdminUserService
     {
-        private readonly ApiDbContext ctx;
-        private readonly UserManager<User> userManager;
-        private readonly IMapper mapper;
+        private readonly UserManager<User> _userManager;
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
         public AdminUserService(
-            ApiDbContext _ctx, 
-            UserManager<User> _userManager, 
-            IMapper _mapper)
+            UserManager<User> userManager, 
+            IUserRepository userRepository,   
+            IMapper mapper)
         {
-            ctx = _ctx;
-            userManager = _userManager;
-            mapper = _mapper;
+            this._userManager = userManager;
+            this._userRepository = userRepository;
+            this._mapper = mapper;
         }
 
-        public async Task<IActionResult> CreateUserAsync(RegistrationDto model)
+        public async Task<User> CreateUserAsync(RegistrationDto model)
         {
-            var validator = await RegistrationValidator
-                .Create(userManager)
-                .ValidateAsync(model);
-
-            if (validator.Errors.Count > 0)
-                return BadRequest(validator.Errors);
-
-            var user = mapper.Map<User>(model);
+            var user = _mapper.Map<User>(model);
 
             user.Email = model.Email;
             user.UserName = model.UserName;
-            user.PasswordHash = userManager.PasswordHasher.HashPassword(user, model.Password);
+            user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, model.Password);
 
-           var identityResult = await userManager.CreateAsync(user);
-            if(!identityResult.Succeeded)
-                return BadRequest(identityResult);
+           await _userManager.CreateAsync(user);
 
-            return Ok(user);
+            return user;
         }
 
-        public async Task<ActionResult<List<User>>> GetAllUsers(int pageNumber, int pageSize) =>
-            await ctx.Users
-                .OrderByDescending(d => d.Id)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-        public async Task<IActionResult> RemoveUserAsync(int id)
+        public async Task<List<User>> GetAllUsers(int pageNumber, int pageSize)
         {
-            var user = await ctx.Users
-                .Include(p => p.Profile)
-                .Where(i => i.Id == id)
-                .FirstOrDefaultAsync();
+            return await _userRepository.GetAllUsers(pageNumber, pageSize);
+        }
 
-            ctx.Users.Remove(user);
+        public async Task RemoveUserAsync(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
 
-            return Ok();
+            await _userManager.DeleteAsync(user);
         }
     }
 }
