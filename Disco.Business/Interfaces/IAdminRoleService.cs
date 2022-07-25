@@ -8,8 +8,8 @@ namespace Disco.Business.Interfaces
 {
     public interface IAdminRoleService
     {
-        Task<IActionResult> CreateRoleAsync(CreateRoleDto model);
-        Task<IActionResult> RemoveRoleAsync(string name);
-        Task<ActionResult<List<Role>>> GetAllRoles(GetAllRolesDto model);
+        Task<Role> CreateRoleAsync(CreateRoleDto dto);
+        Task RemoveRoleAsync(string name);
+        Task<List<Role>> GetAllRoles(GetAllRolesDto dto);
     }
 }

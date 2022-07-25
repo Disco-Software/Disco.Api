@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
-using Disco.Business.Handlers;
 using Disco.Business.Interfaces;
 using Disco.Business.Dtos.Posts;
 using Disco.Business.Dtos.Songs;
 using Disco.Domain.EF;
 using Disco.Domain.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,56 +12,40 @@ using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
-    public class PostService : ApiRequestHandlerBase, IPostService
+    public class PostService : IPostService
     {
-        private readonly ApiDbContext ctx;
-        private readonly UserManager<User> userManager;
-        private readonly IPostRepository postRepository;
-        private readonly IImageService imageService;
-        private readonly ISongService songService;
-        private readonly IVideoService videoService;
-        private readonly IMapper mapper;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IUserService _userService;
+        private readonly IPostRepository _postRepository;
+        private readonly IImageService _imageService;
+        private readonly ISongService _songService;
+        private readonly IVideoService _videoService;
+        private readonly IMapper _mapper;
         public PostService(
-            ApiDbContext _ctx,
-            UserManager<User> _userManager,
-            IMapper _mapper,
-            IPostRepository _postRepository,
-            IImageService _imageService,
-            ISongService _songService,
-            IVideoService _videoService,
-            IHttpContextAccessor _httpContextAccessor)
+            IUserService userService,
+            IMapper mapper,
+            IPostRepository postRepository,
+            IImageService imageService,
+            ISongService songService,
+            IVideoService videoService)
         {
-            postRepository = _postRepository;
-            ctx = _ctx;
-            userManager = _userManager;
-            mapper = _mapper;
-            imageService = _imageService;
-            songService = _songService;
-            videoService = _videoService;
-            httpContextAccessor = _httpContextAccessor;
+            this._postRepository = postRepository;
+            this._userService = userService;
+            this._mapper = mapper;
+            this._imageService = imageService;
+            this._songService = songService;
+            this._videoService = videoService;
         }
 
-        public async Task<IActionResult> CreatePostAsync(CreatePostDto model)
-        {
-            var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
-           
-             await ctx.Entry(user)
-                .Reference(p => p.Profile)
-                .LoadAsync();
-
-            await ctx.Entry(user.Profile)
-                 .Collection(p => p.Posts)
-                 .LoadAsync();
-
-            var post = mapper.Map<Post>(model);
+        public async Task<Post> CreatePostAsync(User user, CreatePostDto model)
+        {            
+            var post = _mapper.Map<Post>(model);
             post.Profile = user.Profile;
             post.ProfileId = user.Profile.Id;
             
             if (model.PostImages != null)
                 foreach (var file in model.PostImages)
                 {
-                    var image = await imageService.CreatePostImage(
+                    var image = await _imageService.CreatePostImage(
                         new Dtos.Images.CreateImageDto { ImageFile = file });
                     post.PostImages.Add(image);
                 }
@@ -76,7 +56,7 @@ namespace Disco.Business.Services
                     var image = model.PostSongImages.First();
                     var executorName = model.ExecutorNames.First();
 
-                    var song = await songService.CreatePostSongAsync(
+                    var song = await _songService.CreatePostSongAsync(
                          new CreateSongDto { SongFile = postSong, SongImage = image, Name = name, ExecutorName = executorName, PostId = post.Id });
                    
                     model.PostSongNames.Remove(name);
@@ -88,7 +68,7 @@ namespace Disco.Business.Services
             if (model.PostVideos != null)
                 foreach (var video in model.PostVideos)
                 {
-                    var postVideo = await videoService.CreateVideoAsync(
+                    var postVideo = await _videoService.CreateVideoAsync(
                         new Dtos.Videos.CreateVideoDto { VideoFile = video });
                     post.PostVideos.Add(postVideo);
                 }
@@ -97,26 +77,24 @@ namespace Disco.Business.Services
             post.Profile = user.Profile;
             post.DateOfCreation = DateTime.UtcNow;
 
-            await postRepository.AddAsync(post,user);
+            await _postRepository.AddAsync(post,user);
 
-            return Ok(post);
+            return post;
         }
 
-        public async Task DeletePostAsync(int postId) =>
-           await postRepository.Remove(postId);
-
-        public async Task<ActionResult<List<Post>>> GetAllUserPosts(GetAllPostsDto model)
+        public async Task DeletePostAsync(int postId)
         {
-            var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
-
-            return await postRepository.GetAllUserPosts(user.Id, model.PageSize, model.PageNumber);
+            await _postRepository.Remove(postId);
         }
 
-        public async Task<ActionResult<List<Post>>> GetAllPosts(GetAllPostsDto model)
+        public async Task<List<Post>> GetAllUserPosts(User user,GetAllPostsDto model)
         {
-            var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
+            return await _postRepository.GetAllUserPosts(user.Id, model.PageSize, model.PageNumber);
+        }
 
-            return await postRepository.GetAllUserPosts(user.Id, model.PageSize, model.PageNumber);
+        public async Task<List<Post>> GetAllPosts(User user, GetAllPostsDto model)
+        {
+            return await _postRepository.GetAllPosts(user.Id, model.PageSize, model.PageNumber);
         }
     }
 }

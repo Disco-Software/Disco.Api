@@ -14,55 +14,33 @@ using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
-    public class StoryService : ApiRequestHandlerBase, IStoryService
+    public class StoryService : IStoryService
     {
-        private readonly UserManager<User> userManager;
-        private readonly ApiDbContext ctx;
-        private readonly IStoryRepository storyRepository;
-        private readonly IStoryImageService storyImageService;
-        private readonly IStoryVideoService storyVideoService;
-        private readonly IMapper mapper;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IStoryRepository _storyRepository;
+        private readonly IStoryImageService _storyImageService;
+        private readonly IStoryVideoService _storyVideoService;
+        private readonly IMapper _mapper;
         public StoryService(
-            UserManager<User> _userManager,
-            ApiDbContext _ctx,
-            IStoryRepository _storyRepository,
-            IStoryImageService _storyImageService,
-            IStoryVideoService _storyVideoService,
-            IMapper _mapper,
-            IHttpContextAccessor _httpContextAccessor)
+            IStoryRepository storyRepository,
+            IStoryImageService storyImageService,
+            IStoryVideoService storyVideoService,
+            IMapper mapper)
         {
-            storyRepository = _storyRepository;
-            userManager = _userManager;
-            ctx = _ctx;
-            storyImageService = _storyImageService;
-            storyVideoService = _storyVideoService;
-            mapper = _mapper;
-            httpContextAccessor = _httpContextAccessor;
+            this._storyRepository = storyRepository;
+            this._storyImageService = storyImageService;
+            this._storyVideoService = storyVideoService;
+            this._mapper = mapper;
         }
         
 
-        public async Task<IActionResult> CreateStoryAsync(CreateStoryDto model)
+        public async Task<Story> CreateStoryAsync(User user, CreateStoryDto model)
         {
-            var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
-
-            await ctx.Entry(user)
-                .Reference(p => p.Profile)
-                .LoadAsync();
-
-            await ctx.Entry(user.Profile)
-                .Collection(s => s.Stories)
-                .LoadAsync();
-
-            if (user == null)
-                throw new NullReferenceException("User is null");
-
-            var story = mapper.Map<Story>(model);
+            var story = _mapper.Map<Story>(model);
 
             if (model.StoryImages != null)
                 foreach (var image in model.StoryImages)
                 {
-                    var storyImage = await storyImageService.CreateStoryImageAsync(
+                    var storyImage = await _storyImageService.CreateStoryImageAsync(
                         new Dtos.StoryImages.CreateStoryImageDto { StoryImageFile = image });
                     story.StoryImages.Add(storyImage);
                 }
@@ -70,7 +48,7 @@ namespace Disco.Business.Services
             if (model.StoryVideos != null)
                 foreach (var video in model.StoryVideos)
                 {
-                    var storyImage = await storyVideoService.CreateStoryVideoAsync(
+                    var storyImage = await _storyVideoService.CreateStoryVideoAsync(
                         new Dtos.StoryVideos.CreateStoryVideoDto { VideoFile = video });
                     story.StoryVideos.Add(storyImage);
                 }
@@ -78,36 +56,24 @@ namespace Disco.Business.Services
             story.DateOfCreation = DateTime.UtcNow;
 
             user.Profile.Stories.Add(story);
-            await storyRepository.AddAsync(story, user.Profile);
+            await _storyRepository.AddAsync(story, user.Profile);
 
-            return Ok(story);
+            return story;
         }
 
         public async Task DeleteStoryAsync(int id)
         {
-            var story = await storyRepository.Get(id);
-
-            if (story.DateOfCreation > DateTime.UtcNow.AddHours(12))
-                await storyRepository.Remove(id);
+            await _storyRepository.Remove(id);
         }
 
-        public async Task<ActionResult<Story>> GetStoryAsync(int id) => 
-            await storyRepository.Get(id);
-
-        public async Task<ActionResult<List<Story>>> GetAllStoryAsync(GetAllStoriesDto model)
+        public async Task<Story> GetStoryAsync(int id)
         {
-            var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
+           return await _storyRepository.Get(id);
+        }
 
-            await ctx.Entry(user)
-                .Reference(s => s.Profile)
-                .LoadAsync();
-
-            await ctx.Entry(user.Profile)
-                .Collection(s => s.Stories)
-                .LoadAsync();
-
-            var stories = await storyRepository.GetAllAsync(user.Profile.Id, model.PageNumber, model.PageSize);
-
+        public async Task<List<Story>> GetAllStoryAsync(User user, GetAllStoriesDto model)
+        {
+            var stories = await _storyRepository.GetAllAsync(user.Profile.Id, model.PageNumber, model.PageSize);
             return stories;
         }
     }

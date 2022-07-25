@@ -36,7 +36,9 @@ namespace Disco.Api
             services.ConfigureDbContext(Configuration);
             services.ConfigureIdentity();
             services.ConfigureAzureServices(Configuration);
-            services.AddSignalR();
+            services.AddSignalR(options => {
+                options.EnableDetailedErrors = true;
+            });
             services.AddOptions<AuthenticationOptions>();
             services.Configure<EmailOptions>(Configuration.GetSection("EmailSettings"));
             services.Configure<GoogleOptions>(Configuration.GetSection("Google"));
@@ -99,17 +101,10 @@ namespace Disco.Api
 
             app.UseWebSockets();
 
-            //app.UseCors(s =>
-            //{
-            //    s.SetIsOriginAllowed(o => true)
-            //        .AllowAnyHeader()
-            //        .AllowAnyMethod();
-            //});
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<LikeHub>("/like");
+                endpoints.MapHub<LikeHub>("/hub/like");
             });
         }
     }

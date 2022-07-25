@@ -26,11 +26,13 @@ namespace Disco.ApiServices.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] CreateRoleDto model)
         {
-            return await adminRoleService.CreateRoleAsync(model);
+            var role = await adminRoleService.CreateRoleAsync(model);
+
+            return Ok(role);
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Role>>> GetAllRoles()
+        public async Task<ActionResult<List<Role>>> GetAllRoles([FromQuery] GetAllRolesDto dto)
         {
             return await adminRoleService.GetAllRoles(new GetAllRolesDto { PageNumber = 1, PageSize = 10});
         }

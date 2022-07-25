@@ -15,7 +15,7 @@ namespace Disco.Domain.Repositories
 
         public async Task<Profile> GetAsync(int id)
         {
-           return await ctx.Profiles
+           return await _ctx.Profiles
                   .Include(u => u.User)
                   .Where(p => p.Id == id)
                   .FirstOrDefaultAsync();
@@ -23,9 +23,9 @@ namespace Disco.Domain.Repositories
 
         public override async Task<Profile> Update(Profile newItem)
         {
-            var profile = ctx.Profiles.Update(newItem).Entity;
+            var profile = _ctx.Profiles.Update(newItem).Entity;
             
-            await ctx.SaveChangesAsync();
+            await _ctx.SaveChangesAsync();
             
             return profile;
         }

@@ -8,9 +8,9 @@ namespace Disco.Business.Interfaces
 {
     public interface IStoryService
     {
-        Task<IActionResult> CreateStoryAsync(CreateStoryDto model);
+        Task<Story> CreateStoryAsync(User user, CreateStoryDto model);
         Task DeleteStoryAsync(int id);
-        Task<ActionResult<Story>> GetStoryAsync(int id);
-        Task<ActionResult<List<Story>>> GetAllStoryAsync(GetAllStoriesDto model);
+        Task<Story> GetStoryAsync(int id);
+        Task<List<Story>> GetAllStoryAsync(User user, GetAllStoriesDto model);
     }
 }

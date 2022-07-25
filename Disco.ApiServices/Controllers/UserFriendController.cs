@@ -12,35 +12,47 @@ namespace Disco.ApiServices.Controllers
     [ApiController]
     public class UserFriendController : ControllerBase
     {
-        private readonly IFriendService friendService;
-
-        public UserFriendController(IFriendService _friendService)
+        private readonly IFriendService _friendService;
+        private readonly IUserService _userService;
+        public UserFriendController(
+            IFriendService friendService,
+            IUserService userService)
         {
-            friendService = _friendService;
+            this._friendService = friendService;
+            this._userService = userService;
         }
 
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] CreateFriendDto model)
         {
-            return await friendService.CreateFriendAsync(model);
+            var user = await _userService.GetUserAsync(HttpContext.User);
+            var friend = await _userService.GetUserByIdAsync(model.FriendId);
+
+            var friendResponse = await _friendService.CreateFriendAsync(user, friend, model);
+
+            return Ok(friendResponse);
         }
 
         [HttpGet("get/{friendId:int}")]
         public async Task<IActionResult> GetFriend([FromRoute] int friendId)
         {
-            return await friendService.GetFriendAsync(friendId);
+            var friend = await _friendService.GetFriendAsync(friendId);
+
+            return Ok(friend);
         }
 
-        [HttpGet("{userId:int}")]
-        public async Task<IActionResult> GetAll([FromRoute] int userId)
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] GetAllFriendsDto dto)
         {
-            return await friendService.GetAllFriends(userId);
+            var friends = await _friendService.GetAllFriends(dto);
+
+            return Ok(friends);
         }
 
         [HttpDelete("{friendId:int}")]
         public async Task DeleteFriend([FromRoute] int friendId)
         {
-            await friendService.DeleteFriend(friendId);
+            await _friendService.DeleteFriend(friendId);
         }
     }
 }

@@ -2,6 +2,9 @@
 using Disco.Business.Dtos.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Disco.Business.Validators;
+using Microsoft.AspNetCore.Identity;
+using Disco.Domain.Models;
 
 namespace Disco.ApiServices.Controllers
 {
@@ -9,35 +12,82 @@ namespace Disco.ApiServices.Controllers
     [ApiController]
     public class AdminAuthenticationController : ControllerBase
     {
-        private readonly IAdminAuthenticationService adminAuthenticationService;
-
-        public AdminAuthenticationController(IAdminAuthenticationService _adminAuthenticationService)
+        private readonly UserManager<User> _userManager;
+        private readonly IAdminAuthenticationService _adminAuthenticationService;
+        private readonly IUserService _userService;
+        public AdminAuthenticationController(
+            UserManager<User> userManager,
+            IAdminAuthenticationService adminAuthenticationService, 
+            IUserService userService)
         {
-            adminAuthenticationService = _adminAuthenticationService;
+            _userManager = userManager;
+            _adminAuthenticationService = adminAuthenticationService;
+            _userService = userService;
         }
 
         [HttpPost("log-in")]
         public async Task<IActionResult> LogIn([FromForm] LoginDto model)
         {
-            return await adminAuthenticationService.LogIn(model);
+            var validator = await LogInValidator
+                .Create(_userManager)
+                .ValidateAsync(model);
+
+            if (!validator.IsValid)
+            {
+                return BadRequest(validator.Errors);
+            }
+
+            var user = await _userService.GetUserByEmailAsync(model.Email);
+            await _userService.LoadUserInfoAsync(user);
+
+            var passwordValidator = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password);
+            if (passwordValidator == PasswordVerificationResult.Failed)
+            {
+                return BadRequest(passwordValidator);
+            }
+
+            var userResponse = await _adminAuthenticationService.LogIn(user, model);
+
+            return Ok(userResponse);
         }
 
         [HttpPut("refresh")]
-        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenRequestModel)
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto dto)
         {
-            return await adminAuthenticationService.RefreshToken(refreshTokenRequestModel);
+            var user = await _userService.GetUserByRefreshTokenAsync(dto.RefreshToken);
+
+            if (user == null)
+                return BadRequest();
+
+            var result = await _adminAuthenticationService.RefreshToken(dto);
+
+            return Ok(result);
         }
 
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto model)
         {
-            return await adminAuthenticationService.ForgotPassword(model);
+            var user = await _userService.GetUserByEmailAsync(model.Email);
+
+            if (user == null)
+                BadRequest("User is null");
+
+            var confirmationDto = await _adminAuthenticationService.ForgotPassword(user, model);
+
+            return Ok(confirmationDto);
         }
 
         [HttpPut("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model)
         {
-            return await adminAuthenticationService.ResetPassword(model);
+            var user = await _userService.GetUserByEmailAsync(model.Email);
+
+            if (user == null)
+                return BadRequest();
+
+            var restPasswordDto = await _adminAuthenticationService.ResetPassword(user, model);
+
+            return Ok(restPasswordDto);
         }
     }
 }
