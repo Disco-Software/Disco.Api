@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Tests", "Disco.Tests\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Business", "Disco.Business\Disco.Business.csproj", "{79509FA5-48BE-4769-BF6F-1A9A37F8049C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Domain", "Disco.Repositories\Disco.Domain.csproj", "{21515EC4-09A5-4089-BAD4-0B4822330414}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Domain", "Disco.Domain\Disco.Domain.csproj", "{21515EC4-09A5-4089-BAD4-0B4822330414}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.ApiServices", "Disco.ApiServices\Disco.ApiServices.csproj", "{130031B2-927A-412A-ADD4-BD15A4BABA6D}"
 EndProject
