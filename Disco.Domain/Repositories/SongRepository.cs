@@ -14,20 +14,20 @@ namespace Disco.Domain.Repositories
 
         public override async Task AddAsync(PostSong song)
         {
-            await _ctx.PostSongs.AddAsync(song);
+            await ctx.PostSongs.AddAsync(song);
         }
 
         public override async Task Remove(int id)
         {
-            var song = await _ctx.PostSongs
+            var song = await ctx.PostSongs
                 .Include(p => p.Post)
                 .Where(s => s.Id == id)
                 .FirstOrDefaultAsync();
 
             song.Post.PostSongs.Remove(song);
-            _ctx.PostSongs.Remove(song);
+            ctx.PostSongs.Remove(song);
 
-            await _ctx.SaveChangesAsync();
+            await ctx.SaveChangesAsync();
         }
     }
 }

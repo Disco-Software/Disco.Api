@@ -11,7 +11,7 @@ using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
-    public class FriendService : ApiRequestHandlerBase, IFriendService
+    public class FriendService : IFriendService
     {
         private readonly IMapper _mapper;
         private readonly IFriendRepository _friendRepository;
@@ -46,9 +46,8 @@ namespace Disco.Business.Services
 
             currentUserFriend.IsConfirmed = true;
 
-            var id = await _friendRepository.AddAsync(currentUserFriend);
-
-
+            _ = await _friendRepository.AddAsync(currentUserFriend);
+            
             return new FriendResponseDto
             {
                 FriendId = friend.Id,

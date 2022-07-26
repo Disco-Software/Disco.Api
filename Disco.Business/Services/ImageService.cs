@@ -11,23 +11,23 @@ namespace Disco.Business.Services
 {
     public class ImageService : IImageService
     {
-        private readonly BlobServiceClient blobServiceClient;
-        private readonly IMapper mapper;
-        private readonly IPostRepository postRepository;
-        private readonly IImageRepository imageRepository;
+        private readonly BlobServiceClient _blobServiceClient;
+        private readonly IMapper _mapper;
+        private readonly IPostRepository _postRepository;
+        private readonly IImageRepository _imageRepository;
 
 
 
         public ImageService(
-            BlobServiceClient _blobServiceClient,
-            IMapper _mapper, 
-            IPostRepository _postRepository,
-            IImageRepository _imageRepository)
+            BlobServiceClient blobServiceClient,
+            IMapper mapper, 
+            IPostRepository postRepository,
+            IImageRepository imageRepository)
         {
-            postRepository = _postRepository;
-            imageRepository = _imageRepository;
-            blobServiceClient = _blobServiceClient;
-            mapper = _mapper;
+            _postRepository = postRepository;
+            _imageRepository = imageRepository;
+            _blobServiceClient = blobServiceClient;
+            _mapper = mapper;
         }
 
 
@@ -41,23 +41,23 @@ namespace Disco.Business.Services
             if (model.ImageFile.Length == 0)
                 return null;
 
-            var containerClient = blobServiceClient.GetBlobContainerClient("images");
+            var containerClient = _blobServiceClient.GetBlobContainerClient("images");
             var blobClient = containerClient.GetBlobClient(uniqueImageName);
 
             using var imageReader = model.ImageFile.OpenReadStream();
             var blobResult = blobClient.Upload(imageReader);
 
-            var postImage = mapper.Map<PostImage>(model);
+            var postImage = _mapper.Map<PostImage>(model);
             postImage.Source = blobClient.Uri.AbsoluteUri;
 
-            await imageRepository.AddAsync(postImage);
+            await _imageRepository.AddAsync(postImage);
 
             return postImage;
         }
 
         public async Task RemoveImage(int id)
         {
-           await imageRepository.Remove(id);
+           await _imageRepository.Remove(id);
         }
     }
 }

@@ -12,24 +12,24 @@ namespace Disco.Business.Services
 {
     public class TokenService : ITokenService
     {
-        private readonly IOptions<AuthenticationOptions> authenticationOptions;
+        private readonly IOptions<AuthenticationOptions> _authenticationOptions;
 
-        public TokenService(IOptions<AuthenticationOptions> _options) =>
-            authenticationOptions = _options;
+        public TokenService(IOptions<AuthenticationOptions> options) =>
+            _authenticationOptions = options;
 
         public string GenerateAccessToken(User user)
         {
             var jwtSecurityToken = new JwtSecurityToken(
-                authenticationOptions.Value.Issuer,
-                authenticationOptions.Value.Audience,
+                _authenticationOptions.Value.Issuer,
+                _authenticationOptions.Value.Audience,
                 new[] { 
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Role, user.RoleName)
                 },
                 DateTime.UtcNow,
-                DateTime.UtcNow.AddHours(authenticationOptions.Value.ExpiresAfterMitutes),
+                DateTime.UtcNow.AddHours(_authenticationOptions.Value.ExpiresAfterMitutes),
                 new SigningCredentials(
-                        new SymmetricSecurityKey(authenticationOptions.Value.SigningKeyBytes),
+                        new SymmetricSecurityKey(_authenticationOptions.Value.SigningKeyBytes),
                         SecurityAlgorithms.HmacSha256));
 
             return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);

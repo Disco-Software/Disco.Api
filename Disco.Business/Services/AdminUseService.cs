@@ -14,6 +14,7 @@ namespace Disco.Business.Services
         private readonly UserManager<User> _userManager;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        
         public AdminUserService(
             UserManager<User> userManager, 
             IUserRepository userRepository,   

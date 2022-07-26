@@ -17,16 +17,16 @@ namespace Disco.Domain.Repositories
 
         public async Task<int> AddAsync(Friend currentUserFriend)
         {
-            await _ctx.Friends.AddAsync(currentUserFriend);
+            await ctx.Friends.AddAsync(currentUserFriend);
             
             currentUserFriend.IsFriend = true;
             
-            await _ctx.SaveChangesAsync();
+            await ctx.SaveChangesAsync();
             
             return currentUserFriend.Id;
         }
         public override async Task<Friend> Get(int id) =>
-            await _ctx.Friends
+            await ctx.Friends
                 .Include(u => u.UserProfile)
                 .ThenInclude(u => u.User)
                 .Include(f => f.ProfileFriend)
@@ -35,20 +35,20 @@ namespace Disco.Domain.Repositories
                 .FirstOrDefaultAsync();
         public override async Task Remove(int id)
         {
-          var friend = await _ctx.Friends
+          var friend = await ctx.Friends
                 .Include(u => u.UserProfile)
                 .ThenInclude(u => u.User)
                 .Include(f => f.ProfileFriend)
                 .ThenInclude(f => f.User)
                 .Where(f => f.Id == id)
                 .FirstOrDefaultAsync();
-            _ctx.Friends.Remove(friend);
+            ctx.Friends.Remove(friend);
            
-            await _ctx.SaveChangesAsync();
+            await ctx.SaveChangesAsync();
         }
         public async Task<List<Friend>> GetAllFriends(int id, int pageNumber, int pageSize)
         {
-            return await _ctx.Friends
+            return await ctx.Friends
                 .Include(u => u.UserProfile)
                 .ThenInclude(u => u.User)
                 .Include(p => p.ProfileFriend)

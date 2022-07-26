@@ -38,11 +38,11 @@ namespace Disco.Business.Mapper
                 .ForMember(source => source.Source, opt => opt.Ignore());
             CreateMap<RegistrationDto, User>();
             CreateMap<CreateFriendDto, Friend>();
-            CreateMap<Domain.Models.Profile, ProfileDto>();
+            CreateMap<Profile, ProfileDto>();
             CreateMap<User, UserResponseDto>()
                 .ForMember(source => source.RefreshToken, opt => opt.Ignore())
                 .ForMember(source => source.AccessToken, opt => opt.Ignore());
-            CreateMap<Domain.Models.Profile, ProfileDto>();
+            CreateMap<Profile, ProfileDto>();
             CreateMap<ProfileDto, FriendResponseDto>()
                 .ForMember(source => source.UserProfile, opt => opt.Ignore())
                 .ForMember(source => source.FriendProfile, opt => opt.Ignore())

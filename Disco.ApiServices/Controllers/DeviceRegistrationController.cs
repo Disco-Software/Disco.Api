@@ -9,17 +9,17 @@ namespace Disco.ApiServices.Controllers
     [ApiController]
     public class DeviceRegistrationController : ControllerBase
     {
-        private readonly IRegisterDeviceService registerDeviceService;
+        private readonly IRegisterDeviceService _registerDeviceService;
 
         public DeviceRegistrationController(IRegisterDeviceService registerDeviceService)
         {
-            this.registerDeviceService = registerDeviceService;
+            _registerDeviceService = registerDeviceService;
         }
 
         [HttpPost]
         public async Task<DeviceRegistrationDto> DeviceRegistration([FromBody] DeviceRegistrationDto model)
         {
-            return await registerDeviceService.RegisterDevice(model);
+            return await _registerDeviceService.RegisterDevice(model);
         }
     }
 }

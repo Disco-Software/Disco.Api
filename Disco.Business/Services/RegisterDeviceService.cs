@@ -10,21 +10,21 @@ namespace Disco.Business.Services
 {
     public class RegisterDeviceService : IRegisterDeviceService
     {
-        private readonly NotificationHubClient notificationHubClient;
-        private readonly IConfiguration configuration;
-        public RegisterDeviceService(IConfiguration _configuration)
+        private readonly NotificationHubClient _notificationHubClient;
+        private readonly IConfiguration _configuration;
+        public RegisterDeviceService(IConfiguration configuration)
         {
-            configuration = _configuration;
-            notificationHubClient = NotificationHubClient.CreateClientFromConnectionString(
-                configuration[Strings.NOTIFICATION_CONNECTION_STRING],
-                configuration[Strings.NOTIFICATION_NAME]);
+            _configuration = configuration;
+            _notificationHubClient = NotificationHubClient.CreateClientFromConnectionString(
+                _configuration[Strings.NotificationConnectionString],
+                _configuration[Strings.NotificationName]);
         }
 
         public async Task<Installation> GetInstallation(DeviceRegistrationDto model)
         {
             try
             {
-               return await notificationHubClient.GetInstallationAsync(model.InstallationId);
+               return await _notificationHubClient.GetInstallationAsync(model.InstallationId);
             }
             catch (Exception ex)
             {
@@ -45,14 +45,14 @@ namespace Disco.Business.Services
                 
                 instatalation.PushChannel = model.PlatformDeviceId;
                 instatalation.PushChannelExpired = false;
-                await notificationHubClient.CreateOrUpdateInstallationAsync(instatalation);
+                await _notificationHubClient.CreateOrUpdateInstallationAsync(instatalation);
 
                 return model;
             }
            
             var instalationId = Guid.NewGuid().ToString();
 
-            await notificationHubClient.CreateOrUpdateInstallationAsync(new Installation
+            await _notificationHubClient.CreateOrUpdateInstallationAsync(new Installation
             {
                 InstallationId = instalationId,
                 PushChannel = model.PlatformDeviceId,

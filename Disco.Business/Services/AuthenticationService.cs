@@ -7,7 +7,6 @@ using Disco.Business.Dtos.Apple;
 using Disco.Business.Dtos.Authentication;
 using Disco.Business.Dtos.EmailNotifications;
 using Disco.Business.Dtos.Facebook;
-using Disco.Domain.EF;
 using Disco.Domain.Models;
 using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Identity;
@@ -22,33 +21,25 @@ namespace Disco.Business.Services
 {
     public class AuthenticationService : ApiRequestHandlerBase, IAuthenticationService
     {
-        private readonly ApiDbContext _ctx;
         private readonly UserManager<User> _userManager;
         private readonly BlobServiceClient _blobServiceClient;
         private readonly IMapper _mapper;
-        private readonly IUserRepository _userRepository;
         private readonly IUserService _userService;
         private readonly ITokenService _tokenService;
         private readonly IGoogleAuthService _googleAuthService;
-        private readonly IFacebookAuthService _facebookAuthService;
         private readonly IEmailService _emailService;
         public AuthenticationService(
-            ApiDbContext ctx,
             UserManager<User> userManager,
             BlobServiceClient blobServiceClient,
             IUserService userService,
-            IUserRepository userRepository,
             ITokenService tokenService,
             IGoogleAuthService googleAuthService,
-            IFacebookAuthService facebookAuthService,
             IEmailService emailService,
             IMapper mapper)
         {
             _userManager = userManager;
             _blobServiceClient = blobServiceClient;
             _userService = userService;
-            _userRepository = userRepository;
-            _facebookAuthService = facebookAuthService;
             _mapper = mapper;
             _tokenService = tokenService;
             _googleAuthService = googleAuthService;
@@ -145,26 +136,29 @@ namespace Disco.Business.Services
                 return userResponseModel;
             }
 
-            user = new User();
-            user.UserName = dto.Name.Replace(" ", "_");
-            user.Email = dto.Email;
-            user.NormalizedEmail = _userManager.NormalizeEmail(dto.Email);
-            user.NormalizedUserName = _userManager.NormalizeName(dto.Name);
-            
-            user.Profile = new Domain.Models.Profile();
-            user.Profile.Status = StatusProvider.NewArtist;
-            user.Profile.Photo = dto.Picture.Data.Url;
+            user = new User
+            {
+                UserName = dto.Name.Replace(" ", "_"),
+                Email = dto.Email,
+                NormalizedEmail = _userManager.NormalizeEmail(dto.Email),
+                NormalizedUserName = _userManager.NormalizeName(dto.Name),
+                Profile = new Domain.Models.Profile
+                {
+                    Status = StatusProvider.NewArtist,
+                    Photo = dto.Picture.Data.Url
+                },
+                RefreshToken = _tokenService.GenerateRefreshToken(),
+                RefreshTokenExpiress = DateTime.UtcNow.AddDays(7)
+            };
 
-            user.RefreshToken = _tokenService.GenerateRefreshToken();
-            user.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
             user.NormalizedEmail = _userManager.NormalizeEmail(user.Email);
             user.NormalizedUserName = _userManager.NormalizeName(user.UserName);
 
-            var ideintityResult = await _userManager.CreateAsync(user);
+            _= await _userManager.CreateAsync(user);
 
-            ideintityResult = await _userManager.AddLoginAsync(user, new UserLoginInfo(LogInProvider.Facebook, dto.Id, "FacebookId"));
+            _ = await _userManager.AddLoginAsync(user, new UserLoginInfo(LogInProvider.Facebook, dto.Id, "FacebookId"));
 
-            var roleResult = await _userManager.AddToRoleAsync(user, "User");
+            _ = await _userManager.AddToRoleAsync(user, "User");
 
             user.RoleName = _userService.GetUserRole(user);
 
@@ -248,14 +242,12 @@ namespace Disco.Business.Services
                     return userResponseResult;
                 }
 
-                user = new User
-                {
+                user = new User{
                     UserName = model.Name,
-
-                    Email = model.Email
+                    Email = model.Email,
+                    NormalizedEmail = _userManager.NormalizeEmail(model.Email),
+                    NormalizedUserName = _userManager.NormalizeName(model.Name)
                 };
-                user.NormalizedEmail = _userManager.NormalizeEmail(model.Email);
-                user.NormalizedUserName = _userManager.NormalizeName(model.Name);
 
                 var profile = new Domain.Models.Profile
                 {
@@ -267,9 +259,9 @@ namespace Disco.Business.Services
 
                 await _userService.SaveRefreshTokenAsync(user, user.RefreshToken);
 
-                var identity = await _userManager.CreateAsync(user);
+                _ = await _userManager.CreateAsync(user);
 
-                identity = await _userManager.AddLoginAsync(user, new UserLoginInfo(LogInProvider.Apple, model.AppleId, "AppleId"));
+                _ = await _userManager.AddLoginAsync(user, new UserLoginInfo(LogInProvider.Apple, model.AppleId, "AppleId"));
 
                 var jwt = _tokenService.GenerateAccessToken(user);
 
@@ -293,13 +285,15 @@ namespace Disco.Business.Services
 
             var html = (new WebClient()).DownloadString(uri);
             var passwordToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-            string url = $"disco://disco.app/token/{passwordToken}";
+            var url = $"disco://disco.app/token/{passwordToken}";
             
-            EmailConfirmationDto model = new EmailConfirmationDto();
-            model.MessageHeader = "Email confirmation";
-            model.MessageBody = html.Replace("[token]", passwordToken).Replace("[email]", user.Email);
-            model.ToEmail = user.Email;
-            model.IsHtmlTemplate = true;
+            var model = new EmailConfirmationDto
+            {
+                MessageHeader = "Email confirmation",
+                MessageBody = html.Replace("[token]", passwordToken).Replace("[email]", user.Email),
+                ToEmail = user.Email,
+                IsHtmlTemplate = true
+            };
 
             _emailService.EmailConfirmation(model);
             return passwordToken;

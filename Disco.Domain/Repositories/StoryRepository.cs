@@ -15,18 +15,18 @@ namespace Disco.Domain.Repositories
 
         public async Task AddAsync(Story story, Profile profile)
         {
-            await _ctx.Stories.AddAsync(story);
+            await ctx.Stories.AddAsync(story);
            
             profile.Stories.Add(story);
 
-            await _ctx.SaveChangesAsync();
+            await ctx.SaveChangesAsync();
         }
 
         public async Task<List<Story>> GetAllAsync(int profileId, int pageNumber, int pageSize)
         {
             var storyList = new List<Story>();
 
-            var profile = await _ctx.Profiles
+            var profile = await ctx.Profiles
                 .Include(u => u.User)
                 .Include(u => u.Stories)
                 .ThenInclude(s => s.StoryImages)
@@ -57,7 +57,7 @@ namespace Disco.Domain.Repositories
 
             foreach (var friend in profile.Followers)
             {
-                friend.ProfileFriend = await _ctx.Profiles
+                friend.ProfileFriend = await ctx.Profiles
                     .Include(p => p.Stories)
                     .ThenInclude(i => i.StoryImages)
                     .Include(p => p.Stories)
@@ -76,18 +76,18 @@ namespace Disco.Domain.Repositories
 
         public override async Task Remove(int id)
         {
-            var story = await _ctx.Stories
+            var story = await ctx.Stories
                 .Include(i => i.StoryImages)
                 .Include(v => v.StoryVideos)
                 .Where(s => s.Id == id)
                 .FirstOrDefaultAsync();
             story.Profile.Stories.Remove(story);
-            _ctx.Stories.Remove(story);
+            ctx.Stories.Remove(story);
         }
 
         public override Task<Story> Get(int id)
         {
-            var story = _ctx.Stories
+            var story = ctx.Stories
                 .Include(i => i.StoryImages)
                 .Include(v => v.StoryVideos)
                 .Where(i => i.Id == id)

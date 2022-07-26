@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Disco.Business.Services;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
@@ -16,6 +17,7 @@ namespace Disco.Tests
         public async Task Test_CreateVideoAsync()
         {
             var mockedFriendRepo = new Mock<IFriendRepository>();
+            
             _ = mockedFriendRepo
                 .Setup(obj => obj.AddAsync(It.IsAny<Friend>()))
                 .Returns(Task.FromResult(150));
@@ -27,9 +29,10 @@ namespace Disco.Tests
                 Id = 1,
                 Profile = new Profile
                 {
-                    Id = 1
+                    Id = 1,
+                    Followers = new List<Friend>(),
+                    Following = new List<Friend>()
                 },
-
             };
 
             var friend = new User
@@ -37,7 +40,8 @@ namespace Disco.Tests
                 Id = 2,
                 Profile = new Profile
                 {
-                    Id = 2
+                    Id = 2,
+                    Followers = new List<Friend>()
                 },
             };
 
@@ -47,7 +51,9 @@ namespace Disco.Tests
             };
 
             var response = await service.CreateFriendAsync(user, friend, dto);
-            Console.WriteLine(response);
+
+            Assert.Equals(friend.Id, response.FriendId);
+            Assert.Equals(friend.Profile.Followers.Count, 1);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Disco.Domain.Repositories
 
         public async Task AddAsync(Like item, int postId)
         {
-            var post = await _ctx.Posts
+            var post = await ctx.Posts
                 .Include(x => x.Likes)
                 .Where(p => p.Id == postId)
                 .FirstOrDefaultAsync();
@@ -24,21 +24,21 @@ namespace Disco.Domain.Repositories
                 throw new Exception("post not found");
 
             post.Likes.Add(item);
-            await _ctx.Like.AddAsync(item);
+            await ctx.Like.AddAsync(item);
 
-            await _ctx.SaveChangesAsync();
+            await ctx.SaveChangesAsync();
         }
 
         public override async Task Remove(int id)
         {
-            var like = await _ctx.Like
+            var like = await ctx.Like
                 .Where(l => l.Id == id)
                 .FirstOrDefaultAsync();
 
-            _ctx.Remove(like);
+            ctx.Remove(like);
             like.Post.Likes.Remove(like);
 
-            await _ctx.SaveChangesAsync();
+            await ctx.SaveChangesAsync();
         }
     }
 }
