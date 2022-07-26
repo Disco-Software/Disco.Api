@@ -13,7 +13,6 @@ namespace Disco.Business.Services
     {
         private readonly BlobServiceClient _blobServiceClient;
         private readonly IMapper _mapper;
-        private readonly IPostRepository _postRepository;
         private readonly IImageRepository _imageRepository;
 
 
@@ -21,10 +20,8 @@ namespace Disco.Business.Services
         public ImageService(
             BlobServiceClient blobServiceClient,
             IMapper mapper, 
-            IPostRepository postRepository,
             IImageRepository imageRepository)
         {
-            _postRepository = postRepository;
             _imageRepository = imageRepository;
             _blobServiceClient = blobServiceClient;
             _mapper = mapper;
