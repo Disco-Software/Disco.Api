@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Disco.Business.Dtos.Friends
+﻿namespace Disco.Business.Dtos.Friends
 {
     public class GetAllFriendsDto
     {

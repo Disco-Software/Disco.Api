@@ -16,7 +16,7 @@ namespace Disco.Domain.Repositories.Base
         protected readonly ApiDbContext _ctx;
 
         public BaseRepository(ApiDbContext ctx) =>
-            this._ctx = ctx;
+            _ctx = ctx;
 
         public virtual async Task AddAsync(T item)
         {

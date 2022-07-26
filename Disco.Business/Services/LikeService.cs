@@ -2,8 +2,6 @@
 using Disco.Business.Interfaces;
 using Disco.Domain.Models;
 using Disco.Domain.Repositories;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,8 +17,8 @@ namespace Disco.Business.Services
             PostRepository postRepository,
             LikeRepository likeRepository)
         {
-            this._postRepository = postRepository;
-            this._likeRepository = likeRepository;
+            _postRepository = postRepository;
+            _likeRepository = likeRepository;
         }
 
         public async Task<List<Like>> CreateLikeAsync(User user, int postId)

@@ -18,9 +18,9 @@ namespace Disco.Business.Services
             IUserService userService,
             IProfileRepository profileRepository)
         {
-            this._blobServiceClient = blobServiceClient;
-            this._userService = userService;
-            this._profileRepository = profileRepository;
+            _blobServiceClient = blobServiceClient;
+            _userService = userService;
+            _profileRepository = profileRepository;
         }
 
         public async Task<User> UpdateProfileAsync(User user, UpdateProfileDto model)

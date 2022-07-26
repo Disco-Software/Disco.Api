@@ -31,6 +31,7 @@ namespace Disco.Business.Services
                 new SigningCredentials(
                         new SymmetricSecurityKey(authenticationOptions.Value.SigningKeyBytes),
                         SecurityAlgorithms.HmacSha256));
+
             return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
         }
 

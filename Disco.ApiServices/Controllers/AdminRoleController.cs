@@ -20,7 +20,7 @@ namespace Disco.ApiServices.Controllers
 
         public AdminRoleController(IAdminRoleService _adminRoleService)
         {
-            this.adminRoleService = _adminRoleService;
+            adminRoleService = _adminRoleService;
         }
 
         [HttpPost("create")]

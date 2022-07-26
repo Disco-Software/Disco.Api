@@ -1,5 +1,5 @@
 ﻿using System.Net.Http;
-using Disco.ApiServices;
+using Disco.Api;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

@@ -20,8 +20,8 @@ namespace Disco.ApiServices.Controllers
             IStoryService storyService,
             IUserService userService)
         {
-            this._storyService = storyService;
-            this._userService = userService;
+            _storyService = storyService;
+            _userService = userService;
         }
 
         [HttpPost("create")]

@@ -2,7 +2,6 @@
 using Disco.Business.Interfaces;
 using Disco.Business.Dtos.Posts;
 using Disco.Business.Dtos.Songs;
-using Disco.Domain.EF;
 using Disco.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -28,12 +27,12 @@ namespace Disco.Business.Services
             ISongService songService,
             IVideoService videoService)
         {
-            this._postRepository = postRepository;
-            this._userService = userService;
-            this._mapper = mapper;
-            this._imageService = imageService;
-            this._songService = songService;
-            this._videoService = videoService;
+            _postRepository = postRepository;
+            _userService = userService;
+            _mapper = mapper;
+            _imageService = imageService;
+            _songService = songService;
+            _videoService = videoService;
         }
 
         public async Task<Post> CreatePostAsync(User user, CreatePostDto model)

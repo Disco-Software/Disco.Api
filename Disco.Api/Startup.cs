@@ -1,21 +1,21 @@
+using System;
+using System.Reflection;
+using Azure.Core.Extensions;
+using Azure.Storage.Blobs;
+using Azure.Storage.Queues;
+using Disco.Api.AppSetup;
+using Disco.ApiServices.Hubs;
+using Disco.Business;
 using Disco.Business.Configurations;
+using Disco.Domain;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Reflection;
-using FluentValidation.AspNetCore;
-using Azure.Storage.Blobs;
-using Microsoft.Extensions.Azure;
-using Azure.Storage.Queues;
-using Azure.Core.Extensions;
-using Disco.ApiServices.Hubs;
-using Disco.Business;
-using Disco.Domain;
-using Disco.Api.AppSetup;
 
 namespace Disco.Api
 {
@@ -31,7 +31,7 @@ namespace Disco.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.ConfigureSwagger();
+            // services.ConfigureSwagger();
 
             services.ConfigureDbContext(Configuration);
             services.ConfigureIdentity();
@@ -81,15 +81,15 @@ namespace Disco.Api
             app.UseExceptionHandler("/Error");
             app.UseHsts();
 
-            app.UseSwagger(c =>
-            {
-                c.SerializeAsV2 = true;
-            });
+            //app.UseSwagger(c =>
+            //{
+            //    c.SerializeAsV2 = true;
+            //});
            
-            app.UseSwaggerUI(u =>
-            {
-                u.SwaggerEndpoint("1.0/swagger.json", "Disco.Api");
-            });
+            //app.UseSwaggerUI(u =>
+            //{
+            //    u.SwaggerEndpoint("1.0/swagger.json", "Disco.Api");
+            //});
 
 
             ILogger logger = loggerFactory.CreateLogger("ClientErrorLogger");

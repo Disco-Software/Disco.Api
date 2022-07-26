@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
 using Disco.Domain.Interfaces;
-using System.Text;
 
 namespace Disco.Business.Services
 {

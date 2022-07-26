@@ -18,8 +18,8 @@ namespace Disco.ApiServices.Controllers
             IFriendService friendService,
             IUserService userService)
         {
-            this._friendService = friendService;
-            this._userService = userService;
+            _friendService = friendService;
+            _userService = userService;
         }
 
         [HttpPost("create")]

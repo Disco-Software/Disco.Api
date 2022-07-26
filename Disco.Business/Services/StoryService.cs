@@ -1,12 +1,7 @@
 ﻿using AutoMapper;
-using Disco.Business.Handlers;
 using Disco.Business.Interfaces;
 using Disco.Business.Dtos.Stories;
-using Disco.Domain.EF;
 using Disco.Domain.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -26,10 +21,10 @@ namespace Disco.Business.Services
             IStoryVideoService storyVideoService,
             IMapper mapper)
         {
-            this._storyRepository = storyRepository;
-            this._storyImageService = storyImageService;
-            this._storyVideoService = storyVideoService;
-            this._mapper = mapper;
+            _storyRepository = storyRepository;
+            _storyImageService = storyImageService;
+            _storyVideoService = storyVideoService;
+            _mapper = mapper;
         }
         
 

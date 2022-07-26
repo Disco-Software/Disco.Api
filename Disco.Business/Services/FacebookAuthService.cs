@@ -1,5 +1,4 @@
-﻿using Disco.Business.Dtos;
-using Disco.Business.Interfaces;
+﻿using Disco.Business.Interfaces;
 using Disco.Business.Dtos.Facebook;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;

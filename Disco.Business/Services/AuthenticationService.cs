@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
-using Disco.Business.Configurations;
 using Disco.Business.Constants;
 using Disco.Business.Handlers;
 using Disco.Business.Interfaces;
@@ -11,17 +10,12 @@ using Disco.Business.Dtos.Facebook;
 using Disco.Domain.EF;
 using Disco.Domain.Models;
 using Google.Apis.Auth.AspNetCore3;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Disco.Business.Validators;
 using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services

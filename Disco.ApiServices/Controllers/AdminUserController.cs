@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Disco.Business.Validators;
+using Disco.ApiServices.Validators;
 
 namespace Disco.ApiServices.Controllers
 {
@@ -25,8 +25,8 @@ namespace Disco.ApiServices.Controllers
             UserManager<User> userManager,
             IAdminUserService adminUserService)
         {
-            this._userManager = userManager;
-            this._adminUserService = adminUserService;
+            _userManager = userManager;
+            _adminUserService = adminUserService;
         }
 
         [HttpPost("create")]

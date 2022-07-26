@@ -21,8 +21,8 @@ namespace Disco.ApiServices.Controllers
             IPostService postService,
             IUserService userService)
         {
-            this._postService = postService;
-            this._userService = userService;
+            _postService = postService;
+            _userService = userService;
         }
 
         [HttpPost("create")]

@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Google.Apis.Auth.AspNetCore3;
 using Google.Apis.PeopleService.v1;
-using Disco.Business.Validators;
 using Microsoft.AspNetCore.Identity;
 using Disco.Domain.Models;
+using Disco.ApiServices.Validators;
 
 namespace Disco.ApiServices.Controllers
 {

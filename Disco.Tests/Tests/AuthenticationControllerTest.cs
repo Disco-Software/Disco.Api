@@ -96,10 +96,10 @@ namespace Disco.Tests.Tests
             var json = JsonConvert.SerializeObject(model);
             var buffer = Encoding.UTF8.GetBytes(json);
 
-            var bytesArry = new ByteArrayContent(buffer);
-            bytesArry.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var bytesArray = new ByteArrayContent(buffer);
+            bytesArray.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            var response = await httpClient.PostAsync("user/authentication/forgot-password", bytesArry);
+            var response = await httpClient.PostAsync("user/authentication/forgot-password", bytesArray);
             var result = response.Content.ReadAsStringAsync();
             var token = JsonConvert.DeserializeObject(json);
 

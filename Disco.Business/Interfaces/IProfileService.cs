@@ -1,6 +1,5 @@
 ﻿using Disco.Business.Dtos.Profile;
 using Disco.Domain.Models;
-using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace Disco.Business.Interfaces

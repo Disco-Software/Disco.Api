@@ -3,7 +3,7 @@ using Disco.Domain.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 
-namespace Disco.Business.Validators
+namespace Disco.ApiServices.Validators
 {
     public class RegistrationValidator : AbstractValidator<RegistrationDto>
     {
