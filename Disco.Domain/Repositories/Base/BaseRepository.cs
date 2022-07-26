@@ -9,24 +9,24 @@ using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories.Base
 {
-    public class BaseRepository<T, Tkey> : IRepository<T, Tkey>
-        where T : Models.Base.BaseEntity<Tkey>
-        where Tkey : struct
+    public class BaseRepository<T, TKey> : IRepository<T, TKey>
+        where T : Models.Base.BaseEntity<TKey>
+        where TKey : struct
     {
-        protected readonly ApiDbContext _ctx;
+        protected readonly ApiDbContext ctx;
 
         public BaseRepository(ApiDbContext ctx) =>
-            this._ctx = ctx;
+            this.ctx = ctx;
 
         public virtual async Task AddAsync(T item)
         {
-            await _ctx.Set<T>().AddAsync(item);
-            await _ctx.SaveChangesAsync();
+            await ctx.Set<T>().AddAsync(item);
+            await ctx.SaveChangesAsync();
         }
 
-        public virtual async Task<T> Get(Tkey id)
+        public virtual async Task<T> Get(TKey id)
         {
-            var item = await _ctx.Set<T>()
+            var item = await ctx.Set<T>()
                 .Where(i => i.Id.Equals(id))
                 .FirstOrDefaultAsync();
             return item;
@@ -35,22 +35,22 @@ namespace Disco.Domain.Repositories.Base
         public virtual async Task<List<T>> GetAll(Expression<Func<T,bool>> expression)
         {
             if (expression != null)
-                return await _ctx.Set<T>().Where(expression).ToListAsync();
+                return await ctx.Set<T>().Where(expression).ToListAsync();
             else
-                return await _ctx.Set<T>().ToListAsync();
+                return await ctx.Set<T>().ToListAsync();
         }
 
-        public virtual async Task Remove(Tkey id)
+        public virtual async Task Remove(TKey id)
         {
-            var item = await _ctx.Set<T>().Where(t => t.Id.Equals(id)).FirstOrDefaultAsync();
-            _ctx.Remove(item);
+            var item = await ctx.Set<T>().Where(t => t.Id.Equals(id)).FirstOrDefaultAsync();
+            ctx.Remove(item);
         }
 
         public virtual async Task<T> Update(T newItem)
         {
-            var item = await _ctx.Set<T>().Where(t => t.Id.Equals(newItem.Id)).FirstOrDefaultAsync();
-            _ctx.Set<T>().Update(newItem);
-            await _ctx.SaveChangesAsync();
+            var item = await ctx.Set<T>().Where(t => t.Id.Equals(newItem.Id)).FirstOrDefaultAsync();
+            ctx.Set<T>().Update(newItem);
+            await ctx.SaveChangesAsync();
             return item;
         }
     }

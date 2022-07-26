@@ -3,7 +3,6 @@ using Disco.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
-using System;
 using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Hubs
@@ -19,9 +18,9 @@ namespace Disco.ApiServices.Hubs
             IUserService userService,
             IHttpContextAccessor httpContextAccessor)
         {
-            this._likeSevice = likeSevice;
-            this._userService = userService;
-            this._httpContextAccessor = httpContextAccessor;
+            _likeSevice = likeSevice;
+            _userService = userService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task AddLike(int postId)

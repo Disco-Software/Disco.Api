@@ -1,9 +1,5 @@
-﻿using Disco.Business.Dtos.Authentication;
-using Disco.Domain.Models;
-using System;
-using System.Collections.Generic;
+﻿using Disco.Domain.Models;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Disco.Business.Interfaces

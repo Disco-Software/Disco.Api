@@ -11,27 +11,27 @@ namespace Disco.Business.Services
 {
     public class VideoService : IVideoService
     {
-        private readonly BlobServiceClient blobServiceClient;
-        private readonly IMapper mapper;
-        private readonly IVideoRepository videoRepository;
-        private readonly IPostRepository postRepository;
+        private readonly BlobServiceClient _blobServiceClient;
+        private readonly IMapper _mapper;
+        private readonly IVideoRepository _videoRepository;
+        private readonly IPostRepository _postRepository;
 
 
         public VideoService(
-            BlobServiceClient _blobServiceClient,
-            IMapper _mapper,
-            IVideoRepository _videoRepository,
-            IPostRepository _postRepository)
+            BlobServiceClient blobServiceClient,
+            IMapper mapper,
+            IVideoRepository videoRepository,
+            IPostRepository postRepository)
         {
-            videoRepository = _videoRepository;
-            postRepository = _postRepository;
-            blobServiceClient = _blobServiceClient;
-            mapper = _mapper;
+            _videoRepository = videoRepository;
+            _postRepository = postRepository;
+            _blobServiceClient = blobServiceClient;
+            _mapper = mapper;
         }
 
         public async Task<PostVideo> CreateVideoAsync(CreateVideoDto model)
         {
-            var post = await postRepository.Get(model.PostId);
+            var post = await _postRepository.Get(model.PostId);
             var uniqueVideoName = Guid.NewGuid().ToString() + "_" + model.VideoFile.FileName.Replace(' ', '_');
 
             if (model.VideoFile == null)
@@ -40,23 +40,23 @@ namespace Disco.Business.Services
             if (model.VideoFile.Length == 0)
                 return null;
 
-            var containerClient = blobServiceClient.GetBlobContainerClient("videos");
+            var containerClient = _blobServiceClient.GetBlobContainerClient("videos");
             var blobClient = containerClient.GetBlobClient(uniqueVideoName);
 
             using var videoReader = model.VideoFile.OpenReadStream();
             var blobResult = blobClient.Upload(videoReader);
 
-            var video = mapper.Map<PostVideo>(model);
+            var video = _mapper.Map<PostVideo>(model);
             video.VideoSource = blobClient.Uri.AbsoluteUri;
 
-            await videoRepository.AddAsync(video);
+            await _videoRepository.AddAsync(video);
 
             return video;
         }
 
         public async Task RemoveVideoAsync(int id)
         {
-            await videoRepository.Remove(id);
+            await _videoRepository.Remove(id);
         }
     }
 }

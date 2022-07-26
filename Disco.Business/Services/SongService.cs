@@ -12,28 +12,26 @@ namespace Disco.Business.Services
 {
     public class SongService : ISongService
     {
-        private readonly BlobServiceClient blobServiceClient;
-        private readonly IMapper mapper;
-        private readonly ISongRepository songRepository;
-        private readonly IPostRepository postRepository;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly BlobServiceClient _blobServiceClient;
+        private readonly IMapper _mapper;
+        private readonly ISongRepository _songRepository;
+        private readonly IPostRepository _postRepository;
+
         public SongService(
-            BlobServiceClient _blobServiceClient,
-            IMapper _mapper,
-            ISongRepository _songRepository,
-            IPostRepository _postRepository,
-            IHttpContextAccessor _httpContextAccessor)
+            BlobServiceClient blobServiceClient,
+            IMapper mapper,
+            ISongRepository songRepository,
+            IPostRepository postRepository)
         {
-            songRepository = _songRepository;
-            postRepository = _postRepository;
-            blobServiceClient = _blobServiceClient;
-            mapper = _mapper;
-            httpContextAccessor = _httpContextAccessor;
+            _songRepository = songRepository;
+            _postRepository = postRepository;
+            _blobServiceClient = blobServiceClient;
+            _mapper = mapper;
         }
 
         public async Task<PostSong> CreatePostSongAsync(CreateSongDto model)
         {
-            var post = await postRepository.Get(model.PostId);
+            var post = await _postRepository.Get(model.PostId);
             
             var uniqueSongName = Guid.NewGuid().ToString() + "_" + model.SongFile.FileName.Replace(' ', '_');
             var uniqueImageName = Guid.NewGuid().ToString() + "_" + model.SongImage.FileName.Replace(' ', '_');
@@ -44,8 +42,8 @@ namespace Disco.Business.Services
             if (model.SongFile.Length == 0)
                 return null;
 
-            var blobSongContainerClient = blobServiceClient.GetBlobContainerClient("songs");
-            var blobImageContainerClient = blobServiceClient.GetBlobContainerClient("images");
+            var blobSongContainerClient = _blobServiceClient.GetBlobContainerClient("songs");
+            var blobImageContainerClient = _blobServiceClient.GetBlobContainerClient("images");
            
             var blobSongClient = blobSongContainerClient.GetBlobClient(uniqueSongName);
             var blobImageClient = blobImageContainerClient.GetBlobClient(uniqueImageName);
@@ -56,19 +54,19 @@ namespace Disco.Business.Services
             using var imageReader = model.SongImage.OpenReadStream();
             var blobImageResult = blobImageClient.Upload(imageReader);
 
-            var song = mapper.Map<PostSong>(model);
+            var song = _mapper.Map<PostSong>(model);
             song.ImageUrl = blobImageClient.Uri.AbsoluteUri;
             song.Source = blobSongClient.Uri.AbsoluteUri;
             song.Name = model.Name;
 
-            await songRepository.AddAsync(song);
+            await _songRepository.AddAsync(song);
 
             return song;
         }
 
         public async Task Remove(int songId)
         {
-            await songRepository.Remove(songId);
+            await _songRepository.Remove(songId);
         }
     }
 }

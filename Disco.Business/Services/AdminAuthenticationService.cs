@@ -1,24 +1,13 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
-using Disco.Business.Configurations;
-using Disco.Business.Handlers;
 using Disco.Business.Interfaces;
 using Disco.Business.Dtos.Authentication;
 using Disco.Business.Dtos.EmailNotifications;
-using Disco.Domain.EF;
 using Disco.Domain.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Disco.Business.Validators;
-using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
@@ -39,12 +28,12 @@ namespace Disco.Business.Services
             ITokenService tokenService, 
             IEmailService emailService)
         {
-            this._userManager = userManager;
-            this._blobServiceClient = blobServiceClient;
-            this._mapper = mapper;
-            this._userService = userService;
-            this._tokenService = tokenService;
-            this._emailService = emailService;
+            _userManager = userManager;
+            _blobServiceClient = blobServiceClient;
+            _mapper = mapper;
+            _userService = userService;
+            _tokenService = tokenService;
+            _emailService = emailService;
         }
 
         public async Task<string> ForgotPassword(User user, ForgotPasswordDto model)

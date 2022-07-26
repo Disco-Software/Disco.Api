@@ -11,16 +11,16 @@ namespace Disco.Domain.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly ApiDbContext ctx;
+        private readonly ApiDbContext _ctx;
 
-        public UserRepository(ApiDbContext _ctx)
+        public UserRepository(ApiDbContext ctx)
         {
-            ctx = _ctx;
+            _ctx = ctx;
         }
 
         public async Task<User> GetUserByRefreshTokenAsync(string refreshToken)
         {
-            return await ctx.Users
+            return await _ctx.Users
                 .Include(p => p.Profile)
                 .ThenInclude(p => p.Posts)
                 .Include(p => p.Profile)
@@ -32,19 +32,19 @@ namespace Disco.Domain.Repositories
 
         public async Task GetUserInfosAsync(User user)
         {
-            await ctx.Entry(user)
+            await _ctx.Entry(user)
                 .Reference(u => u.Profile)
                 .LoadAsync();
 
-            await ctx.Entry(user.Profile)
+            await _ctx.Entry(user.Profile)
                 .Collection(p => p.Posts)
                 .LoadAsync();
         }
 
         public string GetUserRole(User user)
         {
-            return ctx.UserRoles
-                .Join(ctx.Roles, r => r.RoleId, u => u.Id, (u, r) => new { Role = r, UserRole = u })
+            return _ctx.UserRoles
+                .Join(_ctx.Roles, r => r.RoleId, u => u.Id, (u, r) => new { Role = r, UserRole = u })
                 .Where(r => r.UserRole.UserId == user.Id)
                 .FirstOrDefaultAsync().Result.Role.Name;
         }
@@ -55,12 +55,12 @@ namespace Disco.Domain.Repositories
             
             user.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
 
-            await ctx.SaveChangesAsync();
+            await _ctx.SaveChangesAsync();
         }
 
         public async Task<List<User>> GetAllUsers(int pageNumber, int pageSize)
         {
-            return await ctx.Users
+            return await _ctx.Users
                 .OrderByDescending(d => d.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)

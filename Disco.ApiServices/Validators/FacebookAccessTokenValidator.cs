@@ -1,7 +1,7 @@
 ﻿using Disco.Business.Dtos.Facebook;
 using FluentValidation;
 
-namespace Disco.Business.Validators
+namespace Disco.ApiServices.Validators
 {
     public class FacebookAccessTokenValidator : AbstractValidator<FacebookRequestDto>
     {

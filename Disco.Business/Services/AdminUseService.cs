@@ -1,16 +1,10 @@
 ﻿using AutoMapper;
-using Disco.Business.Handlers;
 using Disco.Business.Interfaces;
 using Disco.Business.Dtos.Authentication;
-using Disco.Domain.EF;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Disco.Business.Validators;
 using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
@@ -20,14 +14,15 @@ namespace Disco.Business.Services
         private readonly UserManager<User> _userManager;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        
         public AdminUserService(
             UserManager<User> userManager, 
             IUserRepository userRepository,   
             IMapper mapper)
         {
-            this._userManager = userManager;
-            this._userRepository = userRepository;
-            this._mapper = mapper;
+            _userManager = userManager;
+            _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public async Task<User> CreateUserAsync(RegistrationDto model)

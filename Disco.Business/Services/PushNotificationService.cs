@@ -10,13 +10,13 @@ namespace Disco.Business.Services
 {
     public class PushNotificationService : IPushNotificationService
     {
-        private readonly NotificationHubClient notificationHubClient;
-        private readonly IConfiguration configuration;
-        public PushNotificationService(IConfiguration _configuration)
+        private readonly NotificationHubClient _notificationHubClient;
+        private readonly IConfiguration _configuration;
+        public PushNotificationService(IConfiguration configuration)
         {
-            notificationHubClient = NotificationHubClient.CreateClientFromConnectionString(configuration[
-                Strings.NOTIFICATION_CONNECTION_STRING],
-                configuration[Strings.NOTIFICATION_NAME]);
+            _notificationHubClient = NotificationHubClient.CreateClientFromConnectionString(_configuration[
+                Strings.NotificationConnectionString],
+                _configuration[Strings.NotificationName]);
         }
 
 
@@ -31,10 +31,10 @@ namespace Disco.Business.Services
             var dataPayload = $"\"type\":\"{model.NotificationType}\",\"id\":\"{model.Id}\"";
 
             var androidPayload = $"{{\"notification\":{{}},\"data\":{{{dataPayload}}}, \"sound\": \"default\"}}";
-            var androidTask = notificationHubClient.SendFcmNativeNotificationAsync(androidPayload, model.Tag);
+            var androidTask = _notificationHubClient.SendFcmNativeNotificationAsync(androidPayload, model.Tag);
 
             var applePayload = $"{{\"aps\":{{\"content-available\":1,\"alert\":{{{notificationPayload},\"data\":{{{dataPayload}}}}}, \"sound\": \"default\"}}, \"key-value\" : {{\"type\" : \"{model.NotificationType}\", \"id\" : \"{model.Id}\"}}}}";
-            var appleTask = notificationHubClient.SendAppleNativeNotificationAsync(applePayload, model.Tag);
+            var appleTask = _notificationHubClient.SendAppleNativeNotificationAsync(applePayload, model.Tag);
             await Task.WhenAll(androidTask, appleTask);
         }
         public async Task SendNotificationAsync(NewFriendNotificationDto model)
@@ -43,10 +43,10 @@ namespace Disco.Business.Services
             var dataPayload = $"\"type\":\"{model.NotificationType}\",\"id\":\"{model.Id}\"";
 
             var androidPayload = $"{{\"notification\":{{}},\"data\":{{{dataPayload}}}, \"sound\": \"default\"}}";
-            var androidTask = notificationHubClient.SendFcmNativeNotificationAsync(androidPayload, model.Tags);
+            var androidTask = _notificationHubClient.SendFcmNativeNotificationAsync(androidPayload, model.Tags);
 
             var applePayload = $"{{\"aps\":{{\"content-available\":1,\"alert\":{{{notificationPayload},\"data\":{{{dataPayload}}}}}, \"sound\": \"default\"}}, \"key-value\" : {{\"type\" : \"{model.NotificationType}\", \"id\" : \"{model.Id}\"}}}}";
-            var appleTask = notificationHubClient.SendAppleNativeNotificationAsync(applePayload, model.Tags);
+            var appleTask = _notificationHubClient.SendAppleNativeNotificationAsync(applePayload, model.Tags);
             await Task.WhenAll(androidTask, appleTask);
         }
 

@@ -32,9 +32,9 @@ namespace Disco.Tests.Tests
 
             var result = await response.Content.ReadAsStringAsync();
 
-            var userDTO = JsonConvert.DeserializeObject<UserResponseDto>(result);
+            var userDto = JsonConvert.DeserializeObject<UserResponseDto>(result);
 
-            Assert.IsNotNull(userDTO);
+            Assert.IsNotNull(userDto);
         }
 
         [TestMethod]
@@ -51,13 +51,17 @@ namespace Disco.Tests.Tests
 
             var result = await response.Content.ReadAsStringAsync();
 
-            Assert.IsTrue(result == "user not found");
+            Assert.Equals(result, "user not found");
         }
 
         [TestMethod]
         public async Task LogIn_ReturnsPasswordIsNotValidResponse()
         {
-            var logInModel = new LoginDto { Email = "stas_1999_nr@ukr.net", Password = "kds;afjlkdsajf" };
+            var logInModel = new LoginDto
+            {
+                Email = "stas_1999_nr@ukr.net",
+                Password = "kds;afjlkdsajf"
+            };
             
             var json = JsonConvert.SerializeObject(logInModel);
             var buffer = Encoding.UTF8.GetBytes(json);
@@ -75,7 +79,11 @@ namespace Disco.Tests.Tests
         [TestMethod]
         public async Task LogIn_ReturnsNullResponse()
         {
-            var logInModel = new LoginDto { Email = "", Password = "" };
+            var logInModel = new LoginDto
+            {
+                Email = "", 
+                Password = ""
+            };
             var json = JsonConvert.SerializeObject(logInModel);
             var buffer = Encoding.UTF8.GetBytes(json);
 
@@ -92,14 +100,17 @@ namespace Disco.Tests.Tests
         [TestMethod]
         public async Task ForgotPassword_ReturnsSuccessResponse()
         {
-            var model = new ForgotPasswordDto { Email = "stas_1999_nr@ukr.net" };
+            var model = new ForgotPasswordDto
+            {
+                Email = "stas_1999_nr@ukr.net"
+            };
             var json = JsonConvert.SerializeObject(model);
             var buffer = Encoding.UTF8.GetBytes(json);
 
-            var bytesArry = new ByteArrayContent(buffer);
-            bytesArry.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var bytesArray = new ByteArrayContent(buffer);
+            bytesArray.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            var response = await httpClient.PostAsync("user/authentication/forgot-password", bytesArry);
+            var response = await httpClient.PostAsync("user/authentication/forgot-password", bytesArray);
             var result = response.Content.ReadAsStringAsync();
             var token = JsonConvert.DeserializeObject(json);
 
@@ -109,15 +120,18 @@ namespace Disco.Tests.Tests
         [TestMethod]
         public async Task ForgotPassword_ReturnsErrorResponse()
         {
-            var model = new ForgotPasswordDto { Email = "stas_1999_nr" };
+            var model = new ForgotPasswordDto
+            {
+                Email = "stas_1999_nr"
+            };
             var json = JsonConvert.SerializeObject(model);
             var buffer = Encoding.UTF8.GetBytes(json);
 
-            var bytesArry = new ByteArrayContent(buffer);
-            bytesArry.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var bytesArray = new ByteArrayContent(buffer);
+            bytesArray.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            var response = await httpClient.PostAsync("user/authentication/forgot-password", bytesArry);
-            var result = response.Content.ReadAsStringAsync();
+            var response = await httpClient.PostAsync("user/authentication/forgot-password", bytesArray);
+            _ = await response.Content.ReadAsStringAsync();
             var token = JsonConvert.DeserializeObject(json);
 
             Assert.IsNull(token);

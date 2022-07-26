@@ -9,11 +9,11 @@ namespace Disco.Business.Services
 {
     public class GoogleAuthService : IGoogleAuthService
     {
-        private readonly IHttpClientFactory httpClientFactory;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public GoogleAuthService(IHttpClientFactory _httpClientFactory) 
+        public GoogleAuthService(IHttpClientFactory httpClientFactory) 
         {
-            httpClientFactory = _httpClientFactory; 
+            _httpClientFactory = httpClientFactory; 
         }
 
         public async Task<Person> GetUserData(IGoogleAuthProvider authProvider)

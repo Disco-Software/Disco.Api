@@ -2,9 +2,9 @@
 using Disco.Business.Dtos.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Disco.Business.Validators;
 using Microsoft.AspNetCore.Identity;
 using Disco.Domain.Models;
+using Disco.ApiServices.Validators;
 
 namespace Disco.ApiServices.Controllers
 {

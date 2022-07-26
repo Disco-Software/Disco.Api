@@ -1,16 +1,10 @@
 ﻿using AutoMapper;
-using Disco.Business.Handlers;
 using Disco.Business.Interfaces;
 using Disco.Business.Dtos.Roles;
-using Disco.Domain.EF;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System;
 using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services

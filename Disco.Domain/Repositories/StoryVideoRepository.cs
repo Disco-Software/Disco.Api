@@ -14,19 +14,19 @@ namespace Disco.Domain.Repositories
 
         public override async Task AddAsync(StoryVideo storyVideo)
         {
-            await _ctx.StoryVideos.AddAsync(storyVideo);
+            await ctx.StoryVideos.AddAsync(storyVideo);
         }
 
         public override async Task Remove(int id)
         {
-            var storyVideo = await _ctx.StoryVideos
+            var storyVideo = await ctx.StoryVideos
                 .Include(s => s.Story)
                 .Where(s => s.Id == id)
                 .FirstOrDefaultAsync();
 
-            _ctx.StoryVideos.Remove(storyVideo);
+            ctx.StoryVideos.Remove(storyVideo);
 
-            await _ctx.SaveChangesAsync();
+            await ctx.SaveChangesAsync();
         }
     }
 }
