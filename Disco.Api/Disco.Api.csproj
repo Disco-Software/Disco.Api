@@ -51,6 +51,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Disco.ApiServices\Disco.ApiServices.csproj" />
     <ProjectReference Include="..\Disco.Business\Disco.Business.csproj" />
+    <ProjectReference Include="..\Disco.Domain\Disco.Domain.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
