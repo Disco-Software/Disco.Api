@@ -16,23 +16,25 @@ namespace Disco.ApiServices.Controllers
     [ApiController]
     public class AdminRoleController : ControllerBase
     {
-        private readonly IAdminRoleService adminRoleService;
+        private readonly IAdminRoleService _adminRoleService;
 
-        public AdminRoleController(IAdminRoleService _adminRoleService)
+        public AdminRoleController(IAdminRoleService adminRoleService)
         {
-            this.adminRoleService = _adminRoleService;
+            _adminRoleService = adminRoleService;
         }
 
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] CreateRoleDto model)
         {
-            return await adminRoleService.CreateRoleAsync(model);
+            var role = await _adminRoleService.CreateRoleAsync(model);
+
+            return Ok(role);
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Role>>> GetAllRoles()
+        public async Task<ActionResult<List<Role>>> GetAllRoles([FromQuery] GetAllRolesDto dto)
         {
-            return await adminRoleService.GetAllRoles(new GetAllRolesDto { PageNumber = 1, PageSize = 10});
+            return await _adminRoleService.GetAllRoles(new GetAllRolesDto { PageNumber = 1, PageSize = 10});
         }
     }
 }

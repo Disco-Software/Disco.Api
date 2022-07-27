@@ -10,7 +10,7 @@ namespace Disco.Domain.Repositories
 {
     public class ImageRepository : BaseRepository<PostImage, int>, IImageRepository
     {
-        public ImageRepository(ApiDbContext _ctx) : base(_ctx) { }
+        public ImageRepository(ApiDbContext ctx) : base(ctx) { }
 
         public override async Task Remove(int id)
         {

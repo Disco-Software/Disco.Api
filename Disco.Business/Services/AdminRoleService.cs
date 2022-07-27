@@ -1,64 +1,50 @@
 ﻿using AutoMapper;
-using Disco.Business.Handlers;
 using Disco.Business.Interfaces;
 using Disco.Business.Dtos.Roles;
-using Disco.Domain.EF;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
-    public class AdminRoleService : ApiRequestHandlerBase, IAdminRoleService
+    public class AdminRoleService : IAdminRoleService
     {
-        private readonly ApiDbContext ctx;
-        private readonly RoleManager<Role> roleManager;
-        private readonly IMapper mapper;
+        private readonly RoleManager<Role> _roleManager;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IMapper _mapper;
 
         public AdminRoleService(
-            ApiDbContext _ctx,
-            RoleManager<Role> _roleManager, 
-            IMapper _mapper)
+            RoleManager<Role> roleManager, 
+            IRoleRepository roleRepository,
+            IMapper mapper)
         {
-            ctx = _ctx;
-            roleManager = _roleManager;
-            mapper = _mapper;
+            _roleManager = roleManager;
+            _roleRepository = roleRepository;
+            _mapper = mapper;
         }
 
-        public async Task<IActionResult> CreateRoleAsync(CreateRoleDto model)
+        public async Task<Role> CreateRoleAsync(CreateRoleDto dto)
         {
-           var role = mapper.Map<Role>(model);
-            role.Name = model.RoleName;
+           var role = _mapper.Map<Role>(dto);
+            role.Name = dto.RoleName;
 
-            var roleResult = await roleManager.CreateAsync(role);
-            if (!roleResult.Succeeded)
-                return BadRequest(roleResult.Errors);
+            var roleResult = await _roleManager.CreateAsync(role);
 
-            return Ok(role);
+            return role;
         }
 
-        public async Task<IActionResult> RemoveRoleAsync(string name)
+        public async Task RemoveRoleAsync(string name)
         {
-            var role = await roleManager.FindByNameAsync(name);
+            var role = await _roleManager.FindByNameAsync(name);
 
-            ctx.Roles.Remove(role);
-
-           await ctx.SaveChangesAsync();
-
-            return Ok($"Role: {role.Name} was removed");
+            await _roleManager.DeleteAsync(role);
         }
 
-        public async Task<ActionResult<List<Role>>> GetAllRoles(GetAllRolesDto model)
+        public async Task<List<Role>> GetAllRoles(GetAllRolesDto model)
         {
-           return await ctx.Roles
-                .OrderBy(x => x.Name)
-                .Skip((model.PageNumber - 1) * model.PageSize)
-                .Take(model.PageSize)
-                .ToListAsync();
+            return await _roleRepository.GetAll(model.PageNumber, model.PageSize);
         }
     }
 }

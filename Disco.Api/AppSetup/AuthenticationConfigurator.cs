@@ -1,10 +1,10 @@
 ﻿using Disco.Business.Constants;
+using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using Google.Apis.Auth.AspNetCore3;
 using Microsoft.IdentityModel.Tokens;
+using System;
 
 namespace Disco.Api.AppSetup
 {
@@ -27,7 +27,7 @@ namespace Disco.Api.AppSetup
            {
                options.SaveToken = true;
                options.RequireHttpsMetadata = false;
-               options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+               options.TokenValidationParameters = new TokenValidationParameters
                {
                    ValidateIssuer = true,
                    ValidateAudience = true,

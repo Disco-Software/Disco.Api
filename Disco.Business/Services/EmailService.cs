@@ -9,16 +9,16 @@ namespace Disco.Business.Services
 {
     public class EmailService : IEmailService
     {
-        private readonly IOptions<EmailOptions> emailOptions;
-        public EmailService(IOptions<EmailOptions> _emailOptions)
+        private readonly IOptions<EmailOptions> _emailOptions;
+        public EmailService(IOptions<EmailOptions> emailOptions)
         {
-            emailOptions = _emailOptions;
+            _emailOptions = emailOptions;
         }
 
         public void EmailConfirmation(EmailConfirmationDto model)
         {
             MailMessage mailMessage = new MailMessage();
-            mailMessage.From = new MailAddress(emailOptions.Value.Mail, "Disco");
+            mailMessage.From = new MailAddress(_emailOptions.Value.Mail, "Disco");
             mailMessage.To.Add(model.ToEmail);
             mailMessage.Subject = model.MessageHeader;
             mailMessage.Body = model.MessageBody;
@@ -27,7 +27,7 @@ namespace Disco.Business.Services
             using var smtpClient = new SmtpClient("smtp.gmail.com")
             {
                 Port = 587,
-                Credentials = new NetworkCredential(emailOptions.Value.Mail, emailOptions.Value.Password),
+                Credentials = new NetworkCredential(_emailOptions.Value.Mail, _emailOptions.Value.Password),
                 EnableSsl = true,
             };
 

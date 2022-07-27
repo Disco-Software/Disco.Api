@@ -14,35 +14,49 @@ namespace Disco.ApiServices.Controllers
     [Route("api/user/posts")]
     public class UserPostController : Controller
     {
-        private readonly IPostService postService;
+        private readonly IPostService _postService;
+        private readonly IUserService _userService;
 
-        public UserPostController(IPostService _postService)
+        public UserPostController(
+            IPostService postService,
+            IUserService userService)
         {
-            postService = _postService;
+            _postService = postService;
+            _userService = userService;
         }
 
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromForm] CreatePostDto model)
         {
-            return await postService.CreatePostAsync(model);
+            var user = await _userService.GetUserAsync(HttpContext.User);
+
+            var post = await _postService.CreatePostAsync(user, model);
+
+            return Ok(post);
         }
 
         [HttpDelete("{postId:int}")]
         public async Task Delete([FromRoute] int postId)
         {
-            await postService.DeletePostAsync(postId);
+            await _postService.DeletePostAsync(postId);
         }
 
         [HttpGet]
         public async Task<ActionResult<List<Post>>> GetAllUserPosts([FromQuery] GetAllPostsDto model)
         {
-            return await postService.GetAllUserPosts(model);
+            var user = await _userService.GetUserAsync(HttpContext.User);
+
+            return await _postService.GetAllUserPosts(user, model);
         }
 
         [HttpGet("line")]
         public async Task<ActionResult<List<Post>>> GetAllPosts([FromQuery] GetAllPostsDto model)
         {
-            return await postService.GetAllPosts(model);
+            var user = await _userService.GetUserAsync(HttpContext.User);
+
+            var posts = await _postService.GetAllPosts(user, model);
+
+            return posts;
         }
     }
 }

@@ -13,32 +13,32 @@ namespace Disco.Business.Services
 {
     public class StoryImageService : IStoryImageService
     {
-        private readonly UserManager<User> userManager;
-        private readonly BlobServiceClient blobServiceClient;
-        private readonly IMapper mapper;
-        private readonly IStoryImageRepository storyImageRepository;
-        private readonly IStoryRepository storyRepository;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly UserManager<User> _userManager;
+        private readonly BlobServiceClient _blobServiceClient;
+        private readonly IMapper _mapper;
+        private readonly IStoryImageRepository _storyImageRepository;
+        private readonly IStoryRepository _storyRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public StoryImageService(
-            UserManager<User> _userManager,
-            BlobServiceClient _blobServiceClient,
-            IMapper _mapper,
-            IStoryImageRepository _storyImageRepository,
-            IStoryRepository _storyRepository,
-            IHttpContextAccessor _httpContextAccessor)
+            UserManager<User> userManager,
+            BlobServiceClient blobServiceClient,
+            IMapper mapper,
+            IStoryImageRepository storyImageRepository,
+            IStoryRepository storyRepository,
+            IHttpContextAccessor httpContextAccessor)
         {
-            storyImageRepository = _storyImageRepository;
-            storyRepository = _storyRepository;
-            userManager = _userManager;
-            blobServiceClient = _blobServiceClient;
-            mapper = _mapper;
-            httpContextAccessor = _httpContextAccessor;
+            _storyImageRepository = storyImageRepository;
+            _storyRepository = storyRepository;
+            _userManager = userManager;
+            _blobServiceClient = blobServiceClient;
+            _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<StoryImage> CreateStoryImageAsync(CreateStoryImageDto model)
         {
-            var story = await storyRepository.Get(model.StoryId);
+            var story = await _storyRepository.Get(model.StoryId);
 
             var unequeName = Guid.NewGuid().ToString() + "_" + model.StoryImageFile.FileName.Replace(' ', '_');
 
@@ -48,23 +48,23 @@ namespace Disco.Business.Services
             if (model.StoryImageFile.Length == 0)
                 return null;
 
-            var blobContainerClient = blobServiceClient.GetBlobContainerClient("images");
+            var blobContainerClient = _blobServiceClient.GetBlobContainerClient("images");
             var blobClient = blobContainerClient.GetBlobClient(unequeName);
 
             using var imageReader = model.StoryImageFile.OpenReadStream();
 
             blobClient.Upload(imageReader);
 
-            var storyImage = mapper.Map<StoryImage>(model);
+            var storyImage = _mapper.Map<StoryImage>(model);
             storyImage.Source = blobClient.Uri.AbsoluteUri;
             storyImage.Story = story;
             
-            await storyImageRepository.AddAsync(storyImage);
+            await _storyImageRepository.AddAsync(storyImage);
 
             return storyImage;
         }
 
         public async Task RemoveStoryImageAsync(int id) =>
-            await storyImageRepository.Remove(id);
+            await _storyImageRepository.Remove(id);
     }
 }

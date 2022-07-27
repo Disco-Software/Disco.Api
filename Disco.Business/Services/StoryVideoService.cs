@@ -8,39 +8,38 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
 using Disco.Domain.Interfaces;
-using System.Text;
 
 namespace Disco.Business.Services
 {
     public class StoryVideoService : IStoryVideoService
     {
-        private readonly UserManager<User> userManager;
-        private readonly BlobServiceClient blobServiceClient;
-        private readonly IMapper mapper;
-        private readonly IStoryVideoRepository storyVideoRepository;
-        private readonly IStoryRepository storyRepository;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly UserManager<User> _userManager;
+        private readonly BlobServiceClient _blobServiceClient;
+        private readonly IMapper _mapper;
+        private readonly IStoryVideoRepository _storyVideoRepository;
+        private readonly IStoryRepository _storyRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         
         public StoryVideoService(
-            UserManager<User> _userManager,
-            BlobServiceClient _blobServiceClient,
-            IMapper _mapper,
-            IStoryVideoRepository _storyVideoRepository,
-            IStoryRepository _storyRepository,
-            IHttpContextAccessor _httpContextAccessor)
+            UserManager<User> userManager,
+            BlobServiceClient blobServiceClient,
+            IMapper mapper,
+            IStoryVideoRepository storyVideoRepository,
+            IStoryRepository storyRepository,
+            IHttpContextAccessor httpContextAccessor)
         {
-            storyVideoRepository = _storyVideoRepository;
-            storyRepository = _storyRepository;
-            userManager = _userManager;
-            blobServiceClient = _blobServiceClient;
-            mapper = _mapper;
-            httpContextAccessor = _httpContextAccessor;
+            _storyVideoRepository = storyVideoRepository;
+            _storyRepository = storyRepository;
+            _userManager = userManager;
+            _blobServiceClient = blobServiceClient;
+            _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<StoryVideo> CreateStoryVideoAsync(CreateStoryVideoDto model)
         {
-            var user = await userManager.GetUserAsync(httpContextAccessor.HttpContext.User);
-            var story = await storyRepository.Get(model.StoryId);
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            var story = await _storyRepository.Get(model.StoryId);
 
             var unequeName = Guid.NewGuid().ToString() + "_" + model.VideoFile.FileName.Replace(' ', '_');
 
@@ -50,21 +49,21 @@ namespace Disco.Business.Services
             if (model.VideoFile.Length == 0)
                 return null;
 
-            var blobContainerClient = blobServiceClient.GetBlobContainerClient("videos");
+            var blobContainerClient = _blobServiceClient.GetBlobContainerClient("videos");
             var blobClient = blobContainerClient.GetBlobClient(unequeName);
 
             using var videoReader = model.VideoFile.OpenReadStream();
 
             blobClient.Upload(videoReader);
 
-            var storyVideo = mapper.Map<StoryVideo>(model);
+            var storyVideo = _mapper.Map<StoryVideo>(model);
             storyVideo.Source = blobClient.Uri.AbsoluteUri;
 
             return storyVideo;
         }
 
         public async Task Remove(int id) =>
-            await storyVideoRepository.Remove(id);
+            await _storyVideoRepository.Remove(id);
             
     }
 }

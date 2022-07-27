@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories.Base
 {
-    public class BaseRepository<T, Tkey> : IRepository<T, Tkey>
-        where T : Models.Base.BaseEntity<Tkey>
-        where Tkey : struct
+    public class BaseRepository<T, TKey> : IRepository<T, TKey>
+        where T : Models.Base.BaseEntity<TKey>
+        where TKey : struct
     {
-        protected ApiDbContext ctx;
+        protected readonly ApiDbContext ctx;
 
-        public BaseRepository(ApiDbContext _ctx) =>
-            ctx = _ctx;
+        public BaseRepository(ApiDbContext ctx) =>
+            this.ctx = ctx;
 
         public virtual async Task AddAsync(T item)
         {
@@ -24,7 +24,7 @@ namespace Disco.Domain.Repositories.Base
             await ctx.SaveChangesAsync();
         }
 
-        public virtual async Task<T> Get(Tkey id)
+        public virtual async Task<T> Get(TKey id)
         {
             var item = await ctx.Set<T>()
                 .Where(i => i.Id.Equals(id))
@@ -40,7 +40,7 @@ namespace Disco.Domain.Repositories.Base
                 return await ctx.Set<T>().ToListAsync();
         }
 
-        public virtual async Task Remove(Tkey id)
+        public virtual async Task Remove(TKey id)
         {
             var item = await ctx.Set<T>().Where(t => t.Id.Equals(id)).FirstOrDefaultAsync();
             ctx.Remove(item);

@@ -11,7 +11,7 @@ namespace Disco.Domain.Repositories
 {
     public class FriendRepository : BaseRepository<Friend, int>, IFriendRepository
     {
-        public FriendRepository(ApiDbContext _ctx) : base(_ctx)
+        public FriendRepository(ApiDbContext ctx) : base(ctx)
         {
         }
 

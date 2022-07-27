@@ -11,10 +11,7 @@ namespace Disco.Domain.Repositories
 {
     public class LikeRepository : BaseRepository<Like, int>, ILikeRepository
     {
-        public LikeRepository(ApiDbContext _ctx) : base(_ctx)
-        {
-            ctx = _ctx;
-        }
+        public LikeRepository(ApiDbContext ctx) : base(ctx) { }
 
         public async Task AddAsync(Like item, int postId)
         {

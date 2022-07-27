@@ -1,11 +1,11 @@
 ﻿using Disco.Business.Dtos.Profile;
-using Microsoft.AspNetCore.Mvc;
+using Disco.Domain.Models;
 using System.Threading.Tasks;
 
 namespace Disco.Business.Interfaces
 {
     public interface IProfileService
     {
-        Task<IActionResult> UpdateProfileAsync(UpdateProfileDto model);
+        Task<User> UpdateProfileAsync(User user, UpdateProfileDto model);
     }
 }
