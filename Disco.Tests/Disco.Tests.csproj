@@ -22,4 +22,9 @@
     <ProjectReference Include="..\Disco.Domain\Disco.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
 </Project>

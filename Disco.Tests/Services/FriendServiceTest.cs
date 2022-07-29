@@ -8,16 +8,16 @@ using Moq;
 using System.Threading.Tasks;
 using Disco.Business.Dtos.Friends;
 
-namespace Disco.Tests
+namespace Disco.Tests.Services
 {
     [TestClass]
     public class FriendServiceTest
     {
         [TestMethod]
-        public async Task Test_CreateVideoAsync()
+        public async Task CreateFriendAsync_ReturnsSuccessResponse()
         {
             var mockedFriendRepo = new Mock<IFriendRepository>();
-            
+
             _ = mockedFriendRepo
                 .Setup(obj => obj.AddAsync(It.IsAny<Friend>()))
                 .Returns(Task.FromResult(150));
@@ -52,8 +52,8 @@ namespace Disco.Tests
 
             var response = await service.CreateFriendAsync(user, friend, dto);
 
-            Assert.Equals(friend.Id, response.FriendId);
-            Assert.Equals(friend.Profile.Followers.Count, 1);
+            Assert.AreEqual(friend.Id, response.FriendId);
+            Assert.AreNotEqual(user.Id, friend.Id);
         }
     }
 }

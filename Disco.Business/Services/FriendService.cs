@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Disco.Business.Handlers;
 using Disco.Business.Interfaces;
 using Disco.Business.Dtos.Friends;
 using Disco.Domain.Models;

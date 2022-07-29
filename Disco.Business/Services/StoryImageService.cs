@@ -57,6 +57,7 @@ namespace Disco.Business.Services
 
             var storyImage = _mapper.Map<StoryImage>(model);
             storyImage.Source = blobClient.Uri.AbsoluteUri;
+            storyImage.DateOfCreation = DateTime.UtcNow;
             storyImage.Story = story;
             
             await _storyImageRepository.AddAsync(storyImage);
@@ -64,7 +65,9 @@ namespace Disco.Business.Services
             return storyImage;
         }
 
-        public async Task RemoveStoryImageAsync(int id) =>
-            await _storyImageRepository.Remove(id);
+        public async Task RemoveStoryImageAsync(int id)
+        {
+           await _storyImageRepository.Remove(id);
+        }
     }
 }

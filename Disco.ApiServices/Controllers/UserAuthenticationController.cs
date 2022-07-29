@@ -83,7 +83,9 @@ namespace Disco.ApiServices.Controllers
          GoogleScopedAuthorize(PeopleServiceService.ScopeConstants.UserinfoProfile)]
         public async Task<IActionResult> Google([FromServices] IGoogleAuthProvider googleAuthProvider)
         {
-            return await _authenticationService.Google(googleAuthProvider);
+           var user = await _authenticationService.Google(googleAuthProvider);
+
+           return Ok(user);
         }
 
         [HttpPost("log-in/apple"), AllowAnonymous]

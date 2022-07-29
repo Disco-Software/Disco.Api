@@ -58,6 +58,7 @@ namespace Disco.Business.Services
 
             var storyVideo = _mapper.Map<StoryVideo>(model);
             storyVideo.Source = blobClient.Uri.AbsoluteUri;
+            storyVideo.DateOfCreation = DateTime.UtcNow;
 
             return storyVideo;
         }
