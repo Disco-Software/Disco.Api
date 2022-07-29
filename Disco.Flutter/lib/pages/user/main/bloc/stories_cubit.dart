@@ -21,6 +21,7 @@ class StoriesCubit extends Cubit<StoriesState> {
   Future<void> loadStories({required int pageNumber, bool isInitial = false}) async {
     if (isInitial) {
       isLastPage = false;
+      stories = [];
     }
     try {
       emit(LoadingStoriesState());
