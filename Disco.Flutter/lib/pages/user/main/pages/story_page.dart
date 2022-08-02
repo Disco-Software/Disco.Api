@@ -30,7 +30,8 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
   late PageController _pageController;
   late VideoPlayerController _videoController;
   double animationControllerValue = 0;
-  int stortItemIndex = 0;
+  int storyItemIndex = 0;
+  String _videoSource = '';
 
   // List<Duration> itemDurations = [];
   List<StoryModel> stories = [];
@@ -44,8 +45,7 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
             .map((e) => StoryModel(
                   storyType: StoryType.image,
                   source: e.source ?? '',
-                  dateOfCreation:
-                      DateTime.now(), //TODO: add dateOfCreatin when will changed on the server
+                  dateOfCreation: DateTime.parse(e.dateOfCreation ?? '${DateTime.now()}'),
                 ))
             .toList(growable: false)
         : [];
@@ -54,10 +54,9 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
     final List<StoryModel> filteredVideos = storyVideos != null
         ? storyVideos
             .map((e) => StoryModel(
-                  storyType: StoryType.image,
+                  storyType: StoryType.video,
                   source: e.source ?? '',
-                  dateOfCreation:
-                      DateTime.now(), //TODO: add dateOfCreatin when will changed on the server
+                  dateOfCreation: DateTime.parse(e.dateOfCreation ?? '${DateTime.now()}'),
                 ))
             .toList(growable: false)
         : [];
@@ -66,36 +65,43 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
     stories.addAll(filteredVideos);
     stories.sort((a, b) => a.dateOfCreation.compareTo(b.dateOfCreation));
 
-    final storiesLength = context.watch<StoriesCubit>().stories.length;
-    final int duration = 1000;
-    _controller = AnimationController(vsync: this, duration: Duration(seconds: duration));
+    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 3));
     _controller.forward();
     _pageController = PageController(initialPage: widget.index);
     _controller.addListener(() {
-      if (_controller.isCompleted) {
-        final pageIndex = _pageController.page?.toInt();
-        if (pageIndex == storiesLength - 1) {
-          Navigator.of(context, rootNavigator: true).pop();
+      if (_controller.status == AnimationStatus.completed) {
+        if (storyItemIndex + 1 >= stories.length) {
+          _videoController.dispose();
+          context.router.pop();
+        } else {
+          storyItemIndex++;
+          if (stories.isNotEmpty && stories[storyItemIndex].storyType == StoryType.video) {
+            setState(() {
+              _videoSource = stories.isNotEmpty ? stories[storyItemIndex].source : '';
+              _videoController = VideoPlayerController.network(_videoSource);
+              _videoController.initialize().then((value) {
+                _controller.duration = _videoController.value.duration;
+                _controller.forward(from: 0.0);
+                return _videoController.play();
+              });
+            });
+          }
         }
-        _pageController.nextPage(
-            duration: const Duration(milliseconds: 1500), curve: Curves.easeIn);
       }
     });
   }
 
   @override
   void initState() {
-    _videoController = VideoPlayerController.network('');
-
     super.initState();
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
-    _controller.dispose();
-    _videoController.dispose();
     super.dispose();
+    _videoController.dispose();
+    _controller.dispose();
+    _pageController.dispose();
   }
 
   @override
@@ -114,41 +120,40 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
                     onTapDown: (_) {
                       animationControllerValue = _controller.value;
                       _controller.stop();
+                      _videoController.pause();
                     },
                     onTapUp: (_) {
                       _controller.forward(from: animationControllerValue);
+                      _videoController.play();
                     },
                     child: SizedBox(
                       height: height,
                       child: CubePageView.builder(
                         onPageChanged: (index) async {
                           await Future.delayed(const Duration(milliseconds: 1500), () {
-                            _controller.forward(from: 0.0);
+                            // _controller.forward(from: 0.0);
                           });
                         },
                         controller: _pageController,
                         itemCount: userStories.length,
                         itemBuilder: (ctx, index, notifier) {
-                          // final notifierSafety = notifier ?? 0;
-                          final item = userStories[index];
-                          // final transform = Matrix4.identity();
-                          // final t = (index - notifierSafety).abs();
-                          // final scale = lerpDouble(1.5, 0, t);
                           return CubeWidget(
                             index: index,
                             pageNotifier: notifier,
                             child: Stack(
                               children: [
-                                stories[stortItemIndex].storyType == StoryType.image
+                                stories[storyItemIndex].storyType == StoryType.image
                                     ? Image.network(
-                                        storiesImages.isNotEmpty
-                                            ? item.storyImages![0].source ?? ''
-                                            : '',
+                                        stories[storyItemIndex].source,
                                         errorBuilder: (_, __, ___) =>
                                             Image.asset(Strings.defaultStoryImage),
                                         height: height,
                                       )
-                                    : VideoPlayer(_videoController),
+                                    : Center(
+                                        child: AspectRatio(
+                                        aspectRatio: _videoController.value.aspectRatio,
+                                        child: VideoPlayer(_videoController),
+                                      )),
                                 Column(
                                   children: [
                                     const Spacer(),
@@ -203,6 +208,7 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
                         const SizedBox(width: 10.0),
                         GestureDetector(
                             onTap: () {
+                              _videoController.pause();
                               context.router.pop();
                             },
                             child: const Icon(CupertinoIcons.clear)),

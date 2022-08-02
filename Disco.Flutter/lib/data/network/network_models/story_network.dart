@@ -57,13 +57,20 @@ class StoryImages {
   String? source;
   int? storyId;
   int? id;
+  String? dateOfCreation;
 
-  StoryImages({this.source, this.storyId, this.id});
+  StoryImages({
+    this.source,
+    this.storyId,
+    this.id,
+    this.dateOfCreation,
+  });
 
   StoryImages.fromJson(Map<String, dynamic> json) {
     source = json['source'];
     storyId = json['storyId'];
     id = json['id'];
+    dateOfCreation = json['dateOfCreation'];
   }
 
   Map<String, dynamic> toJson() {
@@ -71,6 +78,7 @@ class StoryImages {
     data['source'] = source;
     data['storyId'] = storyId;
     data['id'] = id;
+    data['dateOfCreation'] = dateOfCreation;
     return data;
   }
 }
@@ -79,13 +87,20 @@ class StoryVideos {
   String? source;
   int? storyId;
   int? id;
+  String? dateOfCreation;
 
-  StoryVideos({this.source, this.storyId, this.id});
+  StoryVideos({
+    this.source,
+    this.storyId,
+    this.id,
+    this.dateOfCreation,
+  });
 
   StoryVideos.fromJson(Map<String, dynamic> json) {
     source = json['source'];
     storyId = json['storyId'];
     id = json['id'];
+    dateOfCreation = json['dateOfCreation'];
   }
 
   Map<String, dynamic> toJson() {
@@ -93,6 +108,7 @@ class StoryVideos {
     data['source'] = source;
     data['storyId'] = storyId;
     data['id'] = id;
+    data['dateOfCreation'] = dateOfCreation;
     return data;
   }
 }
