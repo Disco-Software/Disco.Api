@@ -1,6 +1,6 @@
 ﻿namespace Disco.Domain.Models
 {
-    public class PostSong : Base.BaseEntity<int>
+    public class PostSong : Base.BaseModel<int>
     {
         public string Name { get; set; }
 

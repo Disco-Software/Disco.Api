@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
 using Disco.Business.Constants;
-using Disco.Business.Handlers;
 using Disco.Business.Interfaces;
 using Disco.Business.Dtos.Apple;
 using Disco.Business.Dtos.Authentication;
@@ -19,7 +18,7 @@ using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
-    public class AuthenticationService : ApiRequestHandlerBase, IAuthenticationService
+    public class AuthenticationService : IAuthenticationService
     {
         private readonly UserManager<User> _userManager;
         private readonly BlobServiceClient _blobServiceClient;
@@ -310,7 +309,7 @@ namespace Disco.Business.Services
                 AccessToken = _tokenService.GenerateAccessToken(user)};
         }
 
-        public async Task<IActionResult> Google(IGoogleAuthProvider googleAuthProvider)
+        public async Task<UserResponseDto> Google(IGoogleAuthProvider googleAuthProvider)
         {
             var googleResponse = await _googleAuthService.GetUserData(googleAuthProvider);
 
@@ -339,7 +338,7 @@ namespace Disco.Business.Services
             userResponse.AccessToken = jwt;
             userResponse.User = user;
 
-            return Ok(userResponse);
+            return userResponse;
         }
     }
 }

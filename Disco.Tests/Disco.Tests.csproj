@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\**" />
+    <Compile Remove="Repositories\**" />
+    <EmbeddedResource Remove="Controllers\**" />
+    <EmbeddedResource Remove="Repositories\**" />
+    <None Remove="Controllers\**" />
+    <None Remove="Repositories\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.17" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="Moq" Version="4.18.1" />
@@ -16,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Disco.ApiServices\Disco.ApiServices.csproj" />
     <ProjectReference Include="..\Disco.Api\Disco.Api.csproj" />
     <ProjectReference Include="..\Disco.Business\Disco.Business.csproj" />
     <ProjectReference Include="..\Disco.Domain\Disco.Domain.csproj" />

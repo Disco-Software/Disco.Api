@@ -2,7 +2,7 @@
 
 namespace Disco.Domain.Models
 {
-    public class Friend : BaseEntity<int>
+    public class Friend : BaseModel<int>
     {
         public int UserProfileId { get; set; }
         public Profile UserProfile { get; set; }

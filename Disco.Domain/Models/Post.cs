@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Disco.Domain.Models
 {
-    public class Post : Base.BaseEntity<int>
+    public class Post : Base.BaseModel<int>
     {
         public string Description { get; set; }
 

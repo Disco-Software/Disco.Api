@@ -17,6 +17,6 @@ namespace Disco.Business.Interfaces
         Task<UserResponseDto> Apple(AppleLogInDto model);
         Task<string> ForgotPassword(User user);
         Task<UserResponseDto> ResetPassword(User user, ResetPasswordDto model);
-        Task<IActionResult> Google(IGoogleAuthProvider googleAuthProvider);
+        Task<UserResponseDto> Google(IGoogleAuthProvider googleAuthProvider);
     }
 }

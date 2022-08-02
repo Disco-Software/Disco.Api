@@ -1,6 +1,6 @@
 ﻿namespace Disco.Domain.Models
 {
-    public class PostVideo : Base.BaseEntity<int>
+    public class PostVideo : Base.BaseModel<int>
     {
         public string VideoSource { get; set; }
 

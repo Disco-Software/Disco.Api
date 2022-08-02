@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Disco.Domain.Repositories.Base
 {
     public class BaseRepository<T, TKey> : IRepository<T, TKey>
-        where T : Models.Base.BaseEntity<TKey>
+        where T : Models.Base.BaseModel<TKey>
         where TKey : struct
     {
         protected readonly ApiDbContext ctx;

@@ -2,7 +2,7 @@
 
 namespace Disco.Domain.Models
 {
-    public class Profile : Base.BaseEntity<int>
+    public class Profile : Base.BaseModel<int>
     {
         public string Status { get; set; }
         public string Cread { get; set; } = string.Empty;
