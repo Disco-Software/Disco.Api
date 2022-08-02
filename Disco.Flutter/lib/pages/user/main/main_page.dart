@@ -7,7 +7,6 @@ import 'package:disco_app/pages/user/main/bloc/posts_cubit.dart';
 import 'package:disco_app/pages/user/main/bloc/stories_cubit.dart';
 import 'package:disco_app/pages/user/main/bloc/stories_state.dart';
 import 'package:disco_app/res/numbers.dart';
-import 'package:disco_app/res/strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -159,7 +158,7 @@ class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
                                                         .stories[index - 1]
                                                         .profile
                                                         ?.photo ??
-                                                    Strings.defaultStoryImage,
+                                                    '',
                                                 title: context
                                                         .read<StoriesCubit>()
                                                         .stories[index - 1]
