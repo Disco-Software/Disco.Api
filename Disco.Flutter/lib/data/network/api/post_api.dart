@@ -1,16 +1,29 @@
-import 'package:disco_app/data/network/network_client.dart';
-import 'package:disco_app/data/network/network_models/post_network.dart';
+import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class PostApi {
-  Future<List<Post>?> GetAllUserPost(int id) => NetworkClient.instance.dio
-          .get<List<Post>>('user/posts/${id}')
-          .then((response) {
+  final Dio dio;
+
+  PostApi({required this.dio});
+
+  Future<List<dynamic>?> getAllUserPost(int id) async =>
+      await dio.get('user/posts/$id').then((response) {
         return response.data;
       });
 
-  Future<List<Post>?> GetAllPosts(int id) => NetworkClient.instance.dio
-          .get<List<Post>>("user/posts/${id}/line")
-          .then((response) {
+  Future<List<dynamic>?> getAllPosts(int pageNumber, int pageSize) async => await dio.get(
+        "user/posts/line",
+        queryParameters: {
+          'pageNumber': '$pageNumber',
+          'pageSize': '$pageSize',
+        },
+      ).then((response) {
+        return response.data;
+      });
+
+  Future<dynamic> createPost(FormData post) =>
+      dio.post("user/posts/create", data: post).then((response) {
         return response.data;
       });
 }

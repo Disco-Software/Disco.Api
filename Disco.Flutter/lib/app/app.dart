@@ -17,14 +17,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         inputDecorationTheme: InputDecorationTheme(
             border: OutlineInputBorder(
-                borderSide: BorderSide(color: DcColors.white, width: 2),
+                borderSide: const BorderSide(color: DcColors.white, width: 2),
                 borderRadius: BorderRadius.circular(25))),
         textTheme: GoogleFonts.aBeeZeeTextTheme(),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             primary: DcColors.darkWhite,
-            textStyle: const TextStyle(
-                fontSize: 18, decoration: TextDecoration.underline),
+            textStyle: const TextStyle(fontSize: 18, decoration: TextDecoration.underline),
           ),
         ),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(

@@ -43,8 +43,7 @@ class Post {
       });
     }
     profileId = json['profileId'];
-    profile =
-        json['profile'] != null ? Profile.fromJson(json['profile']) : null;
+    profile = json['profile'] != null ? Profile.fromJson(json['profile']) : null;
     id = json['id'];
   }
 

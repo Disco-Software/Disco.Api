@@ -1,11 +1,16 @@
 import 'package:auto_route/src/router/auto_router_x.dart';
+import 'package:dio/dio.dart';
 import 'package:disco_app/app/app_router.gr.dart';
+import 'package:disco_app/data/local/local_storage.dart';
+import 'package:disco_app/data/network/repositories/user_repository.dart';
 import 'package:disco_app/pages/authentication/registration/bloc/registration_event.dart';
 import 'package:disco_app/pages/authentication/registration/bloc/registration_state.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+import '../../../injection.dart';
 import 'bloc/registration_bloc.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -18,7 +23,11 @@ class RegistrationPage extends StatefulWidget {
 
 class _RegistrationPageState extends State<RegistrationPage> {
   final _formKey = GlobalKey<FormState>();
-  final _bloc = RegistrationBloc(InitialState());
+  final _bloc = RegistrationBloc(
+    userRepository: getIt.get<UserRepository>(),
+    dio: getIt.get<Dio>(),
+    secureStorageRepository: getIt.get<SecureStorageRepository>(),
+  );
   final _userNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -27,7 +36,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void _blocLisener(BuildContext context, Object? state) {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       if (state is RegistratedState) {
-        context.router.navigate(const HomeRoute());
+        context.router.pushAndPopUntil(HomeRoute(), predicate: (route) => false);
       }
     });
   }
@@ -36,6 +45,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void dispose() {
     _bloc.close();
     _emailController.dispose();
+    _userNameController.dispose();
+    _confirmPasswordController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -82,8 +93,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     TextFormField(
                       controller: _userNameController,
-                      decoration: InputDecoration(
-                          errorText: state is RegistrationErrorState ? state.userName : null),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) => _getUserNameErrorText(value ?? ''),
                       style: const TextStyle(color: DcColors.darkWhite),
                     ),
                     const SizedBox(
@@ -99,8 +110,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     TextFormField(
                       controller: _emailController,
-                      decoration: InputDecoration(
-                          errorText: state is RegistrationErrorState ? state.email : null),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) => _getEmailErrorText(value ?? ''),
                       style: const TextStyle(color: DcColors.darkWhite),
                     ),
                     const Padding(
@@ -113,8 +124,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     TextFormField(
                       controller: _passwordController,
-                      decoration: InputDecoration(
-                          errorText: state is RegistrationErrorState ? state.password : null),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) => _getPasswordErrorText(value ?? ''),
                       style: const TextStyle(color: DcColors.darkWhite),
                     ),
                     const Padding(
@@ -127,25 +138,37 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     TextFormField(
                       controller: _confirmPasswordController,
-                      decoration: InputDecoration(
-                          errorText:
-                              state is RegistrationErrorState ? state.confirmPassword : null),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) =>
+                          _getConfirmationPasswordErrorText(value ?? '', _passwordController.text),
                       style: const TextStyle(color: DcColors.darkWhite),
                     ),
-                    Center(
-                        child: SizedBox(
-                            width: double.infinity,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 64, left: 29, right: 29),
-                              child: state is RegistratingState
-                                  ? const Center(
-                                      child: CircularProgressIndicator.adaptive(),
-                                    )
-                                  : ElevatedButton(
-                                      onPressed: onRegistration,
-                                      child: const Text("Create account"),
-                                    ),
-                            ))),
+                    const SizedBox(height: 64),
+                    state is RegistratingState
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: InkWell(
+                              onTap: onRegistration,
+                              child: Container(
+                                height: 55.0,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25.0),
+                                  color: DcColors.violet,
+                                ),
+                                child: Center(
+                                    child: Text(
+                                  "Create account",
+                                  style: GoogleFonts.aBeeZee(
+                                    fontSize: 24.0,
+                                    color: const Color(0xFFE6E0D2),
+                                  ),
+                                )),
+                              ),
+                            ),
+                          ),
                   ],
                 ),
               ),
@@ -170,5 +193,44 @@ class _RegistrationPageState extends State<RegistrationPage> {
       _bloc.add(RegistrationEvent(
           userName: userName, email: email, password: password, confirmPassword: confirmPassword));
     }
+  }
+
+  String? _getUserNameErrorText(String value) {
+    if (value.isEmpty) {
+      return "User name is can not be empty";
+    }
+    return null;
+  }
+
+  String? _getPasswordErrorText(String value) {
+    if (value.isEmpty) {
+      return 'Password can not be empty';
+    } else if (value.length < 6) {
+      return 'Password must have not less the 6 letters';
+    } else {
+      return null;
+    }
+  }
+
+  String? _getConfirmationPasswordErrorText(String firstValue, String secondvalue) {
+    if (firstValue.isEmpty) {
+      return 'Confirm password can not be empty';
+    } else if (firstValue != secondvalue) {
+      return 'Password and confirm password must be equal';
+    } else {
+      return null;
+    }
+  }
+}
+
+String? _getEmailErrorText(String value) {
+  bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+      .hasMatch(value);
+  if (value.isEmpty) {
+    return "Email can not be empty";
+  } else if (!emailValid) {
+    return 'Invalid email';
+  } else {
+    return null;
   }
 }

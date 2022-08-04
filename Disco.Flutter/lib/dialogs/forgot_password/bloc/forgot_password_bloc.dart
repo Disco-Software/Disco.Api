@@ -4,20 +4,25 @@ import 'package:disco_app/dialogs/forgot_password/bloc/forgot_password_event.dar
 import 'package:disco_app/dialogs/forgot_password/bloc/forgot_password_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ForgotPasswordBloc extends Bloc<ForgotPasswordEvent,ForgotPasswordState>{
-  ForgotPasswordBloc(initialState) : super(initialState){
-    on<ForgotPasswordOnSendingEvent>((event, emit) => emit.forEach<ForgotPasswordState>(_handleForgotPassword(event), onData: (state) => state));
+class ForgotPasswordBloc
+    extends Bloc<ForgotPasswordEvent, ForgotPasswordState> {
+  final AuthApi authApi;
+
+  ForgotPasswordBloc(initialState, {required this.authApi})
+      : super(initialState) {
+    on<ForgotPasswordOnSendingEvent>((event, emit) =>
+        emit.forEach<ForgotPasswordState>(_handleForgotPassword(event),
+            onData: (state) => state));
   }
 
-  final authApi = AuthApi();
-
-  Stream<ForgotPasswordState> _handleForgotPassword(ForgotPasswordOnSendingEvent event) async* {
+  Stream<ForgotPasswordState> _handleForgotPassword(
+      ForgotPasswordOnSendingEvent event) async* {
     yield ForgotPasswordEmailSendingState();
-    final authResult = await authApi.forgotPassword(ForgotPasswordModel(email: event.email));
-    if(authResult != null){
+    final authResult =
+        await authApi.forgotPassword(ForgotPasswordModel(email: event.email));
+    if (authResult != null) {
       yield ForgotPasswordSendedState();
-    }
-    else {
+    } else {
       yield ForgotPasswordErrorState(emailError: "Email not valid");
     }
   }

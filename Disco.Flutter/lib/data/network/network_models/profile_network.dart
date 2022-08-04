@@ -5,8 +5,10 @@ import 'package:disco_app/data/network/network_models/user_network.dart';
 class Profile {
   String? status;
   String? photo;
+  String? creed;
   List<Post>? posts;
-  List<FriendModel>? friends;
+  List<FriendModel>? followers;
+  List<FriendModel>? following;
   int? userId;
   User? user;
   int? id;
@@ -15,13 +17,16 @@ class Profile {
       {this.status,
       this.photo,
       this.posts,
-      this.friends,
+      this.followers,
+      this.following,
       this.userId,
       this.user,
+      this.creed,
       this.id});
 
   Profile.fromJson(Map<String, dynamic> json) {
     status = json['status'];
+    creed = json['creed'];
     photo = json['photo'];
     if (json['posts'] != null) {
       posts = <Post>[];
@@ -29,10 +34,16 @@ class Profile {
         posts!.add(Post.fromJson(v));
       });
     }
-    if (json['friends'] != null) {
-      friends = <FriendModel>[];
-      json['friends'].forEach((v) {
-        friends!.add(FriendModel.fromJson(v));
+    if (json['followers'] != null) {
+      followers = <FriendModel>[];
+      json['followers'].forEach((v) {
+        followers!.add(FriendModel.fromJson(v));
+      });
+    }
+    if (json['following'] != null) {
+      following = <FriendModel>[];
+      json['following'].forEach((v) {
+        following!.add(FriendModel.fromJson(v));
       });
     }
     userId = json['userId'];
@@ -44,11 +55,15 @@ class Profile {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
     data['photo'] = photo;
+    data['creed'] = creed;
     if (posts != null) {
       data['posts'] = posts!.map((v) => v.toJson()).toList();
     }
-    if (friends != null) {
-      data['friends'] = friends!.map((v) => v.toJson()).toList();
+    if (followers != null) {
+      data['followers'] = followers!.map((v) => v.toJson()).toList();
+    }
+    if (following != null) {
+      data['following'] = following!.map((v) => v.toJson()).toList();
     }
     data['userId'] = userId;
     if (user != null) {

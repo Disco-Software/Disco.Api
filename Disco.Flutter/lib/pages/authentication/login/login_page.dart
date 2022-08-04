@@ -1,6 +1,10 @@
-import 'package:auto_route/src/router/auto_router_x.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:dio/dio.dart';
 import 'package:disco_app/app/app_router.gr.dart';
+import 'package:disco_app/data/local/local_storage.dart';
+import 'package:disco_app/data/network/repositories/user_repository.dart';
 import 'package:disco_app/dialogs/forgot_password/forgot_password.dart';
+import 'package:disco_app/injection.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,23 +13,33 @@ import 'bloc/login_bloc.dart';
 import 'bloc/login_event.dart';
 import 'bloc/login_state.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatefulWidget implements AutoRouteWrapper {
   const LoginPage({Key? key}) : super(key: key);
   static const routeName = "/log-in";
 
   @override
   State<LoginPage> createState() => _LoginPageState();
+
+  @override
+  Widget wrappedRoute(BuildContext context) {
+    return BlocProvider(
+      create: (_) => LoginBloc(
+        userRepository: getIt.get<UserRepository>(),
+        secureStorageRepository: getIt.get<SecureStorageRepository>(),
+        dio: getIt.get<Dio>(),
+      ),
+      child: this,
+    );
+  }
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _bloc = LoginBloc(InitLoginState());
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    _bloc.close();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -34,7 +48,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoginBloc, LoginPageState>(
-        bloc: _bloc,
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
@@ -75,17 +88,17 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           child: Text(
                             "E-mail",
-                            style: TextStyle(
-                                fontSize: 16, color: DcColors.darkWhite),
+                            style: TextStyle(fontSize: 16, color: DcColors.darkWhite),
                           ),
                         ),
                         TextFormField(
-                            controller: _emailController,
-                            style: const TextStyle(color: DcColors.darkWhite),
-                            decoration: InputDecoration(
-                                errorText: state is LogInErrorState
-                                    ? state.emailError
-                                    : null)),
+                          controller: _emailController,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) => _onEmailValidate(_emailController.text),
+                          style: const TextStyle(color: DcColors.darkWhite),
+                          decoration: InputDecoration(
+                              errorText: state is LogInErrorState ? state.emailError : null),
+                        ),
                         const SizedBox(height: 24),
                         const Padding(
                           padding: EdgeInsets.only(
@@ -94,23 +107,21 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           child: Text(
                             "Password",
-                            style: TextStyle(
-                                fontSize: 16, color: DcColors.darkWhite),
+                            style: TextStyle(fontSize: 16, color: DcColors.darkWhite),
                           ),
                         ),
                         TextFormField(
                           style: const TextStyle(color: DcColors.darkWhite),
                           obscureText: true,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) => _onPasswordValidate(_passwordController.text),
                           controller: _passwordController,
                           decoration: InputDecoration(
-                              errorText: state is LogInErrorState
-                                  ? state.passwordError
-                                  : null),
+                              errorText: state is LogInErrorState ? state.passwordError : null),
                         ),
                         const SizedBox(height: 34),
                         const Text(
-                            'By continuing, you agree to accept our' +
-                                'Privacy Policy & Terms of Service',
+                            'By continuing, you agree to accept our Privacy Policy & Terms of Service',
                             textAlign: TextAlign.center,
                             style: TextStyle(color: DcColors.darkWhite)),
                         const SizedBox(height: 50),
@@ -119,11 +130,9 @@ class _LoginPageState extends State<LoginPage> {
                             width: 192,
                             child: state is LoginingState
                                 ? const Center(
-                                    child: CircularProgressIndicator.adaptive(),
+                                    child: CircularProgressIndicator(),
                                   )
-                                : ElevatedButton(
-                                    onPressed: _onLogin,
-                                    child: const Text('Log In')),
+                                : ElevatedButton(onPressed: _onLogin, child: const Text('Log In')),
                           ),
                         ),
                         const SizedBox(
@@ -150,13 +159,13 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         },
-        listener: _blocLisener);
+        listener: _blocListener);
   }
 
-  void _blocLisener(BuildContext context, Object? state) {
+  void _blocListener(BuildContext context, Object? state) {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       if (state is LoggedInState) {
-        context.router.navigate(const HomeRoute());
+        context.router.pushAndPopUntil(HomeRoute(), predicate: (route) => false);
       }
     });
   }
@@ -165,11 +174,33 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState?.validate() ?? false) {
       final email = _emailController.text;
       final password = _passwordController.text;
-      _bloc.add(LoginEvent(email: email, password: password));
+      context.read<LoginBloc>().add(LoginEvent(email: email, password: password));
+    }
+  }
+
+  String? _onEmailValidate(String value) {
+    bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(value);
+    if (value.isEmpty) {
+      return "Email can not be empty";
+    } else if (!emailValid) {
+      return 'Invalid email';
+    } else {
+      return null;
     }
   }
 
   void _onPasswordForgot() {
     showDialog(context: context, builder: (_) => const ForgotPassword());
+  }
+
+  String? _onPasswordValidate(String value) {
+    if (value.isEmpty) {
+      return 'Password is requared';
+    } else if (value.length < 6) {
+      return 'Password must have more the 6 letters';
+    } else {
+      return null;
+    }
   }
 }
