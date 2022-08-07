@@ -21,6 +21,8 @@ namespace Disco.Business
                 .AddScoped<IImageService, ImageService>()
                 .AddScoped<ISongService, SongService>()
                 .AddScoped<IVideoService, VideoService>()
+                .AddScoped<ILikeService, LikeService>()
+                .AddSingleton<ILikeSocketService, LikeSocketService>()
                 .AddScoped<IPostService, PostService>()
                 .AddScoped<IStoryImageService, StoryImageService>()
                 .AddScoped<IStoryVideoService, StoryVideoService>()

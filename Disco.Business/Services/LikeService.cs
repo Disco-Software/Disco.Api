@@ -1,21 +1,21 @@
 ﻿
 using Disco.Business.Interfaces;
+using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
-using Disco.Domain.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Disco.Business.Services
 {
-    public class LikeService : ILikeSevice
+    public class LikeService : ILikeService
     {
-        private readonly PostRepository _postRepository;
-        private readonly LikeRepository _likeRepository;
+        private readonly IPostRepository _postRepository;
+        private readonly ILikeRepository _likeRepository;
 
         public LikeService(
-            PostRepository postRepository,
-            LikeRepository likeRepository)
+            IPostRepository postRepository,
+            ILikeRepository likeRepository)
         {
             _postRepository = postRepository;
             _likeRepository = likeRepository;

@@ -4,6 +4,7 @@ using Azure.Core.Extensions;
 using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
 using Disco.Api.AppSetup;
+using Disco.Api.Middlewares;
 using Disco.ApiServices.Hubs;
 using Disco.Business;
 using Disco.Business.Configurations;
@@ -98,7 +99,8 @@ namespace Disco.Api
             app.ApplicationServices.CreateScope();
             app.UseAuthorization();
             app.UseAuthentication();
-
+            app.UseMiddleware<WebSocketMiddleware>();
+            
             app.UseWebSockets();
 
             app.UseEndpoints(endpoints =>

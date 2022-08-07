@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Disco.Business.Interfaces
 {
-    public interface ILikeSevice
+    public interface ILikeService
     {
         public Task<List<Like>> CreateLikeAsync(User user, int postId);
 

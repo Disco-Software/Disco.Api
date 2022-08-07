@@ -10,11 +10,11 @@ namespace Disco.ApiServices.Hubs
     [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
     public class LikeHub : Hub
     {
-        private readonly ILikeSevice _likeSevice;
+        private readonly ILikeService _likeSevice;
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         public LikeHub(
-            ILikeSevice likeSevice,
+            ILikeService likeSevice,
             IUserService userService,
             IHttpContextAccessor httpContextAccessor)
         {
