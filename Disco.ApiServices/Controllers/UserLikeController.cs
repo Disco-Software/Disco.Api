@@ -29,7 +29,7 @@ namespace Disco.ApiServices.Controllers
             _userService = userService;
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Like([FromQuery] int postId)
         {
             var user = await _userService.GetUserAsync(HttpContext.User);
