@@ -63,7 +63,7 @@ class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
   void initState() {
     super.initState();
     context.read<PostsCubit>().loadPosts(pageNumber: 1, isInitial: true);
-    context.read<StoriesCubit>().loadStories(pageNumber: 1, isInitial: true);
+    context.read<StoriesCubit>().loadStories(isInitial: true);
   }
 
   @override
@@ -122,8 +122,7 @@ class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
                               onNotification: (ScrollNotification scrollInfo) {
                                 if (scrollInfo is ScrollEndNotification &&
                                     !context.read<StoriesCubit>().isLastPage) {
-                                  context.read<StoriesCubit>().loadStories(
-                                      pageNumber: context.read<StoriesCubit>().pageNumber);
+                                  context.read<StoriesCubit>().loadStories();
                                 }
                                 return true;
                               },

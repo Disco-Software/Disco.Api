@@ -13,4 +13,9 @@ class StoryModel {
     required this.storyType,
     required this.dateOfCreation,
   });
+
+  @override
+  String toString() {
+    return 'StoryModel{source: $source, storyType: $storyType, dateOfCreation: $dateOfCreation}';
+  }
 }

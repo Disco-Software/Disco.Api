@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cube_transition/cube_transition.dart';
 import 'package:disco_app/data/local/story_model.dart';
 import 'package:disco_app/pages/user/main/bloc/stories_cubit.dart';
@@ -29,17 +30,22 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
   late AnimationController _controller;
   late PageController _pageController;
   late VideoPlayerController _videoController;
+  late Future<List<Duration>> _storiesDurationFuture;
   double animationControllerValue = 0;
   int storyItemIndex = 0;
+  late int storyIndex;
   String _videoSource = '';
 
+  // bool _isImageLoaded = false;
+
   // List<Duration> itemDurations = [];
-  List<StoryModel> stories = [];
+  final List<StoryModel> stories = [];
 
   @override
   void didChangeDependencies() {
+    storyIndex = widget.index;
     super.didChangeDependencies();
-    final storiesImages = context.watch<StoriesCubit>().stories[widget.index].storyImages;
+    final storiesImages = context.watch<StoriesCubit>().stories[storyIndex].storyImages;
     final List<StoryModel> filteredImages = storiesImages != null
         ? storiesImages
             .map((e) => StoryModel(
@@ -50,7 +56,7 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
             .toList(growable: false)
         : [];
 
-    final storyVideos = context.watch<StoriesCubit>().stories[widget.index].storyVideos;
+    final storyVideos = context.watch<StoriesCubit>().stories[storyIndex].storyVideos;
     final List<StoryModel> filteredVideos = storyVideos != null
         ? storyVideos
             .map((e) => StoryModel(
@@ -64,36 +70,101 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
     stories.addAll(filteredImages);
     stories.addAll(filteredVideos);
     stories.sort((a, b) => a.dateOfCreation.compareTo(b.dateOfCreation));
+    print('LOADED STORIES FOR THIS USER ---> ${stories}');
 
-    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 3));
-    _controller.forward();
-    _pageController = PageController(initialPage: widget.index);
-    _controller.addListener(() {
-      if (_controller.status == AnimationStatus.completed) {
-        if (storyItemIndex + 1 >= stories.length) {
-          _videoController.dispose();
-          context.router.pop();
-        } else {
-          storyItemIndex++;
-          if (stories.isNotEmpty && stories[storyItemIndex].storyType == StoryType.video) {
-            setState(() {
+    _storiesDurationFuture = Future.wait(stories.map((StoryModel story) async {
+      switch (story.storyType) {
+        case StoryType.image:
+          return const Duration(seconds: 3);
+        case StoryType.video:
+          final _videoController = VideoPlayerController.network(story.source);
+          final duration = await _videoController.initialize().then((_) {
+            return _videoController.value.duration;
+          });
+          return duration;
+      }
+    }).toList(growable: false));
+    _pageController = PageController(initialPage: storyIndex);
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1));
+
+    if (stories.isNotEmpty) {
+      if (stories[storyItemIndex].storyType == StoryType.video) {
+        print('VIDEO--BREAKPOINT');
+        _videoSource = stories.isNotEmpty ? stories[storyItemIndex].source : '';
+        _videoController = VideoPlayerController.network(_videoSource);
+        _videoController.initialize().then((value) async {
+          _controller.duration = _videoController.value.duration;
+          _controller.forward();
+          await Future.delayed(Duration(milliseconds: 300));
+          setState(() {});
+          ;
+        });
+      } else {
+        print('Image--BREAKPOINT');
+        _controller.duration = const Duration(seconds: 3);
+        _controller.forward();
+      }
+    }
+
+    Future.delayed(Duration.zero, () async {
+      final _storiesDurations = await _storiesDurationFuture;
+      _controller.duration =
+          Duration(milliseconds: _storiesDurations[storyItemIndex].inMilliseconds);
+      // if (_isImageLoaded) {
+
+      // }
+
+      // double durationMilliseconds = 0;
+      // final durationList = snapshot.data;
+
+      // double durationPercent =
+      //     ((durationList![storyItemIndex].inMilliseconds /
+      //         durationMilliseconds) *
+      //         100.0) *
+      //         0.01;
+      // print('Dutation ==========>>>> $durationPercent');
+      // _controller.duration = Duration(
+      //     milliseconds: durationList[storyItemIndex].inMilliseconds);
+      // _controller.forward();
+
+      _controller.addListener(() {
+        if (_controller.status == AnimationStatus.completed) {
+          if (storyItemIndex + 1 >= stories.length) {
+            storyIndex++;
+            storyItemIndex = 0;
+            if (stories.isNotEmpty && stories[storyItemIndex].storyType == StoryType.video) {
+              _pageController.nextPage(
+                  duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
               _videoSource = stories.isNotEmpty ? stories[storyItemIndex].source : '';
-              _videoController = VideoPlayerController.network(_videoSource);
               _videoController.initialize().then((value) {
                 _controller.duration = _videoController.value.duration;
                 _controller.forward(from: 0.0);
                 return _videoController.play();
               });
-            });
+            } else {
+              _pageController.nextPage(
+                  duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+              _controller.duration = Duration(seconds: 3);
+              _controller.forward(from: 0.0);
+            }
+          } else {
+            storyItemIndex++;
+            if (stories.isNotEmpty && stories[storyItemIndex].storyType == StoryType.video) {
+              setState(() {
+                _videoSource = stories.isNotEmpty ? stories[storyItemIndex].source : '';
+                _videoController = VideoPlayerController.network(_videoSource);
+                _videoController.initialize().then((value) {
+                  _controller.duration = _videoController.value.duration;
+                  _controller.forward(from: 0.0);
+                  setState(() {});
+                  return _videoController.play();
+                });
+              });
+            }
           }
         }
-      }
+      });
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -101,7 +172,6 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
     super.dispose();
     _videoController.dispose();
     _controller.dispose();
-    _pageController.dispose();
   }
 
   @override
@@ -110,8 +180,8 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
       builder: (context, state) {
         final height = MediaQuery.of(context).size.height;
         if (state is SuccessStoriesState) {
-          final storiesImages = state.stories[widget.index].storyImages ?? [];
           final userStories = state.stories;
+          final _isStoryImage = stories[storyItemIndex].storyType == StoryType.image;
           return Scaffold(
             body: Stack(
               children: [
@@ -120,34 +190,52 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
                     onTapDown: (_) {
                       animationControllerValue = _controller.value;
                       _controller.stop();
-                      _videoController.pause();
+                      if (!_isStoryImage) {
+                        _videoController.pause();
+                      }
                     },
                     onTapUp: (_) {
                       _controller.forward(from: animationControllerValue);
-                      _videoController.play();
+                      if (!_isStoryImage) {
+                        _videoController.play();
+                      }
                     },
                     child: SizedBox(
                       height: height,
                       child: CubePageView.builder(
                         onPageChanged: (index) async {
-                          await Future.delayed(const Duration(milliseconds: 1500), () {
-                            // _controller.forward(from: 0.0);
-                          });
+                          print('ONPAGECHANGED');
                         },
                         controller: _pageController,
                         itemCount: userStories.length,
                         itemBuilder: (ctx, index, notifier) {
+                          final _isStoryImage =
+                              stories[storyItemIndex].storyType == StoryType.image;
+                          print('LOL228 ${_isStoryImage}');
                           return CubeWidget(
                             index: index,
                             pageNotifier: notifier,
                             child: Stack(
                               children: [
-                                stories[storyItemIndex].storyType == StoryType.image
-                                    ? Image.network(
-                                        stories[storyItemIndex].source,
-                                        errorBuilder: (_, __, ___) =>
+                                _isStoryImage
+                                    ? CachedNetworkImage(
+                                        imageUrl: stories[storyItemIndex].source,
+                                        errorWidget: (_, __, ___) =>
                                             Image.asset(Strings.defaultStoryImage),
                                         height: height,
+                                        progressIndicatorBuilder: (context, url, downloadProgress) {
+                                          // print('downloadProgress ${downloadProgress.progress}');
+                                          // if (downloadProgress.progress == 1) {
+                                          //   if (mounted) {
+                                          //     _isImageLoaded = true;
+                                          //   }
+                                          // }
+
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                                value: downloadProgress.progress),
+                                          );
+                                        },
                                       )
                                     : Center(
                                         child: AspectRatio(
@@ -208,7 +296,10 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
                         const SizedBox(width: 10.0),
                         GestureDetector(
                             onTap: () {
-                              _videoController.pause();
+                              if (!_isStoryImage && _videoController.value.isInitialized) {
+                                _videoController.pause();
+                              }
+                              _controller.stop();
                               context.router.pop();
                             },
                             child: const Icon(CupertinoIcons.clear)),

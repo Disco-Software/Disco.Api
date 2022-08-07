@@ -33,8 +33,8 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
   );
   late TextStyle _secondTextStyle;
   late TextStyle _thirdTextStyle;
-  bool shoudlChangeBackGround = false;
-  bool shoudlChangeCircle = false;
+  bool shouldChangeBackGround = false;
+  bool shouldChangeCircle = false;
 
   final BoxDecoration _firstDecoration = const BoxDecoration(
       gradient: RadialGradient(
@@ -118,7 +118,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
           await Future.delayed(const Duration(seconds: 2));
           setState(() {
             _textStyle = _thirdTextStyle;
-            shoudlChangeBackGround = true;
+            shouldChangeBackGround = true;
           });
         }
         if (token.isEmpty) {
@@ -162,7 +162,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
                 opacity: animation,
                 child: child,
               ),
-              child: !shoudlChangeBackGround
+              child: !shouldChangeBackGround
                   ? AnimatedContainer(
                       duration: const Duration(seconds: 1),
                       decoration: _decoration,
@@ -170,7 +170,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
                   : const _BackGroundBody(),
             ),
             AnimatedPositioned(
-              bottom: shoudlChangeBackGround
+              bottom: shouldChangeBackGround
                   ? MediaQuery.of(context).size.height * 0.6
                   : MediaQuery.of(context).size.height * 0.5,
               duration: const Duration(seconds: 1),

@@ -124,7 +124,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                             velocity: 100.0,
                                             startPadding: 10.0,
                                             onDone: () {},
-                                            text: data.songTitles[data.currentSongIndex],
+                                            text: data.songTitles[data.currentSongIndex].isNotEmpty
+                                                ? data.songTitles[data.currentSongIndex]
+                                                : 'Name',
                                             style: GoogleFonts.aBeeZee(
                                                 fontSize: 24.0, color: const Color(0xFFE6E0D2)),
                                           )

@@ -18,10 +18,11 @@ class StoriesCubit extends Cubit<StoriesState> {
   List<StoriesModel> stories = [];
   int pageNumber = 0;
 
-  Future<void> loadStories({required int pageNumber, bool isInitial = false}) async {
+  Future<void> loadStories({bool isInitial = false}) async {
     if (isInitial) {
       isLastPage = false;
       stories = [];
+      pageNumber = 1;
     }
     try {
       emit(LoadingStoriesState());
