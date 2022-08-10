@@ -127,13 +127,14 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
       //     milliseconds: durationList[storyItemIndex].inMilliseconds);
       // _controller.forward();
 
-      _controller.addListener(() {
+      _controller.addListener(() async {
         if (_controller.status == AnimationStatus.completed) {
           if (storyItemIndex + 1 >= stories.length) {
             storyIndex++;
             storyItemIndex = 0;
             if (stories.isNotEmpty && stories[storyItemIndex].storyType == StoryType.video) {
-              _pageController.nextPage(
+              print('ONE SEC');
+              await _pageController.nextPage(
                   duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
               _videoSource = stories.isNotEmpty ? stories[storyItemIndex].source : '';
               _videoController.initialize().then((value) {
@@ -142,9 +143,11 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
                 return _videoController.play();
               });
             } else {
-              _pageController.nextPage(
+              print('TWO SEC');
+
+              await _pageController.nextPage(
                   duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-              _controller.duration = Duration(seconds: 3);
+              _controller.duration = const Duration(seconds: 3);
               _controller.forward(from: 0.0);
             }
           } else {
@@ -183,131 +186,129 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
           final userStories = state.stories;
           final _isStoryImage = stories[storyItemIndex].storyType == StoryType.image;
           return Scaffold(
-            body: Stack(
-              children: [
-                Center(
-                  child: GestureDetector(
-                    onTapDown: (_) {
-                      animationControllerValue = _controller.value;
-                      _controller.stop();
-                      if (!_isStoryImage) {
-                        _videoController.pause();
-                      }
-                    },
-                    onTapUp: (_) {
-                      _controller.forward(from: animationControllerValue);
-                      if (!_isStoryImage) {
-                        _videoController.play();
-                      }
-                    },
-                    child: SizedBox(
-                      height: height,
-                      child: CubePageView.builder(
-                        onPageChanged: (index) async {
-                          print('ONPAGECHANGED');
-                        },
-                        controller: _pageController,
-                        itemCount: userStories.length,
-                        itemBuilder: (ctx, index, notifier) {
-                          final _isStoryImage =
-                              stories[storyItemIndex].storyType == StoryType.image;
-                          print('LOL228 ${_isStoryImage}');
-                          return CubeWidget(
-                            index: index,
-                            pageNotifier: notifier,
-                            child: Stack(
-                              children: [
-                                _isStoryImage
-                                    ? CachedNetworkImage(
-                                        imageUrl: stories[storyItemIndex].source,
-                                        errorWidget: (_, __, ___) =>
-                                            Image.asset(Strings.defaultStoryImage),
-                                        height: height,
-                                        progressIndicatorBuilder: (context, url, downloadProgress) {
-                                          // print('downloadProgress ${downloadProgress.progress}');
-                                          // if (downloadProgress.progress == 1) {
-                                          //   if (mounted) {
-                                          //     _isImageLoaded = true;
-                                          //   }
-                                          // }
+            body: GestureDetector(
+              onTapDown: (_) {
+                animationControllerValue = _controller.value;
+                _controller.stop();
+                if (!_isStoryImage) {
+                  _videoController.pause();
+                }
+              },
+              onTapUp: (_) {
+                _controller.forward(from: animationControllerValue);
+                if (!_isStoryImage) {
+                  _videoController.play();
+                }
+              },
+              child: SizedBox(
+                height: height,
+                child: CubePageView.builder(
+                  onPageChanged: (index) async {
+                    storyItemIndex = 0;
+                    _controller.reset();
+                  },
+                  controller: _pageController,
+                  itemCount: userStories.length,
+                  itemBuilder: (ctx, index, notifier) {
+                    final _isStoryImage = stories[storyItemIndex].storyType == StoryType.image;
+                    print('LOL228 ${_isStoryImage}');
+                    return CubeWidget(
+                      index: index,
+                      pageNotifier: notifier,
+                      child: Stack(
+                        children: [
+                          IgnorePointer(
+                            ignoring: true,
+                            child: _isStoryImage
+                                ? CachedNetworkImage(
+                                    imageUrl: stories[storyItemIndex].source,
+                                    errorWidget: (_, __, ___) =>
+                                        Image.asset(Strings.defaultStoryImage),
+                                    height: height,
+                                    progressIndicatorBuilder: (context, url, downloadProgress) {
+                                      // print('downloadProgress ${downloadProgress.progress}');
+                                      // if (downloadProgress.progress == 1) {
+                                      //   if (mounted) {
+                                      //     _isImageLoaded = true;
+                                      //   }
+                                      // }
 
-                                          return Center(
-                                            child: CircularProgressIndicator(
-                                                value: downloadProgress.progress),
-                                          );
-                                        },
-                                      )
-                                    : Center(
-                                        child: AspectRatio(
-                                        aspectRatio: _videoController.value.aspectRatio,
-                                        child: VideoPlayer(_videoController),
-                                      )),
-                                Column(
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                            value: downloadProgress.progress),
+                                      );
+                                    },
+                                  )
+                                : Center(
+                                    child: AspectRatio(
+                                    aspectRatio: _videoController.value.aspectRatio,
+                                    child: VideoPlayer(_videoController),
+                                  )),
+                          ),
+                          Column(
+                            children: [
+                              const Spacer(),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 45),
+                                child: Row(
                                   children: [
-                                    const Spacer(),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 45),
-                                      child: Row(
-                                        children: [
-                                          const Expanded(
-                                              child: TextField(
-                                            decoration: InputDecoration(
-                                              hintText: 'New message...',
-                                            ),
-                                            style: TextStyle(color: Colors.white),
-                                          )),
-                                          const SizedBox(width: 20.0),
-                                          SvgPicture.asset(
-                                            'assets/ic_send.svg',
-                                            width: 40,
-                                            height: 40,
-                                          )
-                                        ],
+                                    const Expanded(
+                                        child: TextField(
+                                      decoration: InputDecoration(
+                                        hintText: 'New message...',
                                       ),
-                                    ),
-                                    SizedBox(height: MediaQuery.of(context).padding.bottom),
+                                      style: TextStyle(color: Colors.white),
+                                    )),
+                                    const SizedBox(width: 20.0),
+                                    SvgPicture.asset(
+                                      'assets/ic_send.svg',
+                                      width: 40,
+                                      height: 40,
+                                    )
                                   ],
                                 ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                SafeArea(
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Row(
-                      children: [
-                        AnimatedBuilder(
-                          builder: (context, index) => LinearPercentIndicator(
-                            width: 350,
-                            lineHeight: 9,
-                            percent: _controller.value,
-                            barRadius: const Radius.circular(7),
-                            linearGradient: const LinearGradient(
-                                colors: [Color(0xFFE08D11), Color(0xFFF6EA7D)]),
-                            backgroundColor: const Color(0xFFC9D6FF),
+                              ),
+                              SizedBox(height: MediaQuery.of(context).padding.bottom),
+                            ],
                           ),
-                          animation: _controller,
-                        ),
-                        const SizedBox(width: 10.0),
-                        GestureDetector(
-                            onTap: () {
-                              if (!_isStoryImage && _videoController.value.isInitialized) {
-                                _videoController.pause();
-                              }
-                              _controller.stop();
-                              context.router.pop();
-                            },
-                            child: const Icon(CupertinoIcons.clear)),
-                      ],
-                    ),
-                  ),
+                          SafeArea(
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Row(
+                                children: [
+                                  AnimatedBuilder(
+                                    builder: (context, index) => LinearPercentIndicator(
+                                      width: 350,
+                                      lineHeight: 9,
+                                      percent: _controller.value,
+                                      barRadius: const Radius.circular(7),
+                                      linearGradient: const LinearGradient(
+                                          colors: [Color(0xFFE08D11), Color(0xFFF6EA7D)]),
+                                      backgroundColor: const Color(0xFFC9D6FF),
+                                    ),
+                                    animation: _controller,
+                                  ),
+                                  const SizedBox(width: 10.0),
+                                  GestureDetector(
+                                      onTap: () {
+                                        if (!_isStoryImage &&
+                                            _videoController.value.isInitialized) {
+                                          _videoController.pause();
+                                        }
+                                        _controller.stop();
+                                        context.router.pop();
+                                      },
+                                      child: const Icon(CupertinoIcons.clear)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
-              ],
+              ),
             ),
           );
         } else {
