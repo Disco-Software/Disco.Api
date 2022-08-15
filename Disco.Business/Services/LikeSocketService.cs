@@ -1,5 +1,6 @@
 ﻿using Disco.Business.Interfaces;
 using Disco.Domain.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -52,23 +53,40 @@ namespace Disco.Business.Services
                                     cancellationToken: CancellationToken.None);
         }
 
-        public async Task AddLikeAsync(List<Like> likes)
+        public async Task SendAsync(WebSocket webSocket, WebSocketReceiveResult result,  byte[] buffer, int postId)
         {
             foreach (var pair in _sockets)
             {
                 if (pair.Value.State == WebSocketState.Open)
-                    await SendMessageAsync(pair.Value, likes);
+                    await ReciveAsync(pair.Value, result, postId);
             }
         }
 
-        private async Task SendMessageAsync(WebSocket socket, List<Like> likes)
+        public async Task SendLikeAsync(WebSocket socket, int postId)
         {
-            await socket.SendAsync(buffer: new ArraySegment<byte>(array: Encoding.ASCII.GetBytes(likes.ToString()),
+            if (socket.State != WebSocketState.Open)
+                return;
+
+            await socket.SendAsync(buffer: new ArraySegment<byte>(array: Encoding.ASCII.GetBytes(postId.ToString()),
                                                                     offset: 0,
-                                                                    count: likes.Count),
+                                                                    count: postId.ToString().Length),
                                     messageType: WebSocketMessageType.Text,
                                     endOfMessage: true,
                                     cancellationToken: CancellationToken.None);
+        }
+
+
+        private async Task ReciveAsync(WebSocket socket, WebSocketReceiveResult reciveResult, int likesCount)
+        {
+            var buffer = new byte[1024 * 4];
+
+            while (socket.State == WebSocketState.Open)
+            {
+                var result = await socket.ReceiveAsync(buffer: new ArraySegment<byte>(buffer),
+                         cancellationToken: CancellationToken.None);
+
+                await SendLikeAsync(socket, likesCount);
+            }
         }
     }
 }

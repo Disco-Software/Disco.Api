@@ -8,10 +8,14 @@ using Disco.Api.Middlewares;
 using Disco.ApiServices.Hubs;
 using Disco.Business;
 using Disco.Business.Configurations;
+using Disco.Business.Interfaces;
+using Disco.Business.Services;
 using Disco.Domain;
+using Disco.Domain.Models;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -74,6 +78,9 @@ namespace Disco.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            var serviceProvider = serviceScopeFactory.CreateScope().ServiceProvider;
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -82,31 +89,23 @@ namespace Disco.Api
             app.UseExceptionHandler("/Error");
             app.UseHsts();
 
-            //app.UseSwagger(c =>
-            //{
-            //    c.SerializeAsV2 = true;
-            //});
-           
-            //app.UseSwaggerUI(u =>
-            //{
-            //    u.SwaggerEndpoint("1.0/swagger.json", "Disco.Api");
-            //});
-
-
             ILogger logger = loggerFactory.CreateLogger("ClientErrorLogger");
             
             app.UseRouting();
             app.ApplicationServices.CreateScope();
             app.UseAuthorization();
             app.UseAuthentication();
-            app.UseMiddleware<WebSocketMiddleware>();
-            
+
+            var service = serviceScopeFactory.CreateScope().ServiceProvider;
+            service.GetRequiredService(typeof(UserManager<User>));
+
             app.UseWebSockets();
 
+            app.MapWebSocketRequest("/ws/like");
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<LikeHub>("/hub/like");
             });
         }
     }

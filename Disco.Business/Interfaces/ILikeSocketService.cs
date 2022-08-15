@@ -15,6 +15,6 @@ namespace Disco.Business.Interfaces
         string GetId(WebSocket socket);
         string AddSocket(WebSocket socket);
         Task RemoveSocket(string id);
-        Task AddLikeAsync(List<Like> likes);
+        Task SendAsync(WebSocket webSocket, WebSocketReceiveResult webSocketReceiveResult, byte[] buffer, int postId);
     }
 }

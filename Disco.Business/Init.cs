@@ -9,6 +9,7 @@ namespace Disco.Business
         public static IServiceCollection ConfigureServices(this IServiceCollection serviceDescriptors)
         {
             return serviceDescriptors
+                .AddScoped<IUserService, UserService>()
                 .AddScoped<IRegisterDeviceService, RegisterDeviceService>()
                 .AddScoped<IAdminRoleService, AdminRoleService>()
                 .AddScoped<IAdminUserService, AdminUserService>()
@@ -22,14 +23,13 @@ namespace Disco.Business
                 .AddScoped<ISongService, SongService>()
                 .AddScoped<IVideoService, VideoService>()
                 .AddScoped<ILikeService, LikeService>()
-                .AddSingleton<ILikeSocketService, LikeSocketService>()
+                .AddScoped<ILikeSocketService, LikeSocketService>()
                 .AddScoped<IPostService, PostService>()
                 .AddScoped<IStoryImageService, StoryImageService>()
                 .AddScoped<IStoryVideoService, StoryVideoService>()
                 .AddScoped<IStoryService, StoryService>()
                 .AddScoped<IFriendService, FriendService>()
                 .AddScoped<IPushNotificationService, PushNotificationService>()
-                .AddScoped<IUserService, UserService>()
                 .AddScoped<IProfileService, ProfileService>();
         }
     }

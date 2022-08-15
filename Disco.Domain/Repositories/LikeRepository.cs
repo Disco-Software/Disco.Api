@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Repositories.Base;
+using System.Collections.Generic;
 
 namespace Disco.Domain.Repositories
 {
@@ -39,6 +40,14 @@ namespace Disco.Domain.Repositories
             like.Post.Likes.Remove(like);
 
             await ctx.SaveChangesAsync();
+        }
+
+        public async Task<List<Like>> GetAll(int postId)
+        {
+            return await ctx.Like
+                .Include(p => p.Post)
+                .Where(l => l.PostId == postId)
+                .ToListAsync();
         }
     }
 }
