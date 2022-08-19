@@ -6,8 +6,6 @@ namespace Disco.Business.Interfaces
 {
     public interface ILikeService
     {
-        public Task<List<Like>> CreateLikeAsync(User user, int postId);
-
-        public Task<List<Like>> RemoveLikeAsync(User user, int likeId);
+        public Task<List<Like>> ToggleLikeAsync(User user, int postId);
     }
 }

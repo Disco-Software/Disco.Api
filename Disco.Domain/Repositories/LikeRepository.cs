@@ -49,5 +49,12 @@ namespace Disco.Domain.Repositories
                 .Where(l => l.PostId == postId)
                 .ToListAsync();
         }
+
+        public async Task<Like> GetAsync(string userName)
+        {
+            return await ctx.Like
+                .Where(l => l.UserName == userName)
+                .FirstOrDefaultAsync();
+        }
     }
 }

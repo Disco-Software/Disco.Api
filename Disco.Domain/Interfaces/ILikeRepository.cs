@@ -8,6 +8,7 @@ namespace Disco.Domain.Interfaces
     {
         Task AddAsync(Like item, int postId);
         Task Remove(int id);
+        Task<Like> GetAsync(string userName);
         Task<List<Like>> GetAll(int postId);
     }
 }

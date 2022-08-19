@@ -21,32 +21,29 @@ namespace Disco.Business.Services
             _likeRepository = likeRepository;
         }
 
-        public async Task<List<Like>> CreateLikeAsync(User user, int postId)
+        public async Task<List<Like>> ToggleLikeAsync(User user, int postId)
         {
             var post = await _postRepository.Get(postId);
-           
-            var like = new Like
+            var like = await _likeRepository.GetAsync(user.UserName);
+
+            if(like == null)
             {
-                Post = post,
-                UserName = user.UserName,
-                PostId = postId,
-            };
+                like = new Like
+                {
+                    UserName = user.UserName,
+                    Post = post,
+                    PostId = postId,
+                };
 
-            await _likeRepository.AddAsync(like, postId);
+                await _likeRepository.AddAsync(like, postId);
+            }
+            else if (like != null)
+            {
+                await _likeRepository.Remove(like.Id);
 
-            return post.Likes;
-        }
-
-        public async Task<List<Like>> RemoveLikeAsync(User user, int postId)
-        {
-            var post = await _postRepository.Get(postId);
+                return post.Likes;
+            }
             
-            var like = post.Likes
-                .Where(u => u.UserName == user.UserName)
-                .FirstOrDefault();
-
-           await _likeRepository.Remove(like.Id);
-
             return post.Likes;
         }
     }

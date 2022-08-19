@@ -4,8 +4,6 @@ using Azure.Core.Extensions;
 using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
 using Disco.Api.AppSetup;
-using Disco.Api.Middlewares;
-using Disco.ApiServices.Hubs;
 using Disco.Business;
 using Disco.Business.Configurations;
 using Disco.Business.Interfaces;
@@ -40,6 +38,8 @@ namespace Disco.Api
 
             services.ConfigureDbContext(Configuration);
             services.ConfigureIdentity();
+            services.AddAuthorization();
+
             services.ConfigureAzureServices(Configuration);
             services.AddSignalR(options => {
                 options.EnableDetailedErrors = true;
@@ -51,7 +51,6 @@ namespace Disco.Api
 
             services.AddHttpContextAccessor();
             services.AddHttpClient();
-
             services.AddLogging();
 
             services.ConfigureRepositories();
@@ -93,15 +92,13 @@ namespace Disco.Api
             
             app.UseRouting();
             app.ApplicationServices.CreateScope();
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
 
             var service = serviceScopeFactory.CreateScope().ServiceProvider;
             service.GetRequiredService(typeof(UserManager<User>));
 
             app.UseWebSockets();
-
-            app.MapWebSocketRequest("/ws/like");
             
             app.UseEndpoints(endpoints =>
             {
