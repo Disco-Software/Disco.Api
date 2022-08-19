@@ -11,7 +11,7 @@ import 'package:disco_app/pages/user/add_post/widgets/fullscreen_video.dart';
 import 'package:disco_app/pages/user/chat/chat.dart';
 import 'package:disco_app/pages/user/home_page.dart';
 import 'package:disco_app/pages/user/main/main_page.dart';
-import 'package:disco_app/pages/user/main/pages/story_page.dart';
+import 'package:disco_app/pages/user/main/pages/stories/story_page.dart';
 import 'package:disco_app/pages/user/profile/profile.dart';
 import 'package:disco_app/pages/user/saved/saved.dart';
 import 'package:disco_app/pages/user/saved/saved_item_page/saved_item.dart';
@@ -54,3 +54,53 @@ import 'package:disco_app/pages/user/saved/saved_item_page/saved_item.dart';
 )
 // extend the generated private router
 class $AppRouter {}
+
+// class Pseudo3dRouteBuilder extends PageRouteBuilder {
+//   final Widget enterPage;
+//   final Widget exitPage;
+//
+//   Pseudo3dRouteBuilder(this.exitPage, this.enterPage)
+//       : super(
+//           pageBuilder: (context, animation, secondaryAnimation) => enterPage,
+//           transitionsBuilder: _transitionsBuilder(exitPage, enterPage),
+//         );
+
+// final _transitionsBuilder(exitPage, enterPage) =>
+//     (context, animation, secondaryAnimation, child) {
+//       return Stack(
+//         children: <Widget>[
+//           SlideTransition(
+//             position: Tween<Offset>(
+//               begin: Offset.zero,
+//               end: const Offset(-1.0, 0.0),
+//             ).animate(animation),
+//             child: Container(
+//               color: Colors.white,
+//               child: Transform(
+//                 transform: Matrix4.identity()
+//                   ..setEntry(3, 2, 0.003)
+//                   ..rotateY(pi / 2 * animation.value),
+//                 alignment: FractionalOffset.centerRight,
+//                 child: exitPage,
+//               ),
+//             ),
+//           ),
+//           SlideTransition(
+//             position: Tween<Offset>(
+//               begin: const Offset(1.0, 0.0),
+//               end: Offset.zero,
+//             ).animate(animation),
+//             child: Container(
+//               color: Colors.white,
+//               child: Transform(
+//                 transform: Matrix4.identity()
+//                   ..setEntry(3, 2, 0.003)
+//                   ..rotateY(pi / 2 * (animation.value - 1)),
+//                 alignment: FractionalOffset.centerLeft,
+//                 child: enterPage,
+//               ),
+//             ),
+//           )
+//         ],
+//       );
+//     };

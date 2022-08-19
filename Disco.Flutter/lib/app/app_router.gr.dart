@@ -20,7 +20,7 @@ import '../pages/user/add_post/widgets/fullscreen_video.dart' as _i7;
 import '../pages/user/chat/chat.dart' as _i13;
 import '../pages/user/home_page.dart' as _i10;
 import '../pages/user/main/main_page.dart' as _i11;
-import '../pages/user/main/pages/story_page.dart' as _i8;
+import '../pages/user/main/pages/stories/story_page.dart' as _i8;
 import '../pages/user/profile/profile.dart' as _i14;
 import '../pages/user/saved/saved.dart' as _i12;
 import '../pages/user/saved/saved_item_page/saved_item.dart' as _i9;
@@ -62,7 +62,8 @@ class AppRouter extends _i1.RootStackRouter {
         routeData: routeData,
         builder: (data) {
           final args = data.argsAs<StoryRouteArgs>();
-          return _i8.StoryPage(index: args.index, key: args.key);
+          return _i8.StoryPage(
+              index: args.index, totalLength: args.totalLength, key: args.key);
         }),
     SavedItemRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
@@ -198,17 +199,22 @@ class FullScreenVideoRouteArgs {
 }
 
 class StoryRoute extends _i1.PageRouteInfo<StoryRouteArgs> {
-  StoryRoute({required int index, _i2.Key? key})
+  StoryRoute({required int index, required int totalLength, _i2.Key? key})
       : super(name,
-            path: '/story', args: StoryRouteArgs(index: index, key: key));
+            path: '/story',
+            args: StoryRouteArgs(
+                index: index, totalLength: totalLength, key: key));
 
   static const String name = 'StoryRoute';
 }
 
 class StoryRouteArgs {
-  const StoryRouteArgs({required this.index, this.key});
+  const StoryRouteArgs(
+      {required this.index, required this.totalLength, this.key});
 
   final int index;
+
+  final int totalLength;
 
   final _i2.Key? key;
 }

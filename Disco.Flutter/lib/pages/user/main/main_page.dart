@@ -147,8 +147,10 @@ class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
                                           );
                                         } else {
                                           return GestureDetector(
-                                            onTap: () =>
-                                                context.router.push(StoryRoute(index: index - 1)),
+                                            onTap: () => context.router.push(StoryRoute(
+                                                index: index - 1,
+                                                totalLength: _posts.length,
+                                                key: ValueKey(index - 1))),
                                             child: Padding(
                                               padding: const EdgeInsets.symmetric(horizontal: 8),
                                               child: UnicornImage(
