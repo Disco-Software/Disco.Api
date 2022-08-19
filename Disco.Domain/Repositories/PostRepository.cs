@@ -120,6 +120,7 @@ namespace Disco.Domain.Repositories
         public override Task<Post> Get(int id)
         {
            return ctx.Posts
+                .Include(p => p.Likes)
                 .Include(i => i.PostImages)
                 .Include(s => s.PostSongs)
                 .Include(v => v.PostVideos)

@@ -35,7 +35,7 @@ namespace Disco.ApiServices.Controllers
 
             var likes = await _likeService.ToggleLikeAsync(user, postId);
 
-            return Ok(likes);
+            return Ok(likes.Count);
         }
     }
 }

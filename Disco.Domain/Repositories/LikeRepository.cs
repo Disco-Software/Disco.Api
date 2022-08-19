@@ -33,6 +33,8 @@ namespace Disco.Domain.Repositories
         public override async Task Remove(int id)
         {
             var like = await ctx.Like
+                .Include(p => p.Post)
+                .ThenInclude(l => l.Likes)
                 .Where(l => l.Id == id)
                 .FirstOrDefaultAsync();
 
