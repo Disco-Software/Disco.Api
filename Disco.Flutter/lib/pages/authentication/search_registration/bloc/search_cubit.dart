@@ -1,10 +1,10 @@
+import 'package:disco_app/app/extensions/secure_storage_extensions.dart';
 import 'package:disco_app/data/local/local_storage.dart';
 import 'package:disco_app/data/network/api/auth_api.dart';
 import 'package:disco_app/data/network/network_models/user_network.dart';
 import 'package:disco_app/data/network/request_models/access_token_requset_model.dart';
 import 'package:disco_app/data/network/request_models/apple_login.dart';
 import 'package:disco_app/pages/authentication/search_registration/bloc/search_state.dart';
-import 'package:disco_app/res/strings.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../injection.dart';
@@ -39,18 +39,13 @@ class SearchCubit extends Cubit<SearchPageState> {
     }
   }
 
-  void _saveUserData(UserTokenResponse? authResult) {
-    getIt
-        .get<SecureStorageRepository>()
-        .write(key: Strings.token, value: authResult?.accesToken ?? "");
-    getIt
-        .get<SecureStorageRepository>()
-        .write(key: Strings.refreshToken, value: authResult?.refreshToken ?? "");
-    getIt
-        .get<SecureStorageRepository>()
-        .write(key: Strings.userPhoto, value: authResult?.user?.profile?.photo ?? "");
-    getIt
-        .get<SecureStorageRepository>()
-        .write(key: Strings.userId, value: '${authResult?.user?.id}');
+  void _saveUserData(UserTokenResponse? authResult) async {
+    getIt.get<SecureStorageRepository>().saveUserModel(
+          refreshToken: authResult?.refreshToken,
+          token: authResult?.accesToken,
+          userId: '${authResult?.user?.id}',
+          userName: authResult?.user?.userName,
+          userPhoto: authResult?.user?.profile?.photo,
+        );
   }
 }

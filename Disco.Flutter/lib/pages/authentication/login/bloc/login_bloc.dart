@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:disco_app/app/extensions/secure_storage_extensions.dart';
 import 'package:disco_app/data/local/local_storage.dart';
 import 'package:disco_app/data/network/repositories/user_repository.dart';
 import 'package:disco_app/data/network/request_models/login_request.dart';
-import 'package:disco_app/res/strings.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -35,14 +35,13 @@ class LoginBloc extends Bloc<LoginPageEvent, LoginPageState> {
       ));
       if (authResult?.user != null && authResult?.accesToken != null) {
         yield LoggedInState(userTokenResponse: authResult);
-        secureStorageRepository.write(key: Strings.token, value: authResult?.accesToken ?? '');
-        secureStorageRepository.write(
-          key: Strings.refreshToken,
-          value: authResult?.refreshToken ?? '',
+        secureStorageRepository.saveUserModel(
+          refreshToken: authResult?.refreshToken,
+          token: authResult?.accesToken,
+          userId: '${authResult?.user?.id}',
+          userName: authResult?.user?.userName,
+          userPhoto: authResult?.user?.profile?.photo,
         );
-        secureStorageRepository.write(
-            key: Strings.userPhoto, value: authResult?.user?.profile?.photo ?? '');
-        secureStorageRepository.write(key: Strings.userId, value: '${authResult?.user?.id}');
         dio.options.headers.addAll({'Authorization': 'Bearer: ${authResult?.accesToken}'});
       } else {
         final errorText = authResult?.accesToken;

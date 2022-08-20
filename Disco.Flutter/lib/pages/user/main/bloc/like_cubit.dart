@@ -12,7 +12,7 @@ class LikeCubit extends Cubit<LikeState> {
 
   final PostRepository postRepository;
 
-  Future<void> addLike(int postId) async {
+  Future<int?> addLike(int postId) async {
     try {
       // emit(const LikeState.loading());
 
@@ -21,6 +21,7 @@ class LikeCubit extends Cubit<LikeState> {
       emit(LikeState.success(
         likes: likes ?? 0,
       ));
+      return likes ?? 0;
     } catch (err) {
       emit(const LikeState.error());
       debugPrint('$err');

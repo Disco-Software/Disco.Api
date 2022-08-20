@@ -1,6 +1,7 @@
 class Strings {
   static const String token = "token";
   static const String refreshToken = "refreshToken";
+  static const String userName = "userName";
   static const String userPhoto = "userPhoto";
   static const String userId = "userId";
   static const String defaultSongImage = "assets/default_audio_image.png";
