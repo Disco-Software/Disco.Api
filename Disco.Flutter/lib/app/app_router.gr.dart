@@ -65,6 +65,16 @@ class AppRouter extends _i1.RootStackRouter {
           return _i8.StoryPage(
               index: args.index, totalLength: args.totalLength, key: args.key);
         }),
+    AnimatedStoryRoute.name: (routeData) => _i1.CustomPage<dynamic>(
+        routeData: routeData,
+        builder: (data) {
+          final args = data.argsAs<AnimatedStoryRouteArgs>();
+          return _i8.StoryPage(
+              index: args.index, totalLength: args.totalLength, key: args.key);
+        },
+        transitionsBuilder: _i1.TransitionsBuilders.fadeIn,
+        opaque: true,
+        barrierDismissible: false),
     SavedItemRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (data) {
@@ -135,6 +145,7 @@ class AppRouter extends _i1.RootStackRouter {
         _i1.RouteConfig(RegistrationRoute.name, path: '/registration'),
         _i1.RouteConfig(FullScreenVideoRoute.name, path: '/fullscreen-video'),
         _i1.RouteConfig(StoryRoute.name, path: '/story'),
+        _i1.RouteConfig(AnimatedStoryRoute.name, path: '/story_anim'),
         _i1.RouteConfig(SavedItemRoute.name, path: ':itemId'),
         _i1.RouteConfig(HomeRoute.name, path: '/home', children: [
           _i1.RouteConfig(FeedRoute.name, path: 'feed'),
@@ -210,6 +221,28 @@ class StoryRoute extends _i1.PageRouteInfo<StoryRouteArgs> {
 
 class StoryRouteArgs {
   const StoryRouteArgs(
+      {required this.index, required this.totalLength, this.key});
+
+  final int index;
+
+  final int totalLength;
+
+  final _i2.Key? key;
+}
+
+class AnimatedStoryRoute extends _i1.PageRouteInfo<AnimatedStoryRouteArgs> {
+  AnimatedStoryRoute(
+      {required int index, required int totalLength, _i2.Key? key})
+      : super(name,
+            path: '/story_anim',
+            args: AnimatedStoryRouteArgs(
+                index: index, totalLength: totalLength, key: key));
+
+  static const String name = 'AnimatedStoryRoute';
+}
+
+class AnimatedStoryRouteArgs {
+  const AnimatedStoryRouteArgs(
       {required this.index, required this.totalLength, this.key});
 
   final int index;

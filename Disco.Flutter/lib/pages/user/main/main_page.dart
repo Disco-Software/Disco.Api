@@ -3,6 +3,7 @@ import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/core/widgets/post/post.dart';
 import 'package:disco_app/core/widgets/unicorn_image.dart';
 import 'package:disco_app/data/network/network_models/post_network.dart';
+import 'package:disco_app/data/network/network_models/story_network.dart';
 import 'package:disco_app/pages/user/main/bloc/posts_cubit.dart';
 import 'package:disco_app/pages/user/main/bloc/stories_cubit.dart';
 import 'package:disco_app/pages/user/main/bloc/stories_state.dart';
@@ -52,6 +53,7 @@ class _SuccessStateWidget extends StatefulWidget {
 class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
   final List<Post> _posts = [];
+  late List<StoriesModel> _stories;
 
   // final List<StoriesModel> _stories = [];
   int _postNumberPage = 1;
@@ -60,10 +62,11 @@ class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
   bool isLastBlocPaginationPage = false;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     context.read<PostsCubit>().loadPosts(pageNumber: 1, isInitial: true);
     context.read<StoriesCubit>().loadStories(isInitial: true);
+    _stories = context.read<StoriesCubit>().stories;
   }
 
   @override
@@ -100,19 +103,9 @@ class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
                 ],
               ),
               BlocConsumer<StoriesCubit, StoriesState>(
-                listener: (context, state) {
-                  // if (state is SuccessStoriesState) {
-                  //   _stories.addAll(state.stories);
-                  //   setState(() {});
-                  //   if (state.stories.length < Numbers.storiesPageSize) {
-                  //     context.read<StoriesCubit>().isLastPage = true;
-                  //   } else {
-                  //     _storiesNumberPage++;
-                  //   }
-                  // }
-                },
+                listener: (context, state) {},
                 builder: (context, state) {
-                  if (context.read<StoriesCubit>().stories.isNotEmpty) {
+                  if (_stories.isNotEmpty) {
                     return SliverToBoxAdapter(
                       child: Stack(
                         children: [
@@ -149,7 +142,7 @@ class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
                                           return GestureDetector(
                                             onTap: () => context.router.push(StoryRoute(
                                                 index: index - 1,
-                                                totalLength: _posts.length,
+                                                totalLength: _stories.length,
                                                 key: ValueKey(index - 1))),
                                             child: Padding(
                                               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -172,7 +165,7 @@ class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
                                           );
                                         }
                                       },
-                                      itemCount: context.read<StoriesCubit>().stories.length + 1,
+                                      itemCount: _stories.length + 1,
                                     )
                                   : const Center(child: CircularProgressIndicator()),
                             ),

@@ -121,9 +121,7 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
               ),
             ),
           ),
-          const SizedBox(
-            height: 9,
-          ),
+          const SizedBox(height: 9),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 37),
             child: Row(
@@ -140,10 +138,18 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
                         isSelected: snapshot.data as bool,
                       );
                     } else {
-                      return const SizedBox();
+                      return PostButton(
+                        onTap: () async {
+                          context.read<LikeCubit>().addLike(widget.post.id ?? 0);
+                        },
+                        imagePath: "assets/ic_star.svg",
+                        isSelected:
+                            context.watch<LikeCubit>().state == const LikeState.success(likes: 1),
+                      );
                     }
                   },
                 ),
+                const SizedBox(height: 9),
                 BlocBuilder<LikeCubit, LikeState>(
                   key: ValueKey('${widget.post.id}'),
                   builder: (context, state) {
@@ -155,6 +161,7 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
                     );
                   },
                 ),
+                const SizedBox(height: 9),
                 PostButton(
                   onTap: () {},
                   imagePath: 'assets/ic_comment.svg',
@@ -265,12 +272,12 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
   Future<bool> _isPostLiked(List<Like>? likes) async {
     final userName = await _getUserName();
 
-    final isPostSelected = widget.post.likes?.firstWhereOrNull(
-          (element) {
-            final likeUsername = element.userName ?? '';
-            return likeUsername == userName;
-          },
-        ) !=
+    print('lol189 ${userName} and ${widget.post.likes?.first.userName}');
+
+    final isPostSelected = widget.post.likes?.firstWhereOrNull((element) {
+          final likeUsername = element.userName ?? '';
+          return likeUsername == userName;
+        }) !=
         null;
 
     return isPostSelected;

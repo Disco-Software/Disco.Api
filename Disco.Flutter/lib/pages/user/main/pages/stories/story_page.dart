@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/data/local/story_model.dart';
 import 'package:disco_app/data/network/network_models/profile_network.dart';
+import 'package:disco_app/data/network/network_models/story_network.dart';
 import 'package:disco_app/pages/user/main/bloc/stories_cubit.dart';
 import 'package:disco_app/pages/user/main/bloc/stories_state.dart';
 import 'package:disco_app/pages/user/main/pages/stories/story_view/story_view.dart';
@@ -30,54 +31,66 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
   late StoryController _storyController;
   final List<StoryModel> stories = [];
   List<StoryItem> newStories = [];
+  late int _totalLength;
   Profile? currentUser;
   final FocusNode _textFieldFocus = FocusNode();
   final TextEditingController _textController = TextEditingController();
 
   @override
   void didChangeDependencies() {
-    storyIndex = widget.index;
     super.didChangeDependencies();
-    final storiesImages = context.watch<StoriesCubit>().stories[storyIndex].storyImages;
-    currentUser = context.watch<StoriesCubit>().stories[storyIndex].profile;
-    final List<StoryModel> filteredImages = storiesImages != null
-        ? storiesImages
-            .map((e) => StoryModel(
-                  storyType: StoryType.image,
-                  source: e.source ?? '',
-                  dateOfCreation: DateTime.parse(e.dateOfCreation ?? '${DateTime.now()}'),
-                ))
-            .toList(growable: false)
-        : [];
-    _storyController = StoryController();
+    _totalLength = widget.totalLength;
+    storyIndex = widget.index;
+    List<StoriesModel> newCubitStories = context.watch<StoriesCubit>().stories;
+    if (newCubitStories.isNotEmpty && storyIndex < newCubitStories.length) {
+      final storiesImages = newCubitStories[storyIndex].storyImages;
+      currentUser = context.watch<StoriesCubit>().stories[storyIndex].profile;
+      final List<StoryModel> filteredImages = storiesImages != null
+          ? storiesImages
+              .map((e) => StoryModel(
+                    storyType: StoryType.image,
+                    source: e.source ?? '',
+                    dateOfCreation: DateTime.parse(e.dateOfCreation ?? '${DateTime.now()}'),
+                  ))
+              .toList(growable: false)
+          : [];
+      _storyController = StoryController();
 
-    final storyVideos = context.watch<StoriesCubit>().stories[storyIndex].storyVideos;
-    final List<StoryModel> filteredVideos = storyVideos != null
-        ? storyVideos
-            .map((e) => StoryModel(
-                  storyType: StoryType.video,
-                  source: e.source ?? '',
-                  dateOfCreation: DateTime.parse(e.dateOfCreation ?? '${DateTime.now()}'),
-                ))
-            .toList(growable: false)
-        : [];
+      final storyVideos = newCubitStories[storyIndex].storyVideos;
+      final List<StoryModel> filteredVideos = storyVideos != null
+          ? storyVideos
+              .map((e) => StoryModel(
+                    storyType: StoryType.video,
+                    source: e.source ?? '',
+                    dateOfCreation: DateTime.parse(e.dateOfCreation ?? '${DateTime.now()}'),
+                  ))
+              .toList(growable: false)
+          : [];
 
-    stories.addAll(filteredImages);
-    stories.addAll(filteredVideos);
-    stories.sort((a, b) => a.dateOfCreation.compareTo(b.dateOfCreation));
-    newStories = stories.map((e) {
-      if (e.storyType == StoryType.video) {
-        return StoryItem.pageVideo(
-          e.source,
-          controller: _storyController,
-        );
-      } else {
-        return StoryItem.pageImage(
-          url: e.source,
-          controller: _storyController,
-        );
-      }
-    }).toList();
+      stories.addAll(filteredImages);
+      stories.addAll(filteredVideos);
+      stories.sort((a, b) => a.dateOfCreation.compareTo(b.dateOfCreation));
+      newStories = stories.map((e) {
+        if (e.storyType == StoryType.video) {
+          return StoryItem.pageVideo(
+            e.source,
+            controller: _storyController,
+          );
+        } else {
+          return StoryItem.pageImage(
+            url: e.source,
+            controller: _storyController,
+          );
+        }
+      }).toList();
+    } else {
+      _storyController = StoryController();
+      newStories.add(StoryItem.pageImage(
+        url: '',
+        controller: _storyController,
+      ));
+      context.router.pop();
+    }
 
     print('LOADED STORIES FOR THIS USER ---> ${stories}');
   }
@@ -104,9 +117,7 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
                   child: Material(
                     type: MaterialType.transparency,
                     child: StoryView(
-                      onCloseTap: () {
-                        print('LOL888');
-                      },
+                      onCloseTap: () {},
                       // onTap: () {
                       //   if (_textFieldFocus.hasFocus) {
                       //     _textFieldFocus.unfocus();
@@ -115,12 +126,14 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
                       storyItems: newStories,
                       controller: _storyController,
                       onComplete: () {
-                        print('lol223');
                         if (widget.index + 1 < widget.totalLength) {
-                          context.router.replace(StoryRoute(
+                          context.router.popAndPush(
+                            AnimatedStoryRoute(
                               index: widget.index + 1,
-                              totalLength: widget.totalLength,
-                              key: ValueKey(widget.index + 1)));
+                              totalLength: _totalLength,
+                              key: ValueKey(widget.index + 1),
+                            ),
+                          );
                         } else {
                           context.router.pop();
                         }
@@ -130,9 +143,9 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
                           context.router.pop();
                         }
                         if (direction == Direction.left) {
-                          context.router.replace(StoryRoute(
+                          context.router.replace(AnimatedStoryRoute(
                               index: widget.index + 1,
-                              totalLength: widget.totalLength,
+                              totalLength: _totalLength,
                               key: ValueKey(
                                 widget.index + 1,
                               )));

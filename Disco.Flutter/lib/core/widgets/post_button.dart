@@ -21,8 +21,8 @@ class PostButton extends StatelessWidget {
       onTap: onTap,
       child: SvgPicture.asset(
         imagePath,
-        width: 18,
-        height: 18,
+        width: 22,
+        height: 22,
         color: isSelected ? DcColors.orange : DcColors.white,
       ),
     );
