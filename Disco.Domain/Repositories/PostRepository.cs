@@ -60,6 +60,9 @@ namespace Disco.Domain.Repositories
                 .Include(p => p.Profile)
                 .ThenInclude(p => p.Posts)
                 .ThenInclude(p => p.PostVideos)
+                .Include(p => p.Profile)
+                .ThenInclude(p => p.Posts)
+                .ThenInclude(l => l.Likes)
                 .Where(s => s.Id == userId)
                 .FirstOrDefaultAsync();
 
@@ -75,6 +78,9 @@ namespace Disco.Domain.Repositories
                     .Include(p => p.Posts)
                     .ThenInclude(v => v.PostVideos)
                     .Include(u => u.User)
+                    .ThenInclude(l => l.Profile)
+                    .ThenInclude(p => p.Posts)
+                    .ThenInclude(l => l.Likes.Count)
                     .Where(f => f.Id == friend.FriendProfileId)
                     .FirstOrDefaultAsync();
                 posts.AddRange(friend.ProfileFriend.Posts);             
@@ -90,6 +96,10 @@ namespace Disco.Domain.Repositories
                     .Include(p => p.Posts)
                     .ThenInclude(v => v.PostVideos)
                     .Include(u => u.User)
+                    .Include(u => u.User)
+                    .ThenInclude(l => l.Profile)
+                    .ThenInclude(p => p.Posts)
+                    .ThenInclude(l => l.Likes)
                     .Where(f => f.Id == friend.FriendProfileId)
                     .FirstOrDefaultAsync();
                 posts.AddRange(friend.ProfileFriend.Posts);

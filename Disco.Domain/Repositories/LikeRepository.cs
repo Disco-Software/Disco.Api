@@ -30,14 +30,8 @@ namespace Disco.Domain.Repositories
             await ctx.SaveChangesAsync();
         }
 
-        public override async Task Remove(int id)
+        public async Task Remove(Like like,int id)
         {
-            var like = await ctx.Like
-                .Include(p => p.Post)
-                .ThenInclude(l => l.Likes)
-                .Where(l => l.Id == id)
-                .FirstOrDefaultAsync();
-
             ctx.Remove(like);
             like.Post.Likes.Remove(like);
 

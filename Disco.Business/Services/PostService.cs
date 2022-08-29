@@ -18,6 +18,7 @@ namespace Disco.Business.Services
         private readonly IImageService _imageService;
         private readonly ISongService _songService;
         private readonly IVideoService _videoService;
+        private readonly ILikeService _likeService;
         private readonly IMapper _mapper;
         public PostService(
             IUserService userService,
@@ -25,7 +26,8 @@ namespace Disco.Business.Services
             IPostRepository postRepository,
             IImageService imageService,
             ISongService songService,
-            IVideoService videoService)
+            IVideoService videoService,
+            ILikeService likeService)
         {
             _postRepository = postRepository;
             _userService = userService;
@@ -33,6 +35,7 @@ namespace Disco.Business.Services
             _imageService = imageService;
             _songService = songService;
             _videoService = videoService;
+            _likeService = likeService;
         }
 
         public async Task<Post> CreatePostAsync(User user, CreatePostDto model)
@@ -93,7 +96,15 @@ namespace Disco.Business.Services
 
         public async Task<List<Post>> GetAllPosts(User user, GetAllPostsDto model)
         {
-            return await _postRepository.GetAllPosts(user.Id, model.PageSize, model.PageNumber);
+            var posts = await _postRepository.GetAllPosts(user.Id, model.PageSize, model.PageNumber);
+
+            for(int i = 0; i < posts.Count; i++)
+            {
+                var post = posts[i];
+                post.Likes = await _likeService.GetAllLikesAsync(post.Id);
+            }
+
+            return posts;
         }
     }
 }
