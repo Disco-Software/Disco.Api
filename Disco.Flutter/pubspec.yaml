@@ -49,6 +49,7 @@ dependencies:
       url: https://github.com/t4ulabs/cube_transition.git
       ref: NullSafetyUpgrade # branch name
   flutter_launcher_icons: ^0.10.0
+  swipeable_page_route: ^0.2.6
 
 #  web_socket_channel: ^2.2.0
 

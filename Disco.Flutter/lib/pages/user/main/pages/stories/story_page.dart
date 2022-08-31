@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/data/local/story_model.dart';
@@ -35,6 +37,7 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
   Profile? currentUser;
   final FocusNode _textFieldFocus = FocusNode();
   final TextEditingController _textController = TextEditingController();
+  final PageController _pageController = PageController();
 
   @override
   void didChangeDependencies() {

@@ -1,4 +1,5 @@
 import 'package:auto_route/src/router/auto_router_x.dart';
+import 'package:disco_app/app/app_router.dart';
 import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/core/widgets/post/post.dart';
 import 'package:disco_app/core/widgets/unicorn_image.dart';
@@ -13,8 +14,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 import 'bloc/posts_state.dart';
+import 'pages/stories/story_page.dart';
 
 const String title = 'Your story';
 

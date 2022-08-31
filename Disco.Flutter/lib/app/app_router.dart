@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/pages/authentication/login/login_page.dart';
@@ -15,6 +17,7 @@ import 'package:disco_app/pages/user/main/pages/stories/story_page.dart';
 import 'package:disco_app/pages/user/profile/profile.dart';
 import 'package:disco_app/pages/user/saved/saved.dart';
 import 'package:disco_app/pages/user/saved/saved_item_page/saved_item.dart';
+import 'package:flutter/material.dart';
 
 @MaterialAutoRouter(
   replaceInRouteName: 'Page,Route',
@@ -26,10 +29,16 @@ import 'package:disco_app/pages/user/saved/saved_item_page/saved_item.dart';
     AutoRoute(path: '/fullscreen-video', page: FullScreenVideoPage),
     AutoRoute(path: '/story', page: StoryPage),
     CustomRoute(
-        path: '/story_anim',
-        page: StoryPage,
-        name: 'AnimatedStoryRoute',
-        transitionsBuilder: TransitionsBuilders.fadeIn),
+      path: '/story_anim',
+      page: StoryPage,
+      name: 'AnimatedStoryRoute',
+      transitionsBuilder: TransitionsBuilders.fadeIn,
+    ),
+    // CustomRoute(
+    //     path: '/story_anim',
+    //     page: StoryPage,
+    //     name: 'AnimatedStoryRoute',
+    //     transitionsBuilder: TransitionsBuilders.fadeIn),
     // CustomRoute(
     //   path: '/story',
     //   page: StoryPage,
@@ -65,47 +74,46 @@ import 'package:disco_app/pages/user/saved/saved_item_page/saved_item.dart';
 )
 // extend the generated private router
 class $AppRouter {}
-//
-// Widget cubeTransition(BuildContext context, Animation<double> animation,
-//     Animation<double> secondaryAnimation, Widget child) {
-//   return Stack(
-//     children: <Widget>[
-//       SlideTransition(
-//         position: Tween<Offset>(
-//           begin: Offset.zero,
-//           end: const Offset(-1.0, 0.0),
-//         ).animate(animation),
-//         child: Container(
-//           color: Colors.white,
-//           child: Transform(
-//             transform: Matrix4.identity()
-//               ..setEntry(3, 2, 0.003)
-//               ..rotateY(pi / 2 * animation.value),
-//             alignment: FractionalOffset.centerRight,
-//             child: StoryPage(
-//               index: context.findAncestorWidgetOfExactType<StoryPage>()?.index ?? 0,
-//               totalLength: context.findAncestorWidgetOfExactType<StoryPage>()?.totalLength ?? 0,
-//             ),
-//           ),
-//         ),
-//       ),
-//       SlideTransition(
-//         position: Tween<Offset>(
-//           begin: const Offset(1.0, 0.0),
-//           end: Offset.zero,
-//         ).animate(animation),
-//         child: Container(
-//           color: Colors.white,
-//           child: Transform(
-//             transform: Matrix4.identity()
-//               ..setEntry(3, 2, 0.003)
-//               ..rotateY(pi / 2 * (animation.value - 1)),
-//             alignment: FractionalOffset.centerLeft,
-//             child: child,
-//           ),
-//         ),
-//       )
-//     ],
-//   );
-// }
-// // }
+
+Widget cubeTransition(BuildContext context, Animation<double> animation,
+    Animation<double> secondaryAnimation, bool lol, Widget child) {
+  return Stack(
+    children: <Widget>[
+      SlideTransition(
+        position: Tween<Offset>(
+          begin: Offset.zero,
+          end: const Offset(-1.0, 0.0),
+        ).animate(animation),
+        child: Container(
+          color: Colors.white,
+          child: Transform(
+            transform: Matrix4.identity()
+              ..setEntry(3, 2, 0.003)
+              ..rotateY(pi / 2 * animation.value),
+            alignment: FractionalOffset.centerRight,
+            child: StoryPage(
+              index: context.findAncestorWidgetOfExactType<StoryPage>()?.index ?? 0,
+              totalLength: context.findAncestorWidgetOfExactType<StoryPage>()?.totalLength ?? 0,
+            ),
+          ),
+        ),
+      ),
+      SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(1.0, 0.0),
+          end: Offset.zero,
+        ).animate(animation),
+        child: Container(
+          color: Colors.white,
+          child: Transform(
+            transform: Matrix4.identity()
+              ..setEntry(3, 2, 0.003)
+              ..rotateY(pi / 2 * (animation.value - 1)),
+            alignment: FractionalOffset.centerLeft,
+            child: child,
+          ),
+        ),
+      )
+    ],
+  );
+}
