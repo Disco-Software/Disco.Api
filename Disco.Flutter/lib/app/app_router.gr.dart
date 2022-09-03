@@ -8,22 +8,25 @@ import 'package:auto_route/auto_route.dart' as _i1;
 import 'package:flutter/material.dart' as _i2;
 import 'package:video_player/video_player.dart' as _i18;
 
-import '../pages/authentication/login/login_page.dart' as _i4;
-import '../pages/authentication/registration/registration.dart' as _i6;
-import '../pages/authentication/search_registration/search_registration_page.dart'
+import '../presentation/pages/authentication/login/login_page.dart' as _i4;
+import '../presentation/pages/authentication/registration/registration.dart'
+    as _i6;
+import '../presentation/pages/authentication/search_registration/search_registration_page.dart'
     as _i5;
-import '../pages/start/splash_page.dart' as _i3;
-import '../pages/user/add_post/add_post_page.dart' as _i15;
-import '../pages/user/add_post/record_audio_page.dart' as _i16;
-import '../pages/user/add_post/select_files_page.dart' as _i17;
-import '../pages/user/add_post/widgets/fullscreen_video.dart' as _i7;
-import '../pages/user/chat/chat.dart' as _i13;
-import '../pages/user/home_page.dart' as _i10;
-import '../pages/user/main/main_page.dart' as _i11;
-import '../pages/user/main/pages/stories/story_page.dart' as _i8;
-import '../pages/user/profile/profile.dart' as _i14;
-import '../pages/user/saved/saved.dart' as _i12;
-import '../pages/user/saved/saved_item_page/saved_item.dart' as _i9;
+import '../presentation/pages/start/splash_page.dart' as _i3;
+import '../presentation/pages/user/add_post/add_post_page.dart' as _i15;
+import '../presentation/pages/user/add_post/record_audio_page.dart' as _i16;
+import '../presentation/pages/user/add_post/select_files_page.dart' as _i17;
+import '../presentation/pages/user/add_post/widgets/fullscreen_video.dart'
+    as _i7;
+import '../presentation/pages/user/chat/chat.dart' as _i13;
+import '../presentation/pages/user/home_page.dart' as _i10;
+import '../presentation/pages/user/main/main_page.dart' as _i11;
+import '../presentation/pages/user/main/pages/stories/story_page.dart' as _i8;
+import '../presentation/pages/user/profile/profile.dart' as _i14;
+import '../presentation/pages/user/saved/saved.dart' as _i12;
+import '../presentation/pages/user/saved/saved_item_page/saved_item.dart'
+    as _i9;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter([_i2.GlobalKey<_i2.NavigatorState>? navigatorKey])

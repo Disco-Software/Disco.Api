@@ -18,10 +18,11 @@ import 'data/network/network_client.dart' as _i14;
 import 'data/network/repositories/post_repository.dart' as _i8;
 import 'data/network/repositories/stories_repository.dart' as _i11;
 import 'data/network/repositories/user_repository.dart' as _i15;
-import 'pages/authentication/login/bloc/login_bloc.dart' as _i16;
-import 'pages/authentication/registration/bloc/registration_bloc.dart' as _i17;
-import 'pages/user/main/bloc/like_cubit.dart' as _i13;
-import 'pages/user/main/bloc/posts_cubit.dart' as _i9;
+import 'presentation/pages/authentication/login/bloc/login_bloc.dart' as _i16;
+import 'presentation/pages/authentication/registration/bloc/registration_bloc.dart'
+    as _i17;
+import 'presentation/pages/user/main/bloc/like_cubit.dart' as _i13;
+import 'presentation/pages/user/main/bloc/posts_cubit.dart' as _i9;
 import 'register_module.dart' as _i18; // ignore_for_file: unnecessary_lambdas
 
 // ignore_for_file: lines_longer_than_80_chars

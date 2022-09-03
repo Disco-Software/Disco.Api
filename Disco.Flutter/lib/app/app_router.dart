@@ -2,21 +2,21 @@ import 'dart:math';
 
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:disco_app/pages/authentication/login/login_page.dart';
-import 'package:disco_app/pages/authentication/registration/registration.dart';
-import 'package:disco_app/pages/authentication/search_registration/search_registration_page.dart';
-import 'package:disco_app/pages/start/splash_page.dart';
-import 'package:disco_app/pages/user/add_post/add_post_page.dart';
-import 'package:disco_app/pages/user/add_post/record_audio_page.dart';
-import 'package:disco_app/pages/user/add_post/select_files_page.dart';
-import 'package:disco_app/pages/user/add_post/widgets/fullscreen_video.dart';
-import 'package:disco_app/pages/user/chat/chat.dart';
-import 'package:disco_app/pages/user/home_page.dart';
-import 'package:disco_app/pages/user/main/main_page.dart';
-import 'package:disco_app/pages/user/main/pages/stories/story_page.dart';
-import 'package:disco_app/pages/user/profile/profile.dart';
-import 'package:disco_app/pages/user/saved/saved.dart';
-import 'package:disco_app/pages/user/saved/saved_item_page/saved_item.dart';
+import 'package:disco_app/presentation/pages/authentication/login/login_page.dart';
+import 'package:disco_app/presentation/pages/authentication/registration/registration.dart';
+import 'package:disco_app/presentation/pages/authentication/search_registration/search_registration_page.dart';
+import 'package:disco_app/presentation/pages/start/splash_page.dart';
+import 'package:disco_app/presentation/pages/user/add_post/add_post_page.dart';
+import 'package:disco_app/presentation/pages/user/add_post/record_audio_page.dart';
+import 'package:disco_app/presentation/pages/user/add_post/select_files_page.dart';
+import 'package:disco_app/presentation/pages/user/add_post/widgets/fullscreen_video.dart';
+import 'package:disco_app/presentation/pages/user/chat/chat.dart';
+import 'package:disco_app/presentation/pages/user/home_page.dart';
+import 'package:disco_app/presentation/pages/user/main/main_page.dart';
+import 'package:disco_app/presentation/pages/user/main/pages/stories/story_page.dart';
+import 'package:disco_app/presentation/pages/user/profile/profile.dart';
+import 'package:disco_app/presentation/pages/user/saved/saved.dart';
+import 'package:disco_app/presentation/pages/user/saved/saved_item_page/saved_item.dart';
 import 'package:flutter/material.dart';
 
 @MaterialAutoRouter(

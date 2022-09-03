@@ -11,7 +11,6 @@ abstract class RegisterModule {
   @Named("BaseUrl")
   String get baseUrl => 'https://devdiscoapi.azurewebsites.net/api/';
 
-  // url here will be injected
   @lazySingleton
   Dio dio(@Named('BaseUrl') String url) => _getDio(url);
 
