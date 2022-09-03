@@ -1,18 +1,15 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:collection/collection.dart';
 import 'package:disco_app/core/widgets/post/widgets/image_body.dart';
 import 'package:disco_app/core/widgets/post/widgets/post_author.dart';
 import 'package:disco_app/core/widgets/post/widgets/song_body.dart';
 import 'package:disco_app/core/widgets/post/widgets/video_body.dart';
 import 'package:disco_app/core/widgets/post_button.dart';
-import 'package:disco_app/data/local/local_storage.dart';
-import 'package:disco_app/data/network/network_models/like.dart';
 import 'package:disco_app/data/network/network_models/post_network.dart';
 import 'package:disco_app/pages/user/main/bloc/like_cubit.dart';
 import 'package:disco_app/pages/user/main/bloc/like_state.dart';
-import 'package:disco_app/res/strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,6 +39,7 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
   late AnimationController controller;
   final CarouselController carouselController = CarouselController();
   int _currentPageIndex = 0;
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -52,6 +50,7 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
 
   @override
   void dispose() {
+    _debounce?.cancel();
     controller.dispose();
     super.dispose();
   }
@@ -59,7 +58,7 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return BlocProvider<LikeCubit>(
-      create: (context) => getIt(),
+      create: (context) => getIt()..init(widget.post.likes),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -126,27 +125,18 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
             padding: const EdgeInsets.symmetric(horizontal: 37),
             child: Row(
               children: [
-                FutureBuilder(
-                  future: _isPostLiked(widget.post.likes),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return PostButton(
-                        onTap: () async {
-                          context.read<LikeCubit>().addLike(widget.post.id ?? 0);
-                        },
-                        imagePath: "assets/ic_star.svg",
-                        isSelected: snapshot.data as bool,
-                      );
-                    } else {
-                      return PostButton(
-                        onTap: () async {
-                          context.read<LikeCubit>().addLike(widget.post.id ?? 0);
-                        },
-                        imagePath: "assets/ic_star.svg",
-                        isSelected:
-                            context.watch<LikeCubit>().state == const LikeState.success(likes: 1),
-                      );
-                    }
+                BlocBuilder<LikeCubit, LikeState>(
+                  builder: (context, state) {
+                    return PostButton(
+                      onTap: () async {
+                        if (_debounce?.isActive ?? false) _debounce?.cancel();
+                        _debounce = Timer(const Duration(milliseconds: 500), () {
+                          context.read<LikeCubit>().like(widget.post.id ?? 0, widget.post.likes);
+                        });
+                      },
+                      imagePath: "assets/ic_star.svg",
+                      isSelected: state is LikeSelectedState || state is LikeStateInitialSelected,
+                    );
                   },
                 ),
                 const SizedBox(height: 9),
@@ -155,8 +145,10 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
                   builder: (context, state) {
                     return state.maybeMap(
                       orElse: () => const SizedBox(),
-                      success: _likeSuccessState,
-                      initial: _initialState,
+                      selected: _likeSelectedState,
+                      notSelected: _likeNotSelectedState,
+                      initialSelected: _initialState,
+                      initialNotSelected: _initialState,
                       error: (_) => const Text('Error'),
                     );
                   },
@@ -222,9 +214,9 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
     );
   }
 
-  Future<String> _getUserName() async {
-    return await getIt.get<SecureStorageRepository>().read(key: Strings.userName);
-  }
+  // Future<String> _getUserName() async {
+  //   return await getIt.get<SecureStorageRepository>().read(key: Strings.userName);
+  // }
 
   Widget _initialState(_) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -238,7 +230,21 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
         ),
       );
 
-  Widget _likeSuccessState(LikeStateSuccess state) {
+  Widget _likeSelectedState(LikeSelectedState state) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Text(
+        '${state.likes}',
+        style: GoogleFonts.textMeOne(
+          color: Colors.white,
+          fontSize: 18,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+    );
+  }
+
+  Widget _likeNotSelectedState(LikeNotSelectedState state) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Text(
@@ -269,19 +275,19 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
     return summ > 1;
   }
 
-  Future<bool> _isPostLiked(List<Like>? likes) async {
-    final userName = await _getUserName();
-
-    print('lol189 ${userName} and ${widget.post.likes?.first.userName}');
-
-    final isPostSelected = widget.post.likes?.firstWhereOrNull((element) {
-          final likeUsername = element.userName ?? '';
-          return likeUsername == userName;
-        }) !=
-        null;
-
-    return isPostSelected;
-  }
+// Future<bool> _isPostLiked(List<Like>? likes) async {
+//   print('lol2012');
+//   final userName = await _getUserName();
+//
+//   final isPostSelected = widget.post.likes?.firstWhereOrNull((element) {
+//         final likeUsername = element.userName ?? '';
+//         return likeUsername == userName;
+//       }) !=
+//       null;
+//   print('lol189 ${isPostSelected}');
+//
+//   return isPostSelected;
+// }
 
 // void _hanldeNewLikes(List<Object> arguments) {}
 //

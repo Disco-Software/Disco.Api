@@ -24,6 +24,8 @@ class PostRepository {
 
   Future<int?> addLike(int postId) async => postApi.addLike(postId).then((likes) => likes);
 
+  Future<int?> removeLike(int postId) async => postApi.removeLike(postId).then((likes) => likes);
+
   Future<List<Post>?> createPost(CreatePostModel post) async {
     final formData = FormData.fromMap({
       'Description': post.description,

@@ -8,7 +8,6 @@ import 'data/network/interceptors/header_interceptor.dart';
 
 @module
 abstract class RegisterModule {
-  // You can register named preemptive types like follows
   @Named("BaseUrl")
   String get baseUrl => 'https://devdiscoapi.azurewebsites.net/api/';
 

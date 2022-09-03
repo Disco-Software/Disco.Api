@@ -17,12 +17,22 @@ final _privateConstructorUsedError = UnsupportedError(
 class _$LikeStateTearOff {
   const _$LikeStateTearOff();
 
-  LikeStateInitial initial() {
-    return const LikeStateInitial();
+  LikeStateInitialSelected initialSelected() {
+    return const LikeStateInitialSelected();
   }
 
-  LikeStateSuccess success({required int likes}) {
-    return LikeStateSuccess(
+  LikeStateInitialNotSelected initialNotSelected() {
+    return const LikeStateInitialNotSelected();
+  }
+
+  LikeNotSelectedState notSelected({required int likes}) {
+    return LikeNotSelectedState(
+      likes: likes,
+    );
+  }
+
+  LikeSelectedState selected({required int likes}) {
+    return LikeSelectedState(
       likes: likes,
     );
   }
@@ -43,24 +53,30 @@ const $LikeState = _$LikeStateTearOff();
 mixin _$LikeState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function(int likes) success,
+    required TResult Function() initialSelected,
+    required TResult Function() initialNotSelected,
+    required TResult Function(int likes) notSelected,
+    required TResult Function(int likes) selected,
     required TResult Function() loading,
     required TResult Function() error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int likes)? success,
+    TResult Function()? initialSelected,
+    TResult Function()? initialNotSelected,
+    TResult Function(int likes)? notSelected,
+    TResult Function(int likes)? selected,
     TResult Function()? loading,
     TResult Function()? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int likes)? success,
+    TResult Function()? initialSelected,
+    TResult Function()? initialNotSelected,
+    TResult Function(int likes)? notSelected,
+    TResult Function(int likes)? selected,
     TResult Function()? loading,
     TResult Function()? error,
     required TResult orElse(),
@@ -68,24 +84,31 @@ mixin _$LikeState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(LikeStateInitial value) initial,
-    required TResult Function(LikeStateSuccess value) success,
+    required TResult Function(LikeStateInitialSelected value) initialSelected,
+    required TResult Function(LikeStateInitialNotSelected value)
+        initialNotSelected,
+    required TResult Function(LikeNotSelectedState value) notSelected,
+    required TResult Function(LikeSelectedState value) selected,
     required TResult Function(LikeStateLoading value) loading,
     required TResult Function(LikeStateError value) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(LikeStateInitial value)? initial,
-    TResult Function(LikeStateSuccess value)? success,
+    TResult Function(LikeStateInitialSelected value)? initialSelected,
+    TResult Function(LikeStateInitialNotSelected value)? initialNotSelected,
+    TResult Function(LikeNotSelectedState value)? notSelected,
+    TResult Function(LikeSelectedState value)? selected,
     TResult Function(LikeStateLoading value)? loading,
     TResult Function(LikeStateError value)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(LikeStateInitial value)? initial,
-    TResult Function(LikeStateSuccess value)? success,
+    TResult Function(LikeStateInitialSelected value)? initialSelected,
+    TResult Function(LikeStateInitialNotSelected value)? initialNotSelected,
+    TResult Function(LikeNotSelectedState value)? notSelected,
+    TResult Function(LikeSelectedState value)? selected,
     TResult Function(LikeStateLoading value)? loading,
     TResult Function(LikeStateError value)? error,
     required TResult orElse(),
@@ -109,37 +132,39 @@ class _$LikeStateCopyWithImpl<$Res> implements $LikeStateCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class $LikeStateInitialCopyWith<$Res> {
-  factory $LikeStateInitialCopyWith(
-          LikeStateInitial value, $Res Function(LikeStateInitial) then) =
-      _$LikeStateInitialCopyWithImpl<$Res>;
+abstract class $LikeStateInitialSelectedCopyWith<$Res> {
+  factory $LikeStateInitialSelectedCopyWith(LikeStateInitialSelected value,
+          $Res Function(LikeStateInitialSelected) then) =
+      _$LikeStateInitialSelectedCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$LikeStateInitialCopyWithImpl<$Res> extends _$LikeStateCopyWithImpl<$Res>
-    implements $LikeStateInitialCopyWith<$Res> {
-  _$LikeStateInitialCopyWithImpl(
-      LikeStateInitial _value, $Res Function(LikeStateInitial) _then)
-      : super(_value, (v) => _then(v as LikeStateInitial));
+class _$LikeStateInitialSelectedCopyWithImpl<$Res>
+    extends _$LikeStateCopyWithImpl<$Res>
+    implements $LikeStateInitialSelectedCopyWith<$Res> {
+  _$LikeStateInitialSelectedCopyWithImpl(LikeStateInitialSelected _value,
+      $Res Function(LikeStateInitialSelected) _then)
+      : super(_value, (v) => _then(v as LikeStateInitialSelected));
 
   @override
-  LikeStateInitial get _value => super._value as LikeStateInitial;
+  LikeStateInitialSelected get _value =>
+      super._value as LikeStateInitialSelected;
 }
 
 /// @nodoc
 
-class _$LikeStateInitial implements LikeStateInitial {
-  const _$LikeStateInitial();
+class _$LikeStateInitialSelected implements LikeStateInitialSelected {
+  const _$LikeStateInitialSelected();
 
   @override
   String toString() {
-    return 'LikeState.initial()';
+    return 'LikeState.initialSelected()';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is LikeStateInitial);
+        (other.runtimeType == runtimeType && other is LikeStateInitialSelected);
   }
 
   @override
@@ -148,36 +173,42 @@ class _$LikeStateInitial implements LikeStateInitial {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function(int likes) success,
+    required TResult Function() initialSelected,
+    required TResult Function() initialNotSelected,
+    required TResult Function(int likes) notSelected,
+    required TResult Function(int likes) selected,
     required TResult Function() loading,
     required TResult Function() error,
   }) {
-    return initial();
+    return initialSelected();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int likes)? success,
+    TResult Function()? initialSelected,
+    TResult Function()? initialNotSelected,
+    TResult Function(int likes)? notSelected,
+    TResult Function(int likes)? selected,
     TResult Function()? loading,
     TResult Function()? error,
   }) {
-    return initial?.call();
+    return initialSelected?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int likes)? success,
+    TResult Function()? initialSelected,
+    TResult Function()? initialNotSelected,
+    TResult Function(int likes)? notSelected,
+    TResult Function(int likes)? selected,
     TResult Function()? loading,
     TResult Function()? error,
     required TResult orElse(),
   }) {
-    if (initial != null) {
-      return initial();
+    if (initialSelected != null) {
+      return initialSelected();
     }
     return orElse();
   }
@@ -185,68 +216,209 @@ class _$LikeStateInitial implements LikeStateInitial {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(LikeStateInitial value) initial,
-    required TResult Function(LikeStateSuccess value) success,
+    required TResult Function(LikeStateInitialSelected value) initialSelected,
+    required TResult Function(LikeStateInitialNotSelected value)
+        initialNotSelected,
+    required TResult Function(LikeNotSelectedState value) notSelected,
+    required TResult Function(LikeSelectedState value) selected,
     required TResult Function(LikeStateLoading value) loading,
     required TResult Function(LikeStateError value) error,
   }) {
-    return initial(this);
+    return initialSelected(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(LikeStateInitial value)? initial,
-    TResult Function(LikeStateSuccess value)? success,
+    TResult Function(LikeStateInitialSelected value)? initialSelected,
+    TResult Function(LikeStateInitialNotSelected value)? initialNotSelected,
+    TResult Function(LikeNotSelectedState value)? notSelected,
+    TResult Function(LikeSelectedState value)? selected,
     TResult Function(LikeStateLoading value)? loading,
     TResult Function(LikeStateError value)? error,
   }) {
-    return initial?.call(this);
+    return initialSelected?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(LikeStateInitial value)? initial,
-    TResult Function(LikeStateSuccess value)? success,
+    TResult Function(LikeStateInitialSelected value)? initialSelected,
+    TResult Function(LikeStateInitialNotSelected value)? initialNotSelected,
+    TResult Function(LikeNotSelectedState value)? notSelected,
+    TResult Function(LikeSelectedState value)? selected,
     TResult Function(LikeStateLoading value)? loading,
     TResult Function(LikeStateError value)? error,
     required TResult orElse(),
   }) {
-    if (initial != null) {
-      return initial(this);
+    if (initialSelected != null) {
+      return initialSelected(this);
     }
     return orElse();
   }
 }
 
-abstract class LikeStateInitial implements LikeState {
-  const factory LikeStateInitial() = _$LikeStateInitial;
+abstract class LikeStateInitialSelected implements LikeState {
+  const factory LikeStateInitialSelected() = _$LikeStateInitialSelected;
 }
 
 /// @nodoc
-abstract class $LikeStateSuccessCopyWith<$Res> {
-  factory $LikeStateSuccessCopyWith(
-          LikeStateSuccess value, $Res Function(LikeStateSuccess) then) =
-      _$LikeStateSuccessCopyWithImpl<$Res>;
+abstract class $LikeStateInitialNotSelectedCopyWith<$Res> {
+  factory $LikeStateInitialNotSelectedCopyWith(
+          LikeStateInitialNotSelected value,
+          $Res Function(LikeStateInitialNotSelected) then) =
+      _$LikeStateInitialNotSelectedCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class _$LikeStateInitialNotSelectedCopyWithImpl<$Res>
+    extends _$LikeStateCopyWithImpl<$Res>
+    implements $LikeStateInitialNotSelectedCopyWith<$Res> {
+  _$LikeStateInitialNotSelectedCopyWithImpl(LikeStateInitialNotSelected _value,
+      $Res Function(LikeStateInitialNotSelected) _then)
+      : super(_value, (v) => _then(v as LikeStateInitialNotSelected));
+
+  @override
+  LikeStateInitialNotSelected get _value =>
+      super._value as LikeStateInitialNotSelected;
+}
+
+/// @nodoc
+
+class _$LikeStateInitialNotSelected implements LikeStateInitialNotSelected {
+  const _$LikeStateInitialNotSelected();
+
+  @override
+  String toString() {
+    return 'LikeState.initialNotSelected()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is LikeStateInitialNotSelected);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initialSelected,
+    required TResult Function() initialNotSelected,
+    required TResult Function(int likes) notSelected,
+    required TResult Function(int likes) selected,
+    required TResult Function() loading,
+    required TResult Function() error,
+  }) {
+    return initialNotSelected();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initialSelected,
+    TResult Function()? initialNotSelected,
+    TResult Function(int likes)? notSelected,
+    TResult Function(int likes)? selected,
+    TResult Function()? loading,
+    TResult Function()? error,
+  }) {
+    return initialNotSelected?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initialSelected,
+    TResult Function()? initialNotSelected,
+    TResult Function(int likes)? notSelected,
+    TResult Function(int likes)? selected,
+    TResult Function()? loading,
+    TResult Function()? error,
+    required TResult orElse(),
+  }) {
+    if (initialNotSelected != null) {
+      return initialNotSelected();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LikeStateInitialSelected value) initialSelected,
+    required TResult Function(LikeStateInitialNotSelected value)
+        initialNotSelected,
+    required TResult Function(LikeNotSelectedState value) notSelected,
+    required TResult Function(LikeSelectedState value) selected,
+    required TResult Function(LikeStateLoading value) loading,
+    required TResult Function(LikeStateError value) error,
+  }) {
+    return initialNotSelected(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(LikeStateInitialSelected value)? initialSelected,
+    TResult Function(LikeStateInitialNotSelected value)? initialNotSelected,
+    TResult Function(LikeNotSelectedState value)? notSelected,
+    TResult Function(LikeSelectedState value)? selected,
+    TResult Function(LikeStateLoading value)? loading,
+    TResult Function(LikeStateError value)? error,
+  }) {
+    return initialNotSelected?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LikeStateInitialSelected value)? initialSelected,
+    TResult Function(LikeStateInitialNotSelected value)? initialNotSelected,
+    TResult Function(LikeNotSelectedState value)? notSelected,
+    TResult Function(LikeSelectedState value)? selected,
+    TResult Function(LikeStateLoading value)? loading,
+    TResult Function(LikeStateError value)? error,
+    required TResult orElse(),
+  }) {
+    if (initialNotSelected != null) {
+      return initialNotSelected(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class LikeStateInitialNotSelected implements LikeState {
+  const factory LikeStateInitialNotSelected() = _$LikeStateInitialNotSelected;
+}
+
+/// @nodoc
+abstract class $LikeNotSelectedStateCopyWith<$Res> {
+  factory $LikeNotSelectedStateCopyWith(LikeNotSelectedState value,
+          $Res Function(LikeNotSelectedState) then) =
+      _$LikeNotSelectedStateCopyWithImpl<$Res>;
   $Res call({int likes});
 }
 
 /// @nodoc
-class _$LikeStateSuccessCopyWithImpl<$Res> extends _$LikeStateCopyWithImpl<$Res>
-    implements $LikeStateSuccessCopyWith<$Res> {
-  _$LikeStateSuccessCopyWithImpl(
-      LikeStateSuccess _value, $Res Function(LikeStateSuccess) _then)
-      : super(_value, (v) => _then(v as LikeStateSuccess));
+class _$LikeNotSelectedStateCopyWithImpl<$Res>
+    extends _$LikeStateCopyWithImpl<$Res>
+    implements $LikeNotSelectedStateCopyWith<$Res> {
+  _$LikeNotSelectedStateCopyWithImpl(
+      LikeNotSelectedState _value, $Res Function(LikeNotSelectedState) _then)
+      : super(_value, (v) => _then(v as LikeNotSelectedState));
 
   @override
-  LikeStateSuccess get _value => super._value as LikeStateSuccess;
+  LikeNotSelectedState get _value => super._value as LikeNotSelectedState;
 
   @override
   $Res call({
     Object? likes = freezed,
   }) {
-    return _then(LikeStateSuccess(
+    return _then(LikeNotSelectedState(
       likes: likes == freezed
           ? _value.likes
           : likes // ignore: cast_nullable_to_non_nullable
@@ -257,22 +429,22 @@ class _$LikeStateSuccessCopyWithImpl<$Res> extends _$LikeStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LikeStateSuccess implements LikeStateSuccess {
-  const _$LikeStateSuccess({required this.likes});
+class _$LikeNotSelectedState implements LikeNotSelectedState {
+  const _$LikeNotSelectedState({required this.likes});
 
   @override
   final int likes;
 
   @override
   String toString() {
-    return 'LikeState.success(likes: $likes)';
+    return 'LikeState.notSelected(likes: $likes)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is LikeStateSuccess &&
+            other is LikeNotSelectedState &&
             const DeepCollectionEquality().equals(other.likes, likes));
   }
 
@@ -282,42 +454,49 @@ class _$LikeStateSuccess implements LikeStateSuccess {
 
   @JsonKey(ignore: true)
   @override
-  $LikeStateSuccessCopyWith<LikeStateSuccess> get copyWith =>
-      _$LikeStateSuccessCopyWithImpl<LikeStateSuccess>(this, _$identity);
+  $LikeNotSelectedStateCopyWith<LikeNotSelectedState> get copyWith =>
+      _$LikeNotSelectedStateCopyWithImpl<LikeNotSelectedState>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function(int likes) success,
+    required TResult Function() initialSelected,
+    required TResult Function() initialNotSelected,
+    required TResult Function(int likes) notSelected,
+    required TResult Function(int likes) selected,
     required TResult Function() loading,
     required TResult Function() error,
   }) {
-    return success(likes);
+    return notSelected(likes);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int likes)? success,
+    TResult Function()? initialSelected,
+    TResult Function()? initialNotSelected,
+    TResult Function(int likes)? notSelected,
+    TResult Function(int likes)? selected,
     TResult Function()? loading,
     TResult Function()? error,
   }) {
-    return success?.call(likes);
+    return notSelected?.call(likes);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int likes)? success,
+    TResult Function()? initialSelected,
+    TResult Function()? initialNotSelected,
+    TResult Function(int likes)? notSelected,
+    TResult Function(int likes)? selected,
     TResult Function()? loading,
     TResult Function()? error,
     required TResult orElse(),
   }) {
-    if (success != null) {
-      return success(likes);
+    if (notSelected != null) {
+      return notSelected(likes);
     }
     return orElse();
   }
@@ -325,47 +504,214 @@ class _$LikeStateSuccess implements LikeStateSuccess {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(LikeStateInitial value) initial,
-    required TResult Function(LikeStateSuccess value) success,
+    required TResult Function(LikeStateInitialSelected value) initialSelected,
+    required TResult Function(LikeStateInitialNotSelected value)
+        initialNotSelected,
+    required TResult Function(LikeNotSelectedState value) notSelected,
+    required TResult Function(LikeSelectedState value) selected,
     required TResult Function(LikeStateLoading value) loading,
     required TResult Function(LikeStateError value) error,
   }) {
-    return success(this);
+    return notSelected(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(LikeStateInitial value)? initial,
-    TResult Function(LikeStateSuccess value)? success,
+    TResult Function(LikeStateInitialSelected value)? initialSelected,
+    TResult Function(LikeStateInitialNotSelected value)? initialNotSelected,
+    TResult Function(LikeNotSelectedState value)? notSelected,
+    TResult Function(LikeSelectedState value)? selected,
     TResult Function(LikeStateLoading value)? loading,
     TResult Function(LikeStateError value)? error,
   }) {
-    return success?.call(this);
+    return notSelected?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(LikeStateInitial value)? initial,
-    TResult Function(LikeStateSuccess value)? success,
+    TResult Function(LikeStateInitialSelected value)? initialSelected,
+    TResult Function(LikeStateInitialNotSelected value)? initialNotSelected,
+    TResult Function(LikeNotSelectedState value)? notSelected,
+    TResult Function(LikeSelectedState value)? selected,
     TResult Function(LikeStateLoading value)? loading,
     TResult Function(LikeStateError value)? error,
     required TResult orElse(),
   }) {
-    if (success != null) {
-      return success(this);
+    if (notSelected != null) {
+      return notSelected(this);
     }
     return orElse();
   }
 }
 
-abstract class LikeStateSuccess implements LikeState {
-  const factory LikeStateSuccess({required int likes}) = _$LikeStateSuccess;
+abstract class LikeNotSelectedState implements LikeState {
+  const factory LikeNotSelectedState({required int likes}) =
+      _$LikeNotSelectedState;
 
   int get likes;
   @JsonKey(ignore: true)
-  $LikeStateSuccessCopyWith<LikeStateSuccess> get copyWith =>
+  $LikeNotSelectedStateCopyWith<LikeNotSelectedState> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $LikeSelectedStateCopyWith<$Res> {
+  factory $LikeSelectedStateCopyWith(
+          LikeSelectedState value, $Res Function(LikeSelectedState) then) =
+      _$LikeSelectedStateCopyWithImpl<$Res>;
+  $Res call({int likes});
+}
+
+/// @nodoc
+class _$LikeSelectedStateCopyWithImpl<$Res>
+    extends _$LikeStateCopyWithImpl<$Res>
+    implements $LikeSelectedStateCopyWith<$Res> {
+  _$LikeSelectedStateCopyWithImpl(
+      LikeSelectedState _value, $Res Function(LikeSelectedState) _then)
+      : super(_value, (v) => _then(v as LikeSelectedState));
+
+  @override
+  LikeSelectedState get _value => super._value as LikeSelectedState;
+
+  @override
+  $Res call({
+    Object? likes = freezed,
+  }) {
+    return _then(LikeSelectedState(
+      likes: likes == freezed
+          ? _value.likes
+          : likes // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$LikeSelectedState implements LikeSelectedState {
+  const _$LikeSelectedState({required this.likes});
+
+  @override
+  final int likes;
+
+  @override
+  String toString() {
+    return 'LikeState.selected(likes: $likes)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is LikeSelectedState &&
+            const DeepCollectionEquality().equals(other.likes, likes));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(likes));
+
+  @JsonKey(ignore: true)
+  @override
+  $LikeSelectedStateCopyWith<LikeSelectedState> get copyWith =>
+      _$LikeSelectedStateCopyWithImpl<LikeSelectedState>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initialSelected,
+    required TResult Function() initialNotSelected,
+    required TResult Function(int likes) notSelected,
+    required TResult Function(int likes) selected,
+    required TResult Function() loading,
+    required TResult Function() error,
+  }) {
+    return selected(likes);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? initialSelected,
+    TResult Function()? initialNotSelected,
+    TResult Function(int likes)? notSelected,
+    TResult Function(int likes)? selected,
+    TResult Function()? loading,
+    TResult Function()? error,
+  }) {
+    return selected?.call(likes);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initialSelected,
+    TResult Function()? initialNotSelected,
+    TResult Function(int likes)? notSelected,
+    TResult Function(int likes)? selected,
+    TResult Function()? loading,
+    TResult Function()? error,
+    required TResult orElse(),
+  }) {
+    if (selected != null) {
+      return selected(likes);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LikeStateInitialSelected value) initialSelected,
+    required TResult Function(LikeStateInitialNotSelected value)
+        initialNotSelected,
+    required TResult Function(LikeNotSelectedState value) notSelected,
+    required TResult Function(LikeSelectedState value) selected,
+    required TResult Function(LikeStateLoading value) loading,
+    required TResult Function(LikeStateError value) error,
+  }) {
+    return selected(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(LikeStateInitialSelected value)? initialSelected,
+    TResult Function(LikeStateInitialNotSelected value)? initialNotSelected,
+    TResult Function(LikeNotSelectedState value)? notSelected,
+    TResult Function(LikeSelectedState value)? selected,
+    TResult Function(LikeStateLoading value)? loading,
+    TResult Function(LikeStateError value)? error,
+  }) {
+    return selected?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LikeStateInitialSelected value)? initialSelected,
+    TResult Function(LikeStateInitialNotSelected value)? initialNotSelected,
+    TResult Function(LikeNotSelectedState value)? notSelected,
+    TResult Function(LikeSelectedState value)? selected,
+    TResult Function(LikeStateLoading value)? loading,
+    TResult Function(LikeStateError value)? error,
+    required TResult orElse(),
+  }) {
+    if (selected != null) {
+      return selected(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class LikeSelectedState implements LikeState {
+  const factory LikeSelectedState({required int likes}) = _$LikeSelectedState;
+
+  int get likes;
+  @JsonKey(ignore: true)
+  $LikeSelectedStateCopyWith<LikeSelectedState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -409,8 +755,10 @@ class _$LikeStateLoading implements LikeStateLoading {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function(int likes) success,
+    required TResult Function() initialSelected,
+    required TResult Function() initialNotSelected,
+    required TResult Function(int likes) notSelected,
+    required TResult Function(int likes) selected,
     required TResult Function() loading,
     required TResult Function() error,
   }) {
@@ -420,8 +768,10 @@ class _$LikeStateLoading implements LikeStateLoading {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int likes)? success,
+    TResult Function()? initialSelected,
+    TResult Function()? initialNotSelected,
+    TResult Function(int likes)? notSelected,
+    TResult Function(int likes)? selected,
     TResult Function()? loading,
     TResult Function()? error,
   }) {
@@ -431,8 +781,10 @@ class _$LikeStateLoading implements LikeStateLoading {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int likes)? success,
+    TResult Function()? initialSelected,
+    TResult Function()? initialNotSelected,
+    TResult Function(int likes)? notSelected,
+    TResult Function(int likes)? selected,
     TResult Function()? loading,
     TResult Function()? error,
     required TResult orElse(),
@@ -446,8 +798,11 @@ class _$LikeStateLoading implements LikeStateLoading {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(LikeStateInitial value) initial,
-    required TResult Function(LikeStateSuccess value) success,
+    required TResult Function(LikeStateInitialSelected value) initialSelected,
+    required TResult Function(LikeStateInitialNotSelected value)
+        initialNotSelected,
+    required TResult Function(LikeNotSelectedState value) notSelected,
+    required TResult Function(LikeSelectedState value) selected,
     required TResult Function(LikeStateLoading value) loading,
     required TResult Function(LikeStateError value) error,
   }) {
@@ -457,8 +812,10 @@ class _$LikeStateLoading implements LikeStateLoading {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(LikeStateInitial value)? initial,
-    TResult Function(LikeStateSuccess value)? success,
+    TResult Function(LikeStateInitialSelected value)? initialSelected,
+    TResult Function(LikeStateInitialNotSelected value)? initialNotSelected,
+    TResult Function(LikeNotSelectedState value)? notSelected,
+    TResult Function(LikeSelectedState value)? selected,
     TResult Function(LikeStateLoading value)? loading,
     TResult Function(LikeStateError value)? error,
   }) {
@@ -468,8 +825,10 @@ class _$LikeStateLoading implements LikeStateLoading {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(LikeStateInitial value)? initial,
-    TResult Function(LikeStateSuccess value)? success,
+    TResult Function(LikeStateInitialSelected value)? initialSelected,
+    TResult Function(LikeStateInitialNotSelected value)? initialNotSelected,
+    TResult Function(LikeNotSelectedState value)? notSelected,
+    TResult Function(LikeSelectedState value)? selected,
     TResult Function(LikeStateLoading value)? loading,
     TResult Function(LikeStateError value)? error,
     required TResult orElse(),
@@ -525,8 +884,10 @@ class _$LikeStateError implements LikeStateError {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function(int likes) success,
+    required TResult Function() initialSelected,
+    required TResult Function() initialNotSelected,
+    required TResult Function(int likes) notSelected,
+    required TResult Function(int likes) selected,
     required TResult Function() loading,
     required TResult Function() error,
   }) {
@@ -536,8 +897,10 @@ class _$LikeStateError implements LikeStateError {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int likes)? success,
+    TResult Function()? initialSelected,
+    TResult Function()? initialNotSelected,
+    TResult Function(int likes)? notSelected,
+    TResult Function(int likes)? selected,
     TResult Function()? loading,
     TResult Function()? error,
   }) {
@@ -547,8 +910,10 @@ class _$LikeStateError implements LikeStateError {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int likes)? success,
+    TResult Function()? initialSelected,
+    TResult Function()? initialNotSelected,
+    TResult Function(int likes)? notSelected,
+    TResult Function(int likes)? selected,
     TResult Function()? loading,
     TResult Function()? error,
     required TResult orElse(),
@@ -562,8 +927,11 @@ class _$LikeStateError implements LikeStateError {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(LikeStateInitial value) initial,
-    required TResult Function(LikeStateSuccess value) success,
+    required TResult Function(LikeStateInitialSelected value) initialSelected,
+    required TResult Function(LikeStateInitialNotSelected value)
+        initialNotSelected,
+    required TResult Function(LikeNotSelectedState value) notSelected,
+    required TResult Function(LikeSelectedState value) selected,
     required TResult Function(LikeStateLoading value) loading,
     required TResult Function(LikeStateError value) error,
   }) {
@@ -573,8 +941,10 @@ class _$LikeStateError implements LikeStateError {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(LikeStateInitial value)? initial,
-    TResult Function(LikeStateSuccess value)? success,
+    TResult Function(LikeStateInitialSelected value)? initialSelected,
+    TResult Function(LikeStateInitialNotSelected value)? initialNotSelected,
+    TResult Function(LikeNotSelectedState value)? notSelected,
+    TResult Function(LikeSelectedState value)? selected,
     TResult Function(LikeStateLoading value)? loading,
     TResult Function(LikeStateError value)? error,
   }) {
@@ -584,8 +954,10 @@ class _$LikeStateError implements LikeStateError {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(LikeStateInitial value)? initial,
-    TResult Function(LikeStateSuccess value)? success,
+    TResult Function(LikeStateInitialSelected value)? initialSelected,
+    TResult Function(LikeStateInitialNotSelected value)? initialNotSelected,
+    TResult Function(LikeNotSelectedState value)? notSelected,
+    TResult Function(LikeSelectedState value)? selected,
     TResult Function(LikeStateLoading value)? loading,
     TResult Function(LikeStateError value)? error,
     required TResult orElse(),
