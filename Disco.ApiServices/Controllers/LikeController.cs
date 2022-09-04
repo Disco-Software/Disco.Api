@@ -16,19 +16,26 @@ namespace Disco.ApiServices.Controllers
     {
         private readonly IUserService _userService;
         private readonly ILikeService _likeService;
+        private readonly IPostService _postService;
+        private readonly IPushNotificationService _pushNotificationService;
 
         public LikeController(
             IUserService userService, 
-            ILikeService likeService)
+            ILikeService likeService,
+            IPostService postService,
+            IPushNotificationService pushNotificationService)
         {
             _userService = userService;
             _likeService = likeService;
+            _postService = postService;
+            _pushNotificationService = pushNotificationService;
         }
 
         [HttpPost("create")]
         public async Task<IActionResult> CreateLikeAsync([FromQuery] int postId)
         {
             var user = await _userService.GetUserAsync(User);
+            var post = await _postService.GetPostAsync(postId);
 
             if (user == null)
             {

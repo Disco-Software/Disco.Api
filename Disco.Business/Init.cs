@@ -13,6 +13,7 @@ namespace Disco.Business
                 .AddScoped<IRegisterDeviceService, RegisterDeviceService>()
                 .AddScoped<IAdminRoleService, AdminRoleService>()
                 .AddScoped<IAdminUserService, AdminUserService>()
+                .AddScoped<IAdminStatisticsService, AdminStatisticsService>()
                 .AddScoped<ITokenService, TokenService>()
                 .AddScoped<IEmailService, EmailService>()
                 .AddScoped<IGoogleAuthService, GoogleAuthService>()

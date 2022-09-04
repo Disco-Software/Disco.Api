@@ -1,4 +1,5 @@
 ﻿using Disco.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,5 +12,6 @@ namespace Disco.Domain.Interfaces
         string GetUserRole(User user);
         Task SaveRefreshTokenAsync(User user, string refreshToken);
         Task<List<User>> GetAllUsers(int pageNumber, int pageSize);
+        Task<List<User>> GetUsersByPeriotAsync(DateTime date);
     }
 }

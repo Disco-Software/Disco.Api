@@ -57,7 +57,7 @@ namespace Disco.Business.Services
                 Title = model.Title,
                 Body = model.Body,
                 FriendId = model.FriendId,
-                NotificationType = NotificationTypes.NewFollower,
+                NotificationType = NotificationTypes.NewFollowerNotification,
                 Tags = $"user-{model.FriendId}",
             });
         }

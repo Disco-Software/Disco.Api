@@ -19,7 +19,7 @@ namespace Disco.Tests.Services
         {
             var post = new Post
             {
-                Id = 22,
+                Id = 31,
                 Description = "Vasya pupkin",
                 Likes = new List<Like>()
             };
@@ -39,7 +39,7 @@ namespace Disco.Tests.Services
             
             mockedPostRepository
                 .Setup(postRepository => postRepository.AddAsync(post, user))
-                .Returns(Task.FromResult(post));
+                .Returns(Task.CompletedTask);
 
             var mockedLikeService = new Mock<ILikeRepository>();
            

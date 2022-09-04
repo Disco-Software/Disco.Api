@@ -10,6 +10,8 @@ namespace Disco.Domain.Models
         public string RefreshToken { get; set; }
         [Column(TypeName = "date")]
         public DateTime RefreshTokenExpiress { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime DateOfRegister { get; set; }
         public Profile Profile { get; set; }
 
     }

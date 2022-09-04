@@ -16,7 +16,7 @@ namespace Disco.ApiServices.Controllers.Admin
     [ApiController]
     [Authorize(
          AuthenticationSchemes = AuthScheme.UserToken,
-         Roles = "Admin")]
+         Roles = UserRole.Admin)]
     public class UserController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
@@ -54,9 +54,9 @@ namespace Disco.ApiServices.Controllers.Admin
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<User>>> GetAll()
+        public async Task<ActionResult<List<User>>> GetAll([FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
-            return await _adminUserService.GetAllUsers(1, 10);
+            return await _adminUserService.GetAllUsers(pageNumber, pageSize);
         }
     }
 }

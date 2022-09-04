@@ -1,4 +1,6 @@
-﻿//namespace Disco.Api.AppSetup
+﻿//using Microsoft.Extensions.DependencyInjection;
+
+//namespace Disco.Api.AppSetup
 //{
 //    public static class SwaggerConfigurator
 //    {

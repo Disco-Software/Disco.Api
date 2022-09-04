@@ -75,7 +75,7 @@ namespace Disco.Business.Services
             if (!identityResult.Succeeded)
                 throw new Exception(identityResult.Errors.First().Description);
 
-            var roleResult = await _userManager.AddToRoleAsync(userResult, "User");
+            var roleResult = await _userManager.AddToRoleAsync(userResult, UserRole.User);
             if (!roleResult.Succeeded)
                 throw new Exception(roleResult.Errors.First().Description);
 
@@ -157,7 +157,7 @@ namespace Disco.Business.Services
 
             _ = await _userManager.AddLoginAsync(user, new UserLoginInfo(LogInProvider.Facebook, dto.Id, "FacebookId"));
 
-            _ = await _userManager.AddToRoleAsync(user, "User");
+            _ = await _userManager.AddToRoleAsync(user, UserRole.User);
 
             user.RoleName = _userService.GetUserRole(user);
 

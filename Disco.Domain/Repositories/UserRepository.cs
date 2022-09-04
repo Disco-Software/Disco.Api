@@ -66,5 +66,14 @@ namespace Disco.Domain.Repositories
                 .Take(pageSize)
                 .ToListAsync();
         }
+
+        public async Task<List<User>> GetUsersByPeriotAsync(DateTime date)
+        {
+            return await _ctx.Users
+                .Include(u => u.Profile)
+                .Where(u => u.DateOfRegister == date)
+                .OrderBy(u => u.DateOfRegister)
+                .ToListAsync();
+        }
     }
 }
