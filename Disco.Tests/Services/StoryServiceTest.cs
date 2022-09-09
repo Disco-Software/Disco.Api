@@ -51,7 +51,7 @@ namespace Disco.Tests.Services
                 Email = "pupkin2022@gmail.com",
                 Profile = new Domain.Models.Profile
                 {
-                    Status = StatusProvider.MusicLover,
+                    Status = StatusTypes.MusicLover,
                     Id = 5,
                 }
             };
@@ -128,7 +128,7 @@ namespace Disco.Tests.Services
                 Email = "pupkin2022@gmail.com",
                 Profile = new Domain.Models.Profile
                 {
-                    Status = StatusProvider.MusicLover,
+                    Status = StatusTypes.MusicLover,
                     Id = 5,
                 }
             };
@@ -205,7 +205,7 @@ namespace Disco.Tests.Services
                 Email = "pupkin2022@gmail.com",
                 Profile = new Domain.Models.Profile
                 {
-                    Status = StatusProvider.MusicLover,
+                    Status = StatusTypes.MusicLover,
                     Id = 5,
                 }
             };

@@ -11,15 +11,10 @@ namespace Disco.Business.Services
     public class PushNotificationService : IPushNotificationService
     {
         private readonly NotificationHubClient _notificationHubClient;
-        private readonly IConfiguration _configuration;
         public PushNotificationService(IConfiguration configuration)
         {
-            _notificationHubClient = NotificationHubClient.CreateClientFromConnectionString(_configuration[
-                Strings.NotificationConnectionString],
-                _configuration[Strings.NotificationName]);
+            _notificationHubClient = NotificationHubClient.CreateClientFromConnectionString(Strings.NotificationConnectionString, Strings.NotificationName);
         }
-
-
         /// <summary>
         /// Sends push notifications to android and ios devices
         /// </summary>
@@ -49,6 +44,20 @@ namespace Disco.Business.Services
             var appleTask = _notificationHubClient.SendAppleNativeNotificationAsync(applePayload, model.Tags);
             await Task.WhenAll(androidTask, appleTask);
         }
+        
+        public async Task SendNotificationAsync(LikeNotificationDto dto)
+        {
+            var notificationPayload = $"\"title\":\"{dto.Title}\",\"body\":\"{dto.Body}\"";
+            var dataPayload = $"\"type\":\"{dto.NotificationType}\", \"id\" : \"{dto.Id}\",\"likes\":\"{dto.LikesCount}\"";
+
+            var androidPayload = $"{{\"notification\":{{}},\"data\":{{{dataPayload}}}, \"sound\": \"default\"}}";
+            var androidTask = _notificationHubClient.SendFcmNativeNotificationAsync(androidPayload, dto.Tags);
+
+            //var applePayload = $"{{\"aps\":{{\"content-available\":1,\"alert\":{{{notificationPayload},\"data\":{{{dataPayload}}}}}, \"sound\": \"default\"}}, \"key-value\" : {{\"type\" : \"{dto.NotificationType}\", \"id\" : \"{dto.Id}\"}}}}";
+            //var appleTask = _notificationHubClient.SendAppleNativeNotificationAsync(applePayload, dto.Tags);
+            
+            await Task.WhenAll(androidTask);
+        }
 
         public async Task SendNewFriendNotificationAsync(NewFriendNotificationDto model)
         {
@@ -65,6 +74,19 @@ namespace Disco.Business.Services
         public async Task SendFriendConfirmationNotificationAsync(PushNotificationBaseDto model)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task SendLikeNotificationAsync(LikeNotificationDto dto)
+        {
+            await SendNotificationAsync(new LikeNotificationDto
+            {
+                Title = dto.Title,
+                Body = dto.Body,
+                NotificationType = NotificationTypes.LikeNotification,
+                Id = dto.Id,
+                Tags = dto.Tags,
+                LikesCount = dto.LikesCount,
+            });
         }
     }
 }

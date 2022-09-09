@@ -15,10 +15,7 @@ namespace Disco.Business.Services
         public RegisterDeviceService(IConfiguration configuration)
         {
             _configuration = configuration;
-            _notificationHubClient = NotificationHubClient.CreateClientFromConnectionString(
-                _configuration[Strings.NotificationConnectionString],
-                _configuration[Strings.NotificationName]);
-        }
+            _notificationHubClient = NotificationHubClient.CreateClientFromConnectionString(Strings.NotificationConnectionString, Strings.NotificationName);        }
 
         public async Task<Installation> GetInstallation(DeviceRegistrationDto model)
         {

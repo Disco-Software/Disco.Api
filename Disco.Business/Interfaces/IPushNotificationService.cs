@@ -9,5 +9,6 @@ namespace Disco.Business.Interfaces
 
         Task SendNewFriendNotificationAsync(NewFriendNotificationDto model);
         Task SendFriendConfirmationNotificationAsync(PushNotificationBaseDto model);
+        Task SendLikeNotificationAsync(LikeNotificationDto dto);
     }
 }

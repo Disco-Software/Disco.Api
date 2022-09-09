@@ -65,7 +65,7 @@ namespace Disco.Business.Services
             var userResult = _mapper.Map<User>(dto);
             
             userResult.PasswordHash = _userManager.PasswordHasher.HashPassword(userResult, dto.Password);
-            userResult.Profile = new Domain.Models.Profile { Status = StatusProvider.NewArtist };
+            userResult.Profile = new Domain.Models.Profile { Status = StatusTypes.NewArtist };
             userResult.NormalizedEmail = _userManager.NormalizeEmail(userResult.Email);
             userResult.NormalizedUserName = _userManager.NormalizeName(userResult.UserName);
             userResult.RefreshToken = _tokenService.GenerateRefreshToken();
@@ -143,7 +143,7 @@ namespace Disco.Business.Services
                 NormalizedUserName = _userManager.NormalizeName(dto.Name),
                 Profile = new Domain.Models.Profile
                 {
-                    Status = StatusProvider.NewArtist,
+                    Status = StatusTypes.NewArtist,
                     Photo = dto.Picture.Data.Url
                 },
                 RefreshToken = _tokenService.GenerateRefreshToken(),
@@ -252,7 +252,7 @@ namespace Disco.Business.Services
                 {
                     User = user,
                     UserId = user.Id,
-                    Status = StatusProvider.NewArtist,
+                    Status = StatusTypes.NewArtist,
                 };
                 user.Profile = profile;
 
@@ -324,7 +324,7 @@ namespace Disco.Business.Services
                 Profile = new Domain.Models.Profile
                 {
                     Photo = photo.Url,
-                    Status = StatusProvider.NewArtist
+                    Status = StatusTypes.NewArtist
                 }
             };
 

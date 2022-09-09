@@ -134,6 +134,8 @@ namespace Disco.Domain.Repositories
                 .Include(i => i.PostImages)
                 .Include(s => s.PostSongs)
                 .Include(v => v.PostVideos)
+                .Include(p => p.Profile)
+                .ThenInclude(u => u.User)
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
         }
