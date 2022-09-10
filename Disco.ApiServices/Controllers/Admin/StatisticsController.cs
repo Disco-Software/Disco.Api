@@ -26,9 +26,9 @@ namespace Disco.ApiServices.Controllers.Admin
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<User>>> GetUserStatistics([FromQuery] DateTime date)
+        public async Task<ActionResult<List<User>>> GetUserStatistics([FromQuery] int days)
         {
-           return await _adminStatisticsService.GetRegistredUsersAsync(date);
+           return await _adminStatisticsService.GetRegistredUsersDayAsync(days);
         }
     }
 }

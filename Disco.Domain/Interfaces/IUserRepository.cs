@@ -13,5 +13,7 @@ namespace Disco.Domain.Interfaces
         Task SaveRefreshTokenAsync(User user, string refreshToken);
         Task<List<User>> GetAllUsers(int pageNumber, int pageSize);
         Task<List<User>> GetUsersByPeriotAsync(DateTime date);
+
+        Task<List<User>> GetUsersByPeriotIntAsync(int days);
     }
 }

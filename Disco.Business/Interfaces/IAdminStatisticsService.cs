@@ -10,5 +10,7 @@ namespace Disco.Business.Interfaces
     public interface IAdminStatisticsService
     {
         Task<List<User>> GetRegistredUsersAsync(DateTime date);
+
+        Task<List<User>> GetRegistredUsersDayAsync(int days);
     }
 }

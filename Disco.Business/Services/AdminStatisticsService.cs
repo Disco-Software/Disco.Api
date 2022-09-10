@@ -22,5 +22,11 @@ namespace Disco.Business.Services
         {
            return await _userRepository.GetUsersByPeriotAsync(date);
         }
+
+        public async Task<List<User>> GetRegistredUsersDayAsync(int days)
+        {
+            return await _userRepository.GetUsersByPeriotIntAsync(days);
+        }
+
     }
 }
