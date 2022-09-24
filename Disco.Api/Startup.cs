@@ -5,7 +5,7 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
 using Disco.Api.AppSetup;
 using Disco.Business;
-using Disco.Business.Configurations;
+using Disco.Business.Options;
 using Disco.Business.Interfaces;
 using Disco.Business.Services;
 using Disco.Domain;
@@ -19,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Disco.Business.Constants;
 
 namespace Disco.Api
 {
@@ -34,8 +35,6 @@ namespace Disco.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // services.ConfigureSwagger();
-
             services.ConfigureDbContext(Configuration);
             services.ConfigureIdentity();
             services.AddAuthorization();
@@ -61,6 +60,9 @@ namespace Disco.Api
                 .ValidateDataAnnotations();
             services.AddOptions<AuthenticationOptions>()
                 .Configure(Configuration.GetSection("Auth:Jwt").Bind)
+                .ValidateDataAnnotations();
+            services.AddOptions<GoogleOptions>()
+                .Configure(Configuration.GetSection("Google").Bind)
                 .ValidateDataAnnotations();
 
             services.ConfigureAutoMapper();
@@ -99,7 +101,7 @@ namespace Disco.Api
             service.GetRequiredService(typeof(UserManager<User>));
 
             app.UseWebSockets();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

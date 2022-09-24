@@ -44,7 +44,7 @@ namespace Disco.ApiServices.Controllers
 
             var likes = await _likeService.AddLikeAsync(user, postId);
 
-            await _pushNotificationService.SendLikeNotificationAsync(new Business.Dtos.PushNotifications.LikeNotificationDto
+            await _pushNotificationService.SendNotificationAsync(new Business.Dtos.PushNotifications.LikeNotificationDto
             {
                 Title = $"{user.UserName} liked ",
                 Body = $"{user.UserName} liked your post",
@@ -69,16 +69,6 @@ namespace Disco.ApiServices.Controllers
             }
 
             var likes = await _likeService.RemoveLikeAsync(user, postId);
-
-            await _pushNotificationService.SendLikeNotificationAsync(new Business.Dtos.PushNotifications.LikeNotificationDto
-            {
-                Title = "You have new like",
-                Body = "Sumone liked your post, see who is it!",
-                LikesCount = likes.Count,
-                Id = Guid.NewGuid().ToString(),
-                NotificationType = NotificationTypes.LikeNotification,
-                Tags = $"user-{post.Profile.User.Id}"
-            });
 
             return Ok(likes.Count);
         }

@@ -1,4 +1,4 @@
-﻿using Disco.Business.Configurations;
+﻿using Disco.Business.Options;
 using Disco.Business.Interfaces;
 using Disco.Domain.Models;
 using Microsoft.Extensions.Options;

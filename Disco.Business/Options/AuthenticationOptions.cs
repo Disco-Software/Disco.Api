@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Disco.Business.Configurations
+namespace Disco.Business.Options
 {
     public class AuthenticationOptions
     {

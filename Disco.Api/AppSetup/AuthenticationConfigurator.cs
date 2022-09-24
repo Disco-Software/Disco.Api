@@ -19,11 +19,7 @@ namespace Disco.Api.AppSetup
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })
            .AddCookie()
-           .AddGoogleOpenIdConnect(options =>
-           {
-               options.ClientId = configuration["Google:ClientId"];
-               options.ClientSecret = configuration["Google:SecretKey"];
-           }).AddJwtBearer(AuthScheme.UserToken, options =>
+          .AddJwtBearer(AuthScheme.UserToken, options =>
            {
                options.SaveToken = true;
                options.RequireHttpsMetadata = false;
@@ -42,6 +38,11 @@ namespace Disco.Api.AppSetup
            {
                facebookOptions.AppId = configuration["Facebook:AppId"];
                facebookOptions.AppSecret = configuration["Facebook:SecretKey"];
+           })
+           .AddGoogleOpenIdConnect(options =>
+           {
+               options.ClientId = "365798654865-7o3ea5o4rmj9uoo3dltua3nm3igh64ar.apps.googleusercontent.com";
+               options.ClientSecret = "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";
            });
         }
     }

@@ -2,8 +2,9 @@
 {
     public class AppleLogInDto
     {
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string AppleId { get; set; }
+        public string Name { get; set; } = null;
+        public string Email { get; set; } = null ;
+        public string AppleId { get; set; } = null;
+        public string AppleIdCode { get; set; }
     }
 }

@@ -5,10 +5,9 @@ namespace Disco.Business.Interfaces
 {
     public interface IPushNotificationService
     {
-        Task SendNotificationAsync(PushNotificationBaseDto model);
-
-        Task SendNewFriendNotificationAsync(NewFriendNotificationDto model);
-        Task SendFriendConfirmationNotificationAsync(PushNotificationBaseDto model);
-        Task SendLikeNotificationAsync(LikeNotificationDto dto);
+        Task SendNotificationAsync(PushNotificationBaseDto dto);
+        Task SendNotificationAsync(NewFriendNotificationDto dto);
+        Task SendNotificationAsync(LikeNotificationDto dto);
+        Task SendNotificationAsync(AdminMessageNotificationDto dto);
     }
 }

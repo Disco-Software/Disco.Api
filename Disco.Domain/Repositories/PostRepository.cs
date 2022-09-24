@@ -80,7 +80,7 @@ namespace Disco.Domain.Repositories
                     .Include(u => u.User)
                     .ThenInclude(l => l.Profile)
                     .ThenInclude(p => p.Posts)
-                    .ThenInclude(l => l.Likes.Count)
+                    .ThenInclude(l => l.Likes)
                     .Where(f => f.Id == friend.FriendProfileId)
                     .FirstOrDefaultAsync();
                 posts.AddRange(friend.ProfileFriend.Posts);             

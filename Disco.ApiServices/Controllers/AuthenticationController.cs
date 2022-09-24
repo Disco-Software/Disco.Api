@@ -10,6 +10,8 @@ using Google.Apis.PeopleService.v1;
 using Microsoft.AspNetCore.Identity;
 using Disco.Domain.Models;
 using Disco.ApiServices.Validators;
+using Disco.Business.Constants;
+using Disco.Business.Dtos.Google;
 
 namespace Disco.ApiServices.Controllers
 {
@@ -79,11 +81,10 @@ namespace Disco.ApiServices.Controllers
             return Ok(response);
         }
 
-        [HttpPost("log-in/google"), AllowAnonymous,
-         GoogleScopedAuthorize(PeopleServiceService.ScopeConstants.UserinfoProfile)]
-        public async Task<IActionResult> Google([FromServices] IGoogleAuthProvider googleAuthProvider)
+        [HttpPost("log-in/google"), AllowAnonymous]
+        public async Task<IActionResult> Google([FromBody] GoogleLogInDto dto)
         {
-           var user = await _authenticationService.Google(googleAuthProvider);
+           var user = await _authenticationService.Google(dto);
 
            return Ok(user);
         }

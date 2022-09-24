@@ -15,28 +15,31 @@ namespace Disco.Tests.Services
     public class LikeServiceTest
     {
         [TestMethod]
-        public async Task ToggleLike_ReturnsSuccessResponse()
+        public async Task AddLike_ReturnsSuccessResponse()
         {
-            var post = new Post
-            {
-                Id = 31,
-                Description = "Vasya pupkin",
-                Likes = new List<Like>()
-            };
-
             var user = new User
             {
                 UserName = "s.korchevskyi",
                 Email = "stas_1999_nr@ukr.net",
-                RoleName = "User",
+                RoleName = "Admin",
                 Profile = new Profile
                 {
-                    Posts = new List<Post> { post }
+                    Posts = new List<Post>()
                 }
             };
 
+            var post = new Post
+            {
+                Id = 6,
+                Profile = user.Profile,
+                DateOfCreation = DateTime.Now,
+                Description = "Bla bla bla",
+                Likes = new List<Like>(),
+                ProfileId = user.Profile.Id
+            };
+
             var mockedPostRepository = new Mock<IPostRepository>();
-            
+
             mockedPostRepository
                 .Setup(postRepository => postRepository.AddAsync(post, user))
                 .Returns(Task.CompletedTask);
@@ -44,14 +47,13 @@ namespace Disco.Tests.Services
             var mockedLikeService = new Mock<ILikeRepository>();
            
             mockedLikeService
-                .Setup(like => like.AddAsync(new Like { Id = It.IsAny<int>(), Post = post, PostId = post.Id, UserName = "s.korchevskyi" }, post.Id))
+                .Setup(like => like.AddAsync(new Like { Id = 1, Post = post, PostId = post.Id, UserName = user.UserName }, post.Id))
                 .Returns(Task.CompletedTask);
 
             var likeService = new LikeService(mockedPostRepository.Object, mockedLikeService.Object);
             var response = await likeService.AddLikeAsync(user, post.Id);
 
-            Assert.IsNotNull(response);
-            Assert.AreEqual<int>(response.Count, 1);
+            Assert.AreEqual(post.Likes.Count, response.Count + 1);
         }
     }
 }

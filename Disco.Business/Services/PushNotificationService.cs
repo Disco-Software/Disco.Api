@@ -10,16 +10,12 @@ namespace Disco.Business.Services
 {
     public class PushNotificationService : IPushNotificationService
     {
-        private readonly NotificationHubClient _notificationHubClient;
-        public PushNotificationService(IConfiguration configuration)
+        private readonly INotificationHubClient _notificationHubClient;
+        public PushNotificationService()
         {
             _notificationHubClient = NotificationHubClient.CreateClientFromConnectionString(Strings.NotificationConnectionString, Strings.NotificationName);
         }
-        /// <summary>
-        /// Sends push notifications to android and ios devices
-        /// </summary>
-        /// <param name="model">base params of notification</param>
-        /// <returns></returns>
+
         public async Task SendNotificationAsync(PushNotificationBaseDto model)
         {
             var notificationPayload = $"\"title\":\"{model.Title}\",\"body\":\"{model.Body}\"";
@@ -44,7 +40,6 @@ namespace Disco.Business.Services
             var appleTask = _notificationHubClient.SendAppleNativeNotificationAsync(applePayload, model.Tags);
             await Task.WhenAll(androidTask, appleTask);
         }
-        
         public async Task SendNotificationAsync(LikeNotificationDto dto)
         {
             var notificationPayload = $"\"title\":\"{dto.Title}\",\"body\":\"{dto.Body}\"";
@@ -59,34 +54,18 @@ namespace Disco.Business.Services
             await Task.WhenAll(androidTask);
         }
 
-        public async Task SendNewFriendNotificationAsync(NewFriendNotificationDto model)
+        public async Task SendNotificationAsync(AdminMessageNotificationDto dto)
         {
-            await SendNotificationAsync(new NewFriendNotificationDto
-            {
-                Title = model.Title,
-                Body = model.Body,
-                FriendId = model.FriendId,
-                NotificationType = NotificationTypes.NewFollowerNotification,
-                Tags = $"user-{model.FriendId}",
-            });
-        }
+            var notificationPayload = $"\"title\":\"{dto.Title}\",\"body\":\"{dto.Body}\"";
+            var dataPayload = $"\"type\":\"{dto.NotificationType}\"";
 
-        public async Task SendFriendConfirmationNotificationAsync(PushNotificationBaseDto model)
-        {
-            throw new NotImplementedException();
-        }
+            var androidPayload = $"{{\"notification\":{{}},\"data\":{{{dataPayload}}}, \"sound\": \"default\"}}";
+            var androidTask = _notificationHubClient.SendFcmNativeNotificationAsync(androidPayload, dto.Tags);
 
-        public async Task SendLikeNotificationAsync(LikeNotificationDto dto)
-        {
-            await SendNotificationAsync(new LikeNotificationDto
-            {
-                Title = dto.Title,
-                Body = dto.Body,
-                NotificationType = NotificationTypes.LikeNotification,
-                Id = dto.Id,
-                Tags = dto.Tags,
-                LikesCount = dto.LikesCount,
-            });
+            //var applePayload = $"{{\"aps\":{{\"content-available\":1,\"alert\":{{{notificationPayload},\"data\":{{{dataPayload}}}}}, \"sound\": \"default\"}}, \"key-value\" : {{\"type\" : \"{dto.NotificationType}\", \"id\" : \"{dto.Id}\"}}}}";
+            //var appleTask = _notificationHubClient.SendAppleNativeNotificationAsync(applePayload, dto.Tags);
+
+            await Task.WhenAll(androidTask);
         }
     }
 }

@@ -16,7 +16,6 @@ namespace Disco.Business
                 .AddScoped<IAdminStatisticsService, AdminStatisticsService>()
                 .AddScoped<ITokenService, TokenService>()
                 .AddScoped<IEmailService, EmailService>()
-                .AddScoped<IGoogleAuthService, GoogleAuthService>()
                 .AddScoped<IFacebookAuthService, FacebookAuthService>()
                 .AddScoped<IAdminAuthenticationService, AdminAuthenticationService>()
                 .AddScoped<IAuthenticationService, AuthenticationService>()

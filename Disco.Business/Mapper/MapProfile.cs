@@ -1,6 +1,7 @@
 ﻿using Disco.Business.Dtos.Authentication;
 using Disco.Business.Dtos.Facebook;
 using Disco.Business.Dtos.Friends;
+using Disco.Business.Dtos.Google;
 using Disco.Business.Dtos.Images;
 using Disco.Business.Dtos.Posts;
 using Disco.Business.Dtos.Roles;
@@ -51,6 +52,7 @@ namespace Disco.Business.Mapper
             CreateMap<FacebookDto, User>()
                 .ForMember(source => source.UserName, f => f.Ignore())
                 .ForMember(source => source.Email, e => e.Ignore());
+            CreateMap<GoogleLogInDto, User>();
         }
     }
 }

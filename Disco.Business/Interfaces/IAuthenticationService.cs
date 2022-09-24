@@ -1,6 +1,7 @@
 ﻿using Disco.Business.Dtos.Apple;
 using Disco.Business.Dtos.Authentication;
 using Disco.Business.Dtos.Facebook;
+using Disco.Business.Dtos.Google;
 using Disco.Domain.Models;
 using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,6 @@ namespace Disco.Business.Interfaces
         Task<UserResponseDto> Apple(AppleLogInDto model);
         Task<string> ForgotPassword(User user);
         Task<UserResponseDto> ResetPassword(User user, ResetPasswordDto model);
-        Task<UserResponseDto> Google(IGoogleAuthProvider googleAuthProvider);
+        Task<UserResponseDto> Google(GoogleLogInDto dto);
     }
 }

@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Disco.Domain.Models;
 using Disco.ApiServices.Validators;
+using Microsoft.AspNetCore.Cors;
+using Disco.Business.Constants;
 
 namespace Disco.ApiServices.Controllers.Admin
 {
@@ -26,6 +28,7 @@ namespace Disco.ApiServices.Controllers.Admin
         }
 
         [HttpPost("log-in")]
+        [EnableCors(PolicyName = CorsPolicyNames.AdminPanelPolicy)]
         public async Task<IActionResult> LogIn([FromForm] LoginDto model)
         {
             var validator = await LogInValidator
@@ -48,10 +51,13 @@ namespace Disco.ApiServices.Controllers.Admin
 
             var userResponse = await _adminAuthenticationService.LogIn(user, model);
 
+            HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            
             return Ok(userResponse);
         }
 
         [HttpPut("refresh")]
+        [EnableCors(PolicyName = CorsPolicyNames.AdminPanelPolicy)]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto dto)
         {
             var user = await _userService.GetUserByRefreshTokenAsync(dto.RefreshToken);
@@ -65,6 +71,7 @@ namespace Disco.ApiServices.Controllers.Admin
         }
 
         [HttpPost("forgot-password")]
+        [EnableCors(PolicyName = CorsPolicyNames.AdminPanelPolicy)]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto model)
         {
             var user = await _userService.GetUserByEmailAsync(model.Email);
@@ -78,6 +85,7 @@ namespace Disco.ApiServices.Controllers.Admin
         }
 
         [HttpPut("reset-password")]
+        [EnableCors(PolicyName = CorsPolicyNames.AdminPanelPolicy)]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model)
         {
             var user = await _userService.GetUserByEmailAsync(model.Email);
