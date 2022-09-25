@@ -11,5 +11,6 @@ namespace Disco.Domain.Interfaces
         Task<List<Post>> GetAllPosts(int userId, int pageSize, int pageNumber);
         Task<List<Post>> GetAllUserPosts(int userId, int pageSize, int pageNumber);
         Task<Post> Get(int id);
+        Task<List<Post>> GetPostsByDescriptionAsync(string search);
     }
 }

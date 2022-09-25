@@ -111,5 +111,10 @@ namespace Disco.Business.Services
         {
             return await _postRepository.Get(id);
         }
+
+        public async Task<List<Post>> SearchPostsAsync(string search)
+        {
+            return await _postRepository.GetPostsByDescriptionAsync(search);
+        }
     }
 }

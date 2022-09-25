@@ -139,5 +139,15 @@ namespace Disco.Domain.Repositories
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<List<Post>> GetPostsByDescriptionAsync(string search)
+        {
+            return await ctx.Posts
+                .Include(p => p.PostImages)
+                .Include(p => p.PostVideos)
+                .Include(p => p.PostSongs)
+                .Where(p => p.Description.Contains(search))
+                .ToListAsync();
+        }
     }
 }
