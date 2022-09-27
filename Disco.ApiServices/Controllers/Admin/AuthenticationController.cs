@@ -28,7 +28,7 @@ namespace Disco.ApiServices.Controllers.Admin
         }
 
         [HttpPost("log-in")]
-        [EnableCors(PolicyName = CorsPolicyNames.AdminPanelPolicy)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> LogIn([FromForm] LoginDto model)
         {
             var validator = await LogInValidator
@@ -57,7 +57,7 @@ namespace Disco.ApiServices.Controllers.Admin
         }
 
         [HttpPut("refresh")]
-        [EnableCors(PolicyName = CorsPolicyNames.AdminPanelPolicy)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto dto)
         {
             var user = await _userService.GetUserByRefreshTokenAsync(dto.RefreshToken);
@@ -71,7 +71,7 @@ namespace Disco.ApiServices.Controllers.Admin
         }
 
         [HttpPost("forgot-password")]
-        [EnableCors(PolicyName = CorsPolicyNames.AdminPanelPolicy)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto model)
         {
             var user = await _userService.GetUserByEmailAsync(model.Email);
@@ -85,7 +85,7 @@ namespace Disco.ApiServices.Controllers.Admin
         }
 
         [HttpPut("reset-password")]
-        [EnableCors(PolicyName = CorsPolicyNames.AdminPanelPolicy)]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model)
         {
             var user = await _userService.GetUserByEmailAsync(model.Email);
