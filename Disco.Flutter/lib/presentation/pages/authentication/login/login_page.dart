@@ -6,6 +6,7 @@ import 'package:disco_app/data/network/repositories/user_repository.dart';
 import 'package:disco_app/injection.dart';
 import 'package:disco_app/presentation/dialogs/forgot_password/forgot_password.dart';
 import 'package:disco_app/res/colors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,6 +38,7 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _passwordVisible = false;
 
   @override
   void dispose() {
@@ -112,12 +114,23 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         TextFormField(
                           style: const TextStyle(color: DcColors.darkWhite),
-                          obscureText: true,
+                          obscureText: _passwordVisible,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) => _onPasswordValidate(_passwordController.text),
                           controller: _passwordController,
                           decoration: InputDecoration(
-                              errorText: state is LogInErrorState ? state.passwordError : null),
+                              errorText: state is LogInErrorState ? state.passwordError : null,
+                              suffixIcon: IconButton(
+                                icon: Icon(_passwordVisible
+                                    ? CupertinoIcons.eye_slash
+                                    : CupertinoIcons.eye),
+                                color: DcColors.white,
+                                onPressed: () {
+                                  setState(() {
+                                    _passwordVisible = !_passwordVisible;
+                                  });
+                                },
+                              )),
                         ),
                         const SizedBox(height: 34),
                         const Text(

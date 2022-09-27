@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'dart:io' show Platform;
 
 import 'package:auto_route/auto_route.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import 'bloc/search_cubit.dart';
@@ -30,6 +32,11 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
             context.router.navigate(HomeRoute());
           }
         });
+        if (state is ErrorSearchPageState) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Something wrong...'),
+          ));
+        }
       },
       builder: (ctx, state) {
         return Scaffold(
@@ -153,7 +160,26 @@ class _SearchRegistrationPageState extends State<SearchRegistrationPage> {
     context.router.navigate(const RegistrationRoute());
   }
 
-  void onGooglePressed() {}
+  Future<void> onGooglePressed() async {
+    final GoogleSignIn _googleSignIn = GoogleSignIn(
+      scopes: [
+        'email',
+        'profile',
+      ],
+    );
+
+    await _googleSignIn.signIn();
+
+    final _user = _googleSignIn.currentUser;
+
+    if (_user != null) {
+      context.read<SearchCubit>().handleGoogleLogIn(
+            user: _user,
+          );
+    }
+
+    developer.log(_googleSignIn.currentUser.toString(), name: 'Google user');
+  }
 
   Future<void> onApplePressed() async {
     final appleResponse = await SignInWithApple.getAppleIDCredential(
