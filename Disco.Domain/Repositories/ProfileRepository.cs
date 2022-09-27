@@ -36,8 +36,6 @@ namespace Disco.Domain.Repositories
             return await ctx.Profiles
                 .Include(u => u.User)
                 .Where(u => u.User.UserName.Contains(search))
-                .OrderByDescending(u => u.User.UserName.StartsWith(search))
-                .ThenByDescending(u => u.User.UserName.Contains(search))
                 .ToListAsync();
         }
     }

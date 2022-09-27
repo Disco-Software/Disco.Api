@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
+using System.Collections.Generic;
 
 namespace Disco.Business.Services
 {
@@ -44,6 +45,11 @@ namespace Disco.Business.Services
             await _profileRepository.Update(user.Profile);
 
             return user;
+        }
+
+        public async Task<IEnumerable<Profile>> GetProfilesByName(string search)
+        {
+            return await _profileRepository.FindProfleByUserNameAsync(search);
         }
     }
 }

@@ -11,5 +11,7 @@ namespace Disco.Business.Interfaces
         Task<List<Post>> GetAllUserPosts(User user, GetAllPostsDto model);
         Task<List<Post>> GetAllPosts(User user,GetAllPostsDto model);
         Task DeletePostAsync(int postId);
+        Task<Post> GetPostAsync(int id);
+        Task<List<Post>> SearchPostsAsync(string search);
     }
 }

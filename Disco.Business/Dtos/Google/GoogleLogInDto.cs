@@ -2,6 +2,11 @@
 {
     public class GoogleLogInDto
     {
-        public string AccessToken { get; set; }
+        public string Email { get; set; }
+        public string UserName { get;  set; }
+        public string Photo { get; set; }
+        public string Id { get; set; }
+        public string IdToken { get; set; }
+        public string ServerAuthCode { get; set; }
     }
 }

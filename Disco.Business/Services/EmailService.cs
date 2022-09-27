@@ -1,4 +1,4 @@
-﻿using Disco.Business.Configurations;
+﻿using Disco.Business.Options;
 using Disco.Business.Interfaces;
 using Disco.Business.Dtos.EmailNotifications;
 using Microsoft.Extensions.Options;

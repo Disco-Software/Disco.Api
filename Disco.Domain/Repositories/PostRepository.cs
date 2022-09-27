@@ -147,8 +147,6 @@ namespace Disco.Domain.Repositories
                 .Include(p => p.PostVideos)
                 .Include(p => p.PostSongs)
                 .Where(p => p.Description.Contains(search))
-                .OrderByDescending(s => s.Description.StartsWith(search))
-                .ThenByDescending(v => v.Description.Contains(search))
                 .ToListAsync();
         }
     }

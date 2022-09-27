@@ -15,6 +15,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Disco.Domain.Interfaces;
+using Disco.Business.Dtos.Google;
 
 namespace Disco.Business.Services
 {
@@ -25,14 +26,12 @@ namespace Disco.Business.Services
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly ITokenService _tokenService;
-        private readonly IGoogleAuthService _googleAuthService;
         private readonly IEmailService _emailService;
         public AuthenticationService(
             UserManager<User> userManager,
             BlobServiceClient blobServiceClient,
             IUserService userService,
             ITokenService tokenService,
-            IGoogleAuthService googleAuthService,
             IEmailService emailService,
             IMapper mapper)
         {
@@ -41,12 +40,11 @@ namespace Disco.Business.Services
             _userService = userService;
             _mapper = mapper;
             _tokenService = tokenService;
-            _googleAuthService = googleAuthService;
             _emailService = emailService;
         }
 
         public async Task<UserResponseDto> LogIn(User user, string password)
-        {            
+        {
             var jwt = _tokenService.GenerateAccessToken(user);
             var refreshToken = _tokenService.GenerateRefreshToken();
 
@@ -63,19 +61,19 @@ namespace Disco.Business.Services
         public async Task<UserResponseDto> Register(RegistrationDto dto)
         {
             var userResult = _mapper.Map<User>(dto);
-            
+
             userResult.PasswordHash = _userManager.PasswordHasher.HashPassword(userResult, dto.Password);
-            userResult.Profile = new Domain.Models.Profile { Status = StatusProvider.NewArtist };
+            userResult.Profile = new Domain.Models.Profile { Status = StatusTypes.NewArtist };
             userResult.NormalizedEmail = _userManager.NormalizeEmail(userResult.Email);
             userResult.NormalizedUserName = _userManager.NormalizeName(userResult.UserName);
             userResult.RefreshToken = _tokenService.GenerateRefreshToken();
             userResult.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
-            
+
             var identityResult = await _userManager.CreateAsync(userResult);
             if (!identityResult.Succeeded)
                 throw new Exception(identityResult.Errors.First().Description);
 
-            var roleResult = await _userManager.AddToRoleAsync(userResult, "User");
+            var roleResult = await _userManager.AddToRoleAsync(userResult, UserRole.User);
             if (!roleResult.Succeeded)
                 throw new Exception(roleResult.Errors.First().Description);
 
@@ -94,16 +92,16 @@ namespace Disco.Business.Services
         public async Task<UserResponseDto> Facebook(FacebookDto dto)
         {
             var user = await _userManager.FindByLoginAsync(LogInProvider.Facebook, dto.Id);
-            if(user != null)
+            if (user != null)
             {
                 await _userService.LoadUserInfoAsync(user);
-                user.RoleName =  _userService.GetUserRole(user);
+                user.RoleName = _userService.GetUserRole(user);
 
                 user.Email = dto.Email;
                 user.UserName = dto.FirstName;
                 user.Profile.Photo = dto.Picture.Data.Url;
 
-               await _userManager.UpdateAsync(user);
+                await _userManager.UpdateAsync(user);
 
                 var jwt = _tokenService.GenerateAccessToken(user);
                 var refreshToken = _tokenService.GenerateRefreshToken();
@@ -117,7 +115,7 @@ namespace Disco.Business.Services
             }
 
             user = await _userManager.FindByEmailAsync(dto.Email);
-            if(user != null)
+            if (user != null)
             {
                 await _userService.LoadUserInfoAsync(user);
                 user.RoleName = _userService.GetUserRole(user);
@@ -143,7 +141,7 @@ namespace Disco.Business.Services
                 NormalizedUserName = _userManager.NormalizeName(dto.Name),
                 Profile = new Domain.Models.Profile
                 {
-                    Status = StatusProvider.NewArtist,
+                    Status = StatusTypes.NewArtist,
                     Photo = dto.Picture.Data.Url
                 },
                 RefreshToken = _tokenService.GenerateRefreshToken(),
@@ -153,11 +151,11 @@ namespace Disco.Business.Services
             user.NormalizedEmail = _userManager.NormalizeEmail(user.Email);
             user.NormalizedUserName = _userManager.NormalizeName(user.UserName);
 
-            _= await _userManager.CreateAsync(user);
+            _ = await _userManager.CreateAsync(user);
 
             _ = await _userManager.AddLoginAsync(user, new UserLoginInfo(LogInProvider.Facebook, dto.Id, "FacebookId"));
 
-            _ = await _userManager.AddToRoleAsync(user, "User");
+            _ = await _userManager.AddToRoleAsync(user, UserRole.User);
 
             user.RoleName = _userService.GetUserRole(user);
 
@@ -172,8 +170,8 @@ namespace Disco.Business.Services
         }
 
         public async Task<UserResponseDto> RefreshToken(User user, RefreshTokenDto model)
-        {            
-            if(user.RefreshTokenExpiress >= DateTime.UtcNow)
+        {
+            if (user.RefreshTokenExpiress >= DateTime.UtcNow)
             {
                 await _userService.SaveRefreshTokenAsync(user, model.RefreshToken);
 
@@ -226,6 +224,7 @@ namespace Disco.Business.Services
                 {
                     user.UserName = model.Name;
                     user.Email = model.Email;
+                    user.RefreshToken = _tokenService.GenerateRefreshToken();
 
                     await _userService.SaveRefreshTokenAsync(user, user.RefreshToken);
 
@@ -241,7 +240,8 @@ namespace Disco.Business.Services
                     return userResponseResult;
                 }
 
-                user = new User{
+                user = new User
+                {
                     UserName = model.Name,
                     Email = model.Email,
                     NormalizedEmail = _userManager.NormalizeEmail(model.Email),
@@ -252,7 +252,7 @@ namespace Disco.Business.Services
                 {
                     User = user,
                     UserId = user.Id,
-                    Status = StatusProvider.NewArtist,
+                    Status = StatusTypes.NewArtist,
                 };
                 user.Profile = profile;
 
@@ -285,7 +285,7 @@ namespace Disco.Business.Services
             var html = (new WebClient()).DownloadString(uri);
             var passwordToken = await _userManager.GeneratePasswordResetTokenAsync(user);
             var url = $"disco://disco.app/token/{passwordToken}";
-            
+
             var model = new EmailConfirmationDto
             {
                 MessageHeader = "Email confirmation",
@@ -299,46 +299,81 @@ namespace Disco.Business.Services
         }
 
         public async Task<UserResponseDto> ResetPassword(User user, ResetPasswordDto model)
-        {            
+        {
             var identityResult = await _userManager.ResetPasswordAsync(user, model.ConfirmationToken, model.Password);
             if (!identityResult.Succeeded)
                 throw new Exception($"You have sum errors {identityResult.Errors}");
-            
-            return new UserResponseDto { User = user, 
-                RefreshToken = _tokenService.GenerateRefreshToken(), 
-                AccessToken = _tokenService.GenerateAccessToken(user)};
+
+            return new UserResponseDto
+            {
+                User = user,
+                RefreshToken = _tokenService.GenerateRefreshToken(),
+                AccessToken = _tokenService.GenerateAccessToken(user)
+            };
         }
 
-        public async Task<UserResponseDto> Google(IGoogleAuthProvider googleAuthProvider)
+        public async Task<UserResponseDto> Google(GoogleLogInDto dto)
         {
-            var googleResponse = await _googleAuthService.GetUserData(googleAuthProvider);
-
-            var email = googleResponse.EmailAddresses.FirstOrDefault();
-            var userName = googleResponse.Names.FirstOrDefault();
-            var photo = googleResponse.Photos.FirstOrDefault();
-
-            var user = new User
+            User user;
+            if (!string.IsNullOrWhiteSpace(dto.Email))
             {
-                UserName = userName.DisplayName,
-                Email = email.Value,
-                Profile = new Domain.Models.Profile
+                user = await _userManager.FindByLoginAsync(LogInProvider.Google, dto.IdToken);
+                if (user != null)
                 {
-                    Photo = photo.Url,
-                    Status = StatusProvider.NewArtist
+                    user.UserName = dto.UserName;
+                    user.Email = dto.Email;
+
+                    await _userService.SaveRefreshTokenAsync(user, user.RefreshToken);
+
+                    await _userManager.UpdateAsync(user);
+
+                    var jwtToken = _tokenService.GenerateAccessToken(user);
+
+                    var userResponseResult = _mapper.Map<UserResponseDto>(user);
+                    userResponseResult.RefreshToken = user.RefreshToken;
+                    userResponseResult.AccessToken = jwtToken;
+                    userResponseResult.User = user;
+
+                    return userResponseResult;
                 }
-            };
 
-            await _userManager.CreateAsync(user);
+                user = new User
+                {
+                    UserName = dto.UserName,
+                    Email = dto.Email,
+                    NormalizedEmail = _userManager.NormalizeEmail(dto.Email),
+                    NormalizedUserName = _userManager.NormalizeName(dto.UserName)
+                };
 
-            var jwt = _tokenService.GenerateAccessToken(user);
-            var refreshToken = _tokenService.GenerateRefreshToken();
+                var profile = new Domain.Models.Profile
+                {
+                    User = user,
+                    UserId = user.Id,
+                    Status = StatusTypes.NewArtist,
+                };
+                user.Profile = profile;
 
-            var userResponse = _mapper.Map<UserResponseDto>(user);
-            userResponse.RefreshToken = refreshToken;
-            userResponse.AccessToken = jwt;
-            userResponse.User = user;
+                _ = await _userManager.CreateAsync(user);
 
-            return userResponse;
+                _ = await _userManager.AddLoginAsync(user, new UserLoginInfo(LogInProvider.Google, dto.IdToken, "GoogleIdToken"));
+
+                await _userManager.AddToRoleAsync(user, UserRole.User);
+                user.RoleName = _userService.GetUserRole(user);
+
+                var jwt = _tokenService.GenerateAccessToken(user);
+                var refreshToken = _tokenService.GenerateRefreshToken();
+
+                await _userService.SaveRefreshTokenAsync(user, refreshToken);
+
+                var userResponse = _mapper.Map<UserResponseDto>(user);
+                userResponse.RefreshToken = user.RefreshToken;
+                userResponse.AccessToken = jwt;
+                userResponse.User = user;
+
+                return userResponse;
+            }
+
+            return null;
         }
     }
 }

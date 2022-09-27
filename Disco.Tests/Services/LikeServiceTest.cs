@@ -53,7 +53,7 @@ namespace Disco.Tests.Services
             var likeService = new LikeService(mockedPostRepository.Object, mockedLikeService.Object);
             var response = await likeService.AddLikeAsync(user, post.Id);
 
-            Assert.AreEqual(0, 1);
+            Assert.AreEqual(post.Likes.Count, response.Count + 1);
         }
     }
 }
