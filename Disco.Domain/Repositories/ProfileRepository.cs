@@ -4,6 +4,7 @@ using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
 using Disco.Domain.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,5 +31,14 @@ namespace Disco.Domain.Repositories
             return profile;
         }
 
+        public async Task<List<Profile>> FindProfleByUserNameAsync(string search)
+        {
+            return await ctx.Profiles
+                .Include(u => u.User)
+                .Where(u => u.User.UserName.Contains(search))
+                .OrderByDescending(u => u.User.UserName.StartsWith(search))
+                .ThenByDescending(u => u.User.UserName.Contains(search))
+                .ToListAsync();
+        }
     }
 }
