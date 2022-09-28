@@ -1,4 +1,4 @@
-import 'package:auto_route/src/router/auto_router_x.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/data/network/network_models/post_network.dart';
 import 'package:disco_app/data/network/network_models/story_network.dart';
@@ -83,7 +83,7 @@ class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
                   IconButton(
                       padding: const EdgeInsets.only(right: 32),
                       onPressed: () {
-                        /// context.read<PostsCubit>().add(InitialEvent(id: 1));
+                        context.router.push(const SearchRoute());
                       },
                       icon: SvgPicture.asset(
                         "assets/ic_search.svg",
@@ -157,7 +157,7 @@ class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
                                       },
                                       itemCount: _stories.length + 1,
                                     )
-                                  : const Center(child: CircularProgressIndicator()),
+                                  : Center(child: Image.asset('assets/music.gif')),
                             ),
                           ),
                           if (state is LoadingStoriesState)
@@ -166,10 +166,15 @@ class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
                               height: 110,
                             ),
                           if (state is LoadingStoriesState)
-                            const Padding(
-                              padding: EdgeInsets.only(top: 5.0),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
                               child: Align(
-                                  alignment: Alignment.center, child: CircularProgressIndicator()),
+                                  alignment: Alignment.center,
+                                  child: Image.asset(
+                                    'assets/music.gif',
+                                    width: 100,
+                                    height: 100,
+                                  )),
                             ),
                         ],
                       ),
@@ -243,8 +248,8 @@ class _SuccessStateWidgetState extends State<_SuccessStateWidget> {
                     },
                     builder: (context, state) {
                       if (state is LoadingPostsState) {
-                        return const SliverToBoxAdapter(
-                          child: Center(child: CircularProgressIndicator()),
+                        return SliverToBoxAdapter(
+                          child: Center(child: Image.asset('assets/music.gif')),
                         );
                       } else {
                         return const SliverToBoxAdapter(child: SizedBox());

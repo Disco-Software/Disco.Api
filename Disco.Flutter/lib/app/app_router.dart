@@ -5,6 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/presentation/pages/authentication/login/login_page.dart';
 import 'package:disco_app/presentation/pages/authentication/registration/registration.dart';
 import 'package:disco_app/presentation/pages/authentication/search_registration/search_registration_page.dart';
+import 'package:disco_app/presentation/pages/search/search_page.dart';
 import 'package:disco_app/presentation/pages/start/splash_page.dart';
 import 'package:disco_app/presentation/pages/user/add_post/add_post_page.dart';
 import 'package:disco_app/presentation/pages/user/add_post/record_audio_page.dart';
@@ -27,6 +28,7 @@ import 'package:flutter/material.dart';
     AutoRoute(path: "/search", page: SearchRegistrationPage),
     AutoRoute(path: "/registration", page: RegistrationPage),
     AutoRoute(path: '/fullscreen-video', page: FullScreenVideoPage),
+    AutoRoute(path: '/search', page: SearchPage),
     AutoRoute(path: '/story', page: StoryPage),
     CustomRoute(
       path: '/story_anim',

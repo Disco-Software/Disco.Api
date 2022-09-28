@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'dart:developer';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 
@@ -9,7 +10,7 @@ class SecureStorageRepository {
   SecureStorageRepository({required this.secureStorage});
 
   Future<void>? write({required String key, required String value}) {
-    debugPrint('SecureStorageRepository -->write');
+    log('SecureStorageRepository -->write', name: 'Secure Storage write');
 
     secureStorage.write(key: key, value: value);
   }
@@ -17,7 +18,8 @@ class SecureStorageRepository {
   Future<String> read({required String key}) async {
     String value;
     value = await secureStorage.read(key: key) ?? '';
-    debugPrint('SecureStorageRepository --> readed value: $value');
+    log('$value', name: 'Secure Storage read');
+
     return value;
   }
 

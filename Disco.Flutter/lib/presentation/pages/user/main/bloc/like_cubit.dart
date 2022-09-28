@@ -1,10 +1,11 @@
+import 'dart:developer' as developer;
+
 import 'package:collection/collection.dart';
 import 'package:disco_app/data/local/local_storage.dart';
 import 'package:disco_app/data/network/network_models/like.dart';
 import 'package:disco_app/data/network/repositories/post_repository.dart';
+import 'package:disco_app/presentation/pages/user/main/bloc/like_state.dart';
 import 'package:disco_app/res/strings.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -58,7 +59,7 @@ class LikeCubit extends Cubit<LikeState> {
       }
     } catch (err) {
       emit(const LikeState.error());
-      debugPrint('$err');
+      developer.log('$err', name: 'Like cubit error');
     }
   }
 }
