@@ -5,26 +5,28 @@
 // **************************************************************************
 
 import 'package:auto_route/auto_route.dart' as _i1;
-import 'package:flutter/cupertino.dart' as _i18;
 import 'package:flutter/material.dart' as _i2;
-import 'package:video_player/video_player.dart' as _i19;
+import 'package:video_player/video_player.dart' as _i18;
 
-import '../pages/authentication/login/login_page.dart' as _i4;
-import '../pages/authentication/registration/registration.dart' as _i6;
-import '../pages/authentication/search_registration/search_registration_page.dart'
+import '../presentation/pages/authentication/login/login_page.dart' as _i4;
+import '../presentation/pages/authentication/registration/registration.dart'
+    as _i6;
+import '../presentation/pages/authentication/search_registration/search_registration_page.dart'
     as _i5;
-import '../pages/start/splash_page.dart' as _i3;
-import '../pages/user/add_post/add_post_page.dart' as _i15;
-import '../pages/user/add_post/record_audio_page.dart' as _i16;
-import '../pages/user/add_post/select_files_page.dart' as _i17;
-import '../pages/user/add_post/widgets/fullscreen_video.dart' as _i7;
-import '../pages/user/chat/chat.dart' as _i13;
-import '../pages/user/home_page.dart' as _i10;
-import '../pages/user/main/main_page.dart' as _i11;
-import '../pages/user/main/pages/story_page.dart' as _i8;
-import '../pages/user/profile/profile.dart' as _i14;
-import '../pages/user/saved/saved.dart' as _i12;
-import '../pages/user/saved/saved_item_page/saved_item.dart' as _i9;
+import '../presentation/pages/start/splash_page.dart' as _i3;
+import '../presentation/pages/user/add_post/add_post_page.dart' as _i15;
+import '../presentation/pages/user/add_post/record_audio_page.dart' as _i16;
+import '../presentation/pages/user/add_post/select_files_page.dart' as _i17;
+import '../presentation/pages/user/add_post/widgets/fullscreen_video.dart'
+    as _i7;
+import '../presentation/pages/user/chat/chat.dart' as _i13;
+import '../presentation/pages/user/home_page.dart' as _i10;
+import '../presentation/pages/user/main/main_page.dart' as _i11;
+import '../presentation/pages/user/main/pages/stories/story_page.dart' as _i8;
+import '../presentation/pages/user/profile/profile.dart' as _i14;
+import '../presentation/pages/user/saved/saved.dart' as _i12;
+import '../presentation/pages/user/saved/saved_item_page/saved_item.dart'
+    as _i9;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter([_i2.GlobalKey<_i2.NavigatorState>? navigatorKey])
@@ -63,8 +65,19 @@ class AppRouter extends _i1.RootStackRouter {
         routeData: routeData,
         builder: (data) {
           final args = data.argsAs<StoryRouteArgs>();
-          return _i8.StoryPage(index: args.index, key: args.key);
+          return _i8.StoryPage(
+              index: args.index, totalLength: args.totalLength, key: args.key);
         }),
+    AnimatedStoryRoute.name: (routeData) => _i1.CustomPage<dynamic>(
+        routeData: routeData,
+        builder: (data) {
+          final args = data.argsAs<AnimatedStoryRouteArgs>();
+          return _i8.StoryPage(
+              index: args.index, totalLength: args.totalLength, key: args.key);
+        },
+        transitionsBuilder: _i1.TransitionsBuilders.fadeIn,
+        opaque: true,
+        barrierDismissible: false),
     SavedItemRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (data) {
@@ -135,6 +148,7 @@ class AppRouter extends _i1.RootStackRouter {
         _i1.RouteConfig(RegistrationRoute.name, path: '/registration'),
         _i1.RouteConfig(FullScreenVideoRoute.name, path: '/fullscreen-video'),
         _i1.RouteConfig(StoryRoute.name, path: '/story'),
+        _i1.RouteConfig(AnimatedStoryRoute.name, path: '/story_anim'),
         _i1.RouteConfig(SavedItemRoute.name, path: ':itemId'),
         _i1.RouteConfig(HomeRoute.name, path: '/home', children: [
           _i1.RouteConfig(FeedRoute.name, path: 'feed'),
@@ -176,9 +190,9 @@ class RegistrationRoute extends _i1.PageRouteInfo<void> {
 
 class FullScreenVideoRoute extends _i1.PageRouteInfo<FullScreenVideoRouteArgs> {
   FullScreenVideoRoute(
-      {_i18.Key? key,
+      {_i2.Key? key,
       required String source,
-      required _i19.VideoPlayerController controller})
+      required _i18.VideoPlayerController controller})
       : super(name,
             path: '/fullscreen-video',
             args: FullScreenVideoRouteArgs(
@@ -191,31 +205,58 @@ class FullScreenVideoRouteArgs {
   const FullScreenVideoRouteArgs(
       {this.key, required this.source, required this.controller});
 
-  final _i18.Key? key;
+  final _i2.Key? key;
 
   final String source;
 
-  final _i19.VideoPlayerController controller;
+  final _i18.VideoPlayerController controller;
 }
 
 class StoryRoute extends _i1.PageRouteInfo<StoryRouteArgs> {
-  StoryRoute({required int index, _i18.Key? key})
+  StoryRoute({required int index, required int totalLength, _i2.Key? key})
       : super(name,
-            path: '/story', args: StoryRouteArgs(index: index, key: key));
+            path: '/story',
+            args: StoryRouteArgs(
+                index: index, totalLength: totalLength, key: key));
 
   static const String name = 'StoryRoute';
 }
 
 class StoryRouteArgs {
-  const StoryRouteArgs({required this.index, this.key});
+  const StoryRouteArgs(
+      {required this.index, required this.totalLength, this.key});
 
   final int index;
 
-  final _i18.Key? key;
+  final int totalLength;
+
+  final _i2.Key? key;
+}
+
+class AnimatedStoryRoute extends _i1.PageRouteInfo<AnimatedStoryRouteArgs> {
+  AnimatedStoryRoute(
+      {required int index, required int totalLength, _i2.Key? key})
+      : super(name,
+            path: '/story_anim',
+            args: AnimatedStoryRouteArgs(
+                index: index, totalLength: totalLength, key: key));
+
+  static const String name = 'AnimatedStoryRoute';
+}
+
+class AnimatedStoryRouteArgs {
+  const AnimatedStoryRouteArgs(
+      {required this.index, required this.totalLength, this.key});
+
+  final int index;
+
+  final int totalLength;
+
+  final _i2.Key? key;
 }
 
 class SavedItemRoute extends _i1.PageRouteInfo<SavedItemRouteArgs> {
-  SavedItemRoute({_i18.Key? key, required int itemId})
+  SavedItemRoute({_i2.Key? key, required int itemId})
       : super(name,
             path: ':itemId',
             args: SavedItemRouteArgs(key: key, itemId: itemId),
@@ -227,14 +268,14 @@ class SavedItemRoute extends _i1.PageRouteInfo<SavedItemRouteArgs> {
 class SavedItemRouteArgs {
   const SavedItemRouteArgs({this.key, required this.itemId});
 
-  final _i18.Key? key;
+  final _i2.Key? key;
 
   final int itemId;
 }
 
 class HomeRoute extends _i1.PageRouteInfo<HomeRouteArgs> {
   HomeRoute(
-      {_i18.Key? key,
+      {_i2.Key? key,
       bool shouldLoadData = true,
       List<_i1.PageRouteInfo>? children})
       : super(name,
@@ -248,13 +289,13 @@ class HomeRoute extends _i1.PageRouteInfo<HomeRouteArgs> {
 class HomeRouteArgs {
   const HomeRouteArgs({this.key, this.shouldLoadData = true});
 
-  final _i18.Key? key;
+  final _i2.Key? key;
 
   final bool shouldLoadData;
 }
 
 class FeedRoute extends _i1.PageRouteInfo<FeedRouteArgs> {
-  FeedRoute({_i18.Key? key, bool shouldLoadData = true})
+  FeedRoute({_i2.Key? key, bool shouldLoadData = true})
       : super(name,
             path: 'feed',
             args: FeedRouteArgs(key: key, shouldLoadData: shouldLoadData));
@@ -265,7 +306,7 @@ class FeedRoute extends _i1.PageRouteInfo<FeedRouteArgs> {
 class FeedRouteArgs {
   const FeedRouteArgs({this.key, this.shouldLoadData = true});
 
-  final _i18.Key? key;
+  final _i2.Key? key;
 
   final bool shouldLoadData;
 }
