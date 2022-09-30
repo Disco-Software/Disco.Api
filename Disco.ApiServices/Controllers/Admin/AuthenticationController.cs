@@ -1,4 +1,5 @@
-﻿using Disco.Business.Interfaces;
+﻿
+using Disco.Business.Interfaces;
 using Disco.Business.Dtos.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -28,7 +29,6 @@ namespace Disco.ApiServices.Controllers.Admin
         }
 
         [HttpPost("log-in")]
-        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> LogIn([FromForm] LoginDto model)
         {
             var validator = await LogInValidator

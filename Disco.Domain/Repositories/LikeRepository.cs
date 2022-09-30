@@ -23,7 +23,7 @@ namespace Disco.Domain.Repositories
 
             if (post == null)
                 throw new Exception("post not found");
-
+            
             post.Likes.Add(item);
             await ctx.Like.AddAsync(item);
 
@@ -50,10 +50,11 @@ namespace Disco.Domain.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Like> GetAsync(string userName)
+        public async Task<Like> GetAsync(int postId)
         {
             return await ctx.Like
-                .Where(l => l.UserName == userName)
+                .Include(p => p.Post)
+                .Where(l => l.Post.Id == postId)
                 .FirstOrDefaultAsync();
         }
     }

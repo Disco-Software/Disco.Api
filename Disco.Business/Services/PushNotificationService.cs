@@ -59,7 +59,7 @@ namespace Disco.Business.Services
             var notificationPayload = $"\"title\":\"{dto.Title}\",\"body\":\"{dto.Body}\"";
             var dataPayload = $"\"type\":\"{dto.NotificationType}\"";
 
-            var androidPayload = $"{{\"notification\":{{}},\"data\":{{{dataPayload}}}, \"sound\": \"default\"}}";
+            var androidPayload = $"{{\"notification\":{{{notificationPayload}}},\"data\":{{{dataPayload}}}, \"sound\": \"default\"}}";
             var androidTask = _notificationHubClient.SendFcmNativeNotificationAsync(androidPayload, dto.Tags);
 
             //var applePayload = $"{{\"aps\":{{\"content-available\":1,\"alert\":{{{notificationPayload},\"data\":{{{dataPayload}}}}}, \"sound\": \"default\"}}, \"key-value\" : {{\"type\" : \"{dto.NotificationType}\", \"id\" : \"{dto.Id}\"}}}}";
