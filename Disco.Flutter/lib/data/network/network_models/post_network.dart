@@ -3,6 +3,7 @@ import 'package:disco_app/data/network/network_models/song_network.dart';
 import 'package:disco_app/data/network/network_models/video_network.dart';
 
 import 'image_network.dart';
+import 'like.dart';
 
 class Post {
   String? description;
@@ -10,6 +11,7 @@ class Post {
   List<PostSong>? postSongs;
   List<PostVideo>? postVideos;
   int? profileId;
+  List<Like>? likes;
   Profile? profile;
   int? id;
 
@@ -18,6 +20,7 @@ class Post {
       this.postImages,
       this.postSongs,
       this.postVideos,
+      this.likes,
       this.profileId,
       this.profile,
       this.id});
@@ -28,6 +31,12 @@ class Post {
       postImages = <PostImage>[];
       json['postImages'].forEach((v) {
         postImages!.add(PostImage.fromJson(v));
+      });
+    }
+    if (json['likes'] != null) {
+      likes = <Like>[];
+      json['likes'].forEach((v) {
+        likes!.add(Like.fromJson(v));
       });
     }
     if (json['postSongs'] != null) {
@@ -52,6 +61,9 @@ class Post {
     data['description'] = description;
     if (postImages != null) {
       data['postImages'] = postImages!.map((v) => v.toJson()).toList();
+    }
+    if (likes != null) {
+      data['likes'] = likes!.map((v) => v.toJson()).toList();
     }
     if (postSongs != null) {
       data['postSongs'] = postSongs!.map((v) => v.toJson()).toList();

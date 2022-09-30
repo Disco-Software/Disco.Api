@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "912950352912",
+    "project_id": "disco-4209a",
+    "storage_bucket": "disco-4209a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912950352912:android:091e960e3244382624fe95",
+        "android_client_info": {
+          "package_name": "com.discoapp.disco_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "912950352912-48rvpl6kj90i7f8u7cdrtsfagcq6keh8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.discoapp.disco_app",
+            "certificate_hash": "6cdc62bfb72aa731a2cb74685451d50151de39c3"
+          }
+        },
+        {
+          "client_id": "912950352912-rsc1n47skjcd9vnqhaaisb6h9fhhhue1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcABk6DNhduD0OAgsDmkDfVXURvwXN_-k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "912950352912-rsc1n47skjcd9vnqhaaisb6h9fhhhue1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "912950352912-028qvgsojf2a5n7jdtun4il7lk5amicd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.own.disco"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

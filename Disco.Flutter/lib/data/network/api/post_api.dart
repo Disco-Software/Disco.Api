@@ -26,4 +26,14 @@ class PostApi {
       dio.post("user/posts/create", data: post).then((response) {
         return response.data;
       });
+
+  Future<dynamic> addLike(int postId) =>
+      dio.post("user/likes/create", queryParameters: {'postId': postId}).then((response) {
+        return response.data;
+      });
+
+  Future<dynamic> removeLike(int postId) =>
+      dio.delete("user/likes/remove", queryParameters: {'postId': postId}).then((response) {
+        return response.data;
+      });
 }
