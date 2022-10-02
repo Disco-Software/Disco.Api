@@ -8,11 +8,13 @@ using Disco.Domain.Models;
 using Disco.ApiServices.Validators;
 using Microsoft.AspNetCore.Cors;
 using Disco.Business.Constants;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Disco.ApiServices.Controllers.Admin
 {
     [Route("api/admin/authentication")]
     [ApiController]
+    [AllowAnonymous]
     public class AuthenticationController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
@@ -57,7 +59,6 @@ namespace Disco.ApiServices.Controllers.Admin
         }
 
         [HttpPut("refresh")]
-        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto dto)
         {
             var user = await _userService.GetUserByRefreshTokenAsync(dto.RefreshToken);
@@ -71,7 +72,6 @@ namespace Disco.ApiServices.Controllers.Admin
         }
 
         [HttpPost("forgot-password")]
-        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto model)
         {
             var user = await _userService.GetUserByEmailAsync(model.Email);
@@ -85,7 +85,6 @@ namespace Disco.ApiServices.Controllers.Admin
         }
 
         [HttpPut("reset-password")]
-        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model)
         {
             var user = await _userService.GetUserByEmailAsync(model.Email);
