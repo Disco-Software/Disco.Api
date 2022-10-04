@@ -3,15 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Api", "Disco.Api\Disco.Api.csproj", "{E1918CC2-6D52-4047-A233-692B071DE340}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Tests", "Disco.Tests\Disco.Tests.csproj", "{53203ACA-977E-4334-A34B-DC744AAD9D5A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Business", "Disco.Business\Disco.Business.csproj", "{79509FA5-48BE-4769-BF6F-1A9A37F8049C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Domain", "Disco.Domain\Disco.Domain.csproj", "{21515EC4-09A5-4089-BAD4-0B4822330414}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.ApiServices", "Disco.ApiServices\Disco.ApiServices.csproj", "{130031B2-927A-412A-ADD4-BD15A4BABA6D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Prsentation", "Disco.Prsentation\Disco.Prsentation.csproj", "{6A935136-2724-4AE2-B88E-8E31237CA03E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E1918CC2-6D52-4047-A233-692B071DE340}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E1918CC2-6D52-4047-A233-692B071DE340}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E1918CC2-6D52-4047-A233-692B071DE340}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E1918CC2-6D52-4047-A233-692B071DE340}.Release|Any CPU.Build.0 = Release|Any CPU
 		{53203ACA-977E-4334-A34B-DC744AAD9D5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{53203ACA-977E-4334-A34B-DC744AAD9D5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53203ACA-977E-4334-A34B-DC744AAD9D5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -35,10 +29,10 @@ Global
 		{21515EC4-09A5-4089-BAD4-0B4822330414}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21515EC4-09A5-4089-BAD4-0B4822330414}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21515EC4-09A5-4089-BAD4-0B4822330414}.Release|Any CPU.Build.0 = Release|Any CPU
-		{130031B2-927A-412A-ADD4-BD15A4BABA6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{130031B2-927A-412A-ADD4-BD15A4BABA6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{130031B2-927A-412A-ADD4-BD15A4BABA6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{130031B2-927A-412A-ADD4-BD15A4BABA6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A935136-2724-4AE2-B88E-8E31237CA03E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A935136-2724-4AE2-B88E-8E31237CA03E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A935136-2724-4AE2-B88E-8E31237CA03E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A935136-2724-4AE2-B88E-8E31237CA03E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
