@@ -1,4 +1,26 @@
-﻿
+﻿@page "/LogIn"
+
+<body>
+
+<div class="registration-cssave">
+    <form>
+        <h4 class="txt-center">Log in</h4>
+        <div class="form-group">
+            <h3>E-mail</h3>
+            <input class="form-control item" type="email" name="email" id="email"required>
+        </div>
+        <div class="form-group">
+            <h3>Password</h3>
+            <input class="form-control item" type="password" name="Пароль" minlength="6" id="password" required>
+        </div>
+
+        <div class="form-group">
+            <button class="btn btn-primary btn-block create-account" type="submit">Log In</button>
+        </div>
+        <h5 class="txt">Forgot your password</h5>
+    </form>
+</div>
+</body>
 
 @code{
 
