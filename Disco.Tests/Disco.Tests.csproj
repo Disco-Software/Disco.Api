@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Disco.Api\Disco.Api.csproj" />
     <ProjectReference Include="..\Disco.Business\Disco.Business.csproj" />
     <ProjectReference Include="..\Disco.Domain\Disco.Domain.csproj" />
   </ItemGroup>

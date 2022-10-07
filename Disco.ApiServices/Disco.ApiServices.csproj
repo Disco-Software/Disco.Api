@@ -12,9 +12,4 @@
       <ProjectReference Include="..\Disco.Business\Disco.Business.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Controllers\Api\" />
-      <Folder Include="Views\" />
-    </ItemGroup>
-
 </Project>
