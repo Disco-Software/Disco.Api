@@ -1,30 +1,25 @@
-﻿using Disco.Business.Interfaces;
-using Disco.Business.Dtos.Apple;
-using Disco.Business.Dtos.Authentication;
-using Disco.Business.Dtos.Facebook;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Google.Apis.Auth.AspNetCore3;
-using Google.Apis.PeopleService.v1;
-using Microsoft.AspNetCore.Identity;
+﻿using Disco.ApiServices.Validators;
+using Disco.Business.Interfaces;
 using Disco.Domain.Models;
-using Disco.ApiServices.Validators;
-using Disco.Business.Constants;
-using Disco.Business.Dtos.Google;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Controllers
 {
     [ApiController]
-    [Route("api/user/authentication")]
-    public class AuthenticationController : Controller
+    [Route("api/user/account")]
+    public class AccountController : Controller
     {
         private readonly UserManager<User> _userManager;
         private readonly IAuthenticationService _authenticationService;
         private readonly IFacebookAuthService _facebookAuthService;
         private readonly IUserService _userService;
 
-        public AuthenticationController(
+        public AccountController(
             UserManager<User> userManager,
             IAuthenticationService authenticationService,
             IFacebookAuthService facebookAuthService,
@@ -36,12 +31,7 @@ namespace Disco.ApiServices.Controllers
             _userService = userService;
         }
 
-        /// <summary>
-        /// User log in by email and password
-        /// </summary>
-        /// <param name="model">email and password</param>
-        /// <returns>object: UserDto with user and varification result</returns>
-        [HttpPost("log-in"), AllowAnonymous]
+        [HttpPost("log-in")]
         public async Task<IActionResult> LogIn([FromBody] LoginDto model)
         {
             var validator = await LogInValidator
@@ -62,7 +52,7 @@ namespace Disco.ApiServices.Controllers
             return Ok(loginResponse);
         }
 
-        [HttpPost("log-in/facebook"), AllowAnonymous]
+        [HttpPost("log-in/facebook")]
         public async Task<IActionResult> Facebook([FromBody] FacebookRequestDto model)
         {
             var validator = await FacebookAccessTokenValidator
@@ -81,15 +71,15 @@ namespace Disco.ApiServices.Controllers
             return Ok(response);
         }
 
-        [HttpPost("log-in/google"), AllowAnonymous]
+        [HttpPost("log-in/google")]
         public async Task<IActionResult> Google([FromBody] GoogleLogInDto dto)
         {
-           var user = await _authenticationService.Google(dto);
+            var user = await _authenticationService.Google(dto);
 
-           return Ok(user);
+            return Ok(user);
         }
 
-        [HttpPost("log-in/apple"), AllowAnonymous]
+        [HttpPost("log-in/apple")]
         public async Task<IActionResult> Apple([FromBody] AppleLogInDto model)
         {
             var user = await _authenticationService.Apple(model);
@@ -102,10 +92,10 @@ namespace Disco.ApiServices.Controllers
         {
             var user = await _userService.GetUserByRefreshTokenAsync(model.RefreshToken);
 
-            if(user == null) 
+            if (user == null)
                 return BadRequest();
 
-           var result = await _authenticationService.RefreshToken(user, model);
+            var result = await _authenticationService.RefreshToken(user, model);
 
             return Ok(result);
         }
@@ -125,32 +115,6 @@ namespace Disco.ApiServices.Controllers
             var userResponseDto = await _authenticationService.Register(model);
 
             return Ok(userResponseDto);
-        }
-
-        [HttpPost("forgot-password"), AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto model)
-        {
-            var user = await _userService.GetUserByEmailAsync(model.Email);
-
-            if (user == null)
-                BadRequest("User is null");
-
-            var confirmationDto = await _authenticationService.ForgotPassword(user);
-
-            return Ok(confirmationDto);
-        }
-
-        [HttpPut("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model)
-        {
-            var user = await _userService.GetUserByEmailAsync(model.Email);
-
-            if (user == null)
-                return BadRequest();
-
-            var restPasswordDto = await _authenticationService.ResetPassword(user, model);
-
-            return Ok(restPasswordDto);
         }
     }
 }

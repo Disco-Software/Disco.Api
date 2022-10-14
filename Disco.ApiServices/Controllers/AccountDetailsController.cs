@@ -1,20 +1,22 @@
 ﻿using Disco.Business.Constants;
 using Disco.Business.Interfaces;
-using Disco.Business.Dtos.Profile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Controllers
 {
-    [Route("api/user/profile")]
     [ApiController]
+    [Route("api/user/account/details")]
     [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
-    public class UserProfileController : ControllerBase
+    public class AccountDetailsController : Controller
     {
         private readonly IProfileService _profileService;
         private readonly IUserService _userService;
-        public UserProfileController(
+        public AccountDetailsController(
             IProfileService profileService,
             IUserService userService)
         {
@@ -31,5 +33,6 @@ namespace Disco.ApiServices.Controllers
 
             return Ok(user);
         }
+
     }
 }
