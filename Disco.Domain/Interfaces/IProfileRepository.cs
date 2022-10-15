@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 namespace Disco.Domain.Interfaces
 {
-    public interface IProfileRepository
+    public interface IAccountRepository
     {
-        Task<Profile> GetAsync(int id);
-        Task<Profile> Update(Profile newItem);
-        Task<List<Profile>> FindProfleByUserNameAsync(string search);
+        Task<Account> GetAsync(int id);
+        Task<Account> Update(Account newItem);
+        Task<List<Account>> FindProfleByUserNameAsync(string search);
     }
 }

@@ -27,7 +27,7 @@ namespace Disco.Tests.Services
             var user = new User
             {
                 Id = 1,
-                Profile = new Profile
+                Profile = new Account
                 {
                     Id = 1,
                     Followers = new List<Friend>(),
@@ -38,7 +38,7 @@ namespace Disco.Tests.Services
             var friend = new User
             {
                 Id = 2,
-                Profile = new Profile
+                Profile = new Account
                 {
                     Id = 2,
                     Followers = new List<Friend>()

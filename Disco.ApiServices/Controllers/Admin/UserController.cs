@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Disco.ApiServices.Validators;
+using AutoMapper;
 
 namespace Disco.ApiServices.Controllers.Admin 
 {
@@ -19,44 +20,69 @@ namespace Disco.ApiServices.Controllers.Admin
          Roles = UserRole.Admin)]
     public class UserController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
-        private readonly IAdminUserService _adminUserService;
+        private readonly IAccountService _accountService;
+        private readonly ITokenService _tokenService;
+        private readonly IMapper _mapper;
 
         public UserController(
-            UserManager<User> userManager,
-            IAdminUserService adminUserService)
+            IAccountService accountService,
+            ITokenService tokenService,
+            IMapper mapper)
         {
-            _userManager = userManager;
-            _adminUserService = adminUserService;
+            _accountService = accountService;
+            _tokenService = tokenService;
+            _mapper = mapper;
         }
 
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] RegistrationDto model)
         {
             var validator = await RegistrationValidator
-                .Create(_userManager)
+                .Create(_accountService)
                 .ValidateAsync(model);
 
-            if (validator.Errors.Count > 0)
+            if (!validator.IsValid)
+            {
                 return BadRequest(validator.Errors);
+            }
 
-            var user = await _adminUserService.CreateUserAsync(model);
+            var user = _mapper.Map<User>(model);
+            user.Email = model.Email;
+            user.UserName = model.UserName;
+            user.Profile = new Domain.Models.Account
+            {
+                User = user,
+                UserId = user.Id,
+                Status = StatusTypes.NewArtist
+            };
 
-            return Ok(user);
+            _accountService.GetUserRole(user);
+
+            user = await _accountService.CreateAsync(user);
+
+            var accessToken = _tokenService.GenerateAccessToken(user);
+            var refreshToken = _tokenService.GenerateRefreshToken();
+
+            await _accountService.SaveRefreshTokenAsync(user, refreshToken);
+
+            var userResponseDto = _mapper.Map<UserResponseDto>(user);
+            userResponseDto.RefreshToken = refreshToken;
+            userResponseDto.AccessToken = accessToken;
+            userResponseDto.User = user;
+
+            return Ok(userResponseDto);
         }
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Remove([FromRoute] int id)
         {
-            await _adminUserService.RemoveUserAsync(id);
-
             return Ok();
         }
 
         [HttpGet]
         public async Task<ActionResult<List<User>>> GetAll([FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
-            return await _adminUserService.GetAllUsers(pageNumber, pageSize);
+            return Ok();
         }
     }
 }

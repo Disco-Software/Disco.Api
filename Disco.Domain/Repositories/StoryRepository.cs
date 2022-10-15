@@ -13,7 +13,7 @@ namespace Disco.Domain.Repositories
     {
         public StoryRepository(ApiDbContext ctx) : base(ctx) { }
 
-        public async Task AddAsync(Story story, Profile profile)
+        public async Task AddAsync(Story story, Account profile)
         {
             await ctx.Stories.AddAsync(story);
            

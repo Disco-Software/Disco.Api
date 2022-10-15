@@ -22,7 +22,7 @@ namespace Disco.Tests.Services
                 UserName = "s.korchevskyi",
                 Email = "stas_1999_nr@ukr.net",
                 RoleName = "Admin",
-                Profile = new Profile
+                Profile = new Account
                 {
                     Posts = new List<Post>()
                 }

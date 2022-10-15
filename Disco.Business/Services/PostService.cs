@@ -13,7 +13,7 @@ namespace Disco.Business.Services
 {
     public class PostService : IPostService
     {
-        private readonly IUserService _userService;
+        private readonly IAccountService _userService;
         private readonly IPostRepository _postRepository;
         private readonly IImageService _imageService;
         private readonly ISongService _songService;
@@ -21,7 +21,7 @@ namespace Disco.Business.Services
         private readonly ILikeService _likeService;
         private readonly IMapper _mapper;
         public PostService(
-            IUserService userService,
+            IAccountService userService,
             IMapper mapper,
             IPostRepository postRepository,
             IImageService imageService,

@@ -17,10 +17,10 @@ namespace Disco.ApiServices.Controllers
     public class GlobalSearchController : ControllerBase
     {
         private readonly IPostService _postService;
-        private readonly IProfileService _profileService;
+        private readonly IAccountDetailsService _profileService;
         public GlobalSearchController(
             IPostService postService, 
-            IProfileService profileService)
+            IAccountDetailsService profileService)
         {
             _postService = postService;
             _profileService = profileService;

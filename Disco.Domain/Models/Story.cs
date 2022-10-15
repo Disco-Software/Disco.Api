@@ -13,6 +13,6 @@ namespace Disco.Domain.Models
         public DateTime DateOfCreation { get; set; }
 
         public int ProfileId { get; set; }
-        public Profile Profile { get; set; }
+        public Account Profile { get; set; }
     }
 }

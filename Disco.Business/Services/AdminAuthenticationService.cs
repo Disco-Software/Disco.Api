@@ -16,7 +16,7 @@ namespace Disco.Business.Services
         private readonly UserManager<User> _userManager;
         private readonly BlobServiceClient _blobServiceClient;
         private readonly IMapper _mapper;
-        private readonly IUserService _userService;
+        private readonly IAccountService _userService;
         private readonly ITokenService _tokenService;
         private readonly IEmailService _emailService;
 
@@ -24,7 +24,7 @@ namespace Disco.Business.Services
             UserManager<User> userManager,
             BlobServiceClient blobServiceClient,
             IMapper mapper,
-            IUserService userService,
+            IAccountService userService,
             ITokenService tokenService, 
             IEmailService emailService)
         {

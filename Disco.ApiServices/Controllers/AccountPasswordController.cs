@@ -1,4 +1,5 @@
-﻿using Disco.Business.Interfaces;
+﻿using Disco.Business.Dtos.Authentication;
+using Disco.Business.Interfaces;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,47 +15,51 @@ namespace Disco.ApiServices.Controllers
     [Route("api/user/account/password")]
     public class AccountPasswordController : Controller
     {
-       private readonly UserManager<User> _userManager;
-       private readonly IAuthenticationService _authenticationService;
-       private readonly IFacebookAuthService _facebookAuthService;
-       private readonly IUserService _userService;
+        private readonly IAccountService _accountService;
+        private readonly IAccountPasswordService _accountPasswordService;
+        private readonly IEmailService _emailService;
 
         public AccountPasswordController(
-            UserManager<User> userManager,
-            IAuthenticationService authenticationService,
-            IFacebookAuthService facebookAuthService,
-            IUserService userService)
+            IAccountService accountService,
+            IAccountPasswordService accountPasswordService,
+            IEmailService emailService)
         {
-            _userManager = userManager;
-            _authenticationService = authenticationService;
-            _facebookAuthService = facebookAuthService;
-            _userService = userService;
+            _accountService = accountService;
+            _accountPasswordService = accountPasswordService;
+            _emailService = emailService;
         }
 
         [HttpPost("forgot")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto model)
         {
-            var user = await _userService.GetUserByEmailAsync(model.Email);
+            var user = await _accountService.GetByEmailAsync(model.Email);
 
             if (user == null)
                 BadRequest("User is null");
 
-            var confirmationDto = await _authenticationService.ForgotPassword(user);
+            var passwordResetToken = await _accountPasswordService.GetPasswordConfirmationTokenAsync(user);
 
-            return Ok(confirmationDto);
+            _emailService.EmailConfirmation(new Business.Dtos.EmailNotifications.EmailConfirmationDto
+            {
+                ToEmail = user.Email,
+                IsHtmlTemplate = true,
+                MessageHeader = "Email confirmation"
+            });
+
+            return Ok(passwordResetToken);
         }
 
         [HttpPut("reset")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
         {
-            var user = await _userService.GetUserByEmailAsync(model.Email);
+            var user = await _accountService.GetByEmailAsync(dto.Email);
 
             if (user == null)
                 return BadRequest();
 
-            var restPasswordDto = await _authenticationService.ResetPassword(user, model);
+            await _accountPasswordService.ChengePasswordAsync(user, dto.ConfirmationToken, dto.Password);
 
-            return Ok(restPasswordDto);
+            return Ok("Password successfuly reset");
         }
     }
 }

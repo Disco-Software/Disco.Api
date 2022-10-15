@@ -1,4 +1,5 @@
 ﻿using Disco.Business.Dtos.Authentication;
+using Disco.Business.Interfaces;
 using Disco.Domain.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
@@ -8,12 +9,12 @@ namespace Disco.ApiServices.Validators
     public class RegistrationValidator : AbstractValidator<RegistrationDto>
     {
         private RegistrationValidator(
-            UserManager<User> userManager)
+            IAccountService accountService)
         {
             RuleFor(f => f.UserName)
                 .MustAsync(async (name, token) =>
                 {
-                    var user = await userManager.FindByNameAsync(name);
+                    var user = await accountService.GetByNameAsync(name);
                     return user == null;
                 })
                 .WithMessage("this user already created");
@@ -21,15 +22,15 @@ namespace Disco.ApiServices.Validators
             RuleFor(m => m.Email)
                 .MustAsync(async (email, token) =>
                 {
-                    var user = await userManager.FindByEmailAsync(email);
+                    var user = await accountService.GetByEmailAsync(email);
                     return user == null;
                 })
                 .WithMessage("This email already registered");
         }
 
-        public static RegistrationValidator Create(UserManager<User> userManager)
+        public static RegistrationValidator Create(IAccountService accountService)
         {
-            return new RegistrationValidator(userManager);
+            return new RegistrationValidator(accountService);
         }
     }
 }

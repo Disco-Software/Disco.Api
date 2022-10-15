@@ -13,10 +13,10 @@ namespace Disco.ApiServices.Controllers
     public class FriendController : ControllerBase
     {
         private readonly IFriendService _friendService;
-        private readonly IUserService _userService;
+        private readonly IAccountService _userService;
         public FriendController(
             IFriendService friendService,
-            IUserService userService)
+            IAccountService userService)
         {
             _friendService = friendService;
             _userService = userService;
@@ -25,8 +25,8 @@ namespace Disco.ApiServices.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] CreateFriendDto model)
         {
-            var user = await _userService.GetUserAsync(HttpContext.User);
-            var friend = await _userService.GetUserByIdAsync(model.FriendId);
+            var user = await _userService.GetAsync(HttpContext.User);
+            var friend = await _userService.GetByIdAsync(model.FriendId);
 
             var friendResponse = await _friendService.CreateFriendAsync(user, friend, model);
 

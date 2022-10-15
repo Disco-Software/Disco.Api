@@ -13,7 +13,7 @@ namespace Disco.Domain
             .AddTransient<IImageRepository, ImageRepository>()
             .AddTransient<ILikeRepository, LikeRepository>()
             .AddTransient<IPostRepository, PostRepository>()
-            .AddTransient<IProfileRepository, ProfileRepository>()
+            .AddTransient<IAccountRepository, ProfileRepository>()
             .AddTransient<ISongRepository, SongRepository>()
             .AddTransient<IStoryImageRepository, StoryImageRepository>()
             .AddTransient<IStoryRepository, StoryRepository>()

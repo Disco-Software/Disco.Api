@@ -15,11 +15,11 @@ namespace Disco.ApiServices.Controllers
     public class UserPostController : Controller
     {
         private readonly IPostService _postService;
-        private readonly IUserService _userService;
+        private readonly IAccountService _userService;
 
         public UserPostController(
             IPostService postService,
-            IUserService userService)
+            IAccountService userService)
         {
             _postService = postService;
             _userService = userService;
@@ -28,7 +28,7 @@ namespace Disco.ApiServices.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromForm] CreatePostDto model)
         {
-            var user = await _userService.GetUserAsync(HttpContext.User);
+            var user = await _userService.GetAsync(HttpContext.User);
 
             var post = await _postService.CreatePostAsync(user, model);
 
@@ -44,7 +44,7 @@ namespace Disco.ApiServices.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Post>>> GetAllUserPosts([FromQuery] GetAllPostsDto model)
         {
-            var user = await _userService.GetUserAsync(HttpContext.User);
+            var user = await _userService.GetAsync(HttpContext.User);
 
             return await _postService.GetAllUserPosts(user, model);
         }
@@ -52,7 +52,7 @@ namespace Disco.ApiServices.Controllers
         [HttpGet("line")]
         public async Task<ActionResult<List<Post>>> GetAllPosts([FromQuery] GetAllPostsDto model)
         {
-            var user = await _userService.GetUserAsync(HttpContext.User);
+            var user = await _userService.GetAsync(HttpContext.User);
 
             var posts = await _postService.GetAllPosts(user, model);
 

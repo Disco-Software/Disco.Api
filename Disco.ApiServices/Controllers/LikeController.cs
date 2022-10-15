@@ -14,13 +14,13 @@ namespace Disco.ApiServices.Controllers
     [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
     public class LikeController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IAccountService _userService;
         private readonly ILikeService _likeService;
         private readonly IPostService _postService;
         private readonly IPushNotificationService _pushNotificationService;
 
         public LikeController(
-            IUserService userService, 
+            IAccountService userService, 
             ILikeService likeService,
             IPostService postService,
             IPushNotificationService pushNotificationService)
@@ -34,7 +34,7 @@ namespace Disco.ApiServices.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateLikeAsync([FromQuery] int postId)
         {
-            var user = await _userService.GetUserAsync(User);
+            var user = await _userService.GetAsync(User);
             var post = await _postService.GetPostAsync(postId);
 
             if (user == null)
@@ -60,7 +60,7 @@ namespace Disco.ApiServices.Controllers
         [HttpDelete("remove")]
         public async Task<IActionResult> RemoveLikeAsync([FromQuery] int postId)
         {
-            var user = await _userService.GetUserAsync(User);
+            var user = await _userService.GetAsync(User);
             var post = await _postService.GetPostAsync(postId);
 
             if (user == null)

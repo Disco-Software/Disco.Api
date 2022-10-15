@@ -2,10 +2,8 @@
 
 namespace Disco.Business.Dtos.Profile
 {
-    public class UpdateProfileDto
+    public class UpdateAccountDto
     {
         public IFormFile Photo { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Cread { get; set; }
     }
 }

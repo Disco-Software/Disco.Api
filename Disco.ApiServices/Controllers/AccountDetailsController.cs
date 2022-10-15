@@ -1,4 +1,5 @@
 ﻿using Disco.Business.Constants;
+using Disco.Business.Dtos.Profile;
 using Disco.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,22 +15,22 @@ namespace Disco.ApiServices.Controllers
     [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
     public class AccountDetailsController : Controller
     {
-        private readonly IProfileService _profileService;
-        private readonly IUserService _userService;
+        private readonly IAccountDetailsService _accountDetailsService;
+        private readonly IAccountService _accountService;
         public AccountDetailsController(
-            IProfileService profileService,
-            IUserService userService)
+            IAccountDetailsService accountDetailsService,
+            IAccountService accountService)
         {
-            _profileService = profileService;
-            _userService = userService;
+            _accountDetailsService = accountDetailsService;
+            _accountService = accountService;
         }
 
         [HttpPut("update")]
-        public async Task<IActionResult> Update([FromForm] UpdateProfileDto model)
+        public async Task<IActionResult> Update([FromForm] UpdateAccountDto dto)
         {
-            var user = await _userService.GetUserAsync(HttpContext.User);
+            var user = await _accountService.GetAsync(HttpContext.User);
 
-            var profile = await _profileService.UpdateProfileAsync(user, model);
+            var account = await _accountDetailsService.ChengePhotoAsync(user, dto.Photo);
 
             return Ok(user);
         }

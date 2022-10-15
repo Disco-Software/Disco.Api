@@ -1,4 +1,6 @@
 ﻿using Disco.Business.Dtos.Authentication;
+using Disco.Business.Interfaces;
+using Disco.Business.Services;
 using Disco.Domain.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
@@ -7,14 +9,14 @@ namespace Disco.ApiServices.Validators
 {
     public class LogInValidator : AbstractValidator<LoginDto>
     {
-        public LogInValidator(UserManager<User> userManager)
+        public LogInValidator(IAccountService accountService)
         {
             RuleFor(r => r.Email)
                 .EmailAddress()
                 .WithMessage("This is not email, please enter valid email")
                 .MustAsync(async (email, cencelationToken) =>
                 {
-                    var user = await userManager.FindByEmailAsync(email);
+                    var user = await accountService.GetByEmailAsync(email);
                     return user != null;
                 })
                 .WithMessage("User not found")
@@ -26,9 +28,9 @@ namespace Disco.ApiServices.Validators
                 .WithMessage("Password can not be empty");
         }
 
-        public static LogInValidator Create(UserManager<User> userManager)
+        public static LogInValidator Create(IAccountService accountPasswordService)
         {
-            return new LogInValidator(userManager);
+            return new LogInValidator(accountPasswordService);
         }
 
     }

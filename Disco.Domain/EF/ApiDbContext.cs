@@ -8,7 +8,7 @@ namespace Disco.Domain.EF
 {
     public class ApiDbContext : IdentityDbContext<User,Role,int>, IDesignTimeDbContextFactory<ApiDbContext>
     {
-        public DbSet<Profile> Profiles { get; set; }
+        public DbSet<Account> Profiles { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<PostSong> PostSongs { get; set; }
@@ -28,9 +28,9 @@ namespace Disco.Domain.EF
             builder.Entity<User>()
                 .HasOne(p => p.Profile)
                 .WithOne(u => u.User)
-                .HasForeignKey<Profile>(p => p.UserId);
+                .HasForeignKey<Account>(p => p.UserId);
             
-            builder.Entity<Profile>()
+            builder.Entity<Account>()
                 .HasMany(f => f.Followers)
                 .WithOne(p => p.UserProfile)
                 .HasForeignKey(f => f.UserProfileId);

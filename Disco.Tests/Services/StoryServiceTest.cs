@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Disco.Domain.Interfaces;
-using Profile = Disco.Domain.Models.Profile;
+using Account = Disco.Domain.Models.Account;
 
 namespace Disco.Tests.Services
 {
@@ -49,7 +49,7 @@ namespace Disco.Tests.Services
             {
                 UserName = "Vasya_Pupkin",
                 Email = "pupkin2022@gmail.com",
-                Profile = new Domain.Models.Profile
+                Profile = new Domain.Models.Account
                 {
                     Status = StatusTypes.MusicLover,
                     Id = 5,
@@ -72,7 +72,7 @@ namespace Disco.Tests.Services
             var mockedStoryRepository = new Mock<IStoryRepository>();
 
             mockedStoryRepository
-                .Setup(s => s.AddAsync(It.IsAny<Story>(), It.IsAny<Profile>()))
+                .Setup(s => s.AddAsync(It.IsAny<Story>(), It.IsAny<Account>()))
                 .Returns(Task.CompletedTask);
 
             var mockedStoryImageService = new Mock<IStoryImageService>();
@@ -126,7 +126,7 @@ namespace Disco.Tests.Services
             {
                 UserName = "Vasya_Pupkin",
                 Email = "pupkin2022@gmail.com",
-                Profile = new Domain.Models.Profile
+                Profile = new Domain.Models.Account
                 {
                     Status = StatusTypes.MusicLover,
                     Id = 5,
@@ -149,7 +149,7 @@ namespace Disco.Tests.Services
             var mockedStoryRepository = new Mock<IStoryRepository>();
 
             mockedStoryRepository
-                .Setup(s => s.AddAsync(It.IsAny<Story>(), It.IsAny<Profile>()))
+                .Setup(s => s.AddAsync(It.IsAny<Story>(), It.IsAny<Account>()))
                 .Returns(Task.CompletedTask);
 
             var mockedStoryVideoService = new Mock<IStoryVideoService>();
@@ -203,7 +203,7 @@ namespace Disco.Tests.Services
             {
                 UserName = "Vasya_Pupkin",
                 Email = "pupkin2022@gmail.com",
-                Profile = new Domain.Models.Profile
+                Profile = new Domain.Models.Account
                 {
                     Status = StatusTypes.MusicLover,
                     Id = 5,

@@ -35,6 +35,7 @@ namespace Disco.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen();
             services.ConfigureDbContext(Configuration);
             services.ConfigureIdentity();
             services.AddAuthorization();
@@ -84,6 +85,12 @@ namespace Disco.Api
 
             if (env.IsDevelopment())
             {
+                app.UseSwagger(swagger =>
+                {
+                    swagger.SerializeAsV2 = true;
+                });
+                app.UseSwaggerUI(swagger => swagger.SwaggerEndpoint("v1/swagger.json", "Disco.Api"));
+                
                 app.UseDeveloperExceptionPage();
             }
 
