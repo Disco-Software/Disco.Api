@@ -20,7 +20,7 @@ namespace Disco.Domain.Repositories
                 throw new ArgumentNullException("user is null");
             
             await ctx.Posts.AddAsync(post);
-            user.Profile.Posts.Add(post);
+            user.Account.Posts.Add(post);
             
             await ctx.SaveChangesAsync();
         }
@@ -28,14 +28,14 @@ namespace Disco.Domain.Repositories
         public override async Task Remove(int id)
         {
             var post = await ctx.Posts
-                .Include(p => p.Profile)
+                .Include(p => p.Account)
                 .Include(v => v.PostVideos)
                 .Include(s => s.PostSongs)
                 .Include(i => i.PostImages)
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
 
-            post.Profile.Posts.Remove(post);
+            post.Account.Posts.Remove(post);
 
             ctx.Remove(post);
 
@@ -47,30 +47,30 @@ namespace Disco.Domain.Repositories
             var posts = new List<Post>();
 
             var user = await ctx.Users
-                .Include(p => p.Profile)
+                .Include(p => p.Account)
                 .ThenInclude(f => f.Followers)
-                .Include(p => p.Profile)
+                .Include(p => p.Account)
                 .ThenInclude(p => p.Following)
-                .Include(p => p.Profile)
+                .Include(p => p.Account)
                 .ThenInclude(p => p.Posts)
                 .ThenInclude(p => p.PostImages)
-                .Include(p => p.Profile)
+                .Include(p => p.Account)
                 .ThenInclude(p => p.Posts)
                 .ThenInclude(s => s.PostSongs)
-                .Include(p => p.Profile)
+                .Include(p => p.Account)
                 .ThenInclude(p => p.Posts)
                 .ThenInclude(p => p.PostVideos)
-                .Include(p => p.Profile)
+                .Include(p => p.Account)
                 .ThenInclude(p => p.Posts)
                 .ThenInclude(l => l.Likes)
                 .Where(s => s.Id == userId)
                 .FirstOrDefaultAsync();
 
-            posts.AddRange(user.Profile.Posts);
+            posts.AddRange(user.Account.Posts);
 
-            foreach (var friend in user.Profile.Following)
+            foreach (var friend in user.Account.Following)
             {
-                friend.ProfileFriend = await ctx.Profiles
+                friend.AccountFollower = await ctx.Accounts
                     .Include(p => p.Posts)
                     .ThenInclude(i => i.PostImages)
                     .Include(p => p.Posts)
@@ -78,17 +78,17 @@ namespace Disco.Domain.Repositories
                     .Include(p => p.Posts)
                     .ThenInclude(v => v.PostVideos)
                     .Include(u => u.User)
-                    .ThenInclude(l => l.Profile)
+                    .ThenInclude(l => l.Account)
                     .ThenInclude(p => p.Posts)
                     .ThenInclude(l => l.Likes)
-                    .Where(f => f.Id == friend.FriendProfileId)
+                    .Where(f => f.Id == friend.FollowerId)
                     .FirstOrDefaultAsync();
-                posts.AddRange(friend.ProfileFriend.Posts);             
+                posts.AddRange(friend.AccountFollower.Posts);             
             }
 
-            foreach (var friend in user.Profile.Followers)
+            foreach (var friend in user.Account.Followers)
             {
-                friend.ProfileFriend = await ctx.Profiles
+                friend.AccountFollower = await ctx.Accounts
                     .Include(p => p.Posts)
                     .ThenInclude(i => i.PostImages)
                     .Include(p => p.Posts)
@@ -97,12 +97,12 @@ namespace Disco.Domain.Repositories
                     .ThenInclude(v => v.PostVideos)
                     .Include(u => u.User)
                     .Include(u => u.User)
-                    .ThenInclude(l => l.Profile)
+                    .ThenInclude(l => l.Account)
                     .ThenInclude(p => p.Posts)
                     .ThenInclude(l => l.Likes)
-                    .Where(f => f.Id == friend.FriendProfileId)
+                    .Where(f => f.Id == friend.FollowerId)
                     .FirstOrDefaultAsync();
-                posts.AddRange(friend.ProfileFriend.Posts);
+                posts.AddRange(friend.AccountFollower.Posts);
             }
 
             return posts
@@ -115,12 +115,12 @@ namespace Disco.Domain.Repositories
         public async Task<List<Post>> GetAllUserPosts(int userId, int pageSize, int pageNumber)
         {
             var user = await ctx.Users
-                .Include(p => p.Profile)
+                .Include(p => p.Account)
                 .ThenInclude(p => p.Posts)
                 .Where(u => u.Id == userId)
                 .FirstOrDefaultAsync();
 
-           return user.Profile.Posts
+           return user.Account.Posts
                 .OrderByDescending(d => d.DateOfCreation)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -134,7 +134,7 @@ namespace Disco.Domain.Repositories
                 .Include(i => i.PostImages)
                 .Include(s => s.PostSongs)
                 .Include(v => v.PostVideos)
-                .Include(p => p.Profile)
+                .Include(p => p.Account)
                 .ThenInclude(u => u.User)
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();

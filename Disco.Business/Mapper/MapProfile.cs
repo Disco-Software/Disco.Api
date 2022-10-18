@@ -41,7 +41,7 @@ namespace Disco.Business.Mapper
             CreateMap<CreateStoryVideoDto, StoryVideo>()
                 .ForMember(source => source.Source, opt => opt.Ignore());
             CreateMap<RegistrationDto, User>();
-            CreateMap<CreateFriendDto, Friend>();
+            CreateMap<CreateFriendDto, UserFollower>();
             CreateMap<Account, ProfileDto>();
             CreateMap<User, UserResponseDto>()
                 .ForMember(source => source.RefreshToken, opt => opt.Ignore())

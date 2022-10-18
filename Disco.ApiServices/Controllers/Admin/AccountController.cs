@@ -139,7 +139,7 @@ namespace Disco.ApiServices.Controllers.Admin
 
             await _accountPasswordService.ChengePasswordAsync(user, dto.ConfirmationToken, dto.Password);
 
-            return Ok("Password successfuly reset");
+            return Ok("Password successfuly changed");
         }
     }
 }

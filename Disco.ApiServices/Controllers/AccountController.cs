@@ -93,12 +93,12 @@ namespace Disco.ApiServices.Controllers
             {
                 user.Email = userInfo.Email;
                 user.UserName = userInfo.Name;
-                user.Profile.Photo = userInfo.Picture.Data.Url;
+                user.Account.Photo = userInfo.Picture.Data.Url;
 
                 var accessToken = _tokenService.GenerateAccessToken(user);
                 var refreshToken = _tokenService.GenerateRefreshToken();
 
-                _accountService.SaveRefreshTokenAsync(user,refreshToken);
+                await _accountService.SaveRefreshTokenAsync(user,refreshToken);
 
                 var userRsponseDto = _mapper.Map<UserResponseDto>(user);
                 userRsponseDto.AccessToken = accessToken;
@@ -113,7 +113,7 @@ namespace Disco.ApiServices.Controllers
             {
                 user.Email = userInfo.Email;
                 user.UserName = userInfo.Name;
-                user.Profile.Photo = userInfo.Picture.Data.Url;
+                user.Account.Photo = userInfo.Picture.Data.Url;
 
                 var accessToken = _tokenService.GenerateAccessToken(user);
                 var refreshToken = _tokenService.GenerateRefreshToken();
@@ -128,20 +128,20 @@ namespace Disco.ApiServices.Controllers
                 return Ok(userRsponseDto);
             }
 
-            var registeredUser = await _accountService.CreateAsync(new Domain.Models.User
+            user = new Domain.Models.User
             {
                 UserName = userInfo.Name,
                 DateOfRegister = DateTime.UtcNow,
                 Email = userInfo.Email,
-                Profile = new Domain.Models.Account
+                Account = new Domain.Models.Account
                 {
                     Status = StatusTypes.NewArtist,
                     User = user,
                     Photo = userInfo.Picture.Data.Url,
                 }
-            });
+            };
 
-            user = await _accountService.CreateAsync(registeredUser);
+            await _accountService.CreateAsync(user);
 
             var userAccessToken = _tokenService.GenerateAccessToken(user);
             var userRefreshToken = _tokenService.GenerateRefreshToken();
@@ -189,20 +189,20 @@ namespace Disco.ApiServices.Controllers
                 return Ok(userResponseDto);
             }
 
-            var registeredUser = await _accountService.CreateAsync(new Domain.Models.User
+            user = new Domain.Models.User
             {
                 UserName = dto.UserName,
                 DateOfRegister = DateTime.UtcNow,
                 Email = dto.Email,
-                Profile = new Domain.Models.Account
+                Account = new Domain.Models.Account
                 {
                     Status = StatusTypes.NewArtist,
                     User = user,
                     Photo = dto.Photo,
                 }
-            });
+            };
 
-            user = await _accountService.CreateAsync(registeredUser);
+            await _accountService.CreateAsync(user);
 
             var userAccessToken = _tokenService.GenerateAccessToken(user);
             var userRefreshToken = _tokenService.GenerateRefreshToken();
@@ -246,17 +246,19 @@ namespace Disco.ApiServices.Controllers
                 return Ok(userResponseDto);
             }
 
-            user = await _accountService.CreateAsync(new Domain.Models.User
+            user = new Domain.Models.User
             {
                 UserName = dto.Name,
                 DateOfRegister = DateTime.UtcNow,
                 Email = dto.Email,
-                Profile = new Domain.Models.Account
+                Account = new Domain.Models.Account
                 {
                     Status = StatusTypes.NewArtist,
                     User = user,
                 }
-            });
+            };
+            
+            await _accountService.CreateAsync(user);
 
             var userAccessToken = _tokenService.GenerateAccessToken(user);
             var userRefreshToken = _tokenService.GenerateRefreshToken();
@@ -303,30 +305,22 @@ namespace Disco.ApiServices.Controllers
         }
 
         [HttpPost("registration")]
-        public async Task<IActionResult> Registration([FromBody] RegistrationDto model)
+        public async Task<IActionResult> Registration([FromBody] RegistrationDto dto)
         {
-            var validator = await RegistrationValidator
-                .Create(_accountService)
-                .ValidateAsync(model);
-
-            if (!validator.IsValid)
-            {
-                return BadRequest(validator.Errors);
-            }
-
-            var user = _mapper.Map<User>(model);
-            user.Email = model.Email;
-            user.UserName = model.UserName;
-            user.Profile = new Domain.Models.Account
+            var user = _mapper.Map<User>(dto);
+            
+            user.Email = dto.Email;
+            user.UserName = dto.UserName;
+            user.Account = new Domain.Models.Account
             {
                 User = user,
                 UserId = user.Id,
                 Status = StatusTypes.NewArtist
             };
 
-            _accountService.GetUserRole(user);
+            await _accountService.CreateAsync(user);
 
-            user = await _accountService.CreateAsync(user);
+            _accountPasswordService.AddPasswod(user, dto.Password);
 
             var accessToken = _tokenService.GenerateAccessToken(user);
             var refreshToken = _tokenService.GenerateRefreshToken();

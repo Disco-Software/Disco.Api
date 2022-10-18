@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Disco.Domain.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class InitMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,6 +28,11 @@ namespace Disco.Domain.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiress = table.Column<DateTime>(type: "date", nullable: false),
+                    DateOfRegister = table.Column<DateTime>(type: "date", nullable: false),
+                    AccountId = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -65,6 +70,28 @@ namespace Disco.Domain.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Account",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Cread = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Photo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Account", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Account_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -155,56 +182,6 @@ namespace Disco.Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Profiles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Photo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Profiles", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Profiles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Friends",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserProfileId = table.Column<int>(type: "int", nullable: false),
-                    FriendProfileId = table.Column<int>(type: "int", nullable: false),
-                    ProfileFriendId = table.Column<int>(type: "int", nullable: true),
-                    IsConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    IsFriend = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Friends", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Friends_Profiles_ProfileFriendId",
-                        column: x => x.ProfileFriendId,
-                        principalTable: "Profiles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Friends_Profiles_UserProfileId",
-                        column: x => x.UserProfileId,
-                        principalTable: "Profiles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
                 {
@@ -212,15 +189,15 @@ namespace Disco.Domain.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateOfCreation = table.Column<DateTime>(type: "date", nullable: true),
-                    ProfileId = table.Column<int>(type: "int", nullable: false)
+                    AccountId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Posts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Posts_Profiles_ProfileId",
-                        column: x => x.ProfileId,
-                        principalTable: "Profiles",
+                        name: "FK_Posts_Account_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -232,15 +209,44 @@ namespace Disco.Domain.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DateOfCreation = table.Column<DateTime>(type: "date", nullable: false),
-                    ProfileId = table.Column<int>(type: "int", nullable: false)
+                    AccountId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Stories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Stories_Profiles_ProfileId",
-                        column: x => x.ProfileId,
-                        principalTable: "Profiles",
+                        name: "FK_Stories_Account_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Account",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserFollowers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserAccountId = table.Column<int>(type: "int", nullable: false),
+                    FollowerId = table.Column<int>(type: "int", nullable: false),
+                    AccountFollowerId = table.Column<int>(type: "int", nullable: true),
+                    IsConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    IsFriend = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserFollowers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserFollowers_Account_AccountFollowerId",
+                        column: x => x.AccountFollowerId,
+                        principalTable: "Account",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserFollowers_Account_UserAccountId",
+                        column: x => x.UserAccountId,
+                        principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -294,6 +300,7 @@ namespace Disco.Domain.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Source = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExecutorName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PostId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -328,19 +335,20 @@ namespace Disco.Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StoriesImages",
+                name: "StoryImages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Source = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateOfCreation = table.Column<DateTime>(type: "date", nullable: true),
                     StoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StoriesImages", x => x.Id);
+                    table.PrimaryKey("PK_StoryImages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StoriesImages_Stories_StoryId",
+                        name: "FK_StoryImages_Stories_StoryId",
                         column: x => x.StoryId,
                         principalTable: "Stories",
                         principalColumn: "Id",
@@ -354,6 +362,7 @@ namespace Disco.Domain.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Source = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateOfCreation = table.Column<DateTime>(type: "date", nullable: true),
                     StoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -366,6 +375,12 @@ namespace Disco.Domain.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Account_UserId",
+                table: "Account",
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -407,16 +422,6 @@ namespace Disco.Domain.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Friends_ProfileFriendId",
-                table: "Friends",
-                column: "ProfileFriendId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Friends_UserProfileId",
-                table: "Friends",
-                column: "UserProfileId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Like_PostId",
                 table: "Like",
                 column: "PostId");
@@ -427,9 +432,9 @@ namespace Disco.Domain.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Posts_ProfileId",
+                name: "IX_Posts_AccountId",
                 table: "Posts",
-                column: "ProfileId");
+                column: "AccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostSongs_PostId",
@@ -442,25 +447,29 @@ namespace Disco.Domain.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Profiles_UserId",
-                table: "Profiles",
-                column: "UserId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Stories_ProfileId",
+                name: "IX_Stories_AccountId",
                 table: "Stories",
-                column: "ProfileId");
+                column: "AccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StoriesImages_StoryId",
-                table: "StoriesImages",
+                name: "IX_StoryImages_StoryId",
+                table: "StoryImages",
                 column: "StoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StoryVideos_StoryId",
                 table: "StoryVideos",
                 column: "StoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserFollowers_AccountFollowerId",
+                table: "UserFollowers",
+                column: "AccountFollowerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserFollowers_UserAccountId",
+                table: "UserFollowers",
+                column: "UserAccountId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -481,9 +490,6 @@ namespace Disco.Domain.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Friends");
-
-            migrationBuilder.DropTable(
                 name: "Like");
 
             migrationBuilder.DropTable(
@@ -496,10 +502,13 @@ namespace Disco.Domain.Migrations
                 name: "PostVideos");
 
             migrationBuilder.DropTable(
-                name: "StoriesImages");
+                name: "StoryImages");
 
             migrationBuilder.DropTable(
                 name: "StoryVideos");
+
+            migrationBuilder.DropTable(
+                name: "UserFollowers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -511,7 +520,7 @@ namespace Disco.Domain.Migrations
                 name: "Stories");
 
             migrationBuilder.DropTable(
-                name: "Profiles");
+                name: "Account");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

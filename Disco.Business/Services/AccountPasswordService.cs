@@ -41,5 +41,11 @@ namespace Disco.Business.Services
         {
             return await _userManager.GeneratePasswordResetTokenAsync(user);
         }
+
+        public string AddPasswod(User user, string password)
+        {
+            user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, password);
+            return user.PasswordHash;
+        }
     }
 }

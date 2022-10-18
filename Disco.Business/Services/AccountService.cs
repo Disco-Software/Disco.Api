@@ -40,13 +40,9 @@ namespace Disco.Business.Services
             var user = await _userManager.FindByEmailAsync(email);
 
             await _userRepository.GetUserInfosAsync(user);
+            user.RoleName = _userRepository.GetUserRole(user);
 
             return user;
-        }
-
-        public string GetUserRole(User user)
-        {
-            return _userRepository.GetUserRole(user);
         }
 
         public async Task SaveRefreshTokenAsync(User user, string refreshToken)
@@ -57,11 +53,6 @@ namespace Disco.Business.Services
         public async Task<User> GetByRefreshTokenAsync(string refreshToken)
         {
             return await _userRepository.GetUserByRefreshTokenAsync(refreshToken);
-        }
-
-        public async Task LoadInfoAsync(User user)
-        {
-            await _userRepository.GetUserInfosAsync(user);
         }
 
         public async Task<User> GetAsync(ClaimsPrincipal claimsPrincipal)
@@ -84,28 +75,30 @@ namespace Disco.Business.Services
             return user;
         }
 
-        public async Task<User> CreateAsync(User user)
+        public async Task CreateAsync(User user)
         {
-            var identityReesult = await _userManager.CreateAsync(user);
-            if(identityReesult != null)
-            {
-                throw new Exception();
-            }
+           user.NormalizedEmail = _userManager.NormalizeEmail(user.Email);
+           user.NormalizedUserName = _userManager.NormalizeName(user.UserName);
 
-            _userManager.NormalizeEmail(user.Email);
-            _userManager.NormalizeName(user.NormalizedUserName);
+           var identityReesult = await _userManager.CreateAsync(user);
+           if(identityReesult.Errors.Count() > 0)
+           {
+               throw new Exception();
+           }
 
-            _userRepository.GetUserRole(user);
+           user.DateOfRegister = DateTime.UtcNow;
+           user.AccountId = user.Account.Id;
 
-            return user;
+           await _userManager.AddToRoleAsync(user, UserRole.User);
+           user.RoleName = _userRepository.GetUserRole(user);
         }
 
         public async Task<User> GetByLogInProviderAsync(string loginProvider, string providerKey)
         {
             var user = await _userManager.FindByLoginAsync(loginProvider, providerKey);
-            await _userRepository.GetUserInfosAsync(user);
 
-            _userRepository.GetUserRole(user);
+            await _userRepository.GetUserInfosAsync(user);
+            user.RoleName = _userRepository.GetUserRole(user);
 
             return user;
         }
@@ -113,7 +106,7 @@ namespace Disco.Business.Services
         public async Task<User> GetByNameAsync(string name)
         {
             var user = await _userManager.FindByNameAsync(name);
-            
+
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
 

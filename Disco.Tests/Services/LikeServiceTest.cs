@@ -22,7 +22,7 @@ namespace Disco.Tests.Services
                 UserName = "s.korchevskyi",
                 Email = "stas_1999_nr@ukr.net",
                 RoleName = "Admin",
-                Profile = new Account
+                Account = new Account
                 {
                     Posts = new List<Post>()
                 }
@@ -31,12 +31,14 @@ namespace Disco.Tests.Services
             var post = new Post
             {
                 Id = 6,
-                Profile = user.Profile,
+                Account = user.Account,
                 DateOfCreation = DateTime.Now,
                 Description = "Bla bla bla",
                 Likes = new List<Like>(),
-                ProfileId = user.Profile.Id
+                AccountId = user.Account.Id
             };
+
+            user.Account.Posts.Add(post);
 
             var mockedPostRepository = new Mock<IPostRepository>();
 

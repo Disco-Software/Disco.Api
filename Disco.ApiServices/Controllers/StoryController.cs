@@ -12,22 +12,22 @@ namespace Disco.ApiServices.Controllers
     [Route("api/user/story")]
     [ApiController]
     [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
-    public class UserStoryController : ControllerBase
+    public class StoryController : ControllerBase
     {
         private readonly IStoryService _storyService;
-        private readonly IAccountService _userService;
-        public UserStoryController(
+        private readonly IAccountService _accountService;
+        public StoryController(
             IStoryService storyService,
-            IAccountService userService)
+            IAccountService accountService)
         {
             _storyService = storyService;
-            _userService = userService;
+            _accountService = accountService;
         }
 
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromForm] CreateStoryDto model)
         {
-            var user = await _userService.GetAsync(HttpContext.User);
+            var user = await _accountService.GetAsync(HttpContext.User);
 
            var story = await _storyService.CreateStoryAsync(user, model);
 
@@ -49,7 +49,7 @@ namespace Disco.ApiServices.Controllers
         [HttpGet("all")]
         public async Task<ActionResult<List<Story>>> GetStoriesAsync([FromQuery] GetAllStoriesDto model)
         {
-            var user = await _userService.GetAsync(HttpContext.User);
+            var user = await _accountService.GetAsync(HttpContext.User);
 
             var stories = await _storyService.GetAllStoryAsync(user, model);
 

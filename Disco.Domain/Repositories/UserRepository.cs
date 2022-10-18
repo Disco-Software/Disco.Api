@@ -21,11 +21,11 @@ namespace Disco.Domain.Repositories
         public async Task<User> GetUserByRefreshTokenAsync(string refreshToken)
         {
             return await _ctx.Users
-                .Include(p => p.Profile)
+                .Include(p => p.Account)
                 .ThenInclude(p => p.Posts)
-                .Include(p => p.Profile)
+                .Include(p => p.Account)
                 .ThenInclude(s => s.Stories)
-                .Include(p => p.Profile)
+                .Include(p => p.Account)
                 .ThenInclude(f => f.Followers)
                 .FirstOrDefaultAsync();
         }
@@ -33,10 +33,10 @@ namespace Disco.Domain.Repositories
         public async Task GetUserInfosAsync(User user)
         {
             await _ctx.Entry(user)
-                .Reference(u => u.Profile)
+                .Reference(u => u.Account)
                 .LoadAsync();
 
-            await _ctx.Entry(user.Profile)
+            await _ctx.Entry(user.Account)
                 .Collection(p => p.Posts)
                 .LoadAsync();
         }
@@ -70,7 +70,7 @@ namespace Disco.Domain.Repositories
         public async Task<List<User>> GetUsersByPeriotAsync(DateTime date)
         {
             return await _ctx.Users
-                .Include(u => u.Profile)
+                .Include(u => u.Account)
                 .Where(u => u.DateOfRegister == date)
                 .OrderBy(u => u.DateOfRegister)
                 .ToListAsync();
@@ -82,7 +82,7 @@ namespace Disco.Domain.Repositories
             date = date.AddDays(-days);
 
             return await _ctx.Users
-                .Include(u => u.Profile)
+                .Include(u => u.Account)
                 .Where(u => u.DateOfRegister >= date)
                 .OrderBy(u => u.DateOfRegister)
                 .ToListAsync();

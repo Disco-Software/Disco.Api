@@ -12,7 +12,7 @@ namespace Disco.Domain.Models
         [Column(TypeName = "date")]
         public DateTime DateOfCreation { get; set; }
 
-        public int ProfileId { get; set; }
-        public Account Profile { get; set; }
+        public int AccountId { get; set; }
+        public Account Account { get; set; }
     }
 }

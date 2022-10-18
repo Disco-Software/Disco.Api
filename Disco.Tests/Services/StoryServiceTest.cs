@@ -49,7 +49,7 @@ namespace Disco.Tests.Services
             {
                 UserName = "Vasya_Pupkin",
                 Email = "pupkin2022@gmail.com",
-                Profile = new Domain.Models.Account
+                Account = new Domain.Models.Account
                 {
                     Status = StatusTypes.MusicLover,
                     Id = 5,
@@ -62,12 +62,12 @@ namespace Disco.Tests.Services
                 StoryImages = new List<StoryImage>(),
                 DateOfCreation = DateTime.UtcNow,
                 StoryVideos = new List<StoryVideo>(),
-                Profile = user.Profile,
-                ProfileId = user.Profile.Id
+                Account = user.Account,
+                AccountId = user.Account.Id
             };
 
-            user.Profile.UserId = user.Id;
-            user.Profile.User = user;
+            user.Account.UserId = user.Id;
+            user.Account.User = user;
             
             var mockedStoryRepository = new Mock<IStoryRepository>();
 
@@ -90,7 +90,7 @@ namespace Disco.Tests.Services
 
             var storyDto = new CreateStoryDto
             {
-                ProfileId = user.Profile.Id,
+                ProfileId = user.Account.Id,
                 StoryImages = new List<IFormFile>(),
                 StoryVideos = new List<IFormFile>(),
             };
@@ -126,7 +126,7 @@ namespace Disco.Tests.Services
             {
                 UserName = "Vasya_Pupkin",
                 Email = "pupkin2022@gmail.com",
-                Profile = new Domain.Models.Account
+                Account = new Domain.Models.Account
                 {
                     Status = StatusTypes.MusicLover,
                     Id = 5,
@@ -139,12 +139,12 @@ namespace Disco.Tests.Services
                 StoryImages = new List<StoryImage>(),
                 DateOfCreation = DateTime.UtcNow,
                 StoryVideos = new List<StoryVideo>(),
-                Profile = user.Profile,
-                ProfileId = user.Profile.Id
+                Account = user.Account,
+                AccountId = user.Account.Id
             };
 
-            user.Profile.UserId = user.Id;
-            user.Profile.User = user;
+            user.Account.UserId = user.Id;
+            user.Account.User = user;
 
             var mockedStoryRepository = new Mock<IStoryRepository>();
 
@@ -167,7 +167,7 @@ namespace Disco.Tests.Services
 
             var storyDto = new CreateStoryDto
             {
-                ProfileId = user.Profile.Id,
+                ProfileId = user.Account.Id,
                 StoryImages = new List<IFormFile>(),
                 StoryVideos = new List<IFormFile>(),
             };
@@ -203,7 +203,7 @@ namespace Disco.Tests.Services
             {
                 UserName = "Vasya_Pupkin",
                 Email = "pupkin2022@gmail.com",
-                Profile = new Domain.Models.Account
+                Account = new Domain.Models.Account
                 {
                     Status = StatusTypes.MusicLover,
                     Id = 5,
@@ -216,12 +216,12 @@ namespace Disco.Tests.Services
                 StoryImages = new List<StoryImage>(),
                 DateOfCreation = DateTime.UtcNow,
                 StoryVideos = new List<StoryVideo>(),
-                Profile = user.Profile,
-                ProfileId = user.Profile.Id
+                Account = user.Account,
+                AccountId = user.Account.Id
             };
 
-            user.Profile.UserId = user.Id;
-            user.Profile.User = user;
+            user.Account.UserId = user.Id;
+            user.Account.User = user;
 
             var mockedStoryRepository = new Mock<IStoryRepository>();
             mockedStoryRepository

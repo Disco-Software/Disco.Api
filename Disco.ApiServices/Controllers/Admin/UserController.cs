@@ -49,16 +49,14 @@ namespace Disco.ApiServices.Controllers.Admin
             var user = _mapper.Map<User>(model);
             user.Email = model.Email;
             user.UserName = model.UserName;
-            user.Profile = new Domain.Models.Account
+            user.Account = new Domain.Models.Account
             {
                 User = user,
                 UserId = user.Id,
                 Status = StatusTypes.NewArtist
             };
 
-            _accountService.GetUserRole(user);
-
-            user = await _accountService.CreateAsync(user);
+            await _accountService.CreateAsync(user);
 
             var accessToken = _tokenService.GenerateAccessToken(user);
             var refreshToken = _tokenService.GenerateRefreshToken();

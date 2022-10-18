@@ -26,28 +26,28 @@ namespace Disco.Domain.Repositories
         {
             var storyList = new List<Story>();
 
-            var profile = await ctx.Profiles
+            var profile = await ctx.Accounts
                 .Include(u => u.User)
                 .Include(u => u.Stories)
                 .ThenInclude(s => s.StoryImages)
                 .Include(u => u.Stories)
                 .ThenInclude(s => s.StoryVideos)
                 .Include(f => f.Followers)
-                .ThenInclude(p => p.ProfileFriend)
+                .ThenInclude(p => p.AccountFollower)
                 .ThenInclude(s => s.Stories)
                 .ThenInclude(si => si.StoryImages)
                 .Include(f => f.Followers)
-                .ThenInclude(p => p.ProfileFriend)
+                .ThenInclude(p => p.AccountFollower)
                 .ThenInclude(p => p.Stories)
                 .ThenInclude(s => s.StoryVideos)
                 .Include(f => f.Followers)
-                .ThenInclude(p => p.UserProfile)
+                .ThenInclude(p => p.UserAccount)
                 .Include(f => f.Followers)
-                .ThenInclude(p => p.ProfileFriend)
+                .ThenInclude(p => p.AccountFollower)
                 .ThenInclude(s => s.Stories)
                 .ThenInclude(s => s.StoryImages)
                 .Include(f => f.Followers)
-                .ThenInclude(f => f.ProfileFriend)
+                .ThenInclude(f => f.AccountFollower)
                 .ThenInclude(f => f.Stories)
                 .ThenInclude(f => f.StoryVideos)
                 .Where(u => u.Id == profileId)
@@ -57,15 +57,15 @@ namespace Disco.Domain.Repositories
 
             foreach (var friend in profile.Followers)
             {
-                friend.ProfileFriend = await ctx.Profiles
+                friend.AccountFollower = await ctx.Accounts
                     .Include(p => p.Stories)
                     .ThenInclude(i => i.StoryImages)
                     .Include(p => p.Stories)
                     .ThenInclude(s => s.StoryVideos)
                     .Include(u => u.User)
-                    .Where(f => f.Id == friend.FriendProfileId)
+                    .Where(f => f.Id == friend.FollowerId)
                     .FirstOrDefaultAsync();
-                storyList.AddRange(friend.ProfileFriend.Stories);
+                storyList.AddRange(friend.AccountFollower.Stories);
             }
 
            return storyList.OrderByDescending(d => d.DateOfCreation)
@@ -81,7 +81,7 @@ namespace Disco.Domain.Repositories
                 .Include(v => v.StoryVideos)
                 .Where(s => s.Id == id)
                 .FirstOrDefaultAsync();
-            story.Profile.Stories.Remove(story);
+            story.Account.Stories.Remove(story);
             ctx.Stories.Remove(story);
         }
 

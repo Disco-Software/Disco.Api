@@ -19,35 +19,31 @@ namespace Disco.Domain.Migrations
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Disco.Domain.Models.Friend", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Account", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("FriendProfileId")
-                        .HasColumnType("int");
+                    b.Property<string>("Cread")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsConfirmed")
-                        .HasColumnType("bit");
+                    b.Property<string>("Photo")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsFriend")
-                        .HasColumnType("bit");
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProfileFriendId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserProfileId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfileFriendId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
-                    b.HasIndex("UserProfileId");
-
-                    b.ToTable("Friends");
+                    b.ToTable("Account");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.Like", b =>
@@ -77,18 +73,18 @@ namespace Disco.Domain.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("DateOfCreation")
                         .HasColumnType("date");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProfileId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("AccountId");
 
                     b.ToTable("Posts");
                 });
@@ -162,33 +158,6 @@ namespace Disco.Domain.Migrations
                     b.ToTable("PostVideos");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Profile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Cread")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Photo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Profiles");
-                });
-
             modelBuilder.Entity("Disco.Domain.Models.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -225,15 +194,15 @@ namespace Disco.Domain.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DateOfCreation")
                         .HasColumnType("date");
 
-                    b.Property<int>("ProfileId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("AccountId");
 
                     b.ToTable("Stories");
                 });
@@ -258,7 +227,7 @@ namespace Disco.Domain.Migrations
 
                     b.HasIndex("StoryId");
 
-                    b.ToTable("StoriesImages");
+                    b.ToTable("StoryImages");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.StoryVideo", b =>
@@ -292,6 +261,9 @@ namespace Disco.Domain.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccountId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -361,6 +333,37 @@ namespace Disco.Domain.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("Disco.Domain.Models.UserFollower", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AccountFollowerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FollowerId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFriend")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserAccountId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountFollowerId");
+
+                    b.HasIndex("UserAccountId");
+
+                    b.ToTable("UserFollowers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -464,21 +467,15 @@ namespace Disco.Domain.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Friend", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Account", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Profile", "ProfileFriend")
-                        .WithMany("Following")
-                        .HasForeignKey("ProfileFriendId");
-
-                    b.HasOne("Disco.Domain.Models.Profile", "UserProfile")
-                        .WithMany("Followers")
-                        .HasForeignKey("UserProfileId")
+                    b.HasOne("Disco.Domain.Models.User", "User")
+                        .WithOne("Account")
+                        .HasForeignKey("Disco.Domain.Models.Account", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ProfileFriend");
-
-                    b.Navigation("UserProfile");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.Like", b =>
@@ -494,13 +491,13 @@ namespace Disco.Domain.Migrations
 
             modelBuilder.Entity("Disco.Domain.Models.Post", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Profile", "Profile")
+                    b.HasOne("Disco.Domain.Models.Account", "Account")
                         .WithMany("Posts")
-                        .HasForeignKey("ProfileId")
+                        .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Profile");
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.PostImage", b =>
@@ -536,26 +533,15 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Profile", b =>
-                {
-                    b.HasOne("Disco.Domain.Models.User", "User")
-                        .WithOne("Profile")
-                        .HasForeignKey("Disco.Domain.Models.Profile", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Disco.Domain.Models.Story", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Profile", "Profile")
+                    b.HasOne("Disco.Domain.Models.Account", "Account")
                         .WithMany("Stories")
-                        .HasForeignKey("ProfileId")
+                        .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Profile");
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.StoryImage", b =>
@@ -578,6 +564,23 @@ namespace Disco.Domain.Migrations
                         .IsRequired();
 
                     b.Navigation("Story");
+                });
+
+            modelBuilder.Entity("Disco.Domain.Models.UserFollower", b =>
+                {
+                    b.HasOne("Disco.Domain.Models.Account", "AccountFollower")
+                        .WithMany("Following")
+                        .HasForeignKey("AccountFollowerId");
+
+                    b.HasOne("Disco.Domain.Models.Account", "UserAccount")
+                        .WithMany("Followers")
+                        .HasForeignKey("UserAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AccountFollower");
+
+                    b.Navigation("UserAccount");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -631,6 +634,17 @@ namespace Disco.Domain.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Disco.Domain.Models.Account", b =>
+                {
+                    b.Navigation("Followers");
+
+                    b.Navigation("Following");
+
+                    b.Navigation("Posts");
+
+                    b.Navigation("Stories");
+                });
+
             modelBuilder.Entity("Disco.Domain.Models.Post", b =>
                 {
                     b.Navigation("Likes");
@@ -642,17 +656,6 @@ namespace Disco.Domain.Migrations
                     b.Navigation("PostVideos");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Profile", b =>
-                {
-                    b.Navigation("Followers");
-
-                    b.Navigation("Following");
-
-                    b.Navigation("Posts");
-
-                    b.Navigation("Stories");
-                });
-
             modelBuilder.Entity("Disco.Domain.Models.Story", b =>
                 {
                     b.Navigation("StoryImages");
@@ -662,7 +665,7 @@ namespace Disco.Domain.Migrations
 
             modelBuilder.Entity("Disco.Domain.Models.User", b =>
                 {
-                    b.Navigation("Profile");
+                    b.Navigation("Account");
                 });
 #pragma warning restore 612, 618
         }

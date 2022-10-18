@@ -13,11 +13,11 @@ namespace Disco.Business.Services
     public class FriendService : IFriendService
     {
         private readonly IMapper _mapper;
-        private readonly IFriendRepository _friendRepository;
+        private readonly IFollowerRepository _friendRepository;
 
         public FriendService(
             IMapper mapper,
-            IFriendRepository friendRepository)
+            IFollowerRepository friendRepository)
         {
             _friendRepository = friendRepository;
             _mapper = mapper;
@@ -25,22 +25,22 @@ namespace Disco.Business.Services
 
         public async Task<FriendResponseDto> CreateFriendAsync(User user, User friend, CreateFriendDto model)
         {
-            var currentUserFriend = new Friend
+            var currentUserFriend = new UserFollower
             {
-                UserProfile = user.Profile,
-                ProfileFriend = friend.Profile,
-                FriendProfileId = friend.Profile.Id,
-                UserProfileId = user.Profile.Id
+                UserAccount = user.Account,
+                AccountFollower = friend.Account,
+                FollowerId = friend.Account.Id,
+                UserAccountId = user.Account.Id
             };
 
-            if (user.Profile.Following.All(f => f.FriendProfileId != model.FriendId))
+            if (user.Account.Following.All(f => f.FollowerId != model.FriendId))
             {
-                user.Profile.Following.Add(currentUserFriend);
+                user.Account.Following.Add(currentUserFriend);
             }
 
-            if (friend.Profile.Followers.All(f => f.UserProfileId != user.Profile.Id))
+            if (friend.Account.Followers.All(f => f.UserAccountId != user.Account.Id))
             {
-                friend.Profile.Followers.Add(currentUserFriend);
+                friend.Account.Followers.Add(currentUserFriend);
             }
 
             currentUserFriend.IsConfirmed = true;
@@ -51,8 +51,8 @@ namespace Disco.Business.Services
             {
                 FriendId = friend.Id,
                 IsConfirmed = true,
-                FriendProfile = friend.Profile,
-                UserProfile = user.Profile
+                FriendProfile = friend.Account,
+                UserProfile = user.Account
             };
         }
 
@@ -68,8 +68,8 @@ namespace Disco.Business.Services
             {
                 var friendModel = new FriendResponseDto
                 {
-                    FriendProfile = friend.ProfileFriend,
-                    UserProfile = friend.UserProfile,
+                    FriendProfile = friend.AccountFollower,
+                    UserProfile = friend.UserAccount,
                     IsConfirmed = friend.IsConfirmed,
                     FriendId = friend.Id,
                 };
@@ -87,14 +87,14 @@ namespace Disco.Business.Services
             if (friend == null)
                 throw new Exception("freind not found");
 
-            var userProfileModel = _mapper.Map<ProfileDto>(friend.UserProfile);
+            var userProfileModel = _mapper.Map<ProfileDto>(friend.UserAccount);
 
             return new FriendResponseDto
             {
-                FriendId = friend.ProfileFriend.Id,
-                UserProfile = friend.UserProfile,
+                FriendId = friend.AccountFollower.Id,
+                UserProfile = friend.UserAccount,
                 IsConfirmed = true,
-                FriendProfile = friend.ProfileFriend
+                FriendProfile = friend.AccountFollower
             };
         }
     }

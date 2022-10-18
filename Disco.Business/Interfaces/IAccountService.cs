@@ -8,10 +8,8 @@ namespace Disco.Business.Interfaces
 {
     public interface IAccountService
     {
-        Task<User> CreateAsync(User user);
+        Task CreateAsync(User user);
         Task<User> GetByEmailAsync(string email);
-        Task LoadInfoAsync(User user);
-        string GetUserRole(User user);
         Task<User> GetByRefreshTokenAsync(string refreshToken);
         Task SaveRefreshTokenAsync(User user, string refreshToken);
         Task<User> GetAsync(ClaimsPrincipal claimsPrincipal);

@@ -16,10 +16,10 @@ namespace Disco.Tests.Services
         [TestMethod]
         public async Task CreateFriendAsync_ReturnsSuccessResponse()
         {
-            var mockedFriendRepo = new Mock<IFriendRepository>();
+            var mockedFriendRepo = new Mock<IFollowerRepository>();
 
             _ = mockedFriendRepo
-                .Setup(obj => obj.AddAsync(It.IsAny<Friend>()))
+                .Setup(obj => obj.AddAsync(It.IsAny<UserFollower>()))
                 .Returns(Task.FromResult(150));
 
             var service = new FriendService(null, mockedFriendRepo.Object);
@@ -27,21 +27,21 @@ namespace Disco.Tests.Services
             var user = new User
             {
                 Id = 1,
-                Profile = new Account
+                Account = new Account
                 {
                     Id = 1,
-                    Followers = new List<Friend>(),
-                    Following = new List<Friend>()
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>()
                 },
             };
 
             var friend = new User
             {
                 Id = 2,
-                Profile = new Account
+                Account = new Account
                 {
                     Id = 2,
-                    Followers = new List<Friend>()
+                    Followers = new List<UserFollower>()
                 },
             };
 

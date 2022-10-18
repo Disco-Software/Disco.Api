@@ -5,6 +5,8 @@ using Microsoft.Azure.NotificationHubs;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Disco.Domain.Models;
 
 namespace Disco.Business.Services
 {
@@ -66,6 +68,11 @@ namespace Disco.Business.Services
             //var appleTask = _notificationHubClient.SendAppleNativeNotificationAsync(applePayload, dto.Tags);
 
             await Task.WhenAll(androidTask);
+        }
+
+        public async Task<IEnumerable<User>> SubscribeUserAsync(User user, int instalationId, int notificationId)
+        {
+            return new List<User>();
         }
     }
 }

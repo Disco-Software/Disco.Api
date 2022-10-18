@@ -41,8 +41,8 @@ namespace Disco.Business.Services
         public async Task<Post> CreatePostAsync(User user, CreatePostDto model)
         {            
             var post = _mapper.Map<Post>(model);
-            post.Profile = user.Profile;
-            post.ProfileId = user.Profile.Id;
+            post.Account = user.Account;
+            post.AccountId = user.Account.Id;
             
             if (model.PostImages != null)
                 foreach (var file in model.PostImages)
@@ -75,8 +75,8 @@ namespace Disco.Business.Services
                     post.PostVideos.Add(postVideo);
                 }
 
-            post.ProfileId = user.Profile.Id;
-            post.Profile = user.Profile;
+            post.AccountId = user.Account.Id;
+            post.Account = user.Account;
             post.DateOfCreation = DateTime.UtcNow;
 
             await _postRepository.AddAsync(post,user);

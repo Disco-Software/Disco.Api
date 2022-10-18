@@ -15,7 +15,7 @@ namespace Disco.ApiServices.Validators
                 .MustAsync(async (name, token) =>
                 {
                     var user = await accountService.GetByNameAsync(name);
-                    return user == null;
+                    return user != null;
                 })
                 .WithMessage("this user already created");
 
@@ -23,7 +23,7 @@ namespace Disco.ApiServices.Validators
                 .MustAsync(async (email, token) =>
                 {
                     var user = await accountService.GetByEmailAsync(email);
-                    return user == null;
+                    return user != null;
                 })
                 .WithMessage("This email already registered");
         }

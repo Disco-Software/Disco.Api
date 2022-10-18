@@ -36,9 +36,9 @@ namespace Disco.Business.Services
             using var stream = formFile.OpenReadStream();
             blobClient.Upload(stream);
 
-            user.Profile.Photo = blobClient.Uri.AbsoluteUri ?? user.Profile.Photo;
+            user.Account.Photo = blobClient.Uri.AbsoluteUri ?? user.Account.Photo;
 
-            await _accountRepository.Update(user.Profile);
+            await _accountRepository.Update(user.Account);
 
             return user;
         }

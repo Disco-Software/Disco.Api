@@ -12,12 +12,12 @@ namespace Disco.ApiServices.Controllers
     [ApiController]
     [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
     [Route("api/user/posts")]
-    public class UserPostController : Controller
+    public class PostController : Controller
     {
         private readonly IPostService _postService;
         private readonly IAccountService _userService;
 
-        public UserPostController(
+        public PostController(
             IPostService postService,
             IAccountService userService)
         {

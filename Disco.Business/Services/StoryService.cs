@@ -50,8 +50,8 @@ namespace Disco.Business.Services
 
             story.DateOfCreation = DateTime.UtcNow;
 
-            user.Profile.Stories.Add(story);
-            await _storyRepository.AddAsync(story, user.Profile);
+            user.Account.Stories.Add(story);
+            await _storyRepository.AddAsync(story, user.Account);
 
             return story;
         }
@@ -68,7 +68,7 @@ namespace Disco.Business.Services
 
         public async Task<List<Story>> GetAllStoryAsync(User user, GetAllStoriesDto model)
         {
-            var stories = await _storyRepository.GetAllAsync(user.Profile.Id, model.PageNumber, model.PageSize);
+            var stories = await _storyRepository.GetAllAsync(user.Account.Id, model.PageNumber, model.PageSize);
             return stories;
         }
     }

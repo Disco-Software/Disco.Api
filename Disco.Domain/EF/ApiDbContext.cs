@@ -8,15 +8,16 @@ namespace Disco.Domain.EF
 {
     public class ApiDbContext : IdentityDbContext<User,Role,int>, IDesignTimeDbContextFactory<ApiDbContext>
     {
+        public DbSet<Account> Accounts { get; set; }
         public DbSet<Account> Profiles { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<PostSong> PostSongs { get; set; }
         public DbSet<PostVideo> PostVideos { get; set; }
         public DbSet<Like> Like { get; set; }
-        public DbSet<Friend> Friends { get; set; }
+        public DbSet<UserFollower> UserFollowers { get; set; }
         public DbSet<Story> Stories { get; set; }
-        public DbSet<StoryImage> StoriesImages { get; set; }
+        public DbSet<StoryImage> StoryImages { get; set; }
         public DbSet<StoryVideo> StoryVideos { get; set; }
         public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options) { }
         public ApiDbContext() { }
@@ -26,20 +27,20 @@ namespace Disco.Domain.EF
             base.OnModelCreating(builder);
 
             builder.Entity<User>()
-                .HasOne(p => p.Profile)
+                .HasOne(p => p.Account)
                 .WithOne(u => u.User)
                 .HasForeignKey<Account>(p => p.UserId);
             
             builder.Entity<Account>()
                 .HasMany(f => f.Followers)
-                .WithOne(p => p.UserProfile)
-                .HasForeignKey(f => f.UserProfileId);
+                .WithOne(p => p.UserAccount)
+                .HasForeignKey(f => f.UserAccountId);
         }
 
         public ApiDbContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<ApiDbContext>();
-            builder.UseSqlServer("Server=tcp:disco-dev-sql-srv.database.windows.net,1433;Initial Catalog=disco-dev-sql-db;Persist Security Info=False;User ID=disco-dev-sa;Password=StasZeus2021!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
+            builder.UseSqlServer("Server=tcp:disco-dev-sql-srv.database.windows.net,1433;Initial Catalog=disco-prod-sql-db;Persist Security Info=False;User ID=disco-dev-sa;Password=StasZeus2021!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
                 optionsBuilder => optionsBuilder.MigrationsAssembly(typeof(ApiDbContext).GetTypeInfo().Assembly.GetName().Name));
 
             return new ApiDbContext(builder.Options);

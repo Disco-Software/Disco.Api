@@ -9,11 +9,11 @@ namespace Disco.Domain
         public static IServiceCollection ConfigureRepositories(this IServiceCollection serviceDescriptors)
         {
             return serviceDescriptors
-            .AddTransient<IFriendRepository, FriendRepository>()
+            .AddTransient<IFollowerRepository, FollowerRepository>()
             .AddTransient<IImageRepository, ImageRepository>()
             .AddTransient<ILikeRepository, LikeRepository>()
             .AddTransient<IPostRepository, PostRepository>()
-            .AddTransient<IAccountRepository, ProfileRepository>()
+            .AddTransient<IAccountRepository, AccountRepository>()
             .AddTransient<ISongRepository, SongRepository>()
             .AddTransient<IStoryImageRepository, StoryImageRepository>()
             .AddTransient<IStoryRepository, StoryRepository>()

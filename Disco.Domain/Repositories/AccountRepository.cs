@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories
 {
-    public class ProfileRepository : BaseRepository<Account, int>, IAccountRepository
+    public class AccountRepository : BaseRepository<Account, int>, IAccountRepository
     {
-        public ProfileRepository(ApiDbContext ctx) : base(ctx) { }
+        public AccountRepository(ApiDbContext ctx) : base(ctx) { }
 
         public async Task<Account> GetAsync(int id)
         {
-           return await ctx.Profiles
+           return await ctx.Accounts
                   .Include(u => u.User)
                   .Where(p => p.Id == id)
                   .FirstOrDefaultAsync();
@@ -24,7 +24,7 @@ namespace Disco.Domain.Repositories
 
         public override async Task<Account> Update(Account newItem)
         {
-            var profile = ctx.Profiles.Update(newItem).Entity;
+            var profile = ctx.Accounts.Update(newItem).Entity;
             
             await ctx.SaveChangesAsync();
             
@@ -33,7 +33,7 @@ namespace Disco.Domain.Repositories
 
         public async Task<List<Account>> FindProfleByUserNameAsync(string search)
         {
-            return await ctx.Profiles
+            return await ctx.Accounts
                 .Include(u => u.User)
                 .Where(u => u.User.UserName.Contains(search))
                 .ToListAsync();
