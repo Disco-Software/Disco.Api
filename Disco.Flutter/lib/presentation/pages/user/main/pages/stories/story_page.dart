@@ -1,7 +1,8 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:disco_app/app/app_router.gr.dart';
+import 'package:cube_transition/cube_transition.dart';
 import 'package:disco_app/data/local/story_model.dart';
 import 'package:disco_app/data/network/network_models/profile_network.dart';
 import 'package:disco_app/data/network/network_models/story_network.dart';
@@ -30,24 +31,40 @@ class StoryPage extends StatefulWidget {
 
 class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMixin {
   late int storyIndex;
-  late StoryController _storyController;
+  late StoryController _storyController = StoryController();
   final List<StoryModel> stories = [];
   List<StoryItem> newStories = [];
-  late int _totalLength;
   Profile? currentUser;
   final FocusNode _textFieldFocus = FocusNode();
   final TextEditingController _textController = TextEditingController();
+  final PageController _pageController = PageController();
+  int oldIndex = 0;
+
   // final PageController _pageController = PageController();
+  //
+  // @override
+  // void initState() {
+  //   context.read<StoriesCubit>().nexPage(index: widget.index, controller: _storyController);
+  //   super.initState();
+  // }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _totalLength = widget.totalLength;
-    storyIndex = widget.index;
-    List<StoriesModel> newCubitStories = context.watch<StoriesCubit>().stories;
+    _refreshStories(widget.index);
+  }
+
+  void _refreshStories(
+    int index,
+  ) {
+    log('$index', name: 'RefreshStories called');
+    newStories.clear();
+    stories.clear();
+    storyIndex = index;
+    List<StoriesModel> newCubitStories = context.read<StoriesCubit>().stories;
     if (newCubitStories.isNotEmpty && storyIndex < newCubitStories.length) {
       final storiesImages = newCubitStories[storyIndex].storyImages;
-      currentUser = context.watch<StoriesCubit>().stories[storyIndex].profile;
+      currentUser = context.read<StoriesCubit>().stories[storyIndex].profile;
       final List<StoryModel> filteredImages = storiesImages != null
           ? storiesImages
               .map((e) => StoryModel(
@@ -94,8 +111,6 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
       ));
       context.router.pop();
     }
-
-    print('LOADED STORIES FOR THIS USER ---> ${stories}');
   }
 
   @override
@@ -113,55 +128,107 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
           return Scaffold(
             body: Stack(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    FocusScope.of(context).unfocus();
-                  },
-                  child: Material(
-                    type: MaterialType.transparency,
-                    child: StoryView(
-                      onCloseTap: () {},
-                      // onTap: () {
-                      //   if (_textFieldFocus.hasFocus) {
-                      //     _textFieldFocus.unfocus();
-                      //   }
-                      // },
-                      storyItems: newStories,
-                      controller: _storyController,
-                      onComplete: () {
-                        if (widget.index + 1 < widget.totalLength) {
-                          context.router.popAndPush(
-                            AnimatedStoryRoute(
-                              index: widget.index + 1,
-                              totalLength: _totalLength,
-                              key: ValueKey(widget.index + 1),
-                            ),
-                          );
-                        } else {
-                          context.router.pop();
-                        }
-                      },
-                      onVerticalSwipeComplete: (direction) {
-                        if (direction == Direction.down) {
-                          context.router.pop();
-                        }
-                        if (direction == Direction.left) {
-                          context.router.replace(AnimatedStoryRoute(
-                              index: widget.index + 1,
-                              totalLength: _totalLength,
-                              key: ValueKey(
-                                widget.index + 1,
-                              )));
-                        }
-                      },
-                      onStoryShow: (item) {
-                        _storyController.play();
-                        int pos = newStories.indexOf(item);
-                        if (pos > 0) {
-                          setState(() {});
-                        }
-                      },
-                    ),
+                Material(
+                  type: MaterialType.transparency,
+                  child: CubePageView.builder(
+                    onPageChanged: (newIndex) {
+                      final shouldIncrease = newIndex > oldIndex;
+                      //
+                      oldIndex = newIndex;
+                      // log('shouldIncrease : $shouldIncrease', name: 'OnComplete');
+                      // if (widget.index + 1 < widget.totalLength) {
+                      //   log('', name: 'ONStoryAnimationComplete');
+                      storyIndex = shouldIncrease ? storyIndex + 1 : storyIndex - 1;
+                      // Future.microtask(() {
+                      //   _refreshStories(storyIndex);
+                      // });
+                      //   log('$storyIndex', name: 'ONStoryAnimationComplete: Story index value:');
+                      // _refreshStories(storyIndex);
+                      //   _storyController.play();
+                      //   log('END', name: 'OnComplete');
+                      // } else {
+                      //   log('pop', name: 'onPageChanged');
+                      //   context.router.pop();
+                      // }
+                    },
+                    controller: _pageController,
+                    itemBuilder: (ctx, index, pageNotifier) {
+                      // final item = stories[index];
+                      // final transform = Matrix4.identity();
+                      // final t = (index - pageNotifier!).abs();
+                      // final scale = lerpDouble(1.5, 0, t);
+                      // transform.scale(scale, scale);
+                      return CubeWidget(
+                        index: index,
+                        pageNotifier: pageNotifier,
+                        child: StoryView(
+                          onCloseTap: () {
+                            log('', name: 'onCloseTap');
+                          },
+                          storyItems: newStories,
+                          controller: _storyController,
+                          onComplete: () async {
+                            log('', name: 'OnComplete------------------------->');
+                            if (widget.index + 1 < widget.totalLength) {
+                              _storyController.pause();
+                              await _pageController.nextPage(
+                                duration: const Duration(seconds: 1),
+                                curve: Curves.ease,
+                              );
+
+                              log('', name: 'ONStoryAnimationComplete');
+                              // storyIndex = storyIndex + 1;
+                              log('$storyIndex',
+                                  name: 'ONStoryAnimationComplete: Story index value:');
+                              // _refreshStories(storyIndex);
+                              // _storyController.play();
+                            } else {
+                              log('pop', name: 'onComplete');
+
+                              context.router.pop();
+                            }
+                          },
+                          onTap: () {
+                            FocusScope.of(context).unfocus();
+                          },
+                          onVerticalSwipeUpdate: (details) {
+                            const sensitivity = 8;
+                            if (details.delta.dy > sensitivity) {
+                              context.router.pop();
+                            }
+                          },
+                          onVerticalSwipeComplete: (direction) {
+                            // onVerticalDragUpdate: (details) {
+                            // const sensitivity = 8;
+                            // if (details.delta.dy > sensitivity) {
+                            // context.router.pop();
+                            // }
+                            // },
+
+                            if (direction == Direction.down) {
+                              context.router.pop();
+                            }
+                            log('Completed', name: 'On vertical swipe complete');
+                            // if (direction == Direction.left) {
+                            //   context.router.replace(AnimatedStoryRoute(
+                            //       index: widget.index + 1,
+                            //       totalLength: _totalLength,
+                            //       key: ValueKey(
+                            //         widget.index + 1,
+                            //       )));
+                            // }
+                          },
+                          // onStoryShow: (item) {
+                          //   // _storyController.play();
+                          //   int pos = newStories.indexOf(item);
+                          //   if (pos > 0) {
+                          //     // setState(() {});
+                          //   }
+                          // },
+                        ),
+                      );
+                    },
+                    itemCount: widget.totalLength,
                   ),
                 ),
                 Padding(
