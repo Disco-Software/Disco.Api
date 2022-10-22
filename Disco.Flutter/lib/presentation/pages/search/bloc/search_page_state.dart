@@ -1,19 +1,17 @@
-import 'package:disco_app/data/network/network_models/post_network.dart';
+import 'package:disco_app/data/network/network_models/search_item.dart';
 
-abstract class SearchState {}
+abstract class SearchItemState {}
 
-class InitialSearchState implements SearchState {}
+class InitialSearchItemState implements SearchItemState {}
 
-class LoadingSearchState implements SearchState {}
+class LoadingSearchItemState implements SearchItemState {}
 
-class SuccessSearchState implements SearchState {
-  List<Post> search;
-  final bool hasLoading;
+class SuccessSearchItemState implements SearchItemState {
+  SearchItem items;
 
-  SuccessSearchState({
-    required this.search,
-    required this.hasLoading,
+  SuccessSearchItemState({
+    required this.items,
   });
 }
 
-class ErrorSearchState implements SearchState {}
+class ErrorSearchItemState implements SearchItemState {}

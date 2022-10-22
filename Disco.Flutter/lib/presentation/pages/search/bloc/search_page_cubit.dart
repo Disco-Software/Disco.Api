@@ -1,7 +1,6 @@
-import 'package:disco_app/data/network/network_models/post_network.dart';
-import 'package:disco_app/data/network/repositories/post_repository.dart';
+import 'package:disco_app/data/network/network_models/search_item.dart';
+import 'package:disco_app/data/network/repositories/search_repository.dart';
 import 'package:disco_app/presentation/pages/search/bloc/search_page_state.dart';
-import 'package:disco_app/res/numbers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,37 +9,22 @@ import 'package:injectable/injectable.dart';
 import 'search_page_state.dart';
 
 @injectable
-class SearchCubit extends Cubit<SearchState> {
-  SearchCubit({required this.postRepository}) : super(InitialSearchState());
+class SearchItemCubit extends Cubit<SearchItemState> {
+  SearchItemCubit({required this.searchRepository}) : super(InitialSearchItemState());
 
-  final PostRepository postRepository;
+  final SearchRepository searchRepository;
 
   bool isLastPage = false;
 
-  Future<void> loadPosts(
-      {required int pageNumber, Function(List<Post>)? onLoaded, bool isInitial = false}) async {
-    if (isInitial) {
-      isLastPage = false;
-    }
+  Future<void> search(String text) async {
     try {
-      emit(LoadingSearchState());
+      emit(LoadingSearchItemState());
 
-      final posts = isLastPage
-          ? <Post>[]
-          : await postRepository.getAllPosts(
-              pageNumber,
-              Numbers.postsPageSize,
-            );
+      final items = await searchRepository.search(text);
 
-      // emit(SuccessSearchState(
-      //   posts: posts ?? [],
-      //   hasLoading: true,
-      // ));
-      if (onLoaded != null) {
-        onLoaded(posts ?? []);
-      }
+      emit(SuccessSearchItemState(items: items ?? SearchItem()));
     } catch (err) {
-      emit(ErrorSearchState());
+      emit(ErrorSearchItemState());
       debugPrint('$err');
     }
   }

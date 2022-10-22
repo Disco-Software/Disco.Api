@@ -246,15 +246,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.17.1"
-  cube_transition:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: NullSafetyUpgrade
-      resolved-ref: "1766d62ff92438a295569de5b72baca3ded3d01e"
-      url: "https://github.com/t4ulabs/cube_transition.git"
-    source: git
-    version: "1.0.2"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -435,6 +426,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.2"
+  flutter_staggered_grid_view:
+    dependency: "direct main"
+    description:
+      name: flutter_staggered_grid_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.2"
   flutter_svg:
     dependency: "direct main"
     description:
