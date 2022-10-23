@@ -7,7 +7,7 @@ namespace Disco.Business.Interfaces
 {
     public interface IPostService
     {
-        Task<Post> CreatePostAsync(User user, CreatePostDto model);
+        Task<Post> CreatePostAsync(Post post);
         Task<List<Post>> GetAllUserPosts(User user, GetAllPostsDto model);
         Task<List<Post>> GetAllPosts(User user,GetAllPostsDto model);
         Task DeletePostAsync(int postId);

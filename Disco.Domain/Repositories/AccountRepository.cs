@@ -16,7 +16,7 @@ namespace Disco.Domain.Repositories
 
         public async Task<Account> GetAsync(int id)
         {
-           return await ctx.Accounts
+           return await _ctx.Accounts
                   .Include(u => u.User)
                   .Where(p => p.Id == id)
                   .FirstOrDefaultAsync();
@@ -24,19 +24,31 @@ namespace Disco.Domain.Repositories
 
         public override async Task<Account> Update(Account newItem)
         {
-            var profile = ctx.Accounts.Update(newItem).Entity;
+            var profile = _ctx.Accounts.Update(newItem).Entity;
             
-            await ctx.SaveChangesAsync();
+            await _ctx.SaveChangesAsync();
             
             return profile;
         }
 
-        public async Task<List<Account>> FindProfleByUserNameAsync(string search)
+        public async Task<List<Account>> FindAccountsByUserNameAsync(string search)
         {
-            return await ctx.Accounts
+            return await _ctx.Accounts
                 .Include(u => u.User)
-                .Where(u => u.User.UserName.Contains(search))
+                .Where(u => u.User.UserName.StartsWith(search))
                 .ToListAsync();
+        }
+
+        public async Task RemoveAccountAsync(int accountId)
+        {
+            var account = _ctx.Accounts
+                .Include(u => u.User)
+                .Where(a => a.Id == accountId)
+                .FirstOrDefaultAsync();
+
+            _ctx.Remove(account);
+
+            await _ctx.SaveChangesAsync();
         }
     }
 }

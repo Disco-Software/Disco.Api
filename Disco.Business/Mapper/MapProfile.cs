@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dtos.Authentication;
+﻿using Disco.Business.Dtos.Account;
 using Disco.Business.Dtos.Facebook;
 using Disco.Business.Dtos.Friends;
 using Disco.Business.Dtos.Google;
@@ -26,8 +26,24 @@ namespace Disco.Business.Mapper
                 .ForMember(source => source.PostSongs, opt => opt.Ignore())
                 .ForMember(source => source.PostVideos, opt => opt.Ignore());
             CreateMap<Post, PostResponseDto>();
+
+            CreateMap<CreatePostDto, CreateImageDto>()
+                .ForMember(source => source.ImageFile, opt => opt.Ignore());
+            CreateMap<CreatePostDto, CreateSongDto>()
+                .ForMember(source => source.Post, opt => opt.Ignore())
+                .ForMember(source => source.Name, opt => opt.Ignore())
+                .ForMember(source => source.Image, opt => opt.Ignore())
+                .ForMember(source => source.ExecutorName, opt => opt.Ignore());
+            CreateMap<CreateVideoDto, PostVideo>()
+                .ForMember(source => source.VideoSource, opt => opt.Ignore())
+                .ForMember(source => source.Post, opt => opt.Ignore())
+                .ForMember(source => source.PostId, opt => opt.Ignore());
+
             CreateMap<CreateImageDto, PostImage>()
-                .ForMember(source => source.Source, opt => opt.Ignore());
+                .ForMember(source => source.Source, opt => opt.Ignore())
+                .ForMember(source => source.Post, opt => opt.Ignore())
+                .ForMember(source => source.PostId, opt => opt.Ignore())
+                .ForMember(source => source.Id, opt => opt.Ignore());
             CreateMap<CreateSongDto, PostSong>()
                 .ForMember(source => source.Source, opt => opt.Ignore());
             CreateMap<CreateVideoDto, PostVideo>()
@@ -41,15 +57,15 @@ namespace Disco.Business.Mapper
             CreateMap<CreateStoryVideoDto, StoryVideo>()
                 .ForMember(source => source.Source, opt => opt.Ignore());
             CreateMap<RegistrationDto, User>();
-            CreateMap<CreateFriendDto, UserFollower>();
-            CreateMap<Account, ProfileDto>();
+            CreateMap<CreateFollowerDto, UserFollower>();
+            CreateMap<Account, AccountDto>();
             CreateMap<User, UserResponseDto>()
                 .ForMember(source => source.RefreshToken, opt => opt.Ignore())
                 .ForMember(source => source.AccessToken, opt => opt.Ignore());
-            CreateMap<Account, ProfileDto>();
-            CreateMap<ProfileDto, FriendResponseDto>()
-                .ForMember(source => source.UserProfile, opt => opt.Ignore())
-                .ForMember(source => source.FriendProfile, opt => opt.Ignore())
+            CreateMap<Account, AccountDto>();
+            CreateMap<AccountDto, FriendResponseDto>()
+                .ForMember(source => source.UserAccount, opt => opt.Ignore())
+                .ForMember(source => source.FollowerAccount, opt => opt.Ignore())
                 .ForMember(source => source.FriendId, opt => opt.Ignore());
             CreateMap<CreateRoleDto, Role>();
             CreateMap<FacebookDto, User>()
@@ -58,7 +74,7 @@ namespace Disco.Business.Mapper
             CreateMap<GoogleLogInDto, User>();
             CreateMap<IEnumerable<User>, GlobalSearchResponseDto>()
                 .ForMember(p => p.Posts, opt => opt.Ignore())
-                .ForMember(p => p.Profile, opt => opt.Ignore());
+                .ForMember(p => p.Accounts, opt => opt.Ignore());
         }
     }
 }

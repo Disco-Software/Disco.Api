@@ -16,7 +16,7 @@ namespace Disco.Domain.Repositories
 
         public async Task AddAsync(Like item, int postId)
         {
-            var post = await ctx.Posts
+            var post = await _ctx.Posts
                 .Include(x => x.Likes)
                 .Where(p => p.Id == postId)
                 .FirstOrDefaultAsync();
@@ -25,26 +25,26 @@ namespace Disco.Domain.Repositories
                 throw new Exception("post not found");
             
             post.Likes.Add(item);
-            await ctx.Like.AddAsync(item);
+            await _ctx.Like.AddAsync(item);
 
-            await ctx.SaveChangesAsync();
+            await _ctx.SaveChangesAsync();
         }
 
         public async Task Remove(Like like,int id)
         {
-            var post = await ctx.Posts
+            var post = await _ctx.Posts
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
 
-            ctx.Like.Remove(like);
+            _ctx.Like.Remove(like);
             post.Likes.Remove(like);
 
-            await ctx.SaveChangesAsync();
+            await _ctx.SaveChangesAsync();
         }
 
         public async Task<List<Like>> GetAll(int postId)
         {
-            return await ctx.Like
+            return await _ctx.Like
                 .Include(p => p.Post)
                 .Where(l => l.PostId == postId)
                 .ToListAsync();
@@ -52,7 +52,7 @@ namespace Disco.Domain.Repositories
 
         public async Task<Like> GetAsync(int postId)
         {
-            return await ctx.Like
+            return await _ctx.Like
                 .Include(p => p.Post)
                 .Where(l => l.Post.Id == postId)
                 .FirstOrDefaultAsync();

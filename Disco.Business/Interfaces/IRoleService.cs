@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Disco.Business.Interfaces
 {
-    public interface IAdminRoleService
+    public interface IRoleService
     {
         Task<Role> CreateRoleAsync(CreateRoleDto dto);
         Task RemoveRoleAsync(string name);

@@ -7,72 +7,139 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Disco.Domain.Models;
+using System.Threading;
+using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace Disco.Business.Services
 {
     public class PushNotificationService : IPushNotificationService
     {
         private readonly INotificationHubClient _notificationHubClient;
-        public PushNotificationService()
+        private readonly Dictionary<string, NotificationPlatform> _installationPlatform;
+        private readonly ILogger<PushNotificationService> _logger;
+
+        public PushNotificationService(ILogger<PushNotificationService> logger)
         {
+            _logger = logger;
             _notificationHubClient = NotificationHubClient.CreateClientFromConnectionString(Strings.NotificationConnectionString, Strings.NotificationName);
+            _installationPlatform = new Dictionary<string, NotificationPlatform>
+            {
+                {nameof(NotificationPlatform.Fcm), NotificationPlatform.Fcm },
+                {nameof(NotificationPlatform.Apns), NotificationPlatform.Apns }
+            };
         }
 
-        public async Task SendNotificationAsync(PushNotificationBaseDto model)
+        public async Task<bool> CreateOrUpdateInstallationAsync(DeviceInstallationDto dto, CancellationToken cancellationToken)
         {
-            var notificationPayload = $"\"title\":\"{model.Title}\",\"body\":\"{model.Body}\"";
-            var dataPayload = $"\"type\":\"{model.NotificationType}\",\"id\":\"{model.Id}\"";
+            if (string.IsNullOrWhiteSpace(dto?.InstallationId) ||
+                string.IsNullOrWhiteSpace(dto?.PushChannel) ||
+                string.IsNullOrWhiteSpace(dto?.Platform.Value.ToString()))
+                return false;
 
-            var androidPayload = $"{{\"notification\":{{}},\"data\":{{{dataPayload}}}, \"sound\": \"default\"}}";
-            var androidTask = _notificationHubClient.SendFcmNativeNotificationAsync(androidPayload, model.Tag);
+            var installation = new Installation()
+            {
+                InstallationId = dto.InstallationId,
+                PushChannel = dto.PushChannel,
+                Tags = dto.Tags
+            };
 
-            var applePayload = $"{{\"aps\":{{\"content-available\":1,\"alert\":{{{notificationPayload},\"data\":{{{dataPayload}}}}}, \"sound\": \"default\"}}, \"key-value\" : {{\"type\" : \"{model.NotificationType}\", \"id\" : \"{model.Id}\"}}}}";
-            var appleTask = _notificationHubClient.SendAppleNativeNotificationAsync(applePayload, model.Tag);
-            await Task.WhenAll(androidTask, appleTask);
-        }
-        public async Task SendNotificationAsync(NewFriendNotificationDto model)
-        {
-            var notificationPayload = $"\"title\":\"{model.Title}\",\"body\":\"{model.Body}\"";
-            var dataPayload = $"\"type\":\"{model.NotificationType}\",\"id\":\"{model.Id}\"";
+            if (_installationPlatform.TryGetValue(dto.Platform.Value.ToString(), out var platform))
+                installation.Platform = platform;
+            else
+                return false;
 
-            var androidPayload = $"{{\"notification\":{{}},\"data\":{{{dataPayload}}}, \"sound\": \"default\"}}";
-            var androidTask = _notificationHubClient.SendFcmNativeNotificationAsync(androidPayload, model.Tags);
+            try
+            {
+                await _notificationHubClient.CreateOrUpdateInstallationAsync(installation, cancellationToken);
+            }
+            catch
+            {
+                return false;
+            }
 
-            var applePayload = $"{{\"aps\":{{\"content-available\":1,\"alert\":{{{notificationPayload},\"data\":{{{dataPayload}}}}}, \"sound\": \"default\"}}, \"key-value\" : {{\"type\" : \"{model.NotificationType}\", \"id\" : \"{model.Id}\"}}}}";
-            var appleTask = _notificationHubClient.SendAppleNativeNotificationAsync(applePayload, model.Tags);
-            await Task.WhenAll(androidTask, appleTask);
-        }
-        public async Task SendNotificationAsync(LikeNotificationDto dto)
-        {
-            var notificationPayload = $"\"title\":\"{dto.Title}\",\"body\":\"{dto.Body}\"";
-            var dataPayload = $"\"type\":\"{dto.NotificationType}\", \"id\" : \"{dto.Id}\",\"likes\":\"{dto.LikesCount}\"";
-
-            var androidPayload = $"{{\"notification\":{{}},\"data\":{{{dataPayload}}}, \"sound\": \"default\"}}";
-            var androidTask = _notificationHubClient.SendFcmNativeNotificationAsync(androidPayload, dto.Tags);
-
-            //var applePayload = $"{{\"aps\":{{\"content-available\":1,\"alert\":{{{notificationPayload},\"data\":{{{dataPayload}}}}}, \"sound\": \"default\"}}, \"key-value\" : {{\"type\" : \"{dto.NotificationType}\", \"id\" : \"{dto.Id}\"}}}}";
-            //var appleTask = _notificationHubClient.SendAppleNativeNotificationAsync(applePayload, dto.Tags);
-            
-            await Task.WhenAll(androidTask);
+            return true;
         }
 
-        public async Task SendNotificationAsync(AdminMessageNotificationDto dto)
+        public async Task<bool> DeleteInstallationByIdAsync(string installationId, CancellationToken token)
         {
-            var notificationPayload = $"\"title\":\"{dto.Title}\",\"body\":\"{dto.Body}\"";
-            var dataPayload = $"\"type\":\"{dto.NotificationType}\"";
+            if (string.IsNullOrWhiteSpace(installationId))
+                return false;
 
-            var androidPayload = $"{{\"notification\":{{{notificationPayload}}},\"data\":{{{dataPayload}}}, \"sound\": \"default\"}}";
-            var androidTask = _notificationHubClient.SendFcmNativeNotificationAsync(androidPayload, dto.Tags);
+            try
+            {
+                await _notificationHubClient.DeleteInstallationAsync(installationId, token);
+            }
+            catch
+            {
+                return false;
+            }
 
-            //var applePayload = $"{{\"aps\":{{\"content-available\":1,\"alert\":{{{notificationPayload},\"data\":{{{dataPayload}}}}}, \"sound\": \"default\"}}, \"key-value\" : {{\"type\" : \"{dto.NotificationType}\", \"id\" : \"{dto.Id}\"}}}}";
-            //var appleTask = _notificationHubClient.SendAppleNativeNotificationAsync(applePayload, dto.Tags);
-
-            await Task.WhenAll(androidTask);
+            return true;
         }
 
-        public async Task<IEnumerable<User>> SubscribeUserAsync(User user, int instalationId, int notificationId)
+        public async Task<bool> RequestNotificationAsync(PushNotificationBaseDto dto, CancellationToken token)
         {
-            return new List<User>();
+            var androidPushTemplate = dto.Silent ? NotificationTemplates.DataNotification.Android : NotificationTemplates.PayloadNotification.Android;
+            var iOSPushTemplate = dto.Silent ? NotificationTemplates.DataNotification.iOS : NotificationTemplates.PayloadNotification.iOS;
+
+            var androidPayload = PrepareNotificationPayload(androidPushTemplate, dto);
+            var iOSPayload = PrepareNotificationPayload(iOSPushTemplate, dto);
+
+            try
+            {
+                if (dto.Tags.Length == 0)
+                    await SendPlatformNotificationAsync(androidPayload, iOSPayload, token);
+                else if (dto.Tags.Length <= 20)
+                    await SendPlatformNotificationAsync(androidPayload, iOSPayload, dto.Tags, token);
+                else
+                {
+                    var notificationTasks = dto.Tags
+                        .Select((value, index) => (value, index))
+                        .GroupBy(g => g.index / 20, i => i.value)
+                        .Select(tags => SendPlatformNotificationAsync(androidPayload, iOSPayload, dto.Tags, token));
+
+                    await Task.WhenAll(notificationTasks);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error sending notifications");
+                return false;
+            }
+        }
+
+        private Task SendPlatformNotificationAsync(string androidPayload, string iOSPayload, CancellationToken token)
+        {
+            var sendTasks = new Task[]
+            {
+                _notificationHubClient.SendFcmNativeNotificationAsync(androidPayload, token),
+                _notificationHubClient.SendAppleNativeNotificationAsync(iOSPayload, token)
+            };
+
+            return Task.WhenAll(sendTasks);
+        }
+
+        private Task SendPlatformNotificationAsync(string androidPayload, string iOSPayload, string[] tags, CancellationToken token)
+        {
+            var sendTasks = new Task[]
+            {
+                _notificationHubClient.SendFcmNativeNotificationAsync(androidPayload, tags, token),
+                _notificationHubClient.SendAppleNativeNotificationAsync(iOSPayload, tags, token)
+            };
+
+            return Task.WhenAll(sendTasks);
+        }
+
+        private string PrepareNotificationPayload(string template, PushNotificationBaseDto dto)
+        {
+            var payload = template
+                .Replace("$(alertMessage)", dto.Title, StringComparison.InvariantCulture)
+                .Replace("$(alertAction)", dto.Body, StringComparison.InvariantCulture);
+
+            return payload;
         }
     }
 }

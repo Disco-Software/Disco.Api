@@ -31,7 +31,7 @@ namespace Disco.Business.Services
 
         public async Task<PostVideo> CreateVideoAsync(CreateVideoDto model)
         {
-            var post = await _postRepository.Get(model.PostId);
+            var post = await _postRepository.GetAsync(model.PostId);
             var uniqueVideoName = Guid.NewGuid().ToString() + "_" + model.VideoFile.FileName.Replace(' ', '_');
 
             if (model.VideoFile == null)

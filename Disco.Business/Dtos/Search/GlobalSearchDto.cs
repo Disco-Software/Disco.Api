@@ -6,7 +6,7 @@ namespace Disco.Business.Dtos.Search
 {
     public class GlobalSearchResponseDto
     {
-        public IEnumerable<Domain.Models.Account> Profile { get; set; }
+        public IEnumerable<Domain.Models.Account> Accounts { get; set; }
         public IEnumerable<Post> Posts { get; set; }
     }
 }

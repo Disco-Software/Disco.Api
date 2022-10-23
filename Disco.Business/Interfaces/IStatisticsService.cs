@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Disco.Business.Interfaces
 {
-    public interface IAdminStatisticsService
+    public interface IStatisticsService
     {
         Task<List<User>> GetRegistredUsersAsync(DateTime date);
 

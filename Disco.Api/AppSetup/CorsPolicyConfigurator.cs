@@ -12,7 +12,8 @@ namespace Disco.Api.AppSetup
                 .AllowCredentials()
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
-                .WithOrigins("https://admin.disco.net.ua");
+                .WithOrigins(
+                 "https://admin.disco.net.ua");
         }
     }
 }

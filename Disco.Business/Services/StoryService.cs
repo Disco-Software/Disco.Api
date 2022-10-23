@@ -63,7 +63,7 @@ namespace Disco.Business.Services
 
         public async Task<Story> GetStoryAsync(int id)
         {
-           return await _storyRepository.Get(id);
+           return await _storyRepository.GetAsync(id);
         }
 
         public async Task<List<Story>> GetAllStoryAsync(User user, GetAllStoriesDto model)

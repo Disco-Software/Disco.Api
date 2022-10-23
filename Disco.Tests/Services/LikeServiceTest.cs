@@ -43,7 +43,7 @@ namespace Disco.Tests.Services
             var mockedPostRepository = new Mock<IPostRepository>();
 
             mockedPostRepository
-                .Setup(postRepository => postRepository.AddAsync(post, user))
+                .Setup(postRepository => postRepository.AddAsync(post))
                 .Returns(Task.CompletedTask);
 
             var mockedLikeService = new Mock<ILikeRepository>();

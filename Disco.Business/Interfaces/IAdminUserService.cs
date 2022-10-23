@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dtos.Authentication;
+﻿using Disco.Business.Dtos.Account;
 using Disco.Domain.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;

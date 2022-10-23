@@ -38,48 +38,11 @@ namespace Disco.Business.Services
             _likeService = likeService;
         }
 
-        public async Task<Post> CreatePostAsync(User user, CreatePostDto model)
+        public async Task<Post> CreatePostAsync(Post post)
         {            
-            var post = _mapper.Map<Post>(model);
-            post.Account = user.Account;
-            post.AccountId = user.Account.Id;
-            
-            if (model.PostImages != null)
-                foreach (var file in model.PostImages)
-                {
-                    var image = await _imageService.CreatePostImage(
-                        new Dtos.Images.CreateImageDto { ImageFile = file });
-                    post.PostImages.Add(image);
-                }
-            if (model.PostSongs != null)
-                foreach (var postSong in model.PostSongs)
-                {
-                    var name = model.PostSongNames.First();
-                    var image = model.PostSongImages.First();
-                    var executorName = model.ExecutorNames.First();
-
-                    var song = await _songService.CreatePostSongAsync(
-                         new CreateSongDto { SongFile = postSong, SongImage = image, Name = name, ExecutorName = executorName, PostId = post.Id });
-                   
-                    model.PostSongNames.Remove(name);
-                    model.PostSongImages.Remove(image);
-                    model.ExecutorNames.Remove(executorName);
-
-                    post.PostSongs.Add(song);
-                }
-            if (model.PostVideos != null)
-                foreach (var video in model.PostVideos)
-                {
-                    var postVideo = await _videoService.CreateVideoAsync(
-                        new Dtos.Videos.CreateVideoDto { VideoFile = video });
-                    post.PostVideos.Add(postVideo);
-                }
-
-            post.AccountId = user.Account.Id;
-            post.Account = user.Account;
             post.DateOfCreation = DateTime.UtcNow;
 
-            await _postRepository.AddAsync(post,user);
+            await _postRepository.AddAsync(post);
 
             return post;
         }
@@ -96,7 +59,7 @@ namespace Disco.Business.Services
 
         public async Task<List<Post>> GetAllPosts(User user, GetAllPostsDto model)
         {
-            var posts = await _postRepository.GetAllPosts(user.Id, model.PageSize, model.PageNumber);
+            var posts = await _postRepository.GetAll(user.Id, model.PageSize, model.PageNumber);
 
             for(int i = 0; i < posts.Count; i++)
             {
@@ -109,7 +72,7 @@ namespace Disco.Business.Services
 
         public async Task<Post> GetPostAsync(int id)
         {
-            return await _postRepository.Get(id);
+            return await _postRepository.GetAsync(id);
         }
 
         public async Task<List<Post>> SearchPostsAsync(string search)

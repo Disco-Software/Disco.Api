@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dtos.Profile;
+﻿using Disco.Business.Dtos.Account;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using System.Collections;
@@ -10,6 +10,7 @@ namespace Disco.Business.Interfaces
     public interface IAccountDetailsService
     {
         Task<User> ChengePhotoAsync(User user, IFormFile formFile);
-        Task<IEnumerable<Account>> GetProfilesByName(string search);
+        Task<List<Account>> GetAccountsByNameAsync(string search);
+        Task RemoveAsync(Account account);
     }
 }

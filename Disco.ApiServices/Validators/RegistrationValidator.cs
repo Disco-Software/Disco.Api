@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dtos.Authentication;
+﻿using Disco.Business.Dtos.Account;
 using Disco.Business.Interfaces;
 using Disco.Domain.Models;
 using FluentValidation;

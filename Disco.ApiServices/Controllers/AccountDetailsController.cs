@@ -1,5 +1,6 @@
 ﻿using Disco.Business.Constants;
-using Disco.Business.Dtos.Profile;
+using Disco.Business.Dtos.Account;
+using Disco.Business.Dtos.AccountDetails;
 using Disco.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -225,7 +225,7 @@ namespace Disco.Tests.Services
 
             var mockedStoryRepository = new Mock<IStoryRepository>();
             mockedStoryRepository
-                .Setup(s => s.Get(story.Id))
+                .Setup(s => s.GetAsync(story.Id))
                 .Returns(Task.FromResult(story));
 
             var service = new StoryService(mockedStoryRepository.Object, null, null, null);

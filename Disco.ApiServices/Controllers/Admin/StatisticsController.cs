@@ -18,9 +18,9 @@ namespace Disco.ApiServices.Controllers.Admin
         Roles = UserRole.Admin)]
     public class StatisticsController : ControllerBase
     {
-        private readonly IAdminStatisticsService _adminStatisticsService;
+        private readonly IStatisticsService _adminStatisticsService;
 
-        public StatisticsController(IAdminStatisticsService adminStatisticsService)
+        public StatisticsController(IStatisticsService adminStatisticsService)
         {
             _adminStatisticsService = adminStatisticsService;
         }

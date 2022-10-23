@@ -38,7 +38,7 @@ namespace Disco.Business.Services
 
         public async Task<StoryImage> CreateStoryImageAsync(CreateStoryImageDto model)
         {
-            var story = await _storyRepository.Get(model.StoryId);
+            var story = await _storyRepository.GetAsync(model.StoryId);
 
             var unequeName = Guid.NewGuid().ToString() + "_" + model.StoryImageFile.FileName.Replace(' ', '_');
 

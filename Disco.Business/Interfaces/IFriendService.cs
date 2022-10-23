@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace Disco.Business.Interfaces
 {
-    public interface IFriendService
+    public interface IFollowerService
     {
-        Task<FriendResponseDto> CreateFriendAsync(User user, User friend, CreateFriendDto modelel);
+        Task<FriendResponseDto> CreateAsync(User user, User friend, CreateFollowerDto dto);
         Task DeleteFriend(int id);
-        Task<FriendResponseDto> GetFriendAsync(int id);
-        Task<List<FriendResponseDto>> GetAllFriends(GetAllFriendsDto dto);
+        Task<FriendResponseDto> GetAsync(int id);
+        Task<List<FriendResponseDto>> GetAllFollowers(GetAllFriendsDto dto);
     }
 }

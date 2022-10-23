@@ -1,6 +1,6 @@
 ﻿
 using Disco.Business.Interfaces;
-using Disco.Business.Dtos.Authentication;
+using Disco.Business.Dtos.Account;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;

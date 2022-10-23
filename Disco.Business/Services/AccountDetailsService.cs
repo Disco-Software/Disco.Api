@@ -1,6 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Disco.Business.Interfaces;
-using Disco.Business.Dtos.Profile;
+using Disco.Business.Dtos.Account;
 using System;
 using System.Threading.Tasks;
 using Disco.Domain.Interfaces;
@@ -43,9 +43,14 @@ namespace Disco.Business.Services
             return user;
         }
 
-        public async Task<IEnumerable<Account>> GetProfilesByName(string search)
+        public async Task<List<Account>> GetAccountsByNameAsync(string search)
         {
-            return await _accountRepository.FindProfleByUserNameAsync(search);
+            return await _accountRepository.FindAccountsByUserNameAsync(search);
+        }
+
+        public async Task RemoveAsync(Account account)
+        {
+           await _accountRepository.RemoveAccountAsync(account.Id);
         }
     }
 }

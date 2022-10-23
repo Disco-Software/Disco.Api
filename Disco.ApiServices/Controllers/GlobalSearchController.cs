@@ -4,6 +4,7 @@ using Disco.Business.Dtos.Search;
 using Disco.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,24 +18,24 @@ namespace Disco.ApiServices.Controllers
     public class GlobalSearchController : ControllerBase
     {
         private readonly IPostService _postService;
-        private readonly IAccountDetailsService _profileService;
+        private readonly IAccountDetailsService _accountService;
         public GlobalSearchController(
             IPostService postService, 
             IAccountDetailsService profileService)
         {
             _postService = postService;
-            _profileService = profileService;
+            _accountService = profileService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Serach([FromQuery] string search)
         {
-            var users = await _profileService.GetProfilesByName(search);
+            var accounts = await _accountService.GetAccountsByNameAsync(search);
             var posts = await _postService.SearchPostsAsync(search);
 
             var searchResponseDto = new GlobalSearchResponseDto();
             searchResponseDto.Posts = posts;
-            searchResponseDto.Profile = users;
+            searchResponseDto.Accounts = accounts;
 
             return Ok(searchResponseDto);
         }

@@ -1,4 +1,4 @@
-﻿using Disco.Business.Dtos.Authentication;
+﻿using Disco.Business.Dtos.Account;
 using Disco.Domain.Models;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -18,5 +18,6 @@ namespace Disco.Business.Interfaces
         Task<User> GetByLogInProviderAsync(string loginProvider, string providerKey);
         Task<IEnumerable<User>> GetAccountsByPeriotAsync(int periot);
         Task<bool> IsInRoleAsync(User user, string roleName);
+        Task RemoveAsync(User user);
     }
 }

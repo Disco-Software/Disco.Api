@@ -10,7 +10,7 @@ using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
-    public class FriendService : IFriendService
+    public class FriendService : IFollowerService
     {
         private readonly IMapper _mapper;
         private readonly IFollowerRepository _friendRepository;
@@ -23,7 +23,7 @@ namespace Disco.Business.Services
             _mapper = mapper;
         }
 
-        public async Task<FriendResponseDto> CreateFriendAsync(User user, User friend, CreateFriendDto model)
+        public async Task<FriendResponseDto> CreateAsync(User user, User friend, CreateFollowerDto model)
         {
             var currentUserFriend = new UserFollower
             {
@@ -51,50 +51,52 @@ namespace Disco.Business.Services
             {
                 FriendId = friend.Id,
                 IsConfirmed = true,
-                FriendProfile = friend.Account,
-                UserProfile = user.Account
+                FollowerAccount = friend.Account,
+                UserAccount = user.Account
             };
         }
 
-        public async Task DeleteFriend(int id) =>
+        public async Task DeleteFriend(int id)
+        {
             await _friendRepository.Remove(id);
+        }
 
-        public async Task<List<FriendResponseDto>> GetAllFriends(GetAllFriendsDto dto)
+        public async Task<List<FriendResponseDto>> GetAllFollowers(GetAllFriendsDto dto)
         {
             var friends = await _friendRepository.GetAllFriends(dto.UserId, dto.PageNumber, dto.PageSize);
             var friendModels = new List<FriendResponseDto>();
 
             foreach (var friend in friends)
             {
-                var friendModel = new FriendResponseDto
+                var followerDto = new FriendResponseDto
                 {
-                    FriendProfile = friend.AccountFollower,
-                    UserProfile = friend.UserAccount,
+                    FollowerAccount = friend.AccountFollower,
+                    UserAccount = friend.UserAccount,
                     IsConfirmed = friend.IsConfirmed,
                     FriendId = friend.Id,
                 };
 
-                friendModels.Add(friendModel);
+                friendModels.Add(followerDto);
             }
 
             return friendModels;
         }
 
-        public async Task<FriendResponseDto> GetFriendAsync(int id)
+        public async Task<FriendResponseDto> GetAsync(int id)
         {
-            var friend = await _friendRepository.Get(id);
+            var follower = await _friendRepository.GetAsync(id);
 
-            if (friend == null)
+            if (follower == null)
                 throw new Exception("freind not found");
 
-            var userProfileModel = _mapper.Map<ProfileDto>(friend.UserAccount);
+            var userAccountDto = _mapper.Map<AccountDto>(follower.UserAccount);
 
             return new FriendResponseDto
             {
-                FriendId = friend.AccountFollower.Id,
-                UserProfile = friend.UserAccount,
+                FriendId = follower.AccountFollower.Id,
+                UserAccount = follower.UserAccount,
                 IsConfirmed = true,
-                FriendProfile = friend.AccountFollower
+                FollowerAccount = follower.AccountFollower
             };
         }
     }

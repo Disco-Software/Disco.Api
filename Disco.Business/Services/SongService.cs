@@ -29,17 +29,15 @@ namespace Disco.Business.Services
             _mapper = mapper;
         }
 
-        public async Task<PostSong> CreatePostSongAsync(CreateSongDto model)
-        {
-            var post = await _postRepository.Get(model.PostId);
-            
-            var uniqueSongName = Guid.NewGuid().ToString() + "_" + model.SongFile.FileName.Replace(' ', '_');
-            var uniqueImageName = Guid.NewGuid().ToString() + "_" + model.SongImage.FileName.Replace(' ', '_');
+        public async Task<PostSong> CreatePostSongAsync(CreateSongDto dto)
+        {            
+            var uniqueSongName = Guid.NewGuid().ToString() + "_" + dto.Song.FileName.Replace(' ', '_');
+            var uniqueImageName = Guid.NewGuid().ToString() + "_" + dto.Image.FileName.Replace(' ', '_');
            
-            if (model.SongFile == null)
+            if (dto.Song == null)
                 return null;
 
-            if (model.SongFile.Length == 0)
+            if (dto.Song.Length == 0)
                 return null;
 
             var blobSongContainerClient = _blobServiceClient.GetBlobContainerClient("songs");
@@ -48,16 +46,16 @@ namespace Disco.Business.Services
             var blobSongClient = blobSongContainerClient.GetBlobClient(uniqueSongName);
             var blobImageClient = blobImageContainerClient.GetBlobClient(uniqueImageName);
 
-            using var songReader = model.SongFile.OpenReadStream();
+            using var songReader = dto.Song.OpenReadStream();
             var blobSongResult = blobSongClient.Upload(songReader);
 
-            using var imageReader = model.SongImage.OpenReadStream();
+            using var imageReader = dto.Image.OpenReadStream();
             var blobImageResult = blobImageClient.Upload(imageReader);
 
-            var song = _mapper.Map<PostSong>(model);
+            var song = _mapper.Map<PostSong>(dto);
             song.ImageUrl = blobImageClient.Uri.AbsoluteUri;
             song.Source = blobSongClient.Uri.AbsoluteUri;
-            song.Name = model.Name;
+            song.Name = dto.Name;
 
             await _songRepository.AddAsync(song);
 

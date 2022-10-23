@@ -23,11 +23,43 @@ namespace Disco.ApiServices.Controllers.Admin
             _pushNotificationService = pushNotificationService;
         }
 
-        [HttpPost("send")]
-        public async Task<IActionResult> SendNotification([FromBody] AdminMessageNotificationDto adminMessageNotificationDto)
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateInstallationAsync([FromBody] DeviceInstallationDto dto)
         {
-            await _pushNotificationService.SendNotificationAsync(adminMessageNotificationDto);
-            return Ok("Your notification was submited");
+            var response = await _pushNotificationService.CreateOrUpdateInstallationAsync(dto, HttpContext.RequestAborted);
+
+            if (!response)
+            {
+                return BadRequest($"Submit status: {response}");
+            }
+
+            return Ok($"Submit status: {response}");
+        }
+
+        [HttpDelete("installations/{installationId}")]
+        public async Task<IActionResult> RemoveInstallationAsync([FromQuery] string installationId)
+        {
+            var response = await _pushNotificationService.DeleteInstallationByIdAsync(installationId);
+
+            if (!response)
+            {
+                return BadRequest($"Installation remove status: {response}");
+            }
+
+            return Ok($"Installation remove status: {response}");
+        }
+
+        [HttpPost("submit")]
+        public async Task<IActionResult> SubmitNotificationAsync([FromBody] PushNotificationBaseDto dto)
+        {
+            var response = await _pushNotificationService.RequestNotificationAsync(dto, HttpContext.RequestAborted);
+
+            if(!response)
+            {
+                return BadRequest($"Submit status: {response}");
+            }
+
+            return Ok($"Submit status: {response}");
         }
     }
 }

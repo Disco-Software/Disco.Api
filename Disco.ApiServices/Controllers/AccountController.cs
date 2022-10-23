@@ -2,7 +2,7 @@
 using Disco.ApiServices.Validators;
 using Disco.Business.Constants;
 using Disco.Business.Dtos.Apple;
-using Disco.Business.Dtos.Authentication;
+using Disco.Business.Dtos.Account;
 using Disco.Business.Dtos.Facebook;
 using Disco.Business.Dtos.Google;
 using Disco.Business.Interfaces;
@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Disco.ApiServices.Controllers
 {

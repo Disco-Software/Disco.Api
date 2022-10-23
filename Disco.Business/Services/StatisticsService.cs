@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Disco.Business.Services
 {
-    public class AdminStatisticsService : IAdminStatisticsService
+    public class StatisticsService : IStatisticsService
     {
         private readonly IUserRepository _userRepository;
 
-        public AdminStatisticsService(IUserRepository userRepository)
+        public StatisticsService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }

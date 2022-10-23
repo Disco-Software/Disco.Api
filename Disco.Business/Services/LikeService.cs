@@ -23,7 +23,7 @@ namespace Disco.Business.Services
 
         public async Task<List<Like>> AddLikeAsync(User user, int postId)
         {
-            var post = await _postRepository.Get(postId);
+            var post = await _postRepository.GetAsync(postId);
             var like = await _likeRepository.GetAsync(postId);
 
             like = new Like
@@ -45,7 +45,7 @@ namespace Disco.Business.Services
 
         public async Task<List<Like>> RemoveLikeAsync(User user, int postId)
         {
-            var post = await _postRepository.Get(postId);
+            var post = await _postRepository.GetAsync(postId);
             var like = await _likeRepository.GetAsync(postId);
 
             if (like == null)

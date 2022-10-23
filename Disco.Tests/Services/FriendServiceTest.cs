@@ -45,12 +45,12 @@ namespace Disco.Tests.Services
                 },
             };
 
-            var dto = new CreateFriendDto
+            var dto = new CreateFollowerDto
             {
                 FriendId = 2
             };
 
-            var response = await service.CreateFriendAsync(user, friend, dto);
+            var response = await service.CreateAsync(user, friend, dto);
 
             Assert.AreEqual(friend.Id, response.FriendId);
             Assert.AreNotEqual(user.Id, friend.Id);

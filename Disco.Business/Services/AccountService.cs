@@ -3,7 +3,7 @@ using Azure.Storage.Blobs;
 using Disco.Business.Constants;
 using Disco.Business.Interfaces;
 using Disco.Business.Dtos.Apple;
-using Disco.Business.Dtos.Authentication;
+using Disco.Business.Dtos.Account;
 using Disco.Business.Dtos.EmailNotifications;
 using Disco.Business.Dtos.Facebook;
 using Disco.Domain.Models;
@@ -18,6 +18,7 @@ using Disco.Domain.Interfaces;
 using Disco.Business.Dtos.Google;
 using System.Security.Claims;
 using System.Collections.Generic;
+using Disco.Business.Exceptions;
 
 namespace Disco.Business.Services
 {
@@ -39,6 +40,9 @@ namespace Disco.Business.Services
         {
             var user = await _userManager.FindByEmailAsync(email);
 
+            if (user == null)
+                return null;
+
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
 
@@ -59,6 +63,11 @@ namespace Disco.Business.Services
         {
             var user = await _userManager.GetUserAsync(claimsPrincipal);
 
+            if (user == null)
+            {
+                throw new UserNotFoundException("Claim is empty, please try to login");
+            }
+
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
 
@@ -68,6 +77,11 @@ namespace Disco.Business.Services
         public async Task<User> GetByIdAsync(int id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
+
+            if(user == null)
+            {
+                throw new UserNotFoundException($"user with this id -> {id}, not found");
+            }
 
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
@@ -97,6 +111,11 @@ namespace Disco.Business.Services
         {
             var user = await _userManager.FindByLoginAsync(loginProvider, providerKey);
 
+            if(user == null)
+            {
+                return null;
+            }
+
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
 
@@ -121,6 +140,11 @@ namespace Disco.Business.Services
         public async Task<bool> IsInRoleAsync(User user, string roleName)
         {
            return await _userManager.IsInRoleAsync(user, roleName);
+        }
+
+        public async Task RemoveAsync(User user)
+        {
+            await _userManager.DeleteAsync(user);
         }
     }
 }

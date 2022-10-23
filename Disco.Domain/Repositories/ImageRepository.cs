@@ -12,17 +12,22 @@ namespace Disco.Domain.Repositories
     {
         public ImageRepository(ApiDbContext ctx) : base(ctx) { }
 
+        public override async Task AddAsync(PostImage item)
+        {
+            await _ctx.PostImages.AddAsync(item);
+        }
+
         public override async Task Remove(int id)
         {
-            var video = await ctx.PostVideos
+            var video = await _ctx.PostVideos
                 .Include(p => p.Post)
                 .Where(s => s.Id == id)
                 .FirstOrDefaultAsync();
 
             video.Post.PostVideos.Remove(video);
-            ctx.PostVideos.Remove(video);
+            _ctx.PostVideos.Remove(video);
 
-            await ctx.SaveChangesAsync();
+            await _ctx.SaveChangesAsync();
         }
     }
 }

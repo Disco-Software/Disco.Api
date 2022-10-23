@@ -16,9 +16,9 @@ namespace Disco.ApiServices.Controllers.Admin
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private readonly IAdminRoleService _adminRoleService;
+        private readonly IRoleService _adminRoleService;
 
-        public RoleController(IAdminRoleService adminRoleService)
+        public RoleController(IRoleService adminRoleService)
         {
             _adminRoleService = adminRoleService;
         }

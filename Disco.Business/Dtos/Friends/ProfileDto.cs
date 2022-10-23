@@ -1,6 +1,6 @@
 ﻿namespace Disco.Business.Dtos.Friends
 {
-    public class ProfileDto
+    public class AccountDto
     {
         public int Id { get; set; }
         public string Status { get; set; }

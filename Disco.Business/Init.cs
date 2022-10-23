@@ -12,14 +12,11 @@ namespace Disco.Business
                 .AddScoped<IAccountService, AccountService>()
                 .AddScoped<IAccountDetailsService, AccountDetailsService>()
                 .AddScoped<IAccountPasswordService, AccountPasswordService>()
-                .AddScoped<IRegisterDeviceService, RegisterDeviceService>()
-                .AddScoped<IAdminRoleService, AdminRoleService>()
-                .AddScoped<IAdminUserService, AdminUserService>()
-                .AddScoped<IAdminStatisticsService, AdminStatisticsService>()
+                .AddScoped<IRoleService, RoleService>()
+                .AddScoped<IStatisticsService, StatisticsService>()
                 .AddScoped<ITokenService, TokenService>()
                 .AddScoped<IEmailService, EmailService>()
                 .AddScoped<IFacebookAuthService, FacebookAuthService>()
-                .AddScoped<IAdminAuthenticationService, AdminAuthenticationService>()
                 .AddScoped<IAccountService, AccountService>()
                 .AddScoped<IImageService, ImageService>()
                 .AddScoped<ISongService, SongService>()
@@ -29,7 +26,7 @@ namespace Disco.Business
                 .AddScoped<IStoryImageService, StoryImageService>()
                 .AddScoped<IStoryVideoService, StoryVideoService>()
                 .AddScoped<IStoryService, StoryService>()
-                .AddScoped<IFriendService, FriendService>()
+                .AddScoped<IFollowerService, FriendService>()
                 .AddScoped<IPushNotificationService, PushNotificationService>();
         }
     }

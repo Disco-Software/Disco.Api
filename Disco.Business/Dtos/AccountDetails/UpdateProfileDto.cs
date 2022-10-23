@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Disco.Business.Dtos.Profile
+namespace Disco.Business.Dtos.AccountDetails
 {
     public class UpdateAccountDto
     {

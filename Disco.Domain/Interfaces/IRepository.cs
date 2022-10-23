@@ -9,7 +9,7 @@ namespace Disco.Domain.Interfaces
     {
         Task AddAsync(T item);
         Task Remove(TKey id);
-        Task<T> Get(TKey id);
+        Task<T> GetAsync(TKey id);
         Task<List<T>> GetAll(Expression<Func<T,bool>> expression);
         Task<T> Update(T newItem);
     }

@@ -1,19 +1,18 @@
-﻿using Disco.Business.Dtos.Account;
+﻿using Disco.Business.Constants;
+using Disco.Business.Dtos.Account;
 using Disco.Business.Interfaces;
-using Disco.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.ApiServices.Controllers
+namespace Disco.ApiServices.Controllers.Admin
 {
     [ApiController]
-    [Route("api/user/account/password")]
-    public class AccountPasswordController : Controller
+    [Route("api/admin/account/password")]
+    public class AccountPasswordController : ControllerBase
     {
         private readonly IAccountService _accountService;
         private readonly IAccountPasswordService _accountPasswordService;
@@ -61,5 +60,6 @@ namespace Disco.ApiServices.Controllers
 
             return Ok("Password successfuly reset");
         }
+
     }
 }

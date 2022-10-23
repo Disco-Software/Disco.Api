@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Disco.Business.Dtos.Authentication
+namespace Disco.Business.Dtos.Account
 {
     public class RegistrationDto
     {

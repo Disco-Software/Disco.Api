@@ -1,6 +1,6 @@
 ﻿using Disco.Domain.Models;
 
-namespace Disco.Business.Dtos.Authentication
+namespace Disco.Business.Dtos.Account
 {
     public class UserResponseDto
     {

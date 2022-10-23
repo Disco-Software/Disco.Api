@@ -1,6 +1,6 @@
 ﻿using Disco.Business.Constants;
 using Disco.Business.Interfaces;
-using Disco.Business.Dtos.Authentication;
+using Disco.Business.Dtos.Account;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,15 +21,18 @@ namespace Disco.ApiServices.Controllers.Admin
     public class UserController : ControllerBase
     {
         private readonly IAccountService _accountService;
+        private readonly IAccountDetailsService _accountDetailsService;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
 
         public UserController(
             IAccountService accountService,
+            IAccountDetailsService accountDetailsService,
             ITokenService tokenService,
             IMapper mapper)
         {
             _accountService = accountService;
+            _accountDetailsService = accountDetailsService;
             _tokenService = tokenService;
             _mapper = mapper;
         }
@@ -74,13 +77,24 @@ namespace Disco.ApiServices.Controllers.Admin
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Remove([FromRoute] int id)
         {
-            return Ok();
+            var user = await _accountService.GetByIdAsync(id);
+            if(user == null)
+            {
+                return BadRequest("User not found");
+            }
+
+            await _accountDetailsService.RemoveAsync(user.Account);
+            await _accountService.RemoveAsync(user);
+
+            return Ok("User was removed");
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<User>>> GetAll([FromQuery] int pageNumber, [FromQuery] int pageSize)
+        [HttpGet("periot")]
+        public async Task<ActionResult<List<User>>> GetAccountsByPeriotAsync(int periot)
         {
-            return Ok();
+            var users = await _accountService.GetAccountsByPeriotAsync(periot);
+
+            return Ok(users);
         }
     }
 }

@@ -9,13 +9,13 @@ using Disco.Domain.Interfaces;
 
 namespace Disco.Business.Services
 {
-    public class AdminRoleService : IAdminRoleService
+    public class RoleService : IRoleService
     {
         private readonly RoleManager<Role> _roleManager;
         private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
 
-        public AdminRoleService(
+        public RoleService(
             RoleManager<Role> roleManager, 
             IRoleRepository roleRepository,
             IMapper mapper)
