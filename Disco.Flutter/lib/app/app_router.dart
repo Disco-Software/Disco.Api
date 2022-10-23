@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/presentation/pages/authentication/login/login_page.dart';
@@ -28,7 +26,12 @@ import 'package:flutter/material.dart';
     AutoRoute(path: "/search", page: SearchRegistrationPage),
     AutoRoute(path: "/registration", page: RegistrationPage),
     AutoRoute(path: '/fullscreen-video', page: FullScreenVideoPage),
-    AutoRoute(path: '/search', page: SearchPage),
+    CustomRoute(
+      path: '/search_page',
+      page: SearchPage,
+      transitionsBuilder: TransitionsBuilders.fadeIn,
+      durationInMilliseconds: 1500,
+    ),
     AutoRoute(path: '/story', page: StoryPage),
     CustomRoute(
       path: '/story_anim',
@@ -36,17 +39,6 @@ import 'package:flutter/material.dart';
       name: 'AnimatedStoryRoute',
       transitionsBuilder: TransitionsBuilders.fadeIn,
     ),
-    // CustomRoute(
-    //     path: '/story_anim',
-    //     page: StoryPage,
-    //     name: 'AnimatedStoryRoute',
-    //     transitionsBuilder: TransitionsBuilders.fadeIn),
-    // CustomRoute(
-    //   path: '/story',
-    //   page: StoryPage,
-    //   transitionsBuilder: cubeTransition,
-    //   name: 'StoryAnimatedRoute',
-    // ),
     AutoRoute(
       path: ':itemId',
       page: SavedItem,
@@ -77,45 +69,10 @@ import 'package:flutter/material.dart';
 // extend the generated private router
 class $AppRouter {}
 
-Widget cubeTransition(BuildContext context, Animation<double> animation,
-    Animation<double> secondaryAnimation, bool lol, Widget child) {
-  return Stack(
-    children: <Widget>[
-      SlideTransition(
-        position: Tween<Offset>(
-          begin: Offset.zero,
-          end: const Offset(-1.0, 0.0),
-        ).animate(animation),
-        child: Container(
-          color: Colors.white,
-          child: Transform(
-            transform: Matrix4.identity()
-              ..setEntry(3, 2, 0.003)
-              ..rotateY(pi / 2 * animation.value),
-            alignment: FractionalOffset.centerRight,
-            child: StoryPage(
-              index: context.findAncestorWidgetOfExactType<StoryPage>()?.index ?? 0,
-              totalLength: context.findAncestorWidgetOfExactType<StoryPage>()?.totalLength ?? 0,
-            ),
-          ),
-        ),
-      ),
-      SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(1.0, 0.0),
-          end: Offset.zero,
-        ).animate(animation),
-        child: Container(
-          color: Colors.white,
-          child: Transform(
-            transform: Matrix4.identity()
-              ..setEntry(3, 2, 0.003)
-              ..rotateY(pi / 2 * (animation.value - 1)),
-            alignment: FractionalOffset.centerLeft,
-            child: child,
-          ),
-        ),
-      )
-    ],
+Widget searchPageTransition(BuildContext context, Animation<double> animation,
+    Animation<double> secondaryAnimation, Widget child) {
+  return FadeTransition(
+    opacity: animation,
+    child: child,
   );
 }

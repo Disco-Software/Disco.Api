@@ -62,11 +62,15 @@ class AppRouter extends _i1.RootStackRouter {
           return _i7.FullScreenVideoPage(
               key: args.key, source: args.source, controller: args.controller);
         }),
-    SearchRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
+    SearchRoute.name: (routeData) => _i1.CustomPage<dynamic>(
         routeData: routeData,
         builder: (_) {
           return const _i8.SearchPage();
-        }),
+        },
+        transitionsBuilder: _i1.TransitionsBuilders.fadeIn,
+        durationInMilliseconds: 1500,
+        opaque: true,
+        barrierDismissible: false),
     StoryRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (data) {
@@ -153,7 +157,7 @@ class AppRouter extends _i1.RootStackRouter {
         _i1.RouteConfig(SearchRegistrationRoute.name, path: '/search'),
         _i1.RouteConfig(RegistrationRoute.name, path: '/registration'),
         _i1.RouteConfig(FullScreenVideoRoute.name, path: '/fullscreen-video'),
-        _i1.RouteConfig(SearchRoute.name, path: '/search'),
+        _i1.RouteConfig(SearchRoute.name, path: '/search_page'),
         _i1.RouteConfig(StoryRoute.name, path: '/story'),
         _i1.RouteConfig(AnimatedStoryRoute.name, path: '/story_anim'),
         _i1.RouteConfig(SavedItemRoute.name, path: ':itemId'),
@@ -220,7 +224,7 @@ class FullScreenVideoRouteArgs {
 }
 
 class SearchRoute extends _i1.PageRouteInfo<void> {
-  const SearchRoute() : super(name, path: '/search');
+  const SearchRoute() : super(name, path: '/search_page');
 
   static const String name = 'SearchRoute';
 }

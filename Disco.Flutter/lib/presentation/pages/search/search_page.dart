@@ -32,15 +32,30 @@ class SearchPage extends StatefulWidget implements AutoRouteWrapper {
   }
 }
 
-class _SearchPageState extends State<SearchPage> {
+class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateMixin {
   final _searchController = TextEditingController();
+  late AnimationController _animationController;
   bool shouldShowSearchIcon = true;
   Timer? _debounce;
   final FocusNode _textFieldFocus = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+    if (mounted) {
+      _animationController =
+          AnimationController(vsync: this, duration: const Duration(milliseconds: 1500))
+            ..addListener(() {
+              setState(() {});
+            });
+      _animationController.forward();
+    }
+  }
+
+  @override
   void dispose() {
     _debounce?.cancel();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -54,10 +69,12 @@ class _SearchPageState extends State<SearchPage> {
           builder: (context, state) {
             return CustomScrollView(
               slivers: [
-                const SliverAppBar(
-                  backgroundColor: Color(0xFF1C142D),
-                  leading: SizedBox(),
-                  title: Text(
+                SliverAppBar(
+                  centerTitle: false,
+                  backgroundColor: const Color(0xFF1C142D),
+                  titleSpacing: _animationController.drive(Tween(begin: 0.0, end: 100.0)).value,
+                  leading: const SizedBox(),
+                  title: const Text(
                     "DISCO",
                     style: TextStyle(
                       fontSize: 32,
