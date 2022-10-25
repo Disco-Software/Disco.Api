@@ -20,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Disco.Business.Constants;
+using Disco.Business.Server.Hubs;
 
 namespace Disco.Api
 {
@@ -105,6 +106,7 @@ namespace Disco.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chathub");
             });
         }
     }

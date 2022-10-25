@@ -14,6 +14,7 @@ namespace Disco.Domain.EF
         public DbSet<PostSong> PostSongs { get; set; }
         public DbSet<PostVideo> PostVideos { get; set; }
         public DbSet<Like> Like { get; set; }
+        public DbSet<Message> Messages { get; set; }
         public DbSet<Friend> Friends { get; set; }
         public DbSet<Story> Stories { get; set; }
         public DbSet<StoryImage> StoriesImages { get; set; }
