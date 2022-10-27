@@ -1,6 +1,6 @@
 ﻿namespace Disco.Business.Dtos.Friends
 {
-    public class GetAllFollowersDto
+    public class GetAllFriendsDto
     {
         public int UserId { get; set; }
         public int PageNumber { get; set; }

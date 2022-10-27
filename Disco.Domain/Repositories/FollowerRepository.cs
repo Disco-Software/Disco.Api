@@ -15,44 +15,48 @@ namespace Disco.Domain.Repositories
         {
         }
 
-        public override async Task AddAsync(UserFollower userFollower)
+        public async Task<int> AddAsync(UserFollower currentUserFriend)
         {
-            await _ctx.UserFollowers.AddAsync(userFollower);
-        }
-        public override async Task<UserFollower> GetAsync(int id)
-        {
-           return await _ctx.UserFollowers
-                .Include(u => u.FollowingAccount)
-                .ThenInclude(u => u.User)
-                .Include(f => f.FollowerAccount)
-                .ThenInclude(f => f.User)
-                .Where(f => f.Id == id)
-                .FirstOrDefaultAsync();
-        }
-        public override async Task Remove(int id)
-        {
-          var userFollower = await _ctx.UserFollowers
-                .Include(u => u.FollowingAccount)
-                .ThenInclude(u => u.User)
-                .Include(f => f.FollowerAccount)
-                .ThenInclude(f => f.User)
-                .Where(f => f.Id == id)
-                .FirstOrDefaultAsync();
-            _ctx.UserFollowers.Remove(userFollower);
+            await _ctx.UserFollowers.AddAsync(currentUserFriend);
+            
+            currentUserFriend.IsFriend = true;
             
             await _ctx.SaveChangesAsync();
+            
+            return currentUserFriend.Id;
         }
-        public async Task<List<UserFollower>> GetAllAsync(int id, int pageNumber, int pageSize)
+        public override async Task<UserFollower> GetAsync(int id) =>
+            await _ctx.UserFollowers
+                .Include(u => u.UserAccount)
+                .ThenInclude(u => u.User)
+                .Include(f => f.AccountFollower)
+                .ThenInclude(f => f.User)
+                .Where(f => f.Id == id)
+                .FirstOrDefaultAsync();
+        public override async Task Remove(int id)
+        {
+          var friend = await _ctx.UserFollowers
+                .Include(u => u.UserAccount)
+                .ThenInclude(u => u.User)
+                .Include(f => f.AccountFollower)
+                .ThenInclude(f => f.User)
+                .Where(f => f.Id == id)
+                .FirstOrDefaultAsync();
+            _ctx.UserFollowers.Remove(friend);
+           
+            await _ctx.SaveChangesAsync();
+        }
+        public async Task<List<UserFollower>> GetAllFriends(int id, int pageNumber, int pageSize)
         {
             return await _ctx.UserFollowers
-                .Include(u => u.FollowingAccount)
+                .Include(u => u.UserAccount)
                 .ThenInclude(u => u.User)
-                .Include(p => p.FollowerAccount)
+                .Include(p => p.AccountFollower)
                 .ThenInclude(s => s.Stories)
-                .Include(f => f.FollowerAccount)
+                .Include(f => f.AccountFollower)
                 .ThenInclude(u => u.User)
-                .Where(f => f.FollowingAccountId == id)
-                .OrderBy(n => n.FollowerAccount.User.UserName)
+                .Where(f => f.UserAccountId == id)
+                .OrderBy(n => n.AccountFollower.User.UserName)
                 .Take((pageNumber - 1) * pageSize)
                 .Skip(pageSize)
                 .ToListAsync();

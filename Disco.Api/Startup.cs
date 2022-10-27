@@ -35,11 +35,8 @@ namespace Disco.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionStrings = Configuration.GetSection("ConnectionStrings")
-                .Get<ConnectionStrings>();
-
             services.AddSwaggerGen();
-            services.ConfigureDbContext(connectionStrings.ProdactionConnection);
+            services.ConfigureDbContext(Configuration);
             services.ConfigureIdentity();
             services.AddAuthorization();
 

@@ -2,8 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>f6750af4-0eb5-4040-81a5-3e23e355e18d</UserSecretsId>
+    <UserSecretsId>6e65f672-95b0-423d-aefa-8b21304aa1d5</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot - Копировать\**" />
+    <Content Remove="wwwroot - Копировать\**" />
+    <EmbeddedResource Remove="wwwroot - Копировать\**" />
+    <None Remove="wwwroot - Копировать\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Azure.Storage.Queues" Version="12.11.0" />

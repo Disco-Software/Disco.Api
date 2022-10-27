@@ -26,7 +26,7 @@ namespace Disco.Business
                 .AddScoped<IStoryImageService, StoryImageService>()
                 .AddScoped<IStoryVideoService, StoryVideoService>()
                 .AddScoped<IStoryService, StoryService>()
-                .AddScoped<IFollowerService, FollowerService>()
+                .AddScoped<IFollowerService, FriendService>()
                 .AddScoped<IPushNotificationService, PushNotificationService>();
         }
     }

@@ -33,8 +33,8 @@ namespace Disco.Domain.EF
             
             builder.Entity<Account>()
                 .HasMany(f => f.Followers)
-                .WithOne(p => p.FollowingAccount)
-                .HasForeignKey(f => f.FollowingAccountId);
+                .WithOne(p => p.UserAccount)
+                .HasForeignKey(f => f.UserAccountId);
         }
 
         public ApiDbContext CreateDbContext(string[] args)

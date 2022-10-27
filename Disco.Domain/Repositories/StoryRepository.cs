@@ -33,21 +33,21 @@ namespace Disco.Domain.Repositories
                 .Include(u => u.Stories)
                 .ThenInclude(s => s.StoryVideos)
                 .Include(f => f.Followers)
-                .ThenInclude(p => p.FollowerAccount)
+                .ThenInclude(p => p.AccountFollower)
                 .ThenInclude(s => s.Stories)
                 .ThenInclude(si => si.StoryImages)
                 .Include(f => f.Followers)
-                .ThenInclude(p => p.FollowerAccount)
+                .ThenInclude(p => p.AccountFollower)
                 .ThenInclude(p => p.Stories)
                 .ThenInclude(s => s.StoryVideos)
                 .Include(f => f.Followers)
-                .ThenInclude(p => p.FollowingAccount)
+                .ThenInclude(p => p.UserAccount)
                 .Include(f => f.Followers)
-                .ThenInclude(p => p.FollowerAccount)
+                .ThenInclude(p => p.AccountFollower)
                 .ThenInclude(s => s.Stories)
                 .ThenInclude(s => s.StoryImages)
                 .Include(f => f.Followers)
-                .ThenInclude(f => f.FollowerAccount)
+                .ThenInclude(f => f.AccountFollower)
                 .ThenInclude(f => f.Stories)
                 .ThenInclude(f => f.StoryVideos)
                 .Where(u => u.Id == profileId)
@@ -57,15 +57,15 @@ namespace Disco.Domain.Repositories
 
             foreach (var friend in profile.Followers)
             {
-                friend.FollowerAccount = await _ctx.Accounts
+                friend.AccountFollower = await _ctx.Accounts
                     .Include(p => p.Stories)
                     .ThenInclude(i => i.StoryImages)
                     .Include(p => p.Stories)
                     .ThenInclude(s => s.StoryVideos)
                     .Include(u => u.User)
-                    .Where(f => f.Id == friend.FollowerAccountId)
+                    .Where(f => f.Id == friend.FollowerId)
                     .FirstOrDefaultAsync();
-                storyList.AddRange(friend.FollowerAccount.Stories);
+                storyList.AddRange(friend.AccountFollower.Stories);
             }
 
            return storyList.OrderByDescending(d => d.DateOfCreation)

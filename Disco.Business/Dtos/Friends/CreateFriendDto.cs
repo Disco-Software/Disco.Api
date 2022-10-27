@@ -2,7 +2,7 @@
 {
     public class CreateFollowerDto
     {
-        public int FollowerAccountId { get; set;}
+        public int FriendId { get; set;}
         public string IntalationId { get; set; }
     }
 }

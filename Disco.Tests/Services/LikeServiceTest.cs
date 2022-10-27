@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Disco.Business.Interfaces;
-using Disco.Business.Mapper;
+﻿using Disco.Business.Interfaces;
 using Disco.Business.Services;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
@@ -19,40 +17,43 @@ namespace Disco.Tests.Services
         [TestMethod]
         public async Task AddLike_ReturnsSuccessResponse()
         {
-            var post = new Post
+            var user = new User
             {
-                AccountId = It.IsAny<int>(),
-                DateOfCreation = It.IsAny<DateTime>(),
-                Description = It.IsAny<string>(),
-                Likes = new List<Like>(),
-                Id = It.IsAny<int>(),
+                UserName = "s.korchevskyi",
+                Email = "stas_1999_nr@ukr.net",
+                RoleName = "Admin",
+                Account = new Account
+                {
+                    Posts = new List<Post>()
+                }
             };
 
-            var account = new Account
+            var post = new Post
             {
-                User = new User
-                {
-                    UserName = "v.pupkin",
-                    Email = "vasya.pupkin@gmail.com",
-                    DateOfRegister = DateTime.Now.AddDays(-20),
-                    AccountId = 2,
-                } as User,
-                Following = new List<UserFollower>(),
-                Followers = new List<UserFollower>(),
+                Id = 6,
+                Account = user.Account,
+                DateOfCreation = DateTime.Now,
+                Description = "Bla bla bla",
+                Likes = new List<Like>(),
+                AccountId = user.Account.Id
             };
+
+            user.Account.Posts.Add(post);
+
+            var mockedPostRepository = new Mock<IPostRepository>();
+
+            mockedPostRepository
+                .Setup(postRepository => postRepository.AddAsync(post))
+                .Returns(Task.CompletedTask);
 
             var mockedLikeService = new Mock<ILikeRepository>();
            
             mockedLikeService
-                .Setup(like => like.AddAsync(It.IsAny<Like>()))
+                .Setup(like => like.AddAsync(new Like { Id = 1, Post = post, PostId = post.Id, UserName = user.UserName }, post.Id))
                 .Returns(Task.CompletedTask);
 
-            var mapperConfig = new MapperConfiguration(ms => ms.AddProfile(new MapProfile()));
-
-            IMapper mapper = mapperConfig.CreateMapper();
-
-            var likeService = new LikeService(mockedLikeService.Object, mapper);
-            var response = await likeService.AddLikeAsync(account.User, post);
+            var likeService = new LikeService(mockedPostRepository.Object, mockedLikeService.Object);
+            var response = await likeService.AddLikeAsync(user, post.Id);
 
             Assert.AreEqual(post.Likes.Count, response.Count);
         }

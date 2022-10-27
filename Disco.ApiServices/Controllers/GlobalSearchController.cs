@@ -31,7 +31,7 @@ namespace Disco.ApiServices.Controllers
         public async Task<IActionResult> Serach([FromQuery] string search)
         {
             var accounts = await _accountService.GetAccountsByNameAsync(search);
-            var posts = await _postService.GetPostsByDescriptionAsync(search);
+            var posts = await _postService.SearchPostsAsync(search);
 
             var searchResponseDto = new GlobalSearchResponseDto();
             searchResponseDto.Posts = posts;

@@ -342,20 +342,26 @@ namespace Disco.Domain.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("FollowerAccountId")
+                    b.Property<int?>("AccountFollowerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("FollowingAccountId")
+                    b.Property<int>("FollowerId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsFollowing")
+                    b.Property<bool>("IsConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<bool>("IsFriend")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserAccountId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FollowerAccountId");
+                    b.HasIndex("AccountFollowerId");
 
-                    b.HasIndex("FollowingAccountId");
+                    b.HasIndex("UserAccountId");
 
                     b.ToTable("UserFollowers");
                 });
@@ -562,21 +568,19 @@ namespace Disco.Domain.Migrations
 
             modelBuilder.Entity("Disco.Domain.Models.UserFollower", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Account", "FollowerAccount")
+                    b.HasOne("Disco.Domain.Models.Account", "AccountFollower")
                         .WithMany("Following")
-                        .HasForeignKey("FollowerAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AccountFollowerId");
 
-                    b.HasOne("Disco.Domain.Models.Account", "FollowingAccount")
+                    b.HasOne("Disco.Domain.Models.Account", "UserAccount")
                         .WithMany("Followers")
-                        .HasForeignKey("FollowingAccountId")
+                        .HasForeignKey("UserAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("FollowerAccount");
+                    b.Navigation("AccountFollower");
 
-                    b.Navigation("FollowingAccount");
+                    b.Navigation("UserAccount");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

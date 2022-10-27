@@ -6,9 +6,9 @@ namespace Disco.Domain.Interfaces
 {
     public interface IFollowerRepository
     {
-        Task AddAsync(UserFollower userFollower);
+        Task<int> AddAsync(UserFollower currentUserFriend);
         Task<UserFollower> GetAsync(int id);
         Task Remove(int id);
-        Task<List<UserFollower>> GetAllAsync(int id, int pageNumber, int pageSize);
+        Task<List<UserFollower>> GetAllFriends(int id, int pageNumber, int pageSize);
     }
 }

@@ -6,7 +6,7 @@ namespace Disco.Domain.Interfaces
 {
     public interface ILikeRepository
     {
-        Task AddAsync(Like item);
+        Task AddAsync(Like item, int postId);
         Task Remove(Like like,int id);
         Task<Like> GetAsync(int postId);
         Task<List<Like>> GetAll(int postId);

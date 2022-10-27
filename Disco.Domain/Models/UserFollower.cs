@@ -4,11 +4,12 @@ namespace Disco.Domain.Models
 {
     public class UserFollower : BaseModel<int>
     {
-        public int FollowingAccountId { get; set; }
-        public Account FollowingAccount { get; set; }
+        public int UserAccountId { get; set; }
+        public Account UserAccount { get; set; }
         
-        public int FollowerAccountId { get; set; }
-        public Account FollowerAccount { get; set; }
-        public bool IsFollowing { get; set; }
+        public int FollowerId { get; set; }
+        public Account AccountFollower { get; set; }
+        public bool IsConfirmed { get; set; }
+        public bool IsFriend { get; set; }
     }
 }
