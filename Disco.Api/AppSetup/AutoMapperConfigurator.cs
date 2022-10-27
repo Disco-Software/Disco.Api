@@ -8,15 +8,15 @@ namespace Disco.Api.AppSetup
     {
         public static void ConfigureAutoMapper(this IServiceCollection serviceDescriptors)
         {
-            serviceDescriptors.AddSingleton(conf => new MapperConfiguration(options =>
+            serviceDescriptors.AddSingleton(provider => new MapperConfiguration(cfg =>
             {
-                options.AddProfile(new AccountMapProfile());
-                options.AddProfile(new GlobalSearchMapProfile());
-                options.AddProfile(new PostMapProfile());
-                options.AddProfile(new StoryMapProfile());
-                options.AddProfile(new RoleMapProfile());
-                options.AddProfile(new FollowerMapProfile());
-            }));
+                cfg.AddProfile(new AccountMapProfile());
+                cfg.AddProfile(new PostMapProfile());
+                cfg.AddProfile(new StoryMapProfile());
+                cfg.AddProfile(new RoleMapProfile());
+                cfg.AddProfile(new FollowerMapProfile());
+            }).CreateMapper());
+
         }
     }
 }
