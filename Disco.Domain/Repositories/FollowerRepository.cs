@@ -15,48 +15,44 @@ namespace Disco.Domain.Repositories
         {
         }
 
-        public async Task<int> AddAsync(UserFollower currentUserFriend)
+        public override async Task AddAsync(UserFollower userFollower)
         {
-            await _ctx.UserFollowers.AddAsync(currentUserFriend);
-            
-            currentUserFriend.IsFriend = true;
-            
-            await _ctx.SaveChangesAsync();
-            
-            return currentUserFriend.Id;
+            await _ctx.UserFollowers.AddAsync(userFollower);
         }
-        public override async Task<UserFollower> GetAsync(int id) =>
-            await _ctx.UserFollowers
-                .Include(u => u.UserAccount)
+        public override async Task<UserFollower> GetAsync(int id)
+        {
+           return await _ctx.UserFollowers
+                .Include(u => u.FollowingAccount)
                 .ThenInclude(u => u.User)
-                .Include(f => f.AccountFollower)
+                .Include(f => f.FollowerAccount)
                 .ThenInclude(f => f.User)
                 .Where(f => f.Id == id)
                 .FirstOrDefaultAsync();
+        }
         public override async Task Remove(int id)
         {
-          var friend = await _ctx.UserFollowers
-                .Include(u => u.UserAccount)
+          var userFollower = await _ctx.UserFollowers
+                .Include(u => u.FollowingAccount)
                 .ThenInclude(u => u.User)
-                .Include(f => f.AccountFollower)
+                .Include(f => f.FollowerAccount)
                 .ThenInclude(f => f.User)
                 .Where(f => f.Id == id)
                 .FirstOrDefaultAsync();
-            _ctx.UserFollowers.Remove(friend);
-           
+            _ctx.UserFollowers.Remove(userFollower);
+            
             await _ctx.SaveChangesAsync();
         }
-        public async Task<List<UserFollower>> GetAllFriends(int id, int pageNumber, int pageSize)
+        public async Task<List<UserFollower>> GetAllAsync(int id, int pageNumber, int pageSize)
         {
             return await _ctx.UserFollowers
-                .Include(u => u.UserAccount)
+                .Include(u => u.FollowingAccount)
                 .ThenInclude(u => u.User)
-                .Include(p => p.AccountFollower)
+                .Include(p => p.FollowerAccount)
                 .ThenInclude(s => s.Stories)
-                .Include(f => f.AccountFollower)
+                .Include(f => f.FollowerAccount)
                 .ThenInclude(u => u.User)
-                .Where(f => f.UserAccountId == id)
-                .OrderBy(n => n.AccountFollower.User.UserName)
+                .Where(f => f.FollowingAccountId == id)
+                .OrderBy(n => n.FollowerAccount.User.UserName)
                 .Take((pageNumber - 1) * pageSize)
                 .Skip(pageSize)
                 .ToListAsync();

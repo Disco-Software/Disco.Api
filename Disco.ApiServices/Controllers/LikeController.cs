@@ -42,7 +42,7 @@ namespace Disco.ApiServices.Controllers
                 return BadRequest();
             }
 
-            var likes = await _likeService.AddLikeAsync(user, postId);
+            var likes = await _likeService.AddLikeAsync(user, post);
 
             //await _pushNotificationService.SendNotificationAsync(new Business.Dtos.PushNotifications.LikeNotificationDto
             //{
@@ -68,7 +68,7 @@ namespace Disco.ApiServices.Controllers
                 return BadRequest();
             }
 
-            var likes = await _likeService.RemoveLikeAsync(user, postId);
+            var likes = await _likeService.RemoveLikeAsync(user, post);
 
             return Ok(likes.Count);
         }

@@ -1,4 +1,5 @@
 ﻿
+using AutoMapper;
 using Disco.Business.Interfaces;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
@@ -10,30 +11,37 @@ namespace Disco.Business.Services
 {
     public class LikeService : ILikeService
     {
-        private readonly IPostRepository _postRepository;
         private readonly ILikeRepository _likeRepository;
+        private readonly IMapper _mapper;
 
         public LikeService(
-            IPostRepository postRepository,
-            ILikeRepository likeRepository)
+            ILikeRepository likeRepository,
+            IMapper mapper)
         {
-            _postRepository = postRepository;
             _likeRepository = likeRepository;
+            _mapper = mapper;
         }
 
-        public async Task<List<Like>> AddLikeAsync(User user, int postId)
+        public async Task<List<Like>> AddLikeAsync(User user, Post post)
         {
-            var post = await _postRepository.GetAsync(postId);
-            var like = await _likeRepository.GetAsync(postId);
+            var like = await _likeRepository.GetAsync(post.Id);
 
-            like = new Like
+            if (like != null)
             {
-                UserName = user.UserName,
-                Post = post,
-                PostId = postId,
-            };
+                return null;
+            }
 
-            await _likeRepository.AddAsync(like, postId);
+            like = _mapper.Map<Like>(post);
+            like.Post = post;
+            like.PostId = post.Id;
+            like.UserName = user.UserName;
+
+            if(post.Likes.All(p => p.UserName != user.UserName))
+            {
+                post.Likes.Add(like);
+            }
+
+            await _likeRepository.AddAsync(like);
 
             return post.Likes;
         }
@@ -43,17 +51,21 @@ namespace Disco.Business.Services
            return await _likeRepository.GetAll(postId);
         }
 
-        public async Task<List<Like>> RemoveLikeAsync(User user, int postId)
+        public async Task<List<Like>> RemoveLikeAsync(User user, Post post)
         {
-            var post = await _postRepository.GetAsync(postId);
-            var like = await _likeRepository.GetAsync(postId);
+            var like = await _likeRepository.GetAsync(post.Id);
 
             if (like == null)
                 throw new System.Exception("Error");
 
-            await _likeRepository.Remove(like, postId);
+            await _likeRepository.Remove(like, post.Id);
 
             return post.Likes;
+        }
+
+        public async Task<List<Like>> GetAllLikesAsync(int postId, int pageNumber, int pageSize)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

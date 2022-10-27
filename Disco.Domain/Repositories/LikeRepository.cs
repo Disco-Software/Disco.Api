@@ -14,17 +14,8 @@ namespace Disco.Domain.Repositories
     {
         public LikeRepository(ApiDbContext ctx) : base(ctx) { }
 
-        public async Task AddAsync(Like item, int postId)
-        {
-            var post = await _ctx.Posts
-                .Include(x => x.Likes)
-                .Where(p => p.Id == postId)
-                .FirstOrDefaultAsync();
-
-            if (post == null)
-                throw new Exception("post not found");
-            
-            post.Likes.Add(item);
+        public override async Task AddAsync(Like item)
+        {            
             await _ctx.Like.AddAsync(item);
 
             await _ctx.SaveChangesAsync();

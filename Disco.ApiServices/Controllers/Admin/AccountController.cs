@@ -1,5 +1,4 @@
-﻿
-using Disco.Business.Interfaces;
+﻿using Disco.Business.Interfaces;
 using Disco.Business.Dtos.Account;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -20,38 +19,35 @@ namespace Disco.ApiServices.Controllers.Admin
         private readonly IAccountService _accountService;
         private readonly IAccountPasswordService _accountPasswordService;
         private readonly ITokenService _tokenService;
-        private readonly IEmailService _emailService;
         private readonly IMapper _mapper;
 
         public AccountController(
             IAccountService accountService,
             IAccountPasswordService accountPasswordService,
             ITokenService tokenService,
-            IEmailService emailService,
             IMapper mapper)
         {
             _accountService = accountService;
             _accountPasswordService = accountPasswordService;
             _tokenService = tokenService;
-            _emailService = emailService;
             _mapper = mapper;
         }
 
         [HttpPost("log-in")]
-        public async Task<IActionResult> LogIn([FromForm] LoginDto model)
+        public async Task<IActionResult> LogIn([FromBody] LoginDto dto)
         {
             var validator = await LogInValidator
                 .Create(_accountService)
-                .ValidateAsync(model);
+                .ValidateAsync(dto);
 
             if (!validator.IsValid)
             {
                 return BadRequest(validator.Errors);
             }
 
-            var user = await _accountService.GetByEmailAsync(model.Email);
+            var user = await _accountService.GetByEmailAsync(dto.Email);
 
-            var passwordValidator = await _accountPasswordService.VerifyPasswordAsync(user, model.Password);
+            var passwordValidator = await _accountPasswordService.VerifyPasswordAsync(user, dto.Password);
             if (passwordValidator == PasswordVerificationResult.Failed)
             {
                 return Unauthorized(passwordValidator);
@@ -107,39 +103,6 @@ namespace Disco.ApiServices.Controllers.Admin
             userResponseDto.User = user;
 
             return Ok(userResponseDto);
-        }
-
-        [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
-        {
-            var user = await _accountService.GetByEmailAsync(dto.Email);
-
-            if (user == null)
-                return BadRequest("User is null");
-
-            var passwordResetToken = await _accountPasswordService.GetPasswordConfirmationTokenAsync(user);
-
-            _emailService.EmailConfirmation(new Business.Dtos.EmailNotifications.EmailConfirmationDto
-            {
-                ToEmail = user.Email,
-                IsHtmlTemplate = true,
-                MessageHeader = "Email confirmation"
-            });
-
-            return Ok(passwordResetToken);
-        }
-
-        [HttpPut("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
-        {
-            var user = await _accountService.GetByEmailAsync(dto.Email);
-
-            if (user == null)
-                return BadRequest();
-
-            await _accountPasswordService.ChengePasswordAsync(user, dto.ConfirmationToken, dto.Password);
-
-            return Ok("Password successfuly changed");
         }
     }
 }
