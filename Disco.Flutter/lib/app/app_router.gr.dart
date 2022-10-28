@@ -68,7 +68,8 @@ class AppRouter extends _i1.RootStackRouter {
           return const _i8.SearchPage();
         },
         transitionsBuilder: _i1.TransitionsBuilders.fadeIn,
-        durationInMilliseconds: 1500,
+        durationInMilliseconds: 800,
+        reverseDurationInMilliseconds: 500,
         opaque: true,
         barrierDismissible: false),
     StoryRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(

@@ -30,7 +30,8 @@ import 'package:flutter/material.dart';
       path: '/search_page',
       page: SearchPage,
       transitionsBuilder: TransitionsBuilders.fadeIn,
-      durationInMilliseconds: 1500,
+      durationInMilliseconds: 800,
+      reverseDurationInMilliseconds: 500,
     ),
     AutoRoute(path: '/story', page: StoryPage),
     CustomRoute(

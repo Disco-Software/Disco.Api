@@ -981,7 +981,7 @@ packages:
     source: sdk
     version: "0.0.99"
   sliver_tools:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: sliver_tools
       url: "https://pub.dartlang.org"
