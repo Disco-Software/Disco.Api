@@ -7,10 +7,10 @@ namespace Disco.Api.AppSetup
 {
     public static class DbContextConfigurator
     {
-        public static void ConfigureDbContext(this IServiceCollection serviceDescriptors, IConfiguration configuration)
+        public static void ConfigureDbContext(this IServiceCollection serviceDescriptors, string connectionString)
         {
             serviceDescriptors.AddDbContext<ApiDbContext>(o =>
-                o.UseSqlServer(configuration.GetConnectionString("ProdactionConnection"),
+                o.UseSqlServer(connectionString,
                 b => b.MigrationsAssembly("../Disco.DAL")));
         }
     }

@@ -26,33 +26,33 @@ namespace Disco.ApiServices.Controllers
         public async Task<IActionResult> Create([FromBody] CreateFollowerDto dto)
         {
             var user = await _accountService.GetAsync(HttpContext.User);
-            var friend = await _accountService.GetByIdAsync(dto.FriendId);
+            var follower = await _accountService.GetByIdAsync(dto.FollowerAccountId);
 
-            var friendResponse = await _followerService.CreateAsync(user, friend, dto);
+            var followerDto = await _followerService.CreateAsync(user, follower, dto);
 
-            return Ok(friendResponse);
+            return Ok(followerDto);
         }
 
-        [HttpGet("get/{friendId:int}")]
-        public async Task<IActionResult> GetFriend([FromRoute] int friendId)
+        [HttpGet("{followerId:int}")]
+        public async Task<IActionResult> GetFollowerAsync([FromRoute] int followerId)
         {
-            var friend = await _followerService.GetAsync(friendId);
+            var follower = await _followerService.GetAsync(followerId);
 
-            return Ok(friend);
+            return Ok(follower);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] GetAllFriendsDto dto)
+        public async Task<IActionResult> GetAll([FromQuery] GetAllFollowersDto dto)
         {
-            var friends = await _followerService.GetAllFollowers(dto);
+            var followers = await _followerService.GetAllAsync(dto);
 
-            return Ok(friends);
+            return Ok(followers);
         }
 
-        [HttpDelete("{friendId:int}")]
-        public async Task DeleteFriend([FromRoute] int friendId)
+        [HttpDelete("{followerId:int}")]
+        public async Task DeleteFollowerAsync([FromRoute] int followerId)
         {
-            await _followerService.DeleteFriend(friendId);
+            await _followerService.DeleteAsync(followerId);
         }
     }
 }

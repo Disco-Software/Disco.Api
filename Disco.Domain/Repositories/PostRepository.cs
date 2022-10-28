@@ -70,7 +70,7 @@ namespace Disco.Domain.Repositories
 
             foreach (var friend in user.Account.Following)
             {
-                friend.AccountFollower = await _ctx.Accounts
+                friend.FollowerAccount = await _ctx.Accounts
                     .Include(p => p.Posts)
                     .ThenInclude(i => i.PostImages)
                     .Include(p => p.Posts)
@@ -81,14 +81,14 @@ namespace Disco.Domain.Repositories
                     .ThenInclude(l => l.Account)
                     .ThenInclude(p => p.Posts)
                     .ThenInclude(l => l.Likes)
-                    .Where(f => f.Id == friend.FollowerId)
+                    .Where(f => f.Id == friend.FollowerAccountId)
                     .FirstOrDefaultAsync();
-                posts.AddRange(friend.AccountFollower.Posts);             
+                posts.AddRange(friend.FollowerAccount.Posts);             
             }
 
             foreach (var friend in user.Account.Followers)
             {
-                friend.AccountFollower = await _ctx.Accounts
+                friend.FollowerAccount = await _ctx.Accounts
                     .Include(p => p.Posts)
                     .ThenInclude(i => i.PostImages)
                     .Include(p => p.Posts)
@@ -100,9 +100,9 @@ namespace Disco.Domain.Repositories
                     .ThenInclude(l => l.Account)
                     .ThenInclude(p => p.Posts)
                     .ThenInclude(l => l.Likes)
-                    .Where(f => f.Id == friend.FollowerId)
+                    .Where(f => f.Id == friend.FollowerAccountId)
                     .FirstOrDefaultAsync();
-                posts.AddRange(friend.AccountFollower.Posts);
+                posts.AddRange(friend.FollowerAccount.Posts);
             }
 
             return posts

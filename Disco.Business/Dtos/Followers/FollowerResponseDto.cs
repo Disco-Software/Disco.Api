@@ -1,6 +1,6 @@
-﻿namespace Disco.Business.Dtos.Friends
+﻿namespace Disco.Business.Dtos.Followers
 {
-    public class FriendResponseDto
+    public class FollowerResponseDto
     {
         public Domain.Models.Account UserAccount { get; set; }
         public Domain.Models.Account FollowerAccount { get; set; }

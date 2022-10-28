@@ -57,14 +57,14 @@ namespace Disco.Business.Services
             return await _postRepository.GetAllUserPosts(user.Id, model.PageSize, model.PageNumber);
         }
 
-        public async Task<List<Post>> GetAllPosts(User user, GetAllPostsDto model)
+        public async Task<List<Post>> GetAllPosts(User user, GetAllPostsDto dto)
         {
-            var posts = await _postRepository.GetAll(user.Id, model.PageSize, model.PageNumber);
+            var posts = await _postRepository.GetAll(user.Id, dto.PageSize, dto.PageNumber);
 
             for(int i = 0; i < posts.Count; i++)
             {
                 var post = posts[i];
-                post.Likes = await _likeService.GetAllLikesAsync(post.Id);
+                post.Likes = await _likeService.GetAllLikesAsync(post.Id, dto.PageNumber, dto.PageSize);
             }
 
             return posts;
@@ -75,7 +75,7 @@ namespace Disco.Business.Services
             return await _postRepository.GetAsync(id);
         }
 
-        public async Task<List<Post>> SearchPostsAsync(string search)
+        public async Task<List<Post>> GetPostsByDescriptionAsync(string search)
         {
             return await _postRepository.GetPostsByDescriptionAsync(search);
         }
