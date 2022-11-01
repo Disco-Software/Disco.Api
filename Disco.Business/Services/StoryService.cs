@@ -51,7 +51,7 @@ namespace Disco.Business.Services
             story.DateOfCreation = DateTime.UtcNow;
 
             user.Account.Stories.Add(story);
-            await _storyRepository.AddAsync(story, user.Account);
+            await _storyRepository.AddAsync(story);
 
             return story;
         }

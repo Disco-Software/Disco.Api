@@ -47,7 +47,7 @@ namespace Disco.Tests.Services
                 .Setup(like => like.AddAsync(It.IsAny<Like>()))
                 .Returns(Task.CompletedTask);
 
-            var mapperConfig = new MapperConfiguration(ms => ms.AddProfile(new MapProfile()));
+            var mapperConfig = new MapperConfiguration(ms => ms.AddProfile(new PostMapProfile()));
 
             IMapper mapper = mapperConfig.CreateMapper();
 

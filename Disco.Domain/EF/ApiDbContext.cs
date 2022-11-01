@@ -9,7 +9,6 @@ namespace Disco.Domain.EF
     public class ApiDbContext : IdentityDbContext<User,Role,int>, IDesignTimeDbContextFactory<ApiDbContext>
     {
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<Account> Profiles { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<PostSong> PostSongs { get; set; }
@@ -22,19 +21,20 @@ namespace Disco.Domain.EF
         public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options) { }
         public ApiDbContext() { }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(builder);
+            base.OnModelCreating(modelBuilder);
 
-            builder.Entity<User>()
+            modelBuilder.Entity<User>()
                 .HasOne(p => p.Account)
                 .WithOne(u => u.User)
                 .HasForeignKey<Account>(p => p.UserId);
             
-            builder.Entity<Account>()
+            modelBuilder.Entity<Account>()
                 .HasMany(f => f.Followers)
                 .WithOne(p => p.FollowingAccount)
-                .HasForeignKey(f => f.FollowingAccountId);
+                .HasForeignKey(f => f.FollowingAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         public ApiDbContext CreateDbContext(string[] args)

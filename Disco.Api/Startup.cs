@@ -68,6 +68,9 @@ namespace Disco.Api
             services.AddOptions<GoogleOptions>()
                 .Configure(Configuration.GetSection("Google").Bind)
                 .ValidateDataAnnotations();
+            services.AddOptions<AudDOptions>()
+                .Configure(Configuration.GetSection("AudDOptions").Bind)
+                .ValidateDataAnnotations();
 
             services.ConfigureAutoMapper();
 

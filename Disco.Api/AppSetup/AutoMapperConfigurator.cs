@@ -16,7 +16,7 @@ namespace Disco.Api.AppSetup
                 options.AddProfile(new StoryMapProfile());
                 options.AddProfile(new RoleMapProfile());
                 options.AddProfile(new FollowerMapProfile());
-            }));
+            }).CreateMapper());
         }
     }
 }

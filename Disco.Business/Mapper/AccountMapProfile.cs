@@ -28,7 +28,8 @@ namespace Disco.Business.Mapper
                 .ForMember(f => f.FollowerAccountId, opt => opt.Ignore())
                 .ForMember(f => f.IsFollowing, opt => opt.Ignore())
                 .ForMember(f => f.FollowingAccountId, opt => opt.Ignore())
-                .ForMember(f => f.FollowingAccount, opt => opt.Ignore());
+                .ForMember(f => f.FollowingAccount, opt => opt.Ignore())
+                .ForMember(f => f.Id, o => o.Ignore());
         }
     }
 }

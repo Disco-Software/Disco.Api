@@ -18,7 +18,7 @@ namespace Disco.Tests.Services
         [TestMethod]
         public async Task CreateAsync_ReturnsSuccessResponse()
         {
-            var mapperConfig = new MapperConfiguration(ms => ms.AddProfile(new MapProfile()));
+            var mapperConfig = new MapperConfiguration(ms => ms.AddProfile(new AccountMapProfile()));
 
             IMapper mapper = mapperConfig.CreateMapper();
 
@@ -68,7 +68,7 @@ namespace Disco.Tests.Services
         [TestMethod]
         public void DeleteAsync_ReturnsSuccessResponse()
         {
-            var mapperConfig = new MapperConfiguration(ms => ms.AddProfile(new MapProfile()));
+            var mapperConfig = new MapperConfiguration(ms => ms.AddProfile(new FollowerMapProfile()));
 
             IMapper mapper = mapperConfig.CreateMapper();
 

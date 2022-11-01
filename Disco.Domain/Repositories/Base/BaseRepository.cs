@@ -21,6 +21,7 @@ namespace Disco.Domain.Repositories.Base
         public virtual async Task AddAsync(T item)
         {
             await _ctx.Set<T>().AddAsync(item);
+            
             await _ctx.SaveChangesAsync();
         }
 

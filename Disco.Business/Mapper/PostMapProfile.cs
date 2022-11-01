@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Disco.Business.Dtos.AudD;
 using Disco.Business.Dtos.Images;
 using Disco.Business.Dtos.Posts;
 using Disco.Business.Dtos.Songs;
@@ -51,6 +52,11 @@ namespace Disco.Business.Mapper
                 .ForMember(p => p.PostId, opt => opt.Ignore())
                 .ForMember(p => p.Post, opt => opt.Ignore())
                 .ForMember(p => p.UserName, opt => opt.Ignore());
+
+            CreateMap<PostSong, AudDRequestDto>()
+                .ForMember(p => p.@return, o => o.Ignore())
+                .ForMember(p => p.api_token, o => o.Ignore())
+                .ForMember(p => p.url, o => o.Ignore());    
         }
     }
 }

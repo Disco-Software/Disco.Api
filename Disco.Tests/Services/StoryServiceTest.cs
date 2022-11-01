@@ -72,7 +72,7 @@ namespace Disco.Tests.Services
             var mockedStoryRepository = new Mock<IStoryRepository>();
 
             mockedStoryRepository
-                .Setup(s => s.AddAsync(It.IsAny<Story>(), It.IsAny<Account>()))
+                .Setup(s => s.AddAsync(It.IsAny<Story>()))
                 .Returns(Task.CompletedTask);
 
             var mockedStoryImageService = new Mock<IStoryImageService>();
@@ -97,7 +97,7 @@ namespace Disco.Tests.Services
 
             storyDto.StoryImages.Add(file);
 
-            var mapperConfiguration = new MapperConfiguration(config => config.AddProfile<MapProfile>());
+            var mapperConfiguration = new MapperConfiguration(config => config.AddProfile<StoryMapProfile>());
             var mapper = mapperConfiguration.CreateMapper();
 
             var service = new StoryService(mockedStoryRepository.Object, mockedStoryImageService.Object, null, mapper);
@@ -149,7 +149,7 @@ namespace Disco.Tests.Services
             var mockedStoryRepository = new Mock<IStoryRepository>();
 
             mockedStoryRepository
-                .Setup(s => s.AddAsync(It.IsAny<Story>(), It.IsAny<Account>()))
+                .Setup(s => s.AddAsync(It.IsAny<Story>()))
                 .Returns(Task.CompletedTask);
 
             var mockedStoryVideoService = new Mock<IStoryVideoService>();
@@ -174,7 +174,7 @@ namespace Disco.Tests.Services
 
             storyDto.StoryVideos.Add(file);
 
-            var mapperConfiguration = new MapperConfiguration(config => config.AddProfile<MapProfile>());
+            var mapperConfiguration = new MapperConfiguration(config => config.AddProfile<StoryMapProfile>());
             var mapper = mapperConfiguration.CreateMapper();
 
             var service = new StoryService(mockedStoryRepository.Object, null, mockedStoryVideoService.Object, mapper);

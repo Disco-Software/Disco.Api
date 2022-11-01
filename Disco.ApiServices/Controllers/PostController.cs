@@ -11,6 +11,9 @@ using System.Linq;
 using Disco.Business.Dtos.Songs;
 using Disco.Business.Dtos.Images;
 using Disco.Business.Dtos.Videos;
+using Microsoft.Extensions.Options;
+using Disco.Business.Options;
+using Disco.Business.Dtos.AudD;
 
 namespace Disco.ApiServices.Controllers
 {
@@ -23,23 +26,28 @@ namespace Disco.ApiServices.Controllers
         private readonly IImageService _imageService;
         private readonly ISongService _songService;
         private readonly IVideoService _videoService;
+        private readonly IAudDService _audDService;
         private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
+        private readonly IOptions<AudDOptions> _options;
 
         public PostController(
             IPostService postService,
             IImageService imageService,
             ISongService songService,
             IVideoService videoService,
+            IAudDService audDService,
             IAccountService accountService,
+            IOptions<AudDOptions> options,
             IMapper mapper)
         {
             _postService = postService;
-            _songService = songService;
             _imageService = imageService;
             _songService = songService;
             _videoService = videoService;
+            _audDService = audDService;
             _accountService = accountService;
+            _options = options;
             _mapper = mapper;
         }
 
@@ -88,10 +96,23 @@ namespace Disco.ApiServices.Controllers
 
                     var postSong = await _songService.CreatePostSongAsync(postSongDto);
 
-                    dto.PostSongNames.Remove(name);
-                    dto.ExecutorNames.Remove(executor);
-                    dto.PostSongs.Remove(songSource);
-                    dto.PostSongImages.Remove(songImage);
+                    var audDRequestDto = _mapper.Map<AudDRequestDto>(postSong);
+                    audDRequestDto.api_token = _options.Value.Token;
+                    audDRequestDto.url = postSong.Source;
+                    audDRequestDto.@return = _options.Value.Returns;
+
+                    var audDDto = await _audDService.RecognizeAsync(audDRequestDto);
+                    if(audDDto != null)
+                    {
+                        dto.PostSongNames.Remove(name);
+                        dto.ExecutorNames.Remove(executor);
+                        dto.PostSongs.Remove(songSource);
+                        dto.PostSongImages.Remove(songImage);
+
+                        post.PostSongs.Remove(postSong);
+
+                        break;
+                    }
 
                     post.PostSongs.Add(postSong);
                 }

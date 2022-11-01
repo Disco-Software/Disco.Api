@@ -16,17 +16,17 @@ namespace Disco.ApiServices.Controllers.Admin
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private readonly IRoleService _adminRoleService;
+        private readonly IRoleService _roleService;
 
-        public RoleController(IRoleService adminRoleService)
+        public RoleController(IRoleService roleService)
         {
-            _adminRoleService = adminRoleService;
+            _roleService = roleService;
         }
 
-        [HttpPost("create")]
-        public async Task<IActionResult> Create([FromBody] CreateRoleDto model)
+        [HttpPost("create"), AllowAnonymous]
+        public async Task<IActionResult> Create([FromBody] CreateRoleDto dto)
         {
-            var role = await _adminRoleService.CreateRoleAsync(model);
+            var role = await _roleService.CreateRoleAsync(dto);
 
             return Ok(role);
         }
@@ -34,7 +34,7 @@ namespace Disco.ApiServices.Controllers.Admin
         [HttpGet]
         public async Task<ActionResult<List<Role>>> GetAllRoles([FromQuery] GetAllRolesDto dto)
         {
-            return await _adminRoleService.GetAllRoles(new GetAllRolesDto { PageNumber = 1, PageSize = 10});
+            return await _roleService.GetAllRoles(new GetAllRolesDto { PageNumber = 1, PageSize = 10});
         }
     }
 }

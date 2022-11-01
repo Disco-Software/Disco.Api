@@ -12,7 +12,8 @@ namespace Disco.Business.Mapper
     {
         public FollowerMapProfile()
         {
-            CreateMap<CreateFollowerDto, UserFollower>();
+            CreateMap<CreateFollowerDto, UserFollower>()
+                .ForMember(u => u.Id, o => o.Ignore());
             CreateMap<AccountDto, FollowerResponseDto>()
                 .ForMember(source => source.UserAccount, opt => opt.Ignore())
                 .ForMember(source => source.FollowerAccount, opt => opt.Ignore())

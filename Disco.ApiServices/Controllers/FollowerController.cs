@@ -4,6 +4,7 @@ using Disco.Business.Dtos.Friends;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Disco.ApiServices.Controllers
 {
@@ -26,9 +27,9 @@ namespace Disco.ApiServices.Controllers
         public async Task<IActionResult> Create([FromBody] CreateFollowerDto dto)
         {
             var user = await _accountService.GetAsync(HttpContext.User);
-            var follower = await _accountService.GetByIdAsync(dto.FollowerAccountId);
+            var following = await _accountService.GetByIdAsync(dto.FollowerAccountId);
 
-            var followerDto = await _followerService.CreateAsync(user, follower, dto);
+            var followerDto = await _followerService.CreateAsync(user, following, dto);
 
             return Ok(followerDto);
         }

@@ -23,22 +23,22 @@ namespace Disco.Business.Services
             _mapper = mapper;
         }
 
-        public async Task<UserFollower> CreateAsync(User user, User follower, CreateFollowerDto dto)
+        public async Task<UserFollower> CreateAsync(User user, User following, CreateFollowerDto dto)
         {
             var userFollower = _mapper.Map<UserFollower>(user);
-            userFollower.FollowerAccount = follower.Account;
-            userFollower.FollowingAccount = user.Account;
-            userFollower.FollowingAccountId = user.AccountId;
-            userFollower.FollowerAccount.Id = follower.Account.Id;
+            userFollower.FollowerAccount = user.Account;
+            userFollower.FollowingAccount = following.Account;
+            userFollower.FollowingAccountId = following.AccountId;
+            userFollower.FollowerAccountId = user.Account.Id;
 
             if (user.Account.Following.All(f => f.FollowerAccountId != dto.FollowerAccountId))
             {
                 user.Account.Following.Add(userFollower);
             }
 
-            if (follower.Account.Followers.All(f => f.FollowingAccountId != user.Account.Id))
+            if (following.Account.Followers.All(f => f.FollowingAccountId != user.Account.Id))
             {
-                follower.Account.Followers.Add(userFollower);
+                following.Account.Followers.Add(userFollower);
             }
 
             userFollower.IsFollowing = true;

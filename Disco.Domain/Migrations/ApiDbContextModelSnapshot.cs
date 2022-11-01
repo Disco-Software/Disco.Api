@@ -43,7 +43,7 @@ namespace Disco.Domain.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Account");
+                    b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.Like", b =>
@@ -348,14 +348,17 @@ namespace Disco.Domain.Migrations
                     b.Property<int>("FollowingAccountId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("FollowingAccountId1")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsFollowing")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FollowerAccountId");
-
                     b.HasIndex("FollowingAccountId");
+
+                    b.HasIndex("FollowingAccountId1");
 
                     b.ToTable("UserFollowers");
                 });
@@ -564,15 +567,13 @@ namespace Disco.Domain.Migrations
                 {
                     b.HasOne("Disco.Domain.Models.Account", "FollowerAccount")
                         .WithMany("Following")
-                        .HasForeignKey("FollowerAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("FollowingAccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Disco.Domain.Models.Account", "FollowingAccount")
                         .WithMany("Followers")
-                        .HasForeignKey("FollowingAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FollowingAccountId1");
 
                     b.Navigation("FollowerAccount");
 

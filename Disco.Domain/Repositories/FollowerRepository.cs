@@ -5,6 +5,7 @@ using Disco.Domain.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories
@@ -18,6 +19,8 @@ namespace Disco.Domain.Repositories
         public override async Task AddAsync(UserFollower userFollower)
         {
             await _ctx.UserFollowers.AddAsync(userFollower);
+
+            await _ctx.SaveChangesAsync();
         }
         public override async Task<UserFollower> GetAsync(int id)
         {

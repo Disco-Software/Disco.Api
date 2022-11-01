@@ -13,16 +13,14 @@ namespace Disco.Domain.Repositories
     {
         public StoryRepository(ApiDbContext ctx) : base(ctx) { }
 
-        public async Task AddAsync(Story story, Account profile)
+        public async Task AddAsync(Story story)
         {
             await _ctx.Stories.AddAsync(story);
            
-            profile.Stories.Add(story);
-
             await _ctx.SaveChangesAsync();
         }
 
-        public async Task<List<Story>> GetAllAsync(int profileId, int pageNumber, int pageSize)
+        public async Task<List<Story>> GetAllAsync(int accountId, int pageNumber, int pageSize)
         {
             var storyList = new List<Story>();
 
@@ -50,7 +48,7 @@ namespace Disco.Domain.Repositories
                 .ThenInclude(f => f.FollowerAccount)
                 .ThenInclude(f => f.Stories)
                 .ThenInclude(f => f.StoryVideos)
-                .Where(u => u.Id == profileId)
+                .Where(u => u.Id == accountId)
                 .FirstOrDefaultAsync();
             
             storyList.AddRange(profile.Stories);

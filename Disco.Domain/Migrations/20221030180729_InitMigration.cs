@@ -75,7 +75,7 @@ namespace Disco.Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Account",
+                name: "Accounts",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -87,9 +87,9 @@ namespace Disco.Domain.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Account", x => x.Id);
+                    table.PrimaryKey("PK_Accounts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Account_AspNetUsers_UserId",
+                        name: "FK_Accounts_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -195,9 +195,9 @@ namespace Disco.Domain.Migrations
                 {
                     table.PrimaryKey("PK_Posts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Posts_Account_AccountId",
+                        name: "FK_Posts_Accounts_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "Account",
+                        principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -215,9 +215,9 @@ namespace Disco.Domain.Migrations
                 {
                     table.PrimaryKey("PK_Stories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Stories_Account_AccountId",
+                        name: "FK_Stories_Accounts_AccountId",
                         column: x => x.AccountId,
-                        principalTable: "Account",
+                        principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -228,27 +228,26 @@ namespace Disco.Domain.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserAccountId = table.Column<int>(type: "int", nullable: false),
-                    FollowerId = table.Column<int>(type: "int", nullable: false),
-                    AccountFollowerId = table.Column<int>(type: "int", nullable: true),
-                    IsConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    IsFriend = table.Column<bool>(type: "bit", nullable: false)
+                    FollowingAccountId = table.Column<int>(type: "int", nullable: false),
+                    FollowingAccountId1 = table.Column<int>(type: "int", nullable: true),
+                    FollowerAccountId = table.Column<int>(type: "int", nullable: false),
+                    IsFollowing = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserFollowers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserFollowers_Account_AccountFollowerId",
-                        column: x => x.AccountFollowerId,
-                        principalTable: "Account",
+                        name: "FK_UserFollowers_Accounts_FollowingAccountId",
+                        column: x => x.FollowingAccountId,
+                        principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserFollowers_Account_UserAccountId",
-                        column: x => x.UserAccountId,
-                        principalTable: "Account",
+                        name: "FK_UserFollowers_Accounts_FollowingAccountId1",
+                        column: x => x.FollowingAccountId1,
+                        principalTable: "Accounts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -377,8 +376,8 @@ namespace Disco.Domain.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Account_UserId",
-                table: "Account",
+                name: "IX_Accounts_UserId",
+                table: "Accounts",
                 column: "UserId",
                 unique: true);
 
@@ -462,14 +461,14 @@ namespace Disco.Domain.Migrations
                 column: "StoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserFollowers_AccountFollowerId",
+                name: "IX_UserFollowers_FollowingAccountId",
                 table: "UserFollowers",
-                column: "AccountFollowerId");
+                column: "FollowingAccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserFollowers_UserAccountId",
+                name: "IX_UserFollowers_FollowingAccountId1",
                 table: "UserFollowers",
-                column: "UserAccountId");
+                column: "FollowingAccountId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -520,7 +519,7 @@ namespace Disco.Domain.Migrations
                 name: "Stories");
 
             migrationBuilder.DropTable(
-                name: "Account");
+                name: "Accounts");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

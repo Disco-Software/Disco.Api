@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Disco.Domain.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20221017172607_InitMigration")]
+    [Migration("20221030180729_InitMigration")]
     partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,7 +45,7 @@ namespace Disco.Domain.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Account");
+                    b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.Like", b =>
@@ -344,26 +344,23 @@ namespace Disco.Domain.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AccountFollowerId")
+                    b.Property<int>("FollowerAccountId")
                         .HasColumnType("int");
 
-                    b.Property<int>("FollowerId")
+                    b.Property<int>("FollowingAccountId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsConfirmed")
+                    b.Property<int?>("FollowingAccountId1")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsFollowing")
                         .HasColumnType("bit");
-
-                    b.Property<bool>("IsFriend")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("UserAccountId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountFollowerId");
+                    b.HasIndex("FollowingAccountId");
 
-                    b.HasIndex("UserAccountId");
+                    b.HasIndex("FollowingAccountId1");
 
                     b.ToTable("UserFollowers");
                 });
@@ -570,19 +567,19 @@ namespace Disco.Domain.Migrations
 
             modelBuilder.Entity("Disco.Domain.Models.UserFollower", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Account", "AccountFollower")
+                    b.HasOne("Disco.Domain.Models.Account", "FollowerAccount")
                         .WithMany("Following")
-                        .HasForeignKey("AccountFollowerId");
-
-                    b.HasOne("Disco.Domain.Models.Account", "UserAccount")
-                        .WithMany("Followers")
-                        .HasForeignKey("UserAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("FollowingAccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("AccountFollower");
+                    b.HasOne("Disco.Domain.Models.Account", "FollowingAccount")
+                        .WithMany("Followers")
+                        .HasForeignKey("FollowingAccountId1");
 
-                    b.Navigation("UserAccount");
+                    b.Navigation("FollowerAccount");
+
+                    b.Navigation("FollowingAccount");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
