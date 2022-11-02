@@ -1,3 +1,5 @@
+import 'package:disco_app/data/network/network_models/profile_network.dart';
+
 class UserTokenResponse {
   User? user;
   String? accesToken;
@@ -117,43 +119,43 @@ class User {
   }
 }
 
-class Profile {
-  int? id;
-  String? status;
-  String? photo;
-  List<Posts>? posts;
-  int? userId;
-  String? user;
-
-  Profile({this.id, this.status, this.photo, this.posts, this.userId, this.user});
-
-  Profile.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    status = json['status'];
-    photo = json['photo'];
-    if (json['posts'] != null) {
-      posts = <Posts>[];
-      json['posts'].forEach((v) {
-        posts!.add(Posts.fromJson(v));
-      });
-    }
-    userId = json['userId'];
-    user = json['user'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['status'] = status;
-    data['photo'] = photo;
-    if (posts != null) {
-      data['posts'] = posts!.map((v) => v.toJson()).toList();
-    }
-    data['userId'] = userId;
-    data['user'] = user;
-    return data;
-  }
-}
+// class Profile {
+//   int? id;
+//   String? status;
+//   String? photo;
+//   List<Posts>? posts;
+//   int? userId;
+//   String? user;
+//
+//   Profile({this.id, this.status, this.photo, this.posts, this.userId, this.user});
+//
+//   Profile.fromJson(Map<String, dynamic> json) {
+//     id = json['id'];
+//     status = json['status'];
+//     photo = json['photo'];
+//     if (json['posts'] != null) {
+//       posts = <Posts>[];
+//       json['posts'].forEach((v) {
+//         posts!.add(Posts.fromJson(v));
+//       });
+//     }
+//     userId = json['userId'];
+//     user = json['user'];
+//   }
+//
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = <String, dynamic>{};
+//     data['id'] = id;
+//     data['status'] = status;
+//     data['photo'] = photo;
+//     if (posts != null) {
+//       data['posts'] = posts!.map((v) => v.toJson()).toList();
+//     }
+//     data['userId'] = userId;
+//     data['user'] = user;
+//     return data;
+//   }
+// }
 
 class Posts {
   int? id;

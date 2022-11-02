@@ -41,6 +41,9 @@ class LoginBloc extends Bloc<LoginPageEvent, LoginPageState> {
           userId: '${authResult?.user?.id}',
           userName: authResult?.user?.userName,
           userPhoto: authResult?.user?.profile?.photo,
+          moto: authResult?.user?.profile?.status,
+          currentFollowers: authResult?.user?.profile?.followers?.length,
+          goalFollowers: authResult?.user?.profile?.followers?.length,
         );
         dio.options.headers.addAll({'Authorization': 'Bearer: ${authResult?.accesToken}'});
       } else {

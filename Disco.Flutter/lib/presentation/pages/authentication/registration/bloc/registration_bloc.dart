@@ -38,6 +38,9 @@ class RegistrationBloc extends Bloc<RegistrationPageEvent, RegistrationPageState
         userId: '${response?.user?.id}',
         userName: response?.user?.userName,
         userPhoto: response?.user?.profile?.photo,
+        moto: response?.user?.profile?.status,
+        currentFollowers: response?.user?.profile?.followers?.length,
+        goalFollowers: response?.user?.profile?.followers?.length,
       );
       dio.options.headers.addAll({'Authorization': 'Bearer: ${response?.accesToken}'});
     } else {

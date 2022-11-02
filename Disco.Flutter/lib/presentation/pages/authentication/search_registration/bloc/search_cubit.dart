@@ -74,6 +74,9 @@ class SearchCubit extends Cubit<SearchPageState> {
           userId: '${authResult?.user?.id}',
           userName: authResult?.user?.userName,
           userPhoto: authResult?.user?.profile?.photo,
+          moto: authResult?.user?.profile?.status,
+          currentFollowers: authResult?.user?.profile?.followers?.length,
+          goalFollowers: authResult?.user?.profile?.followers?.length,
         );
   }
 }
