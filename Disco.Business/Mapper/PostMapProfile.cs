@@ -20,8 +20,6 @@ namespace Disco.Business.Mapper
                 .ForMember(source => source.PostSongs, opt => opt.Ignore())
                 .ForMember(source => source.PostVideos, opt => opt.Ignore());
             
-            CreateMap<Post, PostResponseDto>();
-
             CreateMap<CreatePostDto, CreateImageDto>()
                 .ForMember(source => source.ImageFile, opt => opt.Ignore());
             

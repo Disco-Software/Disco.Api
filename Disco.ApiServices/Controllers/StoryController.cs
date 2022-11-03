@@ -11,7 +11,7 @@ namespace Disco.ApiServices.Controllers
 {
     [Route("api/user/story")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
+    [Authorize(AuthenticationSchemes = AuthSchema.UserToken)]
     public class StoryController : ControllerBase
     {
         private readonly IStoryService _storyService;

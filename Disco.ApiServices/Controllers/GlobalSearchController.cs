@@ -14,7 +14,7 @@ namespace Disco.ApiServices.Controllers
 {
     [Route("api/user/global/search")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
+    [Authorize(AuthenticationSchemes = AuthSchema.UserToken)]
     public class GlobalSearchController : ControllerBase
     {
         private readonly IPostService _postService;

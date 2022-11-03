@@ -14,7 +14,7 @@ namespace Disco.ApiServices.Controllers.Admin
     [Route("api/admin/statistics")]
     [ApiController]
     [Authorize(
-        AuthenticationSchemes = AuthScheme.UserToken,
+        AuthenticationSchemes = AuthSchema.UserToken,
         Roles = UserRole.Admin)]
     public class StatisticsController : ControllerBase
     {

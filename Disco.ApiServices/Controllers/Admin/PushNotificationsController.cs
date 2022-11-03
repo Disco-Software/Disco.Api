@@ -12,7 +12,7 @@ namespace Disco.ApiServices.Controllers.Admin
 {
     [Route("api/admin/notification")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = AuthScheme.UserToken, 
+    [Authorize(AuthenticationSchemes = AuthSchema.UserToken, 
         Roles = UserRole.Admin)]
     public class PushNotificationsController : ControllerBase
     {

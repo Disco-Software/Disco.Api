@@ -19,7 +19,7 @@ namespace Disco.Api.AppSetup
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })
            .AddCookie()
-          .AddJwtBearer(AuthScheme.UserToken, options =>
+          .AddJwtBearer(AuthSchema.UserToken, options =>
            {
                options.SaveToken = true;
                options.RequireHttpsMetadata = false;

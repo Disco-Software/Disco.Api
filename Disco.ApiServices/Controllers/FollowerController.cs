@@ -9,7 +9,7 @@ using System.Linq;
 namespace Disco.ApiServices.Controllers
 {
     [Route("api/user/followers")]
-    [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
+    [Authorize(AuthenticationSchemes = AuthSchema.UserToken)]
     [ApiController]
     public class FollowerController : ControllerBase
     {

@@ -13,7 +13,7 @@ namespace Disco.ApiServices.Controllers
 {
     [ApiController]
     [Route("api/user/account/details")]
-    [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
+    [Authorize(AuthenticationSchemes = AuthSchema.UserToken)]
     public class AccountDetailsController : Controller
     {
         private readonly IAccountDetailsService _accountDetailsService;
@@ -26,7 +26,7 @@ namespace Disco.ApiServices.Controllers
             _accountService = accountService;
         }
 
-        [HttpPut("update")]
+        [HttpPut("change/photo")]
         public async Task<IActionResult> Update([FromForm] UpdateAccountDto dto)
         {
             var user = await _accountService.GetAsync(HttpContext.User);

@@ -11,7 +11,7 @@ namespace Disco.ApiServices.Controllers
 {
     [Route("api/user/likes")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
+    [Authorize(AuthenticationSchemes = AuthSchema.UserToken)]
     public class LikeController : ControllerBase
     {
         private readonly IAccountService _accountService;

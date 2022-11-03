@@ -18,7 +18,7 @@ using Disco.Business.Dtos.AudD;
 namespace Disco.ApiServices.Controllers
 {
     [ApiController]
-    [Authorize(AuthenticationSchemes = AuthScheme.UserToken)]
+    [Authorize(AuthenticationSchemes = AuthSchema.UserToken)]
     [Route("api/user/posts")]
     public class PostController : Controller
     {
@@ -83,38 +83,23 @@ namespace Disco.ApiServices.Controllers
                 foreach (var song in dto.PostSongs.ToList())
                 {
                     var name = dto.PostSongNames.First();
-                    var executor = dto.ExecutorNames.First();
+                    var artist = dto.ExecutorNames.First();
                     var songSource = dto.PostSongs.First();
                     var songImage = dto.PostSongImages.First();
 
                     var postSongDto = _mapper.Map<CreateSongDto>(dto);
                     postSongDto.Name = name;
-                    postSongDto.ExecutorName = executor;
+                    postSongDto.ExecutorName = artist;
                     postSongDto.Post = post;
                     postSongDto.Image = songImage;
                     postSongDto.Song = songSource;
 
                     var postSong = await _songService.CreatePostSongAsync(postSongDto);
 
-                    var audDRequestDto = _mapper.Map<AudDRequestDto>(postSong);
-                    audDRequestDto.api_token = _options.Value.Token;
-                    audDRequestDto.url = postSong.Source;
-                    audDRequestDto.@return = _options.Value.Returns;
-
-                    var audDDto = await _audDService.RecognizeAsync(audDRequestDto);
-                    if(audDDto != null)
-                    {
-                        dto.PostSongNames.Remove(name);
-                        dto.ExecutorNames.Remove(executor);
-                        dto.PostSongs.Remove(songSource);
-                        dto.PostSongImages.Remove(songImage);
-
-                        post.PostSongs.Remove(postSong);
-
-                        break;
-                    }
-
-                    post.PostSongs.Add(postSong);
+                    dto.PostSongNames.Remove(name);
+                    dto.ExecutorNames.Remove(artist);
+                    dto.PostSongs.Remove(songSource);
+                    dto.PostSongImages.Remove(songImage);
                 }
             }
 

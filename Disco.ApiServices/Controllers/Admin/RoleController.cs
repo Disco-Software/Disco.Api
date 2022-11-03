@@ -11,7 +11,7 @@ namespace Disco.ApiServices.Controllers.Admin
 {
     [Route("api/admin/roles")]
     [Authorize(
-        AuthenticationSchemes = AuthScheme.UserToken, 
+        AuthenticationSchemes = AuthSchema.UserToken, 
         Roles = UserRole.Admin)]
     [ApiController]
     public class RoleController : ControllerBase
