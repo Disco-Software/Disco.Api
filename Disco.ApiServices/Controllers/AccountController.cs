@@ -87,6 +87,7 @@ namespace Disco.ApiServices.Controllers
             }
 
             var userInfo = await _facebookAuthService.GetUserInfo(dto.AccessToken);
+            userInfo.Name = userInfo.Name.Replace(" ", "_");
 
             var user = await _accountService.GetByEmailAsync(userInfo.Email);
             if(user != null)
@@ -143,6 +144,8 @@ namespace Disco.ApiServices.Controllers
 
             var userAccessToken = _tokenService.GenerateAccessToken(user);
             var userRefreshToken = _tokenService.GenerateRefreshToken();
+
+            await _accountService.SaveRefreshTokenAsync(user, userRefreshToken);
 
             var userRegisterResponseDto = _mapper.Map<UserResponseDto>(user);
             userRegisterResponseDto.RefreshToken = userRefreshToken;
