@@ -125,6 +125,7 @@ namespace Disco.Business.Services
 
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
+            user.Account.Status = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
 
             return user;
         }
@@ -135,6 +136,7 @@ namespace Disco.Business.Services
 
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
+            user.Account.Status = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
 
             return user;
         }
