@@ -56,7 +56,6 @@ namespace Disco.ApiServices.Controllers.Admin
             {
                 User = user,
                 UserId = user.Id,
-                Status = StatusTypes.NewArtist
             };
 
             await _accountService.CreateAsync(user);

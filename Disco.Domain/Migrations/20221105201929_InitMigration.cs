@@ -8,6 +8,22 @@ namespace Disco.Domain.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "AccountStatuses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LastStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FollowersCount = table.Column<int>(type: "int", nullable: false),
+                    NextStatusId = table.Column<int>(type: "int", nullable: false),
+                    UserTarget = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountStatuses", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -80,7 +96,6 @@ namespace Disco.Domain.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Cread = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Photo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false)
@@ -229,7 +244,6 @@ namespace Disco.Domain.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FollowingAccountId = table.Column<int>(type: "int", nullable: false),
-                    FollowingAccountId1 = table.Column<int>(type: "int", nullable: true),
                     FollowerAccountId = table.Column<int>(type: "int", nullable: false),
                     IsFollowing = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -237,14 +251,14 @@ namespace Disco.Domain.Migrations
                 {
                     table.PrimaryKey("PK_UserFollowers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserFollowers_Accounts_FollowingAccountId",
-                        column: x => x.FollowingAccountId,
+                        name: "FK_UserFollowers_Accounts_FollowerAccountId",
+                        column: x => x.FollowerAccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserFollowers_Accounts_FollowingAccountId1",
-                        column: x => x.FollowingAccountId1,
+                        name: "FK_UserFollowers_Accounts_FollowingAccountId",
+                        column: x => x.FollowingAccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -461,18 +475,21 @@ namespace Disco.Domain.Migrations
                 column: "StoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserFollowers_FollowerAccountId",
+                table: "UserFollowers",
+                column: "FollowerAccountId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserFollowers_FollowingAccountId",
                 table: "UserFollowers",
                 column: "FollowingAccountId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserFollowers_FollowingAccountId1",
-                table: "UserFollowers",
-                column: "FollowingAccountId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AccountStatuses");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 

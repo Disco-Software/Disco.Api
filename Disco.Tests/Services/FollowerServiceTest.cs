@@ -22,13 +22,13 @@ namespace Disco.Tests.Services
 
             IMapper mapper = mapperConfig.CreateMapper();
 
-            var mockedFriendRepo = new Mock<IFollowerRepository>();
+            var mockedFollowerRepo = new Mock<IFollowerRepository>();
 
-            _ = mockedFriendRepo
+            _ = mockedFollowerRepo
                 .Setup(obj => obj.AddAsync(It.IsAny<UserFollower>()))
                 .Returns(Task.FromResult(150));
 
-            var service = new FollowerService(mapper, mockedFriendRepo.Object);
+            var service = new FollowerService(mapper, mockedFollowerRepo.Object);
 
             var user = new User
             {

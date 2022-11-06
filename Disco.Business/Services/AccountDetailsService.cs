@@ -15,14 +15,16 @@ namespace Disco.Business.Services
         private readonly BlobServiceClient _blobServiceClient;
         private readonly IAccountRepository _accountRepository;
         private readonly IUserRepository _userRepository;
-
+        private readonly IAccountStatusRepository _accountStatusRepository;
         public AccountDetailsService(
             BlobServiceClient blobServiceClient,
             IAccountRepository accountRepository,
+            IAccountStatusRepository accountStatusRepository,
             IUserRepository userRepository)
         {
             _blobServiceClient = blobServiceClient;
             _accountRepository = accountRepository;
+            _accountStatusRepository = accountStatusRepository;
             _userRepository = userRepository;
         }
 

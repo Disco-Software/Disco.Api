@@ -36,5 +36,12 @@ namespace Disco.ApiServices.Controllers
             return Ok(user);
         }
 
+        [HttpGet("user")]
+        public async Task<IActionResult> GetCurrentUserAsync()
+        {
+           var user = await _accountService.GetAsync(HttpContext.User);
+
+            return Ok(user);
+        }
     }
 }

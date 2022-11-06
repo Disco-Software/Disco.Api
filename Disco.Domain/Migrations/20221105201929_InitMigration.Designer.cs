@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Disco.Domain.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20221030180729_InitMigration")]
+    [Migration("20221105201929_InitMigration")]
     partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,9 +34,6 @@ namespace Disco.Domain.Migrations
                     b.Property<string>("Photo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -46,6 +43,30 @@ namespace Disco.Domain.Migrations
                         .IsUnique();
 
                     b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("Disco.Domain.Models.AccountStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("FollowersCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NextStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserTarget")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AccountStatuses");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.Like", b =>
@@ -350,17 +371,14 @@ namespace Disco.Domain.Migrations
                     b.Property<int>("FollowingAccountId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FollowingAccountId1")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsFollowing")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FollowingAccountId");
+                    b.HasIndex("FollowerAccountId");
 
-                    b.HasIndex("FollowingAccountId1");
+                    b.HasIndex("FollowingAccountId");
 
                     b.ToTable("UserFollowers");
                 });
@@ -569,13 +587,15 @@ namespace Disco.Domain.Migrations
                 {
                     b.HasOne("Disco.Domain.Models.Account", "FollowerAccount")
                         .WithMany("Following")
-                        .HasForeignKey("FollowingAccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("FollowerAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Disco.Domain.Models.Account", "FollowingAccount")
                         .WithMany("Followers")
-                        .HasForeignKey("FollowingAccountId1");
+                        .HasForeignKey("FollowingAccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("FollowerAccount");
 

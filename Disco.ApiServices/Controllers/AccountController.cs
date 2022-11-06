@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Diagnostics;
+using Microsoft.Extensions.Hosting;
 
 namespace Disco.ApiServices.Controllers
 {
@@ -23,7 +25,6 @@ namespace Disco.ApiServices.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly IAccountPasswordService _accountPasswordService;
-        private readonly IAccountDetailsService _accountDetailsService;
         private readonly ITokenService _tokenService;
         private readonly IFacebookAuthService _facebookAuthService;
         private readonly IMapper _mapper;
@@ -31,13 +32,11 @@ namespace Disco.ApiServices.Controllers
         public AccountController(
             IAccountService accountService,
             IAccountPasswordService accountPasswordService,
-            IAccountDetailsService accountDetailsService,
             ITokenService tokenService,
             IFacebookAuthService facebookAuthService,
             IMapper mapper)
         {
             _accountService = accountService;
-            _accountDetailsService = accountDetailsService;
             _accountPasswordService = accountPasswordService;
             _tokenService = tokenService;
             _facebookAuthService = facebookAuthService;
@@ -104,7 +103,6 @@ namespace Disco.ApiServices.Controllers
                 var userRsponseDto = _mapper.Map<UserResponseDto>(user);
                 userRsponseDto.AccessToken = accessToken;
                 userRsponseDto.RefreshToken = refreshToken;
-                userRsponseDto.User = user;
 
                 return Ok(userRsponseDto);
             }
@@ -136,7 +134,6 @@ namespace Disco.ApiServices.Controllers
                 Email = userInfo.Email,
                 Account = new Domain.Models.Account
                 {
-                    Status = StatusTypes.NewArtist,
                     User = user,
                     Photo = userInfo.Picture.Data.Url,
                 }
@@ -197,9 +194,13 @@ namespace Disco.ApiServices.Controllers
                 Email = dto.Email,
                 Account = new Domain.Models.Account
                 {
-                    Status = StatusTypes.NewArtist,
                     User = user,
                     Photo = dto.Photo,
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Posts = new List<Post>(),
+                    Stories = new List<Story>(),
+                    UserId = user.Id
                 }
             };
 
@@ -254,8 +255,11 @@ namespace Disco.ApiServices.Controllers
                 Email = dto.Email,
                 Account = new Domain.Models.Account
                 {
-                    Status = StatusTypes.NewArtist,
                     User = user,
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Posts = new List<Post>(),
+                    Stories = new List<Story>(),
                 }
             };
             
@@ -294,7 +298,7 @@ namespace Disco.ApiServices.Controllers
 
                 return Ok(userRefreshedResponseDto);
             }
-
+            
             var accessResponseToken = _tokenService.GenerateAccessToken(user);
 
             var userResponseDto = _mapper.Map<UserResponseDto>(user);
@@ -312,12 +316,13 @@ namespace Disco.ApiServices.Controllers
             
             user.Email = dto.Email;
             user.UserName = dto.UserName;
-            user.Account = new Domain.Models.Account
-            {
-                User = user,
-                UserId = user.Id,
-                Status = StatusTypes.NewArtist
-            };
+            user.Account = new Domain.Models.Account();
+            user.Account.User = user;
+            user.Account.Id = user.Id;
+            user.Account.Followers = new List<UserFollower>();
+            user.Account.Following = new List<UserFollower>();
+            user.Account.Posts = new List<Post>();
+            user.Account.Stories = new List<Story>();
 
             await _accountService.CreateAsync(user);
 

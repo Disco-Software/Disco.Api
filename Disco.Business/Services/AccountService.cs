@@ -26,13 +26,16 @@ namespace Disco.Business.Services
     {
         private readonly UserManager<User> _userManager;
         private readonly IUserRepository _userRepository;
+        private readonly IAccountStatusRepository _accountStatusRepository;
 
         public AccountService(
             UserManager<User> userManager,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IAccountStatusRepository accountStatusRepository)
         {
             _userManager = userManager;
             _userRepository = userRepository;
+            _accountStatusRepository = accountStatusRepository;
         }
 
 
@@ -45,6 +48,7 @@ namespace Disco.Business.Services
 
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
+            user.Account.Status = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
 
             return user;
         }
@@ -70,6 +74,7 @@ namespace Disco.Business.Services
 
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
+            user.Account.Status = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
 
             return user;
         }
@@ -85,6 +90,7 @@ namespace Disco.Business.Services
 
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
+            user.Account.Status = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
 
             return user;
         }
@@ -93,6 +99,7 @@ namespace Disco.Business.Services
         {
            user.NormalizedEmail = _userManager.NormalizeEmail(user.Email);
            user.NormalizedUserName = _userManager.NormalizeName(user.UserName);
+           user.Account.Status = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
 
            var identityReesult = await _userManager.CreateAsync(user);
            if(identityReesult.Errors.Count() > 0)

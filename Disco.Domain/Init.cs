@@ -9,6 +9,7 @@ namespace Disco.Domain
         public static IServiceCollection ConfigureRepositories(this IServiceCollection serviceDescriptors)
         {
             return serviceDescriptors
+            .AddTransient<IAccountStatusRepository, AccountStatusRepository>()
             .AddTransient<IFollowerRepository, FollowerRepository>()
             .AddTransient<IImageRepository, ImageRepository>()
             .AddTransient<ILikeRepository, LikeRepository>()
