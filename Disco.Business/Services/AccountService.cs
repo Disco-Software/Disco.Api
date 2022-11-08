@@ -85,7 +85,7 @@ namespace Disco.Business.Services
 
             if(user == null)
             {
-                throw new UserNotFoundException($"user with this id -> {id}, not found");
+                return null;
             }
 
             await _userRepository.GetUserInfosAsync(user);
@@ -112,7 +112,7 @@ namespace Disco.Business.Services
 
            await _userManager.AddToRoleAsync(user, UserRole.User);
            user.RoleName = _userRepository.GetUserRole(user);
-        }
+         }
 
         public async Task<User> GetByLogInProviderAsync(string loginProvider, string providerKey)
         {
@@ -133,6 +133,11 @@ namespace Disco.Business.Services
         public async Task<User> GetByNameAsync(string name)
         {
             var user = await _userManager.FindByNameAsync(name);
+
+            if(user == null)
+            {
+                return null;
+            }
 
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);

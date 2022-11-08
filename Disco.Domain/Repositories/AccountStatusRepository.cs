@@ -17,7 +17,7 @@ namespace Disco.Domain.Repositories
         public async Task<AccountStatus> GetStatusByFollowersCountAsync(int followersCount)
         {
             return await _ctx.AccountStatuses
-                .FirstOrDefaultAsync(s => s.FollowersCount <= followersCount && followersCount <= s.UserTarget);
+                .FirstOrDefaultAsync(s => followersCount >= s.FollowersCount && followersCount <= s.UserTarget);
         }
     }
 }

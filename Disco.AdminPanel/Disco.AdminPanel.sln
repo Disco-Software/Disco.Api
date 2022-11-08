@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Admin", "Disco.Admin\Disco.Admin.csproj", "{A9F6B9B9-AC59-4EB5-A6D2-05B96F5AC004}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A9F6B9B9-AC59-4EB5-A6D2-05B96F5AC004}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9F6B9B9-AC59-4EB5-A6D2-05B96F5AC004}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9F6B9B9-AC59-4EB5-A6D2-05B96F5AC004}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9F6B9B9-AC59-4EB5-A6D2-05B96F5AC004}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F4A71A9E-40E3-4C11-89A9-D4A7ABC02C02}
+	EndGlobalSection
+EndGlobal
