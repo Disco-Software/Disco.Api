@@ -7,6 +7,7 @@ import 'package:disco_app/data/network/network_models/user_network.dart';
 import 'package:disco_app/data/network/request_models/access_token_requset_model.dart';
 import 'package:disco_app/data/network/request_models/apple_login.dart';
 import 'package:disco_app/data/network/request_models/google_login_request_model.dart';
+import 'package:disco_app/domain/stored_user_model.dart';
 import 'package:disco_app/presentation/pages/authentication/search_registration/bloc/search_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -69,14 +70,17 @@ class SearchCubit extends Cubit<SearchPageState> {
 
   void _saveUserData(UserTokenResponse? authResult) async {
     getIt.get<SecureStorageRepository>().saveUserModel(
-          refreshToken: authResult?.refreshToken,
-          token: authResult?.accesToken,
-          userId: '${authResult?.user?.id}',
-          userName: authResult?.user?.userName,
-          userPhoto: authResult?.user?.profile?.photo,
-          moto: authResult?.user?.profile?.status,
-          currentFollowers: authResult?.user?.profile?.followers?.length,
-          goalFollowers: authResult?.user?.profile?.followers?.length,
+          storedUserModel: StoredUserModel(
+            refreshToken: authResult?.refreshToken,
+            token: authResult?.accesToken,
+            userId: '${authResult?.user?.id}',
+            userName: authResult?.user?.userName,
+            userPhoto: authResult?.user?.account?.photo,
+            moto: authResult?.user?.account?.creed,
+            currentFollowers: authResult?.user?.account?.status?.followersCount,
+            userTarget: authResult?.user?.account?.status?.userTarget,
+            lastStatus: authResult?.user?.account?.status?.lastStatus,
+          ),
         );
   }
 }

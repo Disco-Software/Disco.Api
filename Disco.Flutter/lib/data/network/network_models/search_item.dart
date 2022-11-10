@@ -1,9 +1,9 @@
 import 'package:disco_app/data/network/network_models/post_network.dart';
-import 'package:disco_app/data/network/network_models/profile_network.dart';
+import 'package:disco_app/data/network/network_models/account_network.dart';
 
 class SearchItem {
   List<Post>? posts;
-  List<Profile>? users;
+  List<Account>? users;
 
   SearchItem({
     this.posts,
@@ -18,9 +18,9 @@ class SearchItem {
       });
     }
     if (json['profile'] != null) {
-      users = <Profile>[];
+      users = <Account>[];
       json['profile'].forEach((v) {
-        users!.add(Profile.fromJson(v));
+        users!.add(Account.fromJson(v));
       });
     }
   }

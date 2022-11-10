@@ -1,4 +1,4 @@
-import 'package:disco_app/data/network/network_models/profile_network.dart';
+import 'package:disco_app/data/network/network_models/account_network.dart';
 
 class UserTokenResponse {
   User? user;
@@ -50,7 +50,7 @@ class User {
   String? refreshToken;
   bool? lockoutEnabled;
   int? accessFailedCount;
-  Profile? profile;
+  Account? account;
 
   User(
       {this.id,
@@ -70,7 +70,7 @@ class User {
       this.lockoutEnabled,
       this.accessFailedCount,
       this.roleName,
-      this.profile});
+      this.account});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -90,7 +90,7 @@ class User {
     lockoutEnd = json['lockoutEnd'];
     lockoutEnabled = json['lockoutEnabled'];
     accessFailedCount = json['accessFailedCount'];
-    profile = json['profile'] != null ? Profile.fromJson(json['profile']) : null;
+    account = json['account'] != null ? Account.fromJson(json['account']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -112,8 +112,8 @@ class User {
     data['lockoutEnd'] = lockoutEnd;
     data['lockoutEnabled'] = lockoutEnabled;
     data['accessFailedCount'] = accessFailedCount;
-    if (profile != null) {
-      data['profile'] = profile!.toJson();
+    if (account != null) {
+      data['account'] = account!.toJson();
     }
     return data;
   }

@@ -5,6 +5,7 @@ import 'package:disco_app/app/extensions/secure_storage_extensions.dart';
 import 'package:disco_app/data/local/local_storage.dart';
 import 'package:disco_app/data/network/repositories/user_repository.dart';
 import 'package:disco_app/data/network/request_models/login_request.dart';
+import 'package:disco_app/domain/stored_user_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -36,14 +37,17 @@ class LoginBloc extends Bloc<LoginPageEvent, LoginPageState> {
       if (authResult?.user != null && authResult?.accesToken != null) {
         yield LoggedInState(userTokenResponse: authResult);
         secureStorageRepository.saveUserModel(
-          refreshToken: authResult?.refreshToken,
-          token: authResult?.accesToken,
-          userId: '${authResult?.user?.id}',
-          userName: authResult?.user?.userName,
-          userPhoto: authResult?.user?.profile?.photo,
-          moto: authResult?.user?.profile?.status,
-          currentFollowers: authResult?.user?.profile?.followers?.length,
-          goalFollowers: authResult?.user?.profile?.followers?.length,
+          storedUserModel: StoredUserModel(
+            refreshToken: authResult?.refreshToken,
+            token: authResult?.accesToken,
+            userId: '${authResult?.user?.id}',
+            userName: authResult?.user?.userName,
+            userPhoto: authResult?.user?.account?.photo,
+            moto: authResult?.user?.account?.creed,
+            currentFollowers: authResult?.user?.account?.status?.followersCount,
+            userTarget: authResult?.user?.account?.status?.userTarget,
+            lastStatus: authResult?.user?.account?.status?.lastStatus,
+          ),
         );
         dio.options.headers.addAll({'Authorization': 'Bearer: ${authResult?.accesToken}'});
       } else {

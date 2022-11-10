@@ -1,4 +1,4 @@
-import 'package:disco_app/data/network/network_models/profile_network.dart';
+import 'package:disco_app/data/network/network_models/account_network.dart';
 import 'package:disco_app/data/network/network_models/song_network.dart';
 import 'package:disco_app/data/network/network_models/video_network.dart';
 
@@ -12,7 +12,7 @@ class Post {
   List<PostVideo>? postVideos;
   int? profileId;
   List<Like>? likes;
-  Profile? profile;
+  Account? account;
   int? id;
 
   Post(
@@ -22,7 +22,7 @@ class Post {
       this.postVideos,
       this.likes,
       this.profileId,
-      this.profile,
+      this.account,
       this.id});
 
   Post.fromJson(Map<String, dynamic> json) {
@@ -52,7 +52,7 @@ class Post {
       });
     }
     profileId = json['profileId'];
-    profile = json['profile'] != null ? Profile.fromJson(json['profile']) : null;
+    account = json['account'] != null ? Account.fromJson(json['account']) : null;
     id = json['id'];
   }
 
@@ -72,8 +72,8 @@ class Post {
       data['postVideos'] = postVideos!.map((v) => v.toJson()).toList();
     }
     data['profileId'] = profileId;
-    if (profile != null) {
-      data['profile'] = profile!.toJson();
+    if (account != null) {
+      data['account'] = account!.toJson();
     }
     data['id'] = id;
     return data;

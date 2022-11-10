@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/data/local/local_storage.dart';
+import 'package:disco_app/domain/stored_user_model.dart';
 import 'package:disco_app/res/colors.dart';
-import 'package:disco_app/res/strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +21,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool _shouldShowSaved = false;
-  final userName = getIt.get<SecureStorageRepository>().read(key: Strings.userName);
-  final userPhoto = getIt.get<SecureStorageRepository>().read(key: Strings.userPhoto);
+  final storedUsername = getIt.get<SecureStorageRepository>().getStoredUserModel();
 
   @override
   Widget build(BuildContext context) {
@@ -53,62 +52,65 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       backgroundColor: DcColors.darkViolet,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            backgroundColor: DcColors.darkViolet,
-            leading: const SizedBox(),
-            leadingWidth: 0,
-            centerTitle: false,
-            title: const Text(
-              "DISCO",
-              style: TextStyle(
-                fontSize: 32,
-                fontFamily: 'Colonna',
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.start,
-            ),
-            actions: [
-              Builder(builder: (context) {
-                return InkWell(
-                    onTap: () {
-                      Scaffold.of(context).openDrawer();
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.only(right: 20),
-                      child: Icon(CupertinoIcons.list_bullet),
-                    ));
-              })
-            ],
-          ),
-          SliverList(
-              delegate: SliverChildListDelegate(
-            [
-              Stack(
-                alignment: Alignment.topCenter,
-                children: [
-                  DecoratedBox(
-                    decoration: const BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(color: Color(0xffb2a044ff), offset: Offset(0, 5), blurRadius: 10),
-                      ],
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(100),
-                        bottomRight: Radius.circular(100),
+      body: FutureBuilder(
+          future: storedUsername,
+          builder: (context, data) {
+            if (data.hasData) {
+              return CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    backgroundColor: DcColors.darkViolet,
+                    leading: const SizedBox(),
+                    leadingWidth: 0,
+                    centerTitle: false,
+                    title: const Text(
+                      "DISCO",
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontFamily: 'Colonna',
+                        fontWeight: FontWeight.bold,
                       ),
+                      textAlign: TextAlign.start,
                     ),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(100),
-                        bottomRight: Radius.circular(100),
-                      ),
-                      child: FutureBuilder(
-                          future: userPhoto,
-                          builder: (context, data) {
-                            if (data.hasData) {
-                              return Image.network(
-                                '${data.data}',
+                    actions: [
+                      Builder(builder: (context) {
+                        return InkWell(
+                            onTap: () {
+                              Scaffold.of(context).openDrawer();
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.only(right: 20),
+                              child: Icon(CupertinoIcons.list_bullet),
+                            ));
+                      })
+                    ],
+                  ),
+                  SliverList(
+                      delegate: SliverChildListDelegate(
+                    [
+                      Stack(
+                        alignment: Alignment.topCenter,
+                        children: [
+                          DecoratedBox(
+                            decoration: const BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Color(0xffb2a044ff),
+                                    offset: Offset(0, 5),
+                                    blurRadius: 10),
+                              ],
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(100),
+                                bottomRight: Radius.circular(100),
+                              ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(100),
+                                bottomRight: Radius.circular(100),
+                              ),
+                              child: Image.network(
+                                '${(data.data as StoredUserModel).userPhoto}',
                                 height: 270,
                                 width: 300,
                                 fit: BoxFit.cover,
@@ -120,105 +122,103 @@ class _ProfilePageState extends State<ProfilePage> {
                                   fit: BoxFit.cover,
                                   alignment: Alignment.center,
                                 ),
-                              );
-                            }
-                            return CircularProgressIndicator();
-                          }),
-                    ),
-                  ),
-                  const _CircularPercentage(),
-                  Positioned(
-                    top: 380,
-                    child: FutureBuilder(
-                        future: userName,
-                        builder: (context, data) {
-                          if (data.hasData) {
-                            return Text(
-                              '${data.data}',
-                              style: GoogleFonts.aBeeZee(color: DcColors.white, fontSize: 30),
-                            );
-                          }
-                          return CircularProgressIndicator();
-                        }),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 65),
-                child: Text(
-                  'Do somesthing with passion or not it all...',
-                  style: GoogleFonts.textMeOne(color: DcColors.white, fontSize: 20),
-                ),
-              ),
-              const SizedBox(height: 30),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30),
-                child: SizedBox(
-                  width: 237,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            'Save',
-                            style: GoogleFonts.aBeeZee(color: DcColors.white, fontSize: 18),
+                              ),
+                            ),
                           ),
-                          Text(
-                            'Mine',
-                            style: GoogleFonts.aBeeZee(color: DcColors.white, fontSize: 18),
-                          )
+                          _CircularPercentage(
+                            status: (data.data as StoredUserModel).lastStatus ?? '',
+                            target: (data.data as StoredUserModel).userTarget ?? 0,
+                            current: (data.data as StoredUserModel).currentFollowers ?? 0,
+                          ),
+                          Positioned(
+                            top: 380,
+                            child: Text(
+                              '${(data.data as StoredUserModel).userName}',
+                              style: GoogleFonts.aBeeZee(color: DcColors.white, fontSize: 30),
+                            ),
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: 237,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Container(
-                                width: 237,
-                                height: 13,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(7),
-                                  color: DcColors.sliderBackground,
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _shouldShowSaved = !_shouldShowSaved;
-                                });
-                              },
-                              child: AnimatedAlign(
-                                alignment:
-                                    _shouldShowSaved ? Alignment.centerLeft : Alignment.centerRight,
-                                duration: const Duration(milliseconds: 300),
-                                child: Container(
-                                  width: 237 / 2,
-                                  height: 13,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(7),
-                                    color: Colors.orange,
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 65),
+                        child: Text(
+                          'Do somesthing with passion or not it all...',
+                          style: GoogleFonts.textMeOne(color: DcColors.white, fontSize: 20),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 30),
+                        child: SizedBox(
+                          width: 237,
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    'Save',
+                                    style: GoogleFonts.aBeeZee(color: DcColors.white, fontSize: 18),
                                   ),
+                                  Text(
+                                    'Mine',
+                                    style: GoogleFonts.aBeeZee(color: DcColors.white, fontSize: 18),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                width: 237,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Container(
+                                        width: 237,
+                                        height: 13,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(7),
+                                          color: DcColors.sliderBackground,
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          _shouldShowSaved = !_shouldShowSaved;
+                                        });
+                                      },
+                                      child: AnimatedAlign(
+                                        alignment: _shouldShowSaved
+                                            ? Alignment.centerLeft
+                                            : Alignment.centerRight,
+                                        duration: const Duration(milliseconds: 300),
+                                        child: Container(
+                                          width: 237 / 2,
+                                          height: 13,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(7),
+                                            color: Colors.orange,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
-                  ),
-                ),
-              ),
-            ],
-          )),
-        ],
-      ),
+                  )),
+                ],
+              );
+            }
+            return const SizedBox();
+          }),
     );
   }
 }
@@ -249,8 +249,15 @@ class _IconButton extends StatelessWidget {
 }
 
 class _CircularPercentage extends StatefulWidget {
+  final int target;
+  final int current;
+  final String status;
+
   const _CircularPercentage({
     Key? key,
+    required this.target,
+    required this.current,
+    required this.status,
   }) : super(key: key);
 
   @override
@@ -310,21 +317,21 @@ class _CircularPercentageState extends State<_CircularPercentage>
             top: 280,
             left: 145,
             child: Text(
-              'Music Lover',
+              widget.status,
               style: GoogleFonts.textMeOne(color: DcColors.white, fontSize: 22),
             )),
         Positioned(
             top: 190,
             left: 10,
             child: Text(
-              '250',
+              '${widget.current}',
               style: GoogleFonts.textMeOne(color: DcColors.white, fontSize: 18),
             )),
         Positioned(
             top: 190,
             right: 10,
             child: Text(
-              '300',
+              '${widget.target}',
               style: GoogleFonts.textMeOne(color: DcColors.white, fontSize: 18),
             )),
       ],
