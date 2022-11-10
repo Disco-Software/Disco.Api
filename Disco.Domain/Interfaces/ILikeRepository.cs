@@ -9,6 +9,7 @@ namespace Disco.Domain.Interfaces
         Task AddAsync(Like item);
         Task Remove(Like like,int id);
         Task<Like> GetAsync(int postId);
+        Task<List<Like>> GetAll(int postId, int pageNumber, int pageSize);
         Task<List<Like>> GetAll(int postId);
     }
 }

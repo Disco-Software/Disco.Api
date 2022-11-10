@@ -9,5 +9,6 @@ namespace Disco.Business.Interfaces
         Task<List<Like>> AddLikeAsync(User user, Post post);
         Task<List<Like>> RemoveLikeAsync(User user, Post post);
         Task<List<Like>> GetAllLikesAsync(int postId, int pageNumber, int pageSize);
+        Task<List<Like>> GetAllLikesAsync(int postId);
     }
 }

@@ -14,6 +14,7 @@ using Disco.Business.Dtos.Videos;
 using Microsoft.Extensions.Options;
 using Disco.Business.Options;
 using Disco.Business.Dtos.AudD;
+using Disco.Business.Services;
 
 namespace Disco.ApiServices.Controllers
 {
@@ -26,28 +27,25 @@ namespace Disco.ApiServices.Controllers
         private readonly IImageService _imageService;
         private readonly ISongService _songService;
         private readonly IVideoService _videoService;
-        private readonly IAudDService _audDService;
+        private readonly ILikeService _likeService;
         private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
-        private readonly IOptions<AudDOptions> _options;
 
         public PostController(
             IPostService postService,
             IImageService imageService,
             ISongService songService,
             IVideoService videoService,
-            IAudDService audDService,
+            ILikeService likeService,
             IAccountService accountService,
-            IOptions<AudDOptions> options,
             IMapper mapper)
         {
             _postService = postService;
             _imageService = imageService;
             _songService = songService;
             _videoService = videoService;
-            _audDService = audDService;
             _accountService = accountService;
-            _options = options;
+            _likeService = likeService;
             _mapper = mapper;
         }
 
@@ -141,6 +139,11 @@ namespace Disco.ApiServices.Controllers
             var user = await _accountService.GetAsync(HttpContext.User);
 
             var posts = await _postService.GetAllPosts(user, dto);
+            for (int i = 0; i < posts.Count; i++)
+            {
+                var post = posts[i];
+                post.Likes = await _likeService.GetAllLikesAsync(post.Id);
+            }
 
             return posts;
         }

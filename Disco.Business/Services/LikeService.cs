@@ -65,7 +65,7 @@ namespace Disco.Business.Services
 
         public async Task<List<Like>> GetAllLikesAsync(int postId, int pageNumber, int pageSize)
         {
-            throw new System.NotImplementedException();
+            return await _likeRepository.GetAll(postId);
         }
     }
 }

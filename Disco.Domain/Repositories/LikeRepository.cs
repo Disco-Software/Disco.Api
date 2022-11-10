@@ -40,6 +40,16 @@ namespace Disco.Domain.Repositories
                 .Where(l => l.PostId == postId)
                 .ToListAsync();
         }
+        public async Task<List<Like>> GetAll(int postId, int pageNumber, int pageSize)
+        {
+            return await _ctx.Like
+                .Include(p => p.Post)
+                .Where(l => l.PostId == postId)
+                .OrderBy(l => l.UserName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
 
         public async Task<Like> GetAsync(int postId)
         {

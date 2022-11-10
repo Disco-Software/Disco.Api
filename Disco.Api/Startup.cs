@@ -90,15 +90,16 @@ namespace Disco.Api
             var serviceProvider = serviceScopeFactory.CreateScope().ServiceProvider;
 
             if (env.IsDevelopment())
-            {
-                app.UseSwagger(swagger =>
-                {
-                    swagger.SerializeAsV2 = true;
-                });
-                app.UseSwaggerUI(swagger => swagger.SwaggerEndpoint("v1/swagger.json", "Disco.Api"));
-                
+            {                
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger(swagger =>
+            {
+                swagger.SerializeAsV2 = true;
+            });
+            app.UseSwaggerUI(swagger => swagger.SwaggerEndpoint("v1/swagger.json", "Disco.Api"));
+
 
             app.UseExceptionHandler("/Error");
             app.UseHsts();

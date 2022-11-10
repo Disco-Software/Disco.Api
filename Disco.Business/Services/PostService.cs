@@ -13,29 +13,14 @@ namespace Disco.Business.Services
 {
     public class PostService : IPostService
     {
-        private readonly IAccountService _userService;
         private readonly IPostRepository _postRepository;
-        private readonly IImageService _imageService;
-        private readonly ISongService _songService;
-        private readonly IVideoService _videoService;
-        private readonly ILikeService _likeService;
         private readonly IMapper _mapper;
         public PostService(
-            IAccountService userService,
             IMapper mapper,
-            IPostRepository postRepository,
-            IImageService imageService,
-            ISongService songService,
-            IVideoService videoService,
-            ILikeService likeService)
+            IPostRepository postRepository)
         {
             _postRepository = postRepository;
-            _userService = userService;
             _mapper = mapper;
-            _imageService = imageService;
-            _songService = songService;
-            _videoService = videoService;
-            _likeService = likeService;
         }
 
         public async Task<Post> CreatePostAsync(Post post)
@@ -60,12 +45,6 @@ namespace Disco.Business.Services
         public async Task<List<Post>> GetAllPosts(User user, GetAllPostsDto dto)
         {
             var posts = await _postRepository.GetAll(user.Id, dto.PageSize, dto.PageNumber);
-
-            for(int i = 0; i < posts.Count; i++)
-            {
-                var post = posts[i];
-                post.Likes = await _likeService.GetAllLikesAsync(post.Id, dto.PageNumber, dto.PageSize);
-            }
 
             return posts;
         }
