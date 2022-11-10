@@ -99,6 +99,8 @@ namespace Disco.Tests.Services
             mockedLikeRepository
                 .Setup(l => l.Remove(like,post.Id))
                 .Returns(Task.CompletedTask);
+            mockedLikeRepository.Setup(l => l.GetAsync(It.IsAny<int>()))
+                .ReturnsAsync(like);
 
             var mapperConfig = new MapperConfiguration(ms => ms.AddProfile(new PostMapProfile()));
 
