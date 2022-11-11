@@ -7,6 +7,7 @@ using Disco.Domain.Models;
 using Disco.Business.Dtos.Stories;
 using System.Collections.Generic;
 using AutoMapper;
+using System;
 
 namespace Disco.ApiServices.Controllers
 {
@@ -80,6 +81,14 @@ namespace Disco.ApiServices.Controllers
             var user = await _accountService.GetAsync(HttpContext.User);
 
             var stories = await _storyService.GetAllStoryAsync(user, dto);
+            
+            foreach (var story in stories)
+            {
+                if(story.DateOfCreation.AddHours(12) >= DateTime.UtcNow)
+                {
+                   await _storyService.DeleteStoryAsync(story.Id);
+                }
+            }
 
             return stories;
         }

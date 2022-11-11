@@ -22,8 +22,8 @@ namespace Disco.ApiServices.Controllers
             _audDService = audDService;
         }
 
-        [HttpGet("recognize")]
-        public async Task<IActionResult> RecognizeAsync([FromBody] AudDRequestDto dto)
+        [HttpPost("recognize")]
+        public async Task<IActionResult> RecognizeAsync([FromForm] AudDRequestDto dto)
         {
             var result = await _audDService.RecognizeAsync(dto);
             

@@ -4,14 +4,51 @@
 
 .login-card {
     border-radius: 1rem;
+    
+    height: 80vh;
 }
 
 .login-card__body {
-   background: radial-gradient(101.53% 101.28% at 100% 0%, #2E1257 0%, #221338 100%);
+    
+    background: radial-gradient(101.53% 101.28% at 100% 0%, #2E1257 0%, #221338 100%);
 }
 
 .login-body__submit {
+    width: 50%;
+    height: 6vh;
+
     background: #825DCD;
     box-shadow: 0px 4px 9px rgba(0, 0, 0, 0.25);
     border-radius: 25px;
+}
+
+.login-card__h1 {
+    background: linear-gradient(37.66deg, #FFF170 -1.12%, #DE871F 57.99%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    text-shadow: 0px 4px 7px rgba(160, 68, 255, 0.7);
+}
+
+.login-card__h3 {
+    font-family: 'ABeeZee';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 38px;
+    color: #E6E0D2;
+}
+
+.login-card__group{
+    text-align: left;
+}
+
+.login-card__label {
+    font-family: 'ABeeZee';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #E6E0D2;
 }

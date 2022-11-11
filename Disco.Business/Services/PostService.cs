@@ -23,13 +23,12 @@ namespace Disco.Business.Services
             _mapper = mapper;
         }
 
-        public async Task<Post> CreatePostAsync(Post post)
+        public async Task CreatePostAsync(Post post)
         {            
             post.DateOfCreation = DateTime.UtcNow;
+            post.Account.Posts.Add(post);
 
             await _postRepository.AddAsync(post);
-
-            return post;
         }
 
         public async Task DeletePostAsync(int postId)

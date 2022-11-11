@@ -54,7 +54,7 @@ namespace Disco.Business.Mapper
             CreateMap<PostSong, AudDRequestDto>()
                 .ForMember(p => p.@return, o => o.Ignore())
                 .ForMember(p => p.api_token, o => o.Ignore())
-                .ForMember(p => p.url, o => o.Ignore());    
+                .ForMember(p => p.file, o => o.Ignore());    
         }
     }
 }
