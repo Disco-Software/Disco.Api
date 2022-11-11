@@ -12,48 +12,18 @@ namespace Disco.Business.Services
     public class StoryService : IStoryService
     {
         private readonly IStoryRepository _storyRepository;
-        private readonly IStoryImageService _storyImageService;
-        private readonly IStoryVideoService _storyVideoService;
-        private readonly IMapper _mapper;
         public StoryService(
-            IStoryRepository storyRepository,
-            IStoryImageService storyImageService,
-            IStoryVideoService storyVideoService,
-            IMapper mapper)
-        {
+            IStoryRepository storyRepository)        {
             _storyRepository = storyRepository;
-            _storyImageService = storyImageService;
-            _storyVideoService = storyVideoService;
-            _mapper = mapper;
         }
         
 
-        public async Task<Story> CreateStoryAsync(User user, CreateStoryDto model)
+        public async Task CreateStoryAsync(Story story)
         {
-            var story = _mapper.Map<Story>(model);
-
-            if (model.StoryImages != null)
-                foreach (var image in model.StoryImages)
-                {
-                    var storyImage = await _storyImageService.CreateStoryImageAsync(
-                        new Dtos.StoryImages.CreateStoryImageDto { StoryImageFile = image });
-                    story.StoryImages.Add(storyImage);
-                }
-
-            if (model.StoryVideos != null)
-                foreach (var video in model.StoryVideos)
-                {
-                    var storyImage = await _storyVideoService.CreateStoryVideoAsync(
-                        new Dtos.StoryVideos.CreateStoryVideoDto { VideoFile = video });
-                    story.StoryVideos.Add(storyImage);
-                }
-
             story.DateOfCreation = DateTime.UtcNow;
+            story.Account.Stories.Add(story);
 
-            user.Account.Stories.Add(story);
             await _storyRepository.AddAsync(story);
-
-            return story;
         }
 
         public async Task DeleteStoryAsync(int id)
@@ -66,9 +36,9 @@ namespace Disco.Business.Services
            return await _storyRepository.GetAsync(id);
         }
 
-        public async Task<List<Story>> GetAllStoryAsync(User user, GetAllStoriesDto model)
+        public async Task<List<Story>> GetAllStoryAsync(User user, GetAllStoriesDto dto)
         {
-            var stories = await _storyRepository.GetAllAsync(user.Account.Id, model.PageNumber, model.PageSize);
+            var stories = await _storyRepository.GetAllAsync(user.Account.Id, dto.PageNumber, dto.PageSize);
             return stories;
         }
     }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Disco.Domain.Models;
 using Disco.Business.Dtos.Stories;
 using System.Collections.Generic;
+using AutoMapper;
 
 namespace Disco.ApiServices.Controllers
 {
@@ -15,21 +16,48 @@ namespace Disco.ApiServices.Controllers
     public class StoryController : ControllerBase
     {
         private readonly IStoryService _storyService;
+        private readonly IStoryImageService _storyImageService;
+        private readonly IStoryVideoService _storyVideoService;
         private readonly IAccountService _accountService;
+        private readonly IMapper _mapper;
         public StoryController(
             IStoryService storyService,
-            IAccountService accountService)
+            IStoryImageService storyImageService,
+            IStoryVideoService storyVideoService,
+            IAccountService accountService,
+            IMapper mapper)
         {
             _storyService = storyService;
+            _storyImageService = storyImageService;
+            _storyVideoService = storyVideoService;
             _accountService = accountService;
+            _mapper = mapper;
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create([FromForm] CreateStoryDto model)
+        public async Task<IActionResult> Create([FromForm] CreateStoryDto dto)
         {
             var user = await _accountService.GetAsync(HttpContext.User);
 
-           var story = await _storyService.CreateStoryAsync(user, model);
+            var story = _mapper.Map<Story>(dto);
+
+            if (dto.StoryImages != null)
+                foreach (var image in dto.StoryImages)
+                {
+                    var storyImage = await _storyImageService.CreateStoryImageAsync(
+                        new Business.Dtos.StoryImages.CreateStoryImageDto { StoryImageFile = image });
+                    story.StoryImages.Add(storyImage);
+                }
+
+            if (dto.StoryVideos != null)
+                foreach (var video in dto.StoryVideos)
+                {
+                    var storyImage = await _storyVideoService.CreateStoryVideoAsync(
+                        new Business.Dtos.StoryVideos.CreateStoryVideoDto { VideoFile = video });
+                    story.StoryVideos.Add(storyImage);
+                }
+
+            await _storyService.CreateStoryAsync(story);
 
             return Ok(story);
         }
@@ -47,11 +75,11 @@ namespace Disco.ApiServices.Controllers
         }
 
         [HttpGet("all")]
-        public async Task<ActionResult<List<Story>>> GetStoriesAsync([FromQuery] GetAllStoriesDto model)
+        public async Task<ActionResult<List<Story>>> GetStoriesAsync([FromQuery] GetAllStoriesDto dto)
         {
             var user = await _accountService.GetAsync(HttpContext.User);
 
-            var stories = await _storyService.GetAllStoryAsync(user, model);
+            var stories = await _storyService.GetAllStoryAsync(user, dto);
 
             return stories;
         }
