@@ -22,11 +22,12 @@ import 'data/network/repositories/stories_repository.dart' as _i13;
 import 'data/network/repositories/user_repository.dart' as _i18;
 import 'presentation/pages/authentication/login/bloc/login_bloc.dart' as _i19;
 import 'presentation/pages/authentication/registration/bloc/registration_bloc.dart'
-    as _i20;
+    as _i21;
 import 'presentation/pages/search/bloc/search_page_cubit.dart' as _i17;
 import 'presentation/pages/user/main/bloc/like_cubit.dart' as _i15;
 import 'presentation/pages/user/main/bloc/posts_cubit.dart' as _i9;
-import 'register_module.dart' as _i21; // ignore_for_file: unnecessary_lambdas
+import 'presentation/pages/user/profile/bloc/profile_cubit.dart' as _i20;
+import 'register_module.dart' as _i22; // ignore_for_file: unnecessary_lambdas
 
 // ignore_for_file: lines_longer_than_80_chars
 /// initializes the registration of provided dependencies inside of [GetIt]
@@ -68,11 +69,13 @@ _i1.GetIt $initGetIt(_i1.GetIt get,
       userRepository: get<_i18.UserRepository>(),
       secureStorageRepository: get<_i5.SecureStorageRepository>(),
       dio: get<_i6.Dio>()));
-  gh.factory<_i20.RegistrationBloc>(() => _i20.RegistrationBloc(
+  gh.factory<_i20.ProfileCubit>(
+      () => _i20.ProfileCubit(userRepository: get<_i18.UserRepository>()));
+  gh.factory<_i21.RegistrationBloc>(() => _i21.RegistrationBloc(
       userRepository: get<_i18.UserRepository>(),
       secureStorageRepository: get<_i5.SecureStorageRepository>(),
       dio: get<_i6.Dio>()));
   return get;
 }
 
-class _$RegisterModule extends _i21.RegisterModule {}
+class _$RegisterModule extends _i22.RegisterModule {}

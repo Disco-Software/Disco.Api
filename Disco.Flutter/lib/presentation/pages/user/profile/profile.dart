@@ -3,25 +3,42 @@ import 'dart:math';
 import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/data/local/local_storage.dart';
+import 'package:disco_app/data/network/request_models/google_login_request_model.dart';
 import 'package:disco_app/domain/stored_user_model.dart';
+import 'package:disco_app/presentation/common_widgets/post/post.dart';
+import 'package:disco_app/presentation/pages/user/profile/bloc/profile_cubit.dart';
+import 'package:disco_app/presentation/pages/user/profile/bloc/profile_state.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../injection.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends StatefulWidget implements AutoRouteWrapper {
   const ProfilePage({Key? key}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
+
+  @override
+  Widget wrappedRoute(context) {
+    return BlocProvider<ProfileCubit>(
+      create: (context) => getIt()..loadMine(),
+      child: this,
+    );
+  }
 }
 
 class _ProfilePageState extends State<ProfilePage> {
   bool _shouldShowSaved = false;
   final storedUsername = getIt.get<SecureStorageRepository>().getStoredUserModel();
+
+  String _lastStatus = '';
+  int _userTarget = 50;
+  int _currentFollowers = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -125,10 +142,32 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                           ),
-                          _CircularPercentage(
-                            status: (data.data as StoredUserModel).lastStatus ?? '',
-                            target: (data.data as StoredUserModel).userTarget ?? 0,
-                            current: (data.data as StoredUserModel).currentFollowers ?? 0,
+                          BlocListener<ProfileCubit, ProfileState>(
+                            listener: (context, state) {
+                              state.maybeMap(
+                                  orElse: () {},
+                                  loaded: (state) {
+                                    setState(() {
+                                      _lastStatus = state.user.account?.status?.lastStatus ?? '';
+                                      _userTarget = state.user.account?.status?.userTarget ?? 0;
+                                      _currentFollowers =
+                                          state.user.account?.status?.followersCount ?? 0;
+                                    });
+                                  },
+                                  saved: (state) {
+                                    setState(() {
+                                      _lastStatus = state.user.account?.status?.lastStatus ?? '';
+                                      _userTarget = state.user.account?.status?.userTarget ?? 0;
+                                      _currentFollowers =
+                                          state.user.account?.status?.followersCount ?? 0;
+                                    });
+                                  });
+                            },
+                            child: _CircularPercentage(
+                              status: _lastStatus,
+                              target: _userTarget,
+                              current: _currentFollowers,
+                            ),
                           ),
                           Positioned(
                             top: 380,
@@ -145,6 +184,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Text(
                           'Do somesthing with passion or not it all...',
                           style: GoogleFonts.textMeOne(color: DcColors.white, fontSize: 20),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       const SizedBox(height: 30),
@@ -189,6 +229,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                         setState(() {
                                           _shouldShowSaved = !_shouldShowSaved;
                                         });
+                                        if (_shouldShowSaved) {
+                                          context.read<ProfileCubit>().loadSaved();
+                                        } else {
+                                          context.read<ProfileCubit>().loadMine();
+                                        }
                                       },
                                       child: AnimatedAlign(
                                         alignment: _shouldShowSaved
@@ -214,6 +259,54 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ],
                   )),
+                  BlocBuilder<ProfileCubit, ProfileState>(
+                    builder: (context, state) {
+                      if (state is ProfileStateLoaded &&
+                          state.user.account != null &&
+                          state.user.account!.posts != null) {
+                        return SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (ctx, index) {
+                              return UnicornPost(post: state.user.account!.posts![index]);
+                            },
+                            childCount: state.user.account!.posts!.length,
+                          ),
+                        );
+                      }
+
+                      if (state is ProfileStateSaved &&
+                          state.user.account != null &&
+                          state.user.account!.posts != null) {
+                        return state.savedPosts.isNotEmpty
+                            ? SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                  (ctx, index) {
+                                    return UnicornPost(post: state.savedPosts[index]);
+                                  },
+                                  childCount: state.user.account!.posts!.length,
+                                ),
+                              )
+                            : SliverToBoxAdapter(
+                                child: Center(
+                                child: Text(
+                                  'No Saved posts',
+                                  style: GoogleFonts.aBeeZee(color: Colors.white, fontSize: 25),
+                                ),
+                              ));
+                      }
+
+                      if (state is ProfileStateLoaded) {
+                        return SliverToBoxAdapter(
+                          child: Center(
+                            child: Image.asset('assets/music.gif'),
+                          ),
+                        );
+                      }
+
+                      return const SliverPadding(padding: EdgeInsets.all(1));
+                    },
+                  ),
+                  const SliverPadding(padding: EdgeInsets.only(bottom: 200)),
                 ],
               );
             }
@@ -284,6 +377,7 @@ class _CircularPercentageState extends State<_CircularPercentage>
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Stack(
       children: [
         CustomPaint(
@@ -292,6 +386,7 @@ class _CircularPercentageState extends State<_CircularPercentage>
             420,
           ),
           painter: ProgressBar(
+            screenWidth: width,
             progressColor: const Color(0xFFC9D6FF),
             arc: 3.15,
             isBackground: false,
@@ -307,15 +402,16 @@ class _CircularPercentageState extends State<_CircularPercentage>
               ),
               painter: ProgressBar(
                 progressColor: Colors.orange,
-                arc: 2.15 * _animationController.value,
+                arc: _getCurrentValue(widget.current) * _animationController.value,
                 isBackground: false,
+                screenWidth: width,
               ),
             );
           },
         ),
         Positioned(
             top: 280,
-            left: 145,
+            left: width - 250,
             child: Text(
               widget.status,
               style: GoogleFonts.textMeOne(color: DcColors.white, fontSize: 22),
@@ -337,22 +433,29 @@ class _CircularPercentageState extends State<_CircularPercentage>
       ],
     );
   }
+
+  double _getCurrentValue(int current) {
+    return 2.15;
+    //2.15
+  }
 }
 
 class ProgressBar extends CustomPainter {
   final bool isBackground;
   final double arc;
   final Color progressColor;
+  final double screenWidth;
 
   ProgressBar({
     required this.isBackground,
     required this.arc,
     required this.progressColor,
+    required this.screenWidth,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    const rect = Rect.fromLTRB(25, 90, 370, 290);
+    final rect = Rect.fromLTRB(20, 90, screenWidth - 25, 290);
     final startAngle = -pi;
     final sweepAngle = arc != null ? arc : pi;
     const userCenter = false;

@@ -24,6 +24,11 @@ class AuthApi {
         return response.data;
       });
 
+  Future<dynamic> getUserDetails() =>
+      client.get("user/account/details/user").then((response) {
+        return response.data;
+      });
+
   Future<dynamic> registration(RegisterRequestModel model) =>
       client.post("user/account/registration", data: model).then((response) {
         return response.data;
