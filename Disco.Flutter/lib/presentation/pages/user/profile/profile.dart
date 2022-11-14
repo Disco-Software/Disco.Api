@@ -37,6 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final storedUsername = getIt.get<SecureStorageRepository>().getStoredUserModel();
 
   String _lastStatus = '';
+  String _creed = '';
   int _userTarget = 50;
   int _currentFollowers = 0;
 
@@ -132,12 +133,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                 width: 300,
                                 fit: BoxFit.cover,
                                 alignment: Alignment.center,
-                                errorBuilder: (ctx, onj, trace) => Image.network(
-                                  'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/220px-Image_created_with_a_mobile_phone.png',
-                                  height: 270,
-                                  width: 300,
-                                  fit: BoxFit.cover,
-                                  alignment: Alignment.center,
+                                errorBuilder: (ctx, onj, trace) => Container(
+                                  color: Colors.white,
+                                  child: Image.asset(
+                                    'assets/ic_photo.png',
+                                    height: 270,
+                                    width: 300,
+                                    fit: BoxFit.fill,
+                                    alignment: Alignment.center,
+                                  ),
                                 ),
                               ),
                             ),
@@ -149,6 +153,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   loaded: (state) {
                                     setState(() {
                                       _lastStatus = state.user.account?.status?.lastStatus ?? '';
+                                      _creed = state.user.account?.creed ?? '';
                                       _userTarget = state.user.account?.status?.userTarget ?? 0;
                                       _currentFollowers =
                                           state.user.account?.status?.followersCount ?? 0;
@@ -182,7 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 65),
                         child: Text(
-                          'Do somesthing with passion or not it all...',
+                          _creed,
                           style: GoogleFonts.textMeOne(color: DcColors.white, fontSize: 20),
                           textAlign: TextAlign.center,
                         ),
@@ -288,9 +293,14 @@ class _ProfilePageState extends State<ProfilePage> {
                               )
                             : SliverToBoxAdapter(
                                 child: Center(
-                                child: Text(
-                                  'No Saved posts',
-                                  style: GoogleFonts.aBeeZee(color: Colors.white, fontSize: 25),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'No Saved posts',
+                                      style: GoogleFonts.aBeeZee(color: Colors.white, fontSize: 25),
+                                    ),
+                                    const SizedBox(height: 200),
+                                  ],
                                 ),
                               ));
                       }
@@ -402,7 +412,7 @@ class _CircularPercentageState extends State<_CircularPercentage>
               ),
               painter: ProgressBar(
                 progressColor: Colors.orange,
-                arc: _getCurrentValue(widget.current) * _animationController.value,
+                arc: _getCurrentValue(widget.current, widget.target) * _animationController.value,
                 isBackground: false,
                 screenWidth: width,
               ),
@@ -411,7 +421,7 @@ class _CircularPercentageState extends State<_CircularPercentage>
         ),
         Positioned(
             top: 280,
-            left: width - 250,
+            left: width - 220,
             child: Text(
               widget.status,
               style: GoogleFonts.textMeOne(color: DcColors.white, fontSize: 22),
@@ -434,10 +444,7 @@ class _CircularPercentageState extends State<_CircularPercentage>
     );
   }
 
-  double _getCurrentValue(int current) {
-    return 2.15;
-    //2.15
-  }
+  double _getCurrentValue(int current, int followerTarget) => current / (followerTarget / 3.15);
 }
 
 class ProgressBar extends CustomPainter {
