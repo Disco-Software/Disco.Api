@@ -35,6 +35,7 @@ namespace Disco.Domain.Repositories
         {
             return await _ctx.Accounts
                 .Include(u => u.User)
+                .Include(s => s.Status)
                 .Where(u => u.User.UserName.StartsWith(search))
                 .ToListAsync();
         }
