@@ -114,7 +114,7 @@ namespace Disco.ApiServices.Controllers
                 }
             }
 
-            await _postService.CreatePostAsync(post);
+             await _postService.CreatePostAsync(post);
 
             return Ok(post);
         }

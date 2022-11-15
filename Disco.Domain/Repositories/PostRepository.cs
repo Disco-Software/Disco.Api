@@ -149,5 +149,19 @@ namespace Disco.Domain.Repositories
                 .Where(p => p.Description.StartsWith(search))
                 .ToListAsync();
         }
+
+        public async Task<List<Post>> GetUserPostsAsync(int userId)
+        {
+            return await _ctx.Posts
+                .Include(p => p.Likes)
+                .Include(p => p.PostImages)
+                .Include(p => p.PostSongs)
+                .Include(p => p.PostVideos)
+                .Include(p => p.Likes)
+                .Where(p => p.Account.UserId == userId)
+                .OrderByDescending(p => p.DateOfCreation)
+                .ToListAsync();
+
+        }
     }
 }

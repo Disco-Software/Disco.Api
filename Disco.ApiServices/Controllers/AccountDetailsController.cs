@@ -18,12 +18,15 @@ namespace Disco.ApiServices.Controllers
     {
         private readonly IAccountDetailsService _accountDetailsService;
         private readonly IAccountService _accountService;
+        private readonly IPostService _postService;
         public AccountDetailsController(
             IAccountDetailsService accountDetailsService,
-            IAccountService accountService)
+            IAccountService accountService,
+            IPostService postService)
         {
             _accountDetailsService = accountDetailsService;
             _accountService = accountService;
+            _postService = postService;
         }
 
         [HttpPut("change/photo")]
@@ -40,6 +43,7 @@ namespace Disco.ApiServices.Controllers
         public async Task<IActionResult> GetCurrentUserAsync()
         {
            var user = await _accountService.GetAsync(HttpContext.User);
+           user.Account.Posts = await _postService.GetAllUserPosts(user);
 
             return Ok(user);
         }

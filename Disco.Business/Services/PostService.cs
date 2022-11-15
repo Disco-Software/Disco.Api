@@ -36,9 +36,9 @@ namespace Disco.Business.Services
             await _postRepository.Remove(postId);
         }
 
-        public async Task<List<Post>> GetAllUserPosts(User user,GetAllPostsDto model)
+        public async Task<List<Post>> GetAllUserPosts(User user,GetAllPostsDto dto)
         {
-            return await _postRepository.GetAllUserPosts(user.Id, model.PageSize, model.PageNumber);
+            return await _postRepository.GetAllUserPosts(user.Id, dto.PageSize, dto.PageNumber);
         }
 
         public async Task<List<Post>> GetAllPosts(User user, GetAllPostsDto dto)
@@ -56,6 +56,11 @@ namespace Disco.Business.Services
         public async Task<List<Post>> GetPostsByDescriptionAsync(string search)
         {
             return await _postRepository.GetPostsByDescriptionAsync(search);
+        }
+
+        public async Task<List<Post>> GetAllUserPosts(User user)
+        {
+            return await _postRepository.GetUserPostsAsync(user.Id);
         }
     }
 }

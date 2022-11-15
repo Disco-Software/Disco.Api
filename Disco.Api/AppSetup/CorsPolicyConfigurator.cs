@@ -8,13 +8,16 @@ namespace Disco.Api.AppSetup
     {
         public static void Configure(CorsPolicyBuilder builder)
         {
-             builder.AllowAnyHeader()
-                .AllowCredentials()
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .WithOrigins(
+            builder.WithOrigins(
                  "https://admin.disco.net.ua",
-                 "https://disco.net.ua");
+                 "https://disco.net.ua",
+                 "http://localhost:5168",
+                 "http://localhost:7168")
+                .AllowAnyHeader()
+               //.AllowCredentials()
+               //.AllowAnyOrigin()
+               .AllowAnyMethod();
+                
         }
     }
 }

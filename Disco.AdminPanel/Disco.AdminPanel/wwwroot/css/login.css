@@ -16,13 +16,21 @@
 .login-body__submit {
     width: 50%;
     height: 6vh;
-
+    
+    font-family: 'ABeeZee';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 28px;
+    color: #E6E0D2;
     background: #825DCD;
     box-shadow: 0px 4px 9px rgba(0, 0, 0, 0.25);
     border-radius: 25px;
 }
 
 .login-card__h1 {
+    font-family: 'colonna-mt-regular', sans-serif;
+
     background: linear-gradient(37.66deg, #FFF170 -1.12%, #DE871F 57.99%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -45,10 +53,43 @@
 }
 
 .login-card__label {
+    margin-left: 15px;
     font-family: 'ABeeZee';
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
     line-height: 19px;
+    color: #E6E0D2;
+}
+
+.login-card__input {
+    background-color: transparent !important;
+    border: 2px solid #E5E5E5 !important;
+    border-radius: 25px !important;
+}
+
+.login-card__input:active {
+    background-color: transparent !important;
+    border: 2px solid #E5E5E5 !important;
+    border-radius: 25px !important;
+}
+
+.login-card__a {
+    font-family: 'ABeeZee';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+
+    color: #E6E0D2;
+}
+
+.login-card__a:hover{
+    font-family: 'ABeeZee';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+
     color: #E6E0D2;
 }

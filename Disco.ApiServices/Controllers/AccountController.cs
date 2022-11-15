@@ -89,27 +89,8 @@ namespace Disco.ApiServices.Controllers
             var userInfo = await _facebookAuthService.GetUserInfo(dto.AccessToken);
             userInfo.Name = userInfo.Name.Replace(" ", "_");
 
-            var user = await _accountService.GetByEmailAsync(userInfo.Email);
-            if(user != null)
-            {
-                user.Email = userInfo.Email;
-                user.UserName = userInfo.Name;
-                user.Account.Photo = userInfo.Picture.Data.Url;
-
-                var accessToken = _tokenService.GenerateAccessToken(user);
-                var refreshToken = _tokenService.GenerateRefreshToken();
-
-                await _accountService.SaveRefreshTokenAsync(user,refreshToken);
-
-                var userRsponseDto = _mapper.Map<UserResponseDto>(user);
-                userRsponseDto.AccessToken = accessToken;
-                userRsponseDto.RefreshToken = refreshToken;
-
-                return Ok(userRsponseDto);
-            }
-
-            user = await _accountService.GetByLogInProviderAsync(LogInProvider.Facebook, userInfo.Id);
-            if(user != null)
+            var user = await _accountService.GetByLogInProviderAsync(LogInProvider.Facebook, userInfo.Id);
+            if (user != null)
             {
                 user.Email = userInfo.Email;
                 user.UserName = userInfo.Name;
@@ -128,6 +109,27 @@ namespace Disco.ApiServices.Controllers
                 return Ok(userRsponseDto);
             }
 
+
+            user = await _accountService.GetByEmailAsync(userInfo.Email);
+            if (user != null)
+            {
+                user.Email = userInfo.Email;
+                user.UserName = userInfo.Name;
+                user.Account.Photo = userInfo.Picture.Data.Url;
+
+                var accessToken = _tokenService.GenerateAccessToken(user);
+                var refreshToken = _tokenService.GenerateRefreshToken();
+
+                await _accountService.SaveRefreshTokenAsync(user,refreshToken);
+
+                var userResponseDto = _mapper.Map<UserResponseDto>(user);
+                userResponseDto.AccessToken = accessToken;
+                userResponseDto.RefreshToken = refreshToken;
+                userResponseDto.User = user;
+
+                return Ok(userResponseDto);
+            }
+
             user = new Domain.Models.User
             {
                 UserName = userInfo.Name,
@@ -137,6 +139,8 @@ namespace Disco.ApiServices.Controllers
                 {
                     User = user,
                     Photo = userInfo.Picture.Data.Url,
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>()
                 }
             };
 
@@ -161,6 +165,10 @@ namespace Disco.ApiServices.Controllers
             var user = await _accountService.GetByEmailAsync(dto.Email);
             if(user != null)
             {
+                user.Email = dto.Email;
+                user.UserName = dto.UserName;
+                user.Account.Photo = dto.Photo;
+
                 var accessToken = _tokenService.GenerateAccessToken(user);
                 var refreshToken = _tokenService.GenerateRefreshToken();
 
@@ -177,6 +185,10 @@ namespace Disco.ApiServices.Controllers
             user = await _accountService.GetByLogInProviderAsync(LogInProvider.Google, dto.IdToken);
             if(user != null)
             {
+                user.Account.Photo = dto.Photo;
+                user.UserName = dto.UserName;
+                user.Email = dto.Email;
+
                 var accessToken = _tokenService.GenerateAccessToken(user);
                 var refreshToken = _tokenService.GenerateRefreshToken();
 
@@ -226,6 +238,9 @@ namespace Disco.ApiServices.Controllers
             var user = await _accountService.GetByEmailAsync(dto.Email);
             if(user != null)
             {
+                user.Email = dto.Email;
+                user.UserName = dto.Name;
+
                 var accessToken = _tokenService.GenerateAccessToken(user);
                 var refreshToken = _tokenService.GenerateRefreshToken();
 
@@ -240,6 +255,9 @@ namespace Disco.ApiServices.Controllers
             user = await _accountService.GetByLogInProviderAsync(LogInProvider.Apple, dto.AppleIdCode);
             if(user != null)
             {
+                user.Email = dto.Email;
+                user.UserName = dto.Name;
+
                 var accessToken = _tokenService.GenerateAccessToken(user);
                 var refreshToken = _tokenService.GenerateRefreshToken();
 
