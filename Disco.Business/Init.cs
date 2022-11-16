@@ -23,6 +23,7 @@ namespace Disco.Business
                 .AddScoped<IAudDService, AudDService>()
                 .AddScoped<IVideoService, VideoService>()
                 .AddScoped<ILikeService, LikeService>()
+                .AddScoped<ICommentService, CommentService>()
                 .AddScoped<IPostService, PostService>()
                 .AddScoped<IStoryImageService, StoryImageService>()
                 .AddScoped<IStoryVideoService, StoryVideoService>()

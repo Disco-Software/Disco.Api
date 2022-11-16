@@ -14,7 +14,8 @@ namespace Disco.Domain.EF
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<PostSong> PostSongs { get; set; }
         public DbSet<PostVideo> PostVideos { get; set; }
-        public DbSet<Like> Like { get; set; }
+        public DbSet<Like> Likes { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         public DbSet<UserFollower> UserFollowers { get; set; }
         public DbSet<Story> Stories { get; set; }
         public DbSet<StoryImage> StoryImages { get; set; }
@@ -35,6 +36,28 @@ namespace Disco.Domain.EF
                 .HasMany(f => f.Followers)
                 .WithOne(p => p.FollowingAccount)
                 .HasForeignKey(f => f.FollowingAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Like>()
+                .HasOne(l => l.Account)
+                .WithMany(a => a.Likes)
+                .HasForeignKey(f => f.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Like>()
+                .HasOne(l => l.Post)
+                .WithMany(p => p.Likes)
+                .HasForeignKey(f => f.PostId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            modelBuilder.Entity<Comment>()
+                .HasOne(s => s.Account)
+                .WithMany(c => c.Comments)
+                .HasForeignKey(f => f.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Comment>()
+                .HasOne(o => o.Post)
+                .WithMany(c => c.Comments)
+                .HasForeignKey(f => f.PostId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
 

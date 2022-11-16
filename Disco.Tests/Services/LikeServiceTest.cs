@@ -77,7 +77,6 @@ namespace Disco.Tests.Services
                 Id = 1,
                 Post = post,
                 PostId = post.Id,
-                UserName = "vaya_pupkin",
             };
 
 

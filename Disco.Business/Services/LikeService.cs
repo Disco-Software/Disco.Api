@@ -34,9 +34,9 @@ namespace Disco.Business.Services
             like = _mapper.Map<Like>(post);
             like.Post = post;
             like.PostId = post.Id;
-            like.UserName = user.UserName;
+            like.Account = user.Account;
 
-            if(post.Likes.All(p => p.UserName != user.UserName))
+            if(post.Likes.All(p => p.Account.User.UserName != user.UserName))
             {
                 post.Likes.Add(like);
             }

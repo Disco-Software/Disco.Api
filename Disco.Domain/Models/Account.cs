@@ -9,6 +9,8 @@ namespace Disco.Domain.Models
         public string Cread { get; set; } = string.Empty;
         public string Photo { get; set; }
         public List<Post> Posts { get; set; } = new List<Post>();
+        public List<Comment> Comments { get; set; }
+        public List<Like> Likes { get; set; } = new List<Like>();
         public List<UserFollower> Followers { get; set; } = new List<UserFollower>();
         public List<UserFollower> Following { get; set; } = new List<UserFollower>();
         public List<Story> Stories { get; set; } = new List<Story>();

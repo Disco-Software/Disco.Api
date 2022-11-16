@@ -16,7 +16,7 @@ namespace Disco.Domain.Repositories
 
         public override async Task AddAsync(Like item)
         {            
-            await _ctx.Like.AddAsync(item);
+            await _ctx.Likes.AddAsync(item);
 
             await _ctx.SaveChangesAsync();
         }
@@ -27,7 +27,7 @@ namespace Disco.Domain.Repositories
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
 
-            _ctx.Like.Remove(like);
+            _ctx.Likes.Remove(like);
             post.Likes.Remove(like);
 
             await _ctx.SaveChangesAsync();
@@ -35,17 +35,17 @@ namespace Disco.Domain.Repositories
 
         public async Task<List<Like>> GetAll(int postId)
         {
-            return await _ctx.Like
+            return await _ctx.Likes
                 .Include(p => p.Post)
                 .Where(l => l.PostId == postId)
                 .ToListAsync();
         }
         public async Task<List<Like>> GetAll(int postId, int pageNumber, int pageSize)
         {
-            return await _ctx.Like
+            return await _ctx.Likes
                 .Include(p => p.Post)
                 .Where(l => l.PostId == postId)
-                .OrderBy(l => l.UserName)
+                .OrderBy(l => l.Account.User.UserName)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -53,7 +53,7 @@ namespace Disco.Domain.Repositories
 
         public async Task<Like> GetAsync(int postId)
         {
-            return await _ctx.Like
+            return await _ctx.Likes
                 .Include(p => p.Post)
                 .Where(l => l.Post.Id == postId)
                 .FirstOrDefaultAsync();

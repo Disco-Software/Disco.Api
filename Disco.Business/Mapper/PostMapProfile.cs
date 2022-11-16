@@ -49,7 +49,8 @@ namespace Disco.Business.Mapper
             CreateMap<Post, Like>()
                 .ForMember(p => p.PostId, opt => opt.Ignore())
                 .ForMember(p => p.Post, opt => opt.Ignore())
-                .ForMember(p => p.UserName, opt => opt.Ignore());
+                .ForMember(p => p.Account, opt => opt.Ignore())
+                .ForMember(p => p.AccountId, opt => opt.Ignore());
 
             CreateMap<PostSong, AudDRequestDto>()
                 .ForMember(p => p.@return, o => o.Ignore())

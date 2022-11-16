@@ -12,6 +12,7 @@ namespace Disco.Domain.Models
         public List<PostSong> PostSongs { get; set; } = new List<PostSong>();
         public List<PostVideo> PostVideos { get; set; } = new List<PostVideo>();
         public List<Like> Likes { get; set; } = new List<Like>();
+        public List<Comment> Comments { get; set; } = new List<Comment>();
 
         [Column(TypeName = "date")]
         public DateTime? DateOfCreation { get; set; }
