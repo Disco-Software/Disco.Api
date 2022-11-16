@@ -17,9 +17,9 @@ class SearchItem {
         posts!.add(Post.fromJson(v));
       });
     }
-    if (json['profile'] != null) {
+    if (json['accounts'] != null) {
       users = <Account>[];
-      json['profile'].forEach((v) {
+      json['accounts'].forEach((v) {
         users!.add(Account.fromJson(v));
       });
     }
@@ -31,7 +31,7 @@ class SearchItem {
       data['posts'] = posts!.map((v) => v.toJson()).toList();
     }
     if (users != null) {
-      data['profile'] = users!.map((v) => v.toJson()).toList();
+      data['accounts'] = users!.map((v) => v.toJson()).toList();
     }
     return data;
   }

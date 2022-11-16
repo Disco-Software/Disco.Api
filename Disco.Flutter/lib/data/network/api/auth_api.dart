@@ -29,6 +29,11 @@ class AuthApi {
         return response.data;
       });
 
+  Future<dynamic> getUserById(int id) =>
+      client.get("user/account/details/user/$id").then((response) {
+        return response.data;
+      });
+
   Future<dynamic> registration(RegisterRequestModel model) =>
       client.post("user/account/registration", data: model).then((response) {
         return response.data;
@@ -60,7 +65,9 @@ class AuthApi {
       });
 
   Future<UserTokenResponse?> resetPassword(ResetPasswordRequestModel model) =>
-      client.put("user/account/reset-password", data: model.toJson()).then((response) {
+      client
+          .put("user/account/reset-password", data: model.toJson())
+          .then((response) {
         return response.data;
       });
 }
