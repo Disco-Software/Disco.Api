@@ -19,6 +19,11 @@ class UserRepository {
         return UserTokenResponse.fromJson(response);
       });
 
+  Future<User?> getUserDetails() async =>
+      await authApi.getUserDetails().then((response) {
+        return User.fromJson(response);
+      });
+
   Future<UserTokenResponse?> registration(RegisterRequestModel model) async =>
       await authApi.registration(model).then((response) {
         return UserTokenResponse.fromJson(response);

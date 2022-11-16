@@ -3,6 +3,7 @@ import 'package:disco_app/app/extensions/secure_storage_extensions.dart';
 import 'package:disco_app/data/local/local_storage.dart';
 import 'package:disco_app/data/network/repositories/user_repository.dart';
 import 'package:disco_app/data/network/request_models/register_request.dart';
+import 'package:disco_app/domain/stored_user_model.dart';
 import 'package:disco_app/presentation/pages/authentication/registration/bloc/registration_event.dart';
 import 'package:disco_app/presentation/pages/authentication/registration/bloc/registration_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,11 +34,17 @@ class RegistrationBloc extends Bloc<RegistrationPageEvent, RegistrationPageState
     if (response?.user != null && response?.accesToken != null) {
       yield RegistratedState();
       secureStorageRepository.saveUserModel(
-        refreshToken: response?.refreshToken,
-        token: response?.accesToken,
-        userId: '${response?.user?.id}',
-        userName: response?.user?.userName,
-        userPhoto: response?.user?.profile?.photo,
+        storedUserModel: StoredUserModel(
+          refreshToken: response?.refreshToken,
+          token: response?.accesToken,
+          userId: '${response?.user?.id}',
+          userName: response?.user?.userName,
+          userPhoto: response?.user?.account?.photo,
+          moto: response?.user?.account?.creed,
+          currentFollowers: response?.user?.account?.status?.followersCount,
+          userTarget: response?.user?.account?.status?.userTarget,
+          lastStatus: response?.user?.account?.status?.lastStatus,
+        ),
       );
       dio.options.headers.addAll({'Authorization': 'Bearer: ${response?.accesToken}'});
     } else {

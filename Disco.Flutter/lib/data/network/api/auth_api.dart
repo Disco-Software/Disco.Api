@@ -20,58 +20,47 @@ class AuthApi {
   AuthApi({required this.client});
 
   Future<dynamic> login(LogInRequestModel model) =>
-      client.post("user/authentication/log-in", data: model).then((response) {
+      client.post("user/account/log-in", data: model).then((response) {
         return response.data;
       });
 
-  Future<dynamic> registration(RegisterRequestModel model) => client
-          .post("user/authentication/registration", data: model)
-          .then((response) {
+  Future<dynamic> getUserDetails() =>
+      client.get("user/account/details/user").then((response) {
+        return response.data;
+      });
+
+  Future<dynamic> registration(RegisterRequestModel model) =>
+      client.post("user/account/registration", data: model).then((response) {
         return response.data;
       });
 
   Future<UserTokenResponse?> refreshToken(RefreshTokenModel model) =>
-      client.put("user/authentication/refresh", data: model).then((response) {
+      client.put("user/account/refresh", data: model).then((response) {
         return UserTokenResponse.fromJson(response.data);
       });
 
-  Future<UserTokenResponse?> facebook(AccessTokenRequestModel model) => client
-          .post("user/authentication/log-in/facebook", data: model)
-          .then((response) {
+  Future<UserTokenResponse?> facebook(AccessTokenRequestModel model) =>
+      client.post("user/account/log-in/facebook", data: model).then((response) {
         return UserTokenResponse.fromJson(response.data);
       });
 
-  Future<UserTokenResponse?> apple(AppleLogInRequestModel model) => client
-          .post("user/authentication/log-in/apple", data: model)
-          .then((response) {
+  Future<UserTokenResponse?> apple(AppleLogInRequestModel model) =>
+      client.post("user/account/log-in/apple", data: model).then((response) {
         return response.data;
       });
 
-  Future<UserTokenResponse?> googleLogin(GoogleLogInRequestModel model) {
-    print("lol 0");
+  Future<UserTokenResponse?> googleLogin(GoogleLogInRequestModel model) =>
+      client.post("user/account/log-in/google", data: model).then((response) {
+        return UserTokenResponse.fromJson(response.data);
+      });
 
-    client
-        .post("user/authentication/log-in/google", data: model)
-        .then((response) {
-      print("lol 1");
-      return UserTokenResponse.fromJson(response.data);
-    }).catchError((onError) {
-      print(onError);
-    });
-
-    throw new Exception();
-  }
-
-  Future<String?> forgotPassword(ForgotPasswordModel model) => client
-          .post('user/authentication/forgot-password', data: model)
-          .then((response) {
+  Future<String?> forgotPassword(ForgotPasswordModel model) =>
+      client.post('user/account/forgot-password', data: model).then((response) {
         return response.data;
       });
 
   Future<UserTokenResponse?> resetPassword(ResetPasswordRequestModel model) =>
-      client
-          .put("user/authentication/reset-password", data: model.toJson())
-          .then((response) {
+      client.put("user/account/reset-password", data: model.toJson()).then((response) {
         return response.data;
       });
 }

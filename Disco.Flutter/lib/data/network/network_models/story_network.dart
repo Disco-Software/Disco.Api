@@ -1,11 +1,11 @@
-import 'package:disco_app/data/network/network_models/profile_network.dart';
+import 'package:disco_app/data/network/network_models/account_network.dart';
 
 class StoriesModel {
   List<StoryImages>? storyImages;
   List<StoryVideos>? storyVideos;
   String? dateOfCreation;
   int? profileId;
-  Profile? profile;
+  Account? profile;
   int? id;
 
   StoriesModel(
@@ -31,7 +31,7 @@ class StoriesModel {
     }
     dateOfCreation = json['dateOfCreation'];
     profileId = json['profileId'];
-    profile = json['profile'] != null ? Profile.fromJson(json['profile']) : null;
+    profile = json['profile'] != null ? Account.fromJson(json['profile']) : null;
     id = json['id'];
   }
 

@@ -73,7 +73,7 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
                   ...widget.post.postSongs!
                       .map((postSong) => SongBody(
                             userName: widget.post.postSongs?[_currentPageIndex].executorName ??
-                                widget.post.profile?.user?.userName ??
+                                widget.post.account?.user?.userName ??
                                 "",
                             postSong: postSong,
                             songSources:

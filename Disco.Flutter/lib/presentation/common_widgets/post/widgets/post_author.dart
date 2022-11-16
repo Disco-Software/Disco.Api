@@ -34,14 +34,14 @@ class PostAuthor extends StatelessWidget {
                       spreadRadius: 7,
                       blurRadius: 7)
                 ]),
-            child: post.profile?.photo != null
+            child: post.account?.photo != null
                 ? ClipRRect(
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(100),
                       bottomRight: Radius.circular(100),
                     ),
                     child: CachedNetworkImage(
-                      imageUrl: post.profile?.photo ?? '',
+                      imageUrl: post.account?.photo ?? '',
                       placeholder: (context, url) => Image.asset('assets/ic_photo.png'),
                       fit: BoxFit.fill,
                     ),
@@ -69,7 +69,7 @@ class PostAuthor extends StatelessWidget {
           const SizedBox(
             width: 16,
           ),
-          Text(post.profile?.user?.userName ?? "",
+          Text(post.account?.user?.userName ?? "",
               style: GoogleFonts.aBeeZee(
                 color: const Color(0xFFE6E0D2),
                 fontSize: 24,

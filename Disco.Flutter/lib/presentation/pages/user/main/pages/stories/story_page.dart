@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/data/local/story_model.dart';
-import 'package:disco_app/data/network/network_models/profile_network.dart';
+import 'package:disco_app/data/network/network_models/account_network.dart';
 import 'package:disco_app/data/network/network_models/story_network.dart';
 import 'package:disco_app/presentation/pages/user/main/bloc/stories_cubit.dart';
 import 'package:disco_app/presentation/pages/user/main/bloc/stories_state.dart';
@@ -34,7 +34,7 @@ class _StoryPageState extends State<StoryPage> with SingleTickerProviderStateMix
   final List<StoryModel> stories = [];
   List<StoryItem> newStories = [];
   late int _totalLength;
-  Profile? currentUser;
+  Account? currentUser;
   final FocusNode _textFieldFocus = FocusNode();
   final TextEditingController _textController = TextEditingController();
   // final PageController _pageController = PageController();

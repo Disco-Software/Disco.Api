@@ -1,3 +1,5 @@
+import 'package:disco_app/data/network/network_models/account_network.dart';
+
 class UserTokenResponse {
   User? user;
   String? accesToken;
@@ -48,7 +50,7 @@ class User {
   String? refreshToken;
   bool? lockoutEnabled;
   int? accessFailedCount;
-  Profile? profile;
+  Account? account;
 
   User(
       {this.id,
@@ -68,7 +70,7 @@ class User {
       this.lockoutEnabled,
       this.accessFailedCount,
       this.roleName,
-      this.profile});
+      this.account});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -88,7 +90,7 @@ class User {
     lockoutEnd = json['lockoutEnd'];
     lockoutEnabled = json['lockoutEnabled'];
     accessFailedCount = json['accessFailedCount'];
-    profile = json['profile'] != null ? Profile.fromJson(json['profile']) : null;
+    account = json['account'] != null ? Account.fromJson(json['account']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -110,50 +112,50 @@ class User {
     data['lockoutEnd'] = lockoutEnd;
     data['lockoutEnabled'] = lockoutEnabled;
     data['accessFailedCount'] = accessFailedCount;
-    if (profile != null) {
-      data['profile'] = profile!.toJson();
+    if (account != null) {
+      data['account'] = account!.toJson();
     }
     return data;
   }
 }
 
-class Profile {
-  int? id;
-  String? status;
-  String? photo;
-  List<Posts>? posts;
-  int? userId;
-  String? user;
-
-  Profile({this.id, this.status, this.photo, this.posts, this.userId, this.user});
-
-  Profile.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    status = json['status'];
-    photo = json['photo'];
-    if (json['posts'] != null) {
-      posts = <Posts>[];
-      json['posts'].forEach((v) {
-        posts!.add(Posts.fromJson(v));
-      });
-    }
-    userId = json['userId'];
-    user = json['user'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['status'] = status;
-    data['photo'] = photo;
-    if (posts != null) {
-      data['posts'] = posts!.map((v) => v.toJson()).toList();
-    }
-    data['userId'] = userId;
-    data['user'] = user;
-    return data;
-  }
-}
+// class Profile {
+//   int? id;
+//   String? status;
+//   String? photo;
+//   List<Posts>? posts;
+//   int? userId;
+//   String? user;
+//
+//   Profile({this.id, this.status, this.photo, this.posts, this.userId, this.user});
+//
+//   Profile.fromJson(Map<String, dynamic> json) {
+//     id = json['id'];
+//     status = json['status'];
+//     photo = json['photo'];
+//     if (json['posts'] != null) {
+//       posts = <Posts>[];
+//       json['posts'].forEach((v) {
+//         posts!.add(Posts.fromJson(v));
+//       });
+//     }
+//     userId = json['userId'];
+//     user = json['user'];
+//   }
+//
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = <String, dynamic>{};
+//     data['id'] = id;
+//     data['status'] = status;
+//     data['photo'] = photo;
+//     if (posts != null) {
+//       data['posts'] = posts!.map((v) => v.toJson()).toList();
+//     }
+//     data['userId'] = userId;
+//     data['user'] = user;
+//     return data;
+//   }
+// }
 
 class Posts {
   int? id;

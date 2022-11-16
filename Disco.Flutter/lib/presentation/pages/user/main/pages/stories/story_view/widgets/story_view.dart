@@ -390,6 +390,9 @@ class StoryView extends StatefulWidget {
   /// for inline stories inside ListViews, it is preferrable to not to
   /// provide this callback so as to enable scroll events on the list view.
   final Function(Direction?)? onVerticalSwipeComplete;
+  final Function(DragUpdateDetails)? onVerticalSwipeUpdate;
+
+  final Function()? onTap;
 
   /// Callback for when a story is currently being shown.
   final ValueChanged<StoryItem>? onStoryShow;
@@ -418,6 +421,8 @@ class StoryView extends StatefulWidget {
     this.repeat = false,
     this.inline = false,
     this.onVerticalSwipeComplete,
+    this.onVerticalSwipeUpdate,
+    this.onTap,
   });
 
   @override
@@ -644,6 +649,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               alignment: Alignment.centerRight,
               heightFactor: 1,
               child: GestureDetector(
+                onTap: widget.onTap,
                 onTapDown: (details) {
                   widget.controller.pause();
                 },
@@ -674,6 +680,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                         verticalDragInfo ??= VerticalDragInfo();
 
                         verticalDragInfo!.update(details.primaryDelta!);
+                        print('LOLO1111111');
+                        widget.onVerticalSwipeUpdate!(details);
                       },
                 onVerticalDragEnd: widget.onVerticalSwipeComplete == null
                     ? null

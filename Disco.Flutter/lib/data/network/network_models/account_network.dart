@@ -1,9 +1,10 @@
 import 'package:disco_app/data/network/network_models/friend_model.dart';
 import 'package:disco_app/data/network/network_models/post_network.dart';
+import 'package:disco_app/data/network/network_models/status_model.dart';
 import 'package:disco_app/data/network/network_models/user_network.dart';
 
-class Profile {
-  String? status;
+class Account {
+  StatusModel? status;
   String? photo;
   String? creed;
   List<Post>? posts;
@@ -13,7 +14,7 @@ class Profile {
   User? user;
   int? id;
 
-  Profile(
+  Account(
       {this.status,
       this.photo,
       this.posts,
@@ -24,8 +25,8 @@ class Profile {
       this.creed,
       this.id});
 
-  Profile.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
+  Account.fromJson(Map<String, dynamic> json) {
+    status = json['status'] != null ? StatusModel.fromJson(json['status']) : null;
     creed = json['creed'];
     photo = json['photo'];
     if (json['posts'] != null) {
@@ -68,6 +69,10 @@ class Profile {
     data['userId'] = userId;
     if (user != null) {
       data['user'] = user!.toJson();
+    }
+
+    if (status != null) {
+      data['status'] = status!.toJson();
     }
     data['id'] = id;
     return data;
