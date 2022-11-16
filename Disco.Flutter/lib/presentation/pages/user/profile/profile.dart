@@ -421,7 +421,7 @@ class _CircularPercentageState extends State<_CircularPercentage>
         ),
         Positioned(
             top: 280,
-            left: width - 220,
+            left: width > 400 ? width - 260 : width - 220,
             child: Text(
               widget.status,
               style: GoogleFonts.textMeOne(color: DcColors.white, fontSize: 22),
