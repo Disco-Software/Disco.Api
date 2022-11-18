@@ -1,39 +1,39 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>f6750af4-0eb5-4040-81a5-3e23e355e18d</UserSecretsId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<UserSecretsId>f6750af4-0eb5-4040-81a5-3e23e355e18d</UserSecretsId>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Azure.Storage.Queues" Version="12.11.0" />
-    <PackageReference Include="FluentValidation.AspNetCore" Version="11.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.27" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.27" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="6.0.7" />
-    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="3.1.27">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.4.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Azure.Storage.Queues" Version="12.11.0" />
+		<PackageReference Include="FluentValidation.AspNetCore" Version="11.1.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.27" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.27" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="6.0.7" />
+		<PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="3.1.27">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.4.0" />
+	</ItemGroup>
 
-  <!--<ItemGroup>
+	<!--<ItemGroup>
     <OpenApiReference Include="OpenAPIs\index.html" CodeGenerator="NSwagCSharp" Namespace="Disco.Api.Swagger" ClassName="Swagger">
       <SourceUri>http://localhost/Disco.Api/swagger/index.html</SourceUri>
     </OpenApiReference>
   </ItemGroup>-->
 
-  <ItemGroup>
-    <ProjectReference Include="..\Disco.ApiServices\Disco.ApiServices.csproj" />
-    <ProjectReference Include="..\Disco.Business\Disco.Business.csproj" />
-    <ProjectReference Include="..\Disco.Domain\Disco.Domain.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Disco.ApiServices\Disco.ApiServices.csproj" />
+	</ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+	<ProjectExtensions>
+		<VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio>
+	</ProjectExtensions>
 
 
 </Project>

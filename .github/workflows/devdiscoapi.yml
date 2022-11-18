@@ -2,7 +2,7 @@ name: Создавайте и развертывайте приложения .N
 on:
   push:
     branches:
-    - feature/commets_integration
+    - master
 env:
   AZURE_WEBAPP_NAME: devdiscoapi
   AZURE_WEBAPP_PACKAGE_PATH: Disco.Api\publish

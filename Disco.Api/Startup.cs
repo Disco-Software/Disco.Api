@@ -21,6 +21,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Disco.Business.Constants;
 using Disco.ApiServices.Hubs;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Disco.Api
 {
@@ -39,7 +41,34 @@ namespace Disco.Api
             var connectionStrings = Configuration.GetSection("ConnectionStrings")
                 .Get<ConnectionStrings>();
 
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { });
+                options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter a valid token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
+            });
             services.ConfigureDbContext(connectionStrings.ProdactionConnection);
             services.ConfigureIdentity();
             services.AddAuthorization();
@@ -91,16 +120,17 @@ namespace Disco.Api
             var serviceProvider = serviceScopeFactory.CreateScope().ServiceProvider;
 
             if (env.IsDevelopment())
-            {                
+            {
+                app.UseSwagger(swagger =>
+                {
+                    swagger.SerializeAsV2 = true;
+                });
+                app.UseSwaggerUI(swagger => {
+                    swagger.SwaggerEndpoint("v1/swagger.json", "Disco.Api");
+                });
+
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseSwagger(swagger =>
-            {
-                swagger.SerializeAsV2 = true;
-            });
-            app.UseSwaggerUI(swagger => swagger.SwaggerEndpoint("v1/swagger.json", "Disco.Api"));
-
 
             app.UseExceptionHandler("/Error");
             app.UseHsts();
