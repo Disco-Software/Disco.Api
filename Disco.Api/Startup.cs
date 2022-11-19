@@ -150,7 +150,7 @@ namespace Disco.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<CommentHub>("api/user/comments");
+                endpoints.MapHub<CommentHub>("/hub/comments");
             });
         }
     }
