@@ -27,7 +27,7 @@ class UserProfilePage extends StatefulWidget implements AutoRouteWrapper {
   Widget wrappedRoute(context) {
     return BlocProvider<ProfileCubit>(
       create: (context) => getIt()..loadMine(),
-      child: this,
+      child: Sliver,
     );
   }
 }
