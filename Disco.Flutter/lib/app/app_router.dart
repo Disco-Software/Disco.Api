@@ -14,6 +14,7 @@ import 'package:disco_app/presentation/pages/user/home_page.dart';
 import 'package:disco_app/presentation/pages/user/main/main_page.dart';
 import 'package:disco_app/presentation/pages/user/main/pages/stories/story_page.dart';
 import 'package:disco_app/presentation/pages/user/profile/profile.dart';
+import 'package:disco_app/presentation/pages/user/profile/user_profile_page.dart';
 import 'package:disco_app/presentation/pages/user/saved/saved.dart';
 import 'package:disco_app/presentation/pages/user/saved/saved_item_page/saved_item.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ import 'package:flutter/material.dart';
     AutoRoute(path: "/search", page: SearchRegistrationPage),
     AutoRoute(path: "/registration", page: RegistrationPage),
     AutoRoute(path: '/fullscreen-video', page: FullScreenVideoPage),
+    AutoRoute(path: '/follower-account', page: UserProfilePage),
     CustomRoute(
       path: '/search_page',
       page: SearchPage,
