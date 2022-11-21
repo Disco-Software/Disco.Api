@@ -1,6 +1,7 @@
 ﻿using Disco.Business.Services;
 using Disco.Domain.Models;
 using Disco.Tests.Mock;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -22,10 +23,13 @@ namespace Disco.Tests.Services
 
             var mockedUserManager = MockedUserManager.MockUserManager(list);
             mockedUserManager.Setup(u => u.ResetPasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(new Microsoft.AspNetCore.Identity.IdentityResult());
+                .ReturnsAsync(It.IsAny<IdentityResult>());
+            mockedUserManager.Setup(u => u.GeneratePasswordResetTokenAsync(It.IsAny<User>()))
+                .ReturnsAsync("lusha_token");
 
             var accountPasswordService = new AccountPasswordService(mockedUserManager.Object);
-            var response = accountPasswordService.ChengePasswordAsync(user, "kdjfkjdkfjdkjf", "StasZeus2021!");
+            var passwordResetToken = await mockedUserManager.Object.GeneratePasswordResetTokenAsync(user);
+            var response = accountPasswordService.ChengePasswordAsync(user, passwordResetToken, "StasZeus2021!");
 
             Assert.IsTrue(response.IsCompletedSuccessfully);
         }
