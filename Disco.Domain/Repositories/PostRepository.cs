@@ -163,15 +163,5 @@ namespace Disco.Domain.Repositories
                 .ToListAsync();
 
         }
-
-        public async Task<List<Post>> GetAllUserPostsAsync(int accountId)
-        {
-            return await _ctx.Posts
-                .Include(p => p.PostSongs)
-                .Include(p => p.PostImages)
-                .Include(p => p.PostVideos)
-                .Where(p => p.AccountId == accountId)
-                .ToListAsync();
-        }
     }
 }
