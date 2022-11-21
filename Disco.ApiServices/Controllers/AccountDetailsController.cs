@@ -51,9 +51,11 @@ namespace Disco.ApiServices.Controllers
         [HttpGet("user/{id:int}")]
         public async Task<IActionResult> GetUserByIdAsync([FromRoute] int id)
         {
-            var account = await _accountService.GetByIdAsync(id);
+            var user = await _accountService.GetByIdAsync(id);
 
-            return Ok(account);
+            user.Account.Posts = await _postService.GetAllUserPosts(user);
+
+            return Ok(user);
         }
     }
 }

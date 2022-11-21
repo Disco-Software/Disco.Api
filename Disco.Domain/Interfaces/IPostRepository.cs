@@ -10,6 +10,7 @@ namespace Disco.Domain.Interfaces
         Task Remove(int id);
         Task<List<Post>> GetAll(int userId, int pageSize, int pageNumber);
         Task<List<Post>> GetAllUserPosts(int userId, int pageSize, int pageNumber);
+        Task<List<Post>> GetAllUserPostsAsync(int userId);
         Task<Post> GetAsync(int id);
         Task<List<Post>> GetPostsByDescriptionAsync(string search);
         Task<List<Post>> GetUserPostsAsync(int userId);
