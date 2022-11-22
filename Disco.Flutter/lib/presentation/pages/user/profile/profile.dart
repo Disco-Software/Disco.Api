@@ -26,7 +26,7 @@ class ProfilePage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(context) {
     return BlocProvider<ProfileCubit>(
-      create: (context) => getIt()..loadMine(),
+      create: (context) => getIt()..loadMine(ProfilePageType.userProfile),
       child: this,
     );
   }
@@ -34,7 +34,8 @@ class ProfilePage extends StatefulWidget implements AutoRouteWrapper {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool _shouldShowSaved = false;
-  final storedUsername = getIt.get<SecureStorageRepository>().getStoredUserModel();
+  final storedUsername =
+      getIt.get<SecureStorageRepository>().getStoredUserModel();
 
   String _lastStatus = '';
   String _creed = '';
@@ -152,19 +153,29 @@ class _ProfilePageState extends State<ProfilePage> {
                                   orElse: () {},
                                   loaded: (state) {
                                     setState(() {
-                                      _lastStatus = state.user.account?.status?.lastStatus ?? '';
+                                      _lastStatus = state.user.account?.status
+                                              ?.lastStatus ??
+                                          '';
                                       _creed = state.user.account?.creed ?? '';
-                                      _userTarget = state.user.account?.status?.userTarget ?? 0;
-                                      _currentFollowers =
-                                          state.user.account?.status?.followersCount ?? 0;
+                                      _userTarget = state.user.account?.status
+                                              ?.userTarget ??
+                                          0;
+                                      _currentFollowers = state.user.account
+                                              ?.status?.followersCount ??
+                                          0;
                                     });
                                   },
                                   saved: (state) {
                                     setState(() {
-                                      _lastStatus = state.user.account?.status?.lastStatus ?? '';
-                                      _userTarget = state.user.account?.status?.userTarget ?? 0;
-                                      _currentFollowers =
-                                          state.user.account?.status?.followersCount ?? 0;
+                                      _lastStatus = state.user.account?.status
+                                              ?.lastStatus ??
+                                          '';
+                                      _userTarget = state.user.account?.status
+                                              ?.userTarget ??
+                                          0;
+                                      _currentFollowers = state.user.account
+                                              ?.status?.followersCount ??
+                                          0;
                                     });
                                   });
                             },
@@ -178,7 +189,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             top: 380,
                             child: Text(
                               '${(data.data as StoredUserModel).userName}',
-                              style: GoogleFonts.aBeeZee(color: DcColors.white, fontSize: 30),
+                              style: GoogleFonts.aBeeZee(
+                                  color: DcColors.white, fontSize: 30),
                             ),
                           ),
                         ],
@@ -188,7 +200,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         padding: const EdgeInsets.symmetric(horizontal: 65),
                         child: Text(
                           _creed,
-                          style: GoogleFonts.textMeOne(color: DcColors.white, fontSize: 20),
+                          style: GoogleFonts.textMeOne(
+                              color: DcColors.white, fontSize: 20),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -200,15 +213,18 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Text(
                                     'Save',
-                                    style: GoogleFonts.aBeeZee(color: DcColors.white, fontSize: 18),
+                                    style: GoogleFonts.aBeeZee(
+                                        color: DcColors.white, fontSize: 18),
                                   ),
                                   Text(
                                     'Mine',
-                                    style: GoogleFonts.aBeeZee(color: DcColors.white, fontSize: 18),
+                                    style: GoogleFonts.aBeeZee(
+                                        color: DcColors.white, fontSize: 18),
                                   )
                                 ],
                               ),
@@ -224,7 +240,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                         width: 237,
                                         height: 13,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(7),
+                                          borderRadius:
+                                              BorderRadius.circular(7),
                                           color: DcColors.sliderBackground,
                                         ),
                                       ),
@@ -235,21 +252,26 @@ class _ProfilePageState extends State<ProfilePage> {
                                           _shouldShowSaved = !_shouldShowSaved;
                                         });
                                         if (_shouldShowSaved) {
-                                          context.read<ProfileCubit>().loadSaved();
+                                          context
+                                              .read<ProfileCubit>()
+                                              .loadSaved();
                                         } else {
-                                          context.read<ProfileCubit>().loadMine();
+                                          context.read<ProfileCubit>().loadMine(
+                                              ProfilePageType.userProfile);
                                         }
                                       },
                                       child: AnimatedAlign(
                                         alignment: _shouldShowSaved
                                             ? Alignment.centerLeft
                                             : Alignment.centerRight,
-                                        duration: const Duration(milliseconds: 300),
+                                        duration:
+                                            const Duration(milliseconds: 300),
                                         child: Container(
                                           width: 237 / 2,
                                           height: 13,
                                           decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(7),
+                                            borderRadius:
+                                                BorderRadius.circular(7),
                                             color: Colors.orange,
                                           ),
                                         ),
@@ -272,7 +294,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         return SliverList(
                           delegate: SliverChildBuilderDelegate(
                             (ctx, index) {
-                              return UnicornPost(post: state.user.account!.posts![index]);
+                              return UnicornPost(
+                                  post: state.user.account!.posts![index]);
                             },
                             childCount: state.user.account!.posts!.length,
                           ),
@@ -286,7 +309,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             ? SliverList(
                                 delegate: SliverChildBuilderDelegate(
                                   (ctx, index) {
-                                    return UnicornPost(post: state.savedPosts[index]);
+                                    return UnicornPost(
+                                        post: state.savedPosts[index]);
                                   },
                                   childCount: state.user.account!.posts!.length,
                                 ),
@@ -297,7 +321,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   children: [
                                     Text(
                                       'No Saved posts',
-                                      style: GoogleFonts.aBeeZee(color: Colors.white, fontSize: 25),
+                                      style: GoogleFonts.aBeeZee(
+                                          color: Colors.white, fontSize: 25),
                                     ),
                                     const SizedBox(height: 200),
                                   ],
@@ -373,8 +398,8 @@ class _CircularPercentageState extends State<_CircularPercentage>
 
   @override
   void initState() {
-    _animationController =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 1500));
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1500));
     _animationController.forward();
     super.initState();
   }
@@ -412,7 +437,8 @@ class _CircularPercentageState extends State<_CircularPercentage>
               ),
               painter: ProgressBar(
                 progressColor: Colors.orange,
-                arc: _getCurrentValue(widget.current, widget.target) * _animationController.value,
+                arc: _getCurrentValue(widget.current, widget.target) *
+                    _animationController.value,
                 isBackground: false,
                 screenWidth: width,
               ),
@@ -444,7 +470,8 @@ class _CircularPercentageState extends State<_CircularPercentage>
     );
   }
 
-  double _getCurrentValue(int current, int followerTarget) => current / (followerTarget / 3.15);
+  double _getCurrentValue(int current, int followerTarget) =>
+      current / (followerTarget / 3.15);
 }
 
 class ProgressBar extends CustomPainter {

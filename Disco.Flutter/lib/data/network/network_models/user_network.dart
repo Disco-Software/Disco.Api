@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:disco_app/data/network/network_models/account_network.dart';
 
 class UserTokenResponse {
@@ -73,24 +75,29 @@ class User {
       this.account});
 
   User.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userName = json['userName'];
-    roleName = json['roleName'];
-    normalizedUserName = json['normalizedUserName'];
-    email = json['email'];
-    normalizedEmail = json['normalizedEmail'];
-    emailConfirmed = json['emailConfirmed'];
-    passwordHash = json['passwordHash'];
-    securityStamp = json['securityStamp'];
-    refreshToken = json['refreshToken'];
-    concurrencyStamp = json['concurrencyStamp'];
-    phoneNumber = json['phoneNumber'];
-    phoneNumberConfirmed = json['phoneNumberConfirmed'];
-    twoFactorEnabled = json['twoFactorEnabled'];
-    lockoutEnd = json['lockoutEnd'];
-    lockoutEnabled = json['lockoutEnabled'];
-    accessFailedCount = json['accessFailedCount'];
-    account = json['account'] != null ? Account.fromJson(json['account']) : null;
+    try {
+      id = json['id'];
+      userName = json['userName'];
+      roleName = json['roleName'];
+      normalizedUserName = json['normalizedUserName'];
+      email = json['email'];
+      normalizedEmail = json['normalizedEmail'];
+      emailConfirmed = json['emailConfirmed'];
+      passwordHash = json['passwordHash'];
+      securityStamp = json['securityStamp'];
+      refreshToken = json['refreshToken'];
+      concurrencyStamp = json['concurrencyStamp'];
+      phoneNumber = json['phoneNumber'];
+      phoneNumberConfirmed = json['phoneNumberConfirmed'];
+      twoFactorEnabled = json['twoFactorEnabled'];
+      lockoutEnd = json['lockoutEnd'];
+      lockoutEnabled = json['lockoutEnabled'];
+      accessFailedCount = json['accessFailedCount'];
+      account =
+          json['account'] != null ? Account.fromJson(json['account']) : null;
+    } catch (ex) {
+      log(ex.toString(), name: "user from json error");
+    }
   }
 
   Map<String, dynamic> toJson() {

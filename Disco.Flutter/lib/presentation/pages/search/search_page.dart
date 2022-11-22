@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/data/network/network_models/post_network.dart';
 import 'package:disco_app/injection.dart';
 import 'package:disco_app/presentation/common_widgets/post/post.dart';
@@ -33,7 +34,8 @@ class SearchPage extends StatefulWidget implements AutoRouteWrapper {
   }
 }
 
-class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateMixin {
+class _SearchPageState extends State<SearchPage>
+    with SingleTickerProviderStateMixin {
   final _searchController = TextEditingController();
   late AnimationController _animationController;
   bool shouldShowSearchIcon = true;
@@ -44,11 +46,11 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     if (mounted) {
-      _animationController =
-          AnimationController(vsync: this, duration: const Duration(milliseconds: 1500))
-            ..addListener(() {
-              setState(() {});
-            });
+      _animationController = AnimationController(
+          vsync: this, duration: const Duration(milliseconds: 1500))
+        ..addListener(() {
+          setState(() {});
+        });
       _animationController.forward();
     }
   }
@@ -71,7 +73,9 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
               SliverAppBar(
                 centerTitle: false,
                 backgroundColor: const Color(0xFF1C142D),
-                titleSpacing: _animationController.drive(Tween(begin: 0.0, end: 100.0)).value,
+                titleSpacing: _animationController
+                    .drive(Tween(begin: 0.0, end: 100.0))
+                    .value,
                 leading: IconButton(
                   icon: const Icon(CupertinoIcons.chevron_back),
                   onPressed: () {
@@ -97,10 +101,13 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                         shouldShowSearchIcon = !shouldShowSearchIcon;
                       });
                       _debounce = Timer(const Duration(milliseconds: 600), () {
-                        context.read<SearchItemCubit>().search(_searchController.text);
+                        context
+                            .read<SearchItemCubit>()
+                            .search(_searchController.text);
                       });
                     },
-                    style: const TextStyle(color: DcColors.darkWhite, fontSize: 30),
+                    style: const TextStyle(
+                        color: DcColors.darkWhite, fontSize: 30),
                     controller: _searchController,
                     decoration: InputDecoration(
                       isDense: true,
@@ -119,18 +126,22 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                   ),
                 ),
               ),
-              const SliverPadding(padding: EdgeInsets.symmetric(vertical: 20.0)),
+              const SliverPadding(
+                  padding: EdgeInsets.symmetric(vertical: 20.0)),
               if (_shoudlShowNothing(state))
                 const SliverToBoxAdapter(
                   child: Text(
                     "Nothing found",
-                    style:
-                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: DcColors.white),
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: DcColors.white),
                     textAlign: TextAlign.center,
                   ),
                 ),
               if (state is LoadingSearchItemState)
-                SliverToBoxAdapter(child: Center(child: Image.asset('assets/music.gif')))
+                SliverToBoxAdapter(
+                    child: Center(child: Image.asset('assets/music.gif')))
               else ...[
                 if (state is SuccessSearchItemState &&
                     state.items.users != null &&
@@ -139,11 +150,14 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                     child: Text(
                       "Users",
                       style: TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold, color: DcColors.white),
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: DcColors.white),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                const SliverPadding(padding: EdgeInsets.symmetric(vertical: 20.0)),
+                const SliverPadding(
+                    padding: EdgeInsets.symmetric(vertical: 20.0)),
                 if (state is SuccessSearchItemState)
                   SliverGrid(
                     delegate: SliverChildBuilderDelegate((context, index) {
@@ -161,14 +175,25 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                                   ),
                                 ],
                               ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: CachedNetworkImage(
-                                  fit: BoxFit.cover,
-                                  imageUrl: state.items.users?[index].photo ?? '',
-                                  errorWidget: (context, string, err) => Container(
-                                      color: Colors.white,
-                                      child: Image.asset('assets/ic_photo.png')),
+                              child: InkWell(
+                                onTap: () {
+                                  context.router.push(UserProfileRoute(
+                                      userId:
+                                          state.items.users?[index].userId ??
+                                              0));
+                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: CachedNetworkImage(
+                                    fit: BoxFit.cover,
+                                    imageUrl:
+                                        state.items.users?[index].photo ?? '',
+                                    errorWidget: (context, string, err) =>
+                                        Container(
+                                            color: Colors.white,
+                                            child: Image.asset(
+                                                'assets/ic_photo.png')),
+                                  ),
                                 ),
                               ),
                             ),
@@ -205,11 +230,14 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                     child: Text(
                       "Posts",
                       style: TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold, color: DcColors.white),
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: DcColors.white),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                const SliverPadding(padding: EdgeInsets.symmetric(vertical: 20.0)),
+                const SliverPadding(
+                    padding: EdgeInsets.symmetric(vertical: 20.0)),
                 if (state is InitialSearchItemState)
                   BlocBuilder<PostsCubit, PostsState>(
                     builder: (context, state) {
@@ -229,12 +257,14 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (ctx, index) {
-                        return UnicornPost(post: state.items.posts?[index] ?? Post());
+                        return UnicornPost(
+                            post: state.items.posts?[index] ?? Post());
                       },
                       childCount: state.items.posts?.length ?? 0,
                     ),
                   ),
-                const SliverPadding(padding: EdgeInsets.symmetric(vertical: 100.0)),
+                const SliverPadding(
+                    padding: EdgeInsets.symmetric(vertical: 100.0)),
               ],
             ],
           );

@@ -6,28 +6,29 @@
 
 import 'package:auto_route/auto_route.dart' as _i1;
 import 'package:flutter/material.dart' as _i2;
-import 'package:video_player/video_player.dart' as _i19;
+import 'package:video_player/video_player.dart' as _i20;
 
 import '../presentation/pages/authentication/login/login_page.dart' as _i4;
 import '../presentation/pages/authentication/registration/registration.dart'
     as _i6;
 import '../presentation/pages/authentication/search_registration/search_registration_page.dart'
     as _i5;
-import '../presentation/pages/search/search_page.dart' as _i8;
+import '../presentation/pages/search/search_page.dart' as _i9;
 import '../presentation/pages/start/splash_page.dart' as _i3;
-import '../presentation/pages/user/add_post/add_post_page.dart' as _i16;
-import '../presentation/pages/user/add_post/record_audio_page.dart' as _i17;
-import '../presentation/pages/user/add_post/select_files_page.dart' as _i18;
+import '../presentation/pages/user/add_post/add_post_page.dart' as _i17;
+import '../presentation/pages/user/add_post/record_audio_page.dart' as _i18;
+import '../presentation/pages/user/add_post/select_files_page.dart' as _i19;
 import '../presentation/pages/user/add_post/widgets/fullscreen_video.dart'
     as _i7;
-import '../presentation/pages/user/chat/chat.dart' as _i14;
-import '../presentation/pages/user/home_page.dart' as _i11;
-import '../presentation/pages/user/main/main_page.dart' as _i12;
-import '../presentation/pages/user/main/pages/stories/story_page.dart' as _i9;
-import '../presentation/pages/user/profile/profile.dart' as _i15;
-import '../presentation/pages/user/saved/saved.dart' as _i13;
+import '../presentation/pages/user/chat/chat.dart' as _i15;
+import '../presentation/pages/user/home_page.dart' as _i12;
+import '../presentation/pages/user/main/main_page.dart' as _i13;
+import '../presentation/pages/user/main/pages/stories/story_page.dart' as _i10;
+import '../presentation/pages/user/profile/profile.dart' as _i16;
+import '../presentation/pages/user/profile/user_profile_page.dart' as _i8;
+import '../presentation/pages/user/saved/saved.dart' as _i14;
 import '../presentation/pages/user/saved/saved_item_page/saved_item.dart'
-    as _i10;
+    as _i11;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter([_i2.GlobalKey<_i2.NavigatorState>? navigatorKey])
@@ -62,10 +63,16 @@ class AppRouter extends _i1.RootStackRouter {
           return _i7.FullScreenVideoPage(
               key: args.key, source: args.source, controller: args.controller);
         }),
+    UserProfileRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
+        routeData: routeData,
+        builder: (data) {
+          final args = data.argsAs<UserProfileRouteArgs>();
+          return _i8.UserProfilePage(key: args.key, userId: args.userId);
+        }),
     SearchRoute.name: (routeData) => _i1.CustomPage<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i8.SearchPage();
+          return const _i9.SearchPage();
         },
         transitionsBuilder: _i1.TransitionsBuilders.fadeIn,
         durationInMilliseconds: 800,
@@ -76,14 +83,14 @@ class AppRouter extends _i1.RootStackRouter {
         routeData: routeData,
         builder: (data) {
           final args = data.argsAs<StoryRouteArgs>();
-          return _i9.StoryPage(
+          return _i10.StoryPage(
               index: args.index, totalLength: args.totalLength, key: args.key);
         }),
     AnimatedStoryRoute.name: (routeData) => _i1.CustomPage<dynamic>(
         routeData: routeData,
         builder: (data) {
           final args = data.argsAs<AnimatedStoryRouteArgs>();
-          return _i9.StoryPage(
+          return _i10.StoryPage(
               index: args.index, totalLength: args.totalLength, key: args.key);
         },
         transitionsBuilder: _i1.TransitionsBuilders.fadeIn,
@@ -96,14 +103,14 @@ class AppRouter extends _i1.RootStackRouter {
           final args = data.argsAs<SavedItemRouteArgs>(
               orElse: () =>
                   SavedItemRouteArgs(itemId: pathParams.getInt('itemId')));
-          return _i10.SavedItem(key: args.key, itemId: args.itemId);
+          return _i11.SavedItem(key: args.key, itemId: args.itemId);
         }),
     HomeRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (data) {
           final args =
               data.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
-          return _i11.HomePage(
+          return _i12.HomePage(
               key: args.key, shouldLoadData: args.shouldLoadData);
         }),
     FeedRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
@@ -111,13 +118,13 @@ class AppRouter extends _i1.RootStackRouter {
         builder: (data) {
           final args =
               data.argsAs<FeedRouteArgs>(orElse: () => const FeedRouteArgs());
-          return _i12.MainPage(
+          return _i13.MainPage(
               key: args.key, shouldLoadData: args.shouldLoadData);
         }),
     SavedItemsRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i13.SavedItemsPage();
+          return const _i14.SavedItemsPage();
         }),
     AddPostRouter.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
@@ -127,27 +134,27 @@ class AppRouter extends _i1.RootStackRouter {
     ChatRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i14.ChatPage();
+          return const _i15.ChatPage();
         }),
     ProfileRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i15.ProfilePage();
+          return const _i16.ProfilePage();
         }),
     AddPostRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i16.AddPostPage();
+          return const _i17.AddPostPage();
         }),
     RecordAudioRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i17.RecordAudioPage();
+          return const _i18.RecordAudioPage();
         }),
     SelectFilesRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return const _i18.SelectFilesPage();
+          return const _i19.SelectFilesPage();
         })
   };
 
@@ -158,6 +165,7 @@ class AppRouter extends _i1.RootStackRouter {
         _i1.RouteConfig(SearchRegistrationRoute.name, path: '/search'),
         _i1.RouteConfig(RegistrationRoute.name, path: '/registration'),
         _i1.RouteConfig(FullScreenVideoRoute.name, path: '/fullscreen-video'),
+        _i1.RouteConfig(UserProfileRoute.name, path: '/follower-account'),
         _i1.RouteConfig(SearchRoute.name, path: '/search_page'),
         _i1.RouteConfig(StoryRoute.name, path: '/story'),
         _i1.RouteConfig(AnimatedStoryRoute.name, path: '/story_anim'),
@@ -204,7 +212,7 @@ class FullScreenVideoRoute extends _i1.PageRouteInfo<FullScreenVideoRouteArgs> {
   FullScreenVideoRoute(
       {_i2.Key? key,
       required String source,
-      required _i19.VideoPlayerController controller})
+      required _i20.VideoPlayerController controller})
       : super(name,
             path: '/fullscreen-video',
             args: FullScreenVideoRouteArgs(
@@ -221,7 +229,24 @@ class FullScreenVideoRouteArgs {
 
   final String source;
 
-  final _i19.VideoPlayerController controller;
+  final _i20.VideoPlayerController controller;
+}
+
+class UserProfileRoute extends _i1.PageRouteInfo<UserProfileRouteArgs> {
+  UserProfileRoute({_i2.Key? key, required int userId})
+      : super(name,
+            path: '/follower-account',
+            args: UserProfileRouteArgs(key: key, userId: userId));
+
+  static const String name = 'UserProfileRoute';
+}
+
+class UserProfileRouteArgs {
+  const UserProfileRouteArgs({this.key, required this.userId});
+
+  final _i2.Key? key;
+
+  final int userId;
 }
 
 class SearchRoute extends _i1.PageRouteInfo<void> {
