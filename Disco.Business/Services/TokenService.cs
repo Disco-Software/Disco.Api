@@ -45,9 +45,9 @@ namespace Disco.Business.Services
             }
         }
 
-        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        public int GetTokenExpirce()
         {
-            throw new NotImplementedException();
+            return _authenticationOptions.Value.ExpiresAfterMitutes;
         }
     }
 }

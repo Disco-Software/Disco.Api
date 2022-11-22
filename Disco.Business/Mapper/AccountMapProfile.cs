@@ -17,7 +17,8 @@ namespace Disco.Business.Mapper
             CreateMap<RegistrationDto, User>();
             CreateMap<User, UserResponseDto>()
                 .ForMember(source => source.RefreshToken, opt => opt.Ignore())
-                .ForMember(source => source.AccessToken, opt => opt.Ignore());
+                .ForMember(source => source.AccessToken, opt => opt.Ignore())
+                .ForMember(source => source.AccessTokenExpirce, opt => opt.Ignore());
             CreateMap<Account, AccountDto>();
             CreateMap<FacebookDto, User>()
                 .ForMember(source => source.UserName, f => f.Ignore())
