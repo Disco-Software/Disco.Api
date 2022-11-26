@@ -18,10 +18,6 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../../../injection.dart';
 import '../post_button.dart';
 
-const String serverUrl = 'https://devdiscoapi.azurewebsites.net/like';
-const String token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJuYmYiOjE2NTQxOTk2OTMsImV4cCI6MTY1NDI3MTY5MywiaXNzIjoiZGlzY28tYXBpIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdC9EaXNjby5BcGkifQ.o0pUMkhRb5hm3ziPDNv1QCcLs-shMhAkc2dHGw_MkWI';
-
 class UnicornPost extends StatefulWidget {
   const UnicornPost({
     Key? key,
@@ -34,7 +30,8 @@ class UnicornPost extends StatefulWidget {
   State<UnicornPost> createState() => _UnicornPostState();
 }
 
-class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStateMixin {
+class _UnicornPostState extends State<UnicornPost>
+    with SingleTickerProviderStateMixin {
   int bodyIndex = 1;
   late AnimationController controller;
   final CarouselController carouselController = CarouselController();
@@ -44,8 +41,8 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    controller =
-        AnimationController(value: 0.3, vsync: this, duration: const Duration(milliseconds: 300));
+    controller = AnimationController(
+        value: 0.3, vsync: this, duration: const Duration(milliseconds: 300));
   }
 
   @override
@@ -69,29 +66,37 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
             child: CarouselSlider(
               carouselController: carouselController,
               items: [
-                if (widget.post.postSongs != null && widget.post.postSongs!.isNotEmpty)
+                if (widget.post.postSongs != null &&
+                    widget.post.postSongs!.isNotEmpty)
                   ...widget.post.postSongs!
                       .map((postSong) => SongBody(
-                            userName: widget.post.postSongs?[_currentPageIndex].executorName ??
+                            userName: widget.post.postSongs?[_currentPageIndex]
+                                    .executorName ??
                                 widget.post.account?.user?.userName ??
                                 "",
                             postSong: postSong,
-                            songSources:
-                                widget.post.postSongs?.map((e) => e.source ?? '').toList() ?? [],
-                            songTitles:
-                                widget.post.postSongs?.map((e) => e.name ?? '').toList() ?? [],
+                            songSources: widget.post.postSongs
+                                    ?.map((e) => e.source ?? '')
+                                    .toList() ??
+                                [],
+                            songTitles: widget.post.postSongs
+                                    ?.map((e) => e.name ?? '')
+                                    .toList() ??
+                                [],
                             carouselController: carouselController,
                             post: widget.post,
                             currentPageIndex: _currentPageIndex,
                           ))
                       .toList(),
-                if (widget.post.postImages != null && widget.post.postImages!.isNotEmpty)
+                if (widget.post.postImages != null &&
+                    widget.post.postImages!.isNotEmpty)
                   ...widget.post.postImages!
                       .map((postImage) => ImageBody(
                             postImage: postImage,
                           ))
                       .toList(),
-                if (widget.post.postVideos != null && widget.post.postVideos!.isNotEmpty)
+                if (widget.post.postVideos != null &&
+                    widget.post.postVideos!.isNotEmpty)
                   ...widget.post.postVideos!
                       .map((postVideo) => VideoBody(
                             postVideo: postVideo,
@@ -130,12 +135,16 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
                     return PostButton(
                       onTap: () async {
                         if (_debounce?.isActive ?? false) _debounce?.cancel();
-                        _debounce = Timer(const Duration(milliseconds: 350), () {
-                          context.read<LikeCubit>().like(widget.post.id ?? 0, widget.post.likes);
+                        _debounce =
+                            Timer(const Duration(milliseconds: 350), () {
+                          context
+                              .read<LikeCubit>()
+                              .like(widget.post.id ?? 0, widget.post.likes);
                         });
                       },
                       imagePath: "assets/ic_star.svg",
-                      isSelected: state is LikeSelectedState || state is LikeStateInitialSelected,
+                      isSelected: state is LikeSelectedState ||
+                          state is LikeStateInitialSelected,
                     );
                   },
                 ),
@@ -167,8 +176,8 @@ class _UnicornPostState extends State<UnicornPost> with SingleTickerProviderStat
                       width: 100,
                       percent: controller.value,
                       barRadius: const Radius.circular(7),
-                      linearGradient:
-                          const LinearGradient(colors: [Color(0xFFE08D11), Color(0xFFF6EA7D)]),
+                      linearGradient: const LinearGradient(
+                          colors: [Color(0xFFE08D11), Color(0xFFF6EA7D)]),
                       backgroundColor: const Color(0xFFC9D6FF),
                     ),
                     animation: controller,
@@ -301,6 +310,7 @@ class HttpOverrideCertificateVerificationInDev extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

@@ -18,7 +18,9 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../injection.dart';
 
 class UserProfilePage extends StatefulWidget implements AutoRouteWrapper {
-  const UserProfilePage({Key? key}) : super(key: key);
+  const UserProfilePage({Key? key, required this.userId}) : super(key: key);
+
+  final int userId;
 
   @override
   State<UserProfilePage> createState() => _UserProfilePageState();
@@ -26,8 +28,9 @@ class UserProfilePage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(context) {
     return BlocProvider<ProfileCubit>(
-      create: (context) => getIt()..loadMine(),
-      child: Sliver,
+      create: (context) =>
+          getIt()..loadMine(ProfilePageType.followerProfile, userId),
+      child: this,
     );
   }
 }
@@ -41,6 +44,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
   String _creed = '';
   int _userTarget = 50;
   int _currentFollowers = 0;
+  String _photo = '';
+  String _userName = '';
 
   @override
   Widget build(BuildContext context) {
@@ -71,283 +76,177 @@ class _UserProfilePageState extends State<UserProfilePage> {
         ),
       ),
       backgroundColor: DcColors.darkViolet,
-      body: FutureBuilder(
-          future: storedUsername,
-          builder: (context, data) {
-            if (data.hasData) {
-              return CustomScrollView(
-                slivers: [
-                  SliverAppBar(
-                    backgroundColor: DcColors.darkViolet,
-                    leading: const SizedBox(),
-                    leadingWidth: 0,
-                    centerTitle: false,
-                    title: const Text(
-                      "DISCO",
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontFamily: 'Colonna',
-                        fontWeight: FontWeight.bold,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            backgroundColor: DcColors.darkViolet,
+            leading: IconButton(
+              icon: Image.asset(
+                'assets/back_button.png',
+                fit: BoxFit.cover,
+              ),
+              onPressed: () {
+                context.router.pop();
+              },
+            ),
+            //leadingWidth: 0,
+            centerTitle: true,
+            title: const Text(
+              "Account",
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          SliverList(
+              delegate: SliverChildListDelegate(
+            [
+              Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  DecoratedBox(
+                    decoration: const BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color(0xffb2a044ff),
+                            offset: Offset(0, 5),
+                            blurRadius: 10),
+                      ],
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(100),
+                        bottomRight: Radius.circular(100),
                       ),
-                      textAlign: TextAlign.start,
                     ),
-                    actions: [
-                      Builder(builder: (context) {
-                        return InkWell(
-                            onTap: () {
-                              Scaffold.of(context).openDrawer();
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.only(right: 20),
-                              child: Icon(CupertinoIcons.list_bullet),
-                            ));
-                      })
-                    ],
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(100),
+                        bottomRight: Radius.circular(100),
+                      ),
+                      child: Image.network(
+                        _photo,
+                        height: 270,
+                        width: 300,
+                        fit: BoxFit.cover,
+                        alignment: Alignment.center,
+                        errorBuilder: (ctx, onj, trace) => Container(
+                          color: Colors.white,
+                          child: Image.asset(
+                            'assets/ic_photo.png',
+                            height: 270,
+                            width: 300,
+                            fit: BoxFit.fill,
+                            alignment: Alignment.center,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  SliverList(
-                      delegate: SliverChildListDelegate(
-                    [
-                      Stack(
-                        alignment: Alignment.topCenter,
-                        children: [
-                          DecoratedBox(
-                            decoration: const BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Color(0xffb2a044ff),
-                                    offset: Offset(0, 5),
-                                    blurRadius: 10),
-                              ],
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(100),
-                                bottomRight: Radius.circular(100),
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(100),
-                                bottomRight: Radius.circular(100),
-                              ),
-                              child: Image.network(
-                                '${(data.data as StoredUserModel).userPhoto}',
-                                height: 270,
-                                width: 300,
-                                fit: BoxFit.cover,
-                                alignment: Alignment.center,
-                                errorBuilder: (ctx, onj, trace) => Container(
-                                  color: Colors.white,
-                                  child: Image.asset(
-                                    'assets/ic_photo.png',
-                                    height: 270,
-                                    width: 300,
-                                    fit: BoxFit.fill,
-                                    alignment: Alignment.center,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          BlocListener<ProfileCubit, ProfileState>(
-                            listener: (context, state) {
-                              state.maybeMap(
-                                  orElse: () {},
-                                  loaded: (state) {
-                                    setState(() {
-                                      _lastStatus = state.user.account?.status
-                                              ?.lastStatus ??
-                                          '';
-                                      _creed = state.user.account?.creed ?? '';
-                                      _userTarget = state.user.account?.status
-                                              ?.userTarget ??
-                                          0;
-                                      _currentFollowers = state.user.account
-                                              ?.status?.followersCount ??
-                                          0;
-                                    });
-                                  },
-                                  saved: (state) {
-                                    setState(() {
-                                      _lastStatus = state.user.account?.status
-                                              ?.lastStatus ??
-                                          '';
-                                      _userTarget = state.user.account?.status
-                                              ?.userTarget ??
-                                          0;
-                                      _currentFollowers = state.user.account
-                                              ?.status?.followersCount ??
-                                          0;
-                                    });
-                                  });
-                            },
-                            child: _CircularPercentage(
-                              status: _lastStatus,
-                              target: _userTarget,
-                              current: _currentFollowers,
-                            ),
-                          ),
-                          Positioned(
-                            top: 380,
-                            child: Text(
-                              '${(data.data as StoredUserModel).userName}',
-                              style: GoogleFonts.aBeeZee(
-                                  color: DcColors.white, fontSize: 30),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 65),
-                        child: Text(
-                          _creed,
-                          style: GoogleFonts.textMeOne(
-                              color: DcColors.white, fontSize: 20),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      const SizedBox(height: 30),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 30),
-                        child: SizedBox(
-                          width: 237,
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    'Save',
-                                    style: GoogleFonts.aBeeZee(
-                                        color: DcColors.white, fontSize: 18),
-                                  ),
-                                  Text(
-                                    'Mine',
-                                    style: GoogleFonts.aBeeZee(
-                                        color: DcColors.white, fontSize: 18),
-                                  )
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              SizedBox(
-                                width: 237,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Container(
-                                        width: 237,
-                                        height: 13,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(7),
-                                          color: DcColors.sliderBackground,
-                                        ),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          _shouldShowSaved = !_shouldShowSaved;
-                                        });
-                                        if (_shouldShowSaved) {
-                                          context
-                                              .read<ProfileCubit>()
-                                              .loadSaved();
-                                        } else {
-                                          context
-                                              .read<ProfileCubit>()
-                                              .loadMine();
-                                        }
-                                      },
-                                      child: AnimatedAlign(
-                                        alignment: _shouldShowSaved
-                                            ? Alignment.centerLeft
-                                            : Alignment.centerRight,
-                                        duration:
-                                            const Duration(milliseconds: 300),
-                                        child: Container(
-                                          width: 237 / 2,
-                                          height: 13,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(7),
-                                            color: Colors.orange,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )),
-                  BlocBuilder<ProfileCubit, ProfileState>(
-                    builder: (context, state) {
-                      if (state is ProfileStateLoaded &&
-                          state.user.account != null &&
-                          state.user.account!.posts != null) {
-                        return SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (ctx, index) {
-                              return UnicornPost(
-                                  post: state.user.account!.posts![index]);
-                            },
-                            childCount: state.user.account!.posts!.length,
-                          ),
-                        );
-                      }
-
-                      if (state is ProfileStateSaved &&
-                          state.user.account != null &&
-                          state.user.account!.posts != null) {
-                        return state.savedPosts.isNotEmpty
-                            ? SliverList(
-                                delegate: SliverChildBuilderDelegate(
-                                  (ctx, index) {
-                                    return UnicornPost(
-                                        post: state.savedPosts[index]);
-                                  },
-                                  childCount: state.user.account!.posts!.length,
-                                ),
-                              )
-                            : SliverToBoxAdapter(
-                                child: Center(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      'No Saved posts',
-                                      style: GoogleFonts.aBeeZee(
-                                          color: Colors.white, fontSize: 25),
-                                    ),
-                                    const SizedBox(height: 200),
-                                  ],
-                                ),
-                              ));
-                      }
-
-                      if (state is ProfileStateLoaded) {
-                        return SliverToBoxAdapter(
-                          child: Center(
-                            child: Image.asset('assets/music.gif'),
-                          ),
-                        );
-                      }
-
-                      return const SliverPadding(padding: EdgeInsets.all(1));
+                  BlocListener<ProfileCubit, ProfileState>(
+                    listener: (context, state) {
+                      state.maybeMap(
+                          orElse: () {},
+                          loaded: (state) {
+                            setState(() {
+                              _lastStatus =
+                                  state.user.account?.status?.lastStatus ?? '';
+                              _photo = state.user.account?.photo ?? '';
+                              _userName = state.user.userName ?? '';
+                              _creed = state.user.account?.creed ?? '';
+                              _userTarget =
+                                  state.user.account?.status?.userTarget ?? 0;
+                              _currentFollowers =
+                                  state.user.account?.status?.followersCount ??
+                                      0;
+                            });
+                          });
                     },
+                    child: _CircularPercentage(
+                      status: _lastStatus,
+                      target: _userTarget,
+                      current: _currentFollowers,
+                    ),
                   ),
-                  const SliverPadding(padding: EdgeInsets.only(bottom: 200)),
+                  Positioned(
+                    top: 380,
+                    child: Text(
+                      _userName,
+                      style: GoogleFonts.aBeeZee(
+                          color: DcColors.white, fontSize: 30),
+                    ),
+                  ),
                 ],
-              );
-            }
-            return const SizedBox();
-          }),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 65),
+                child: Text(
+                  _creed,
+                  style: GoogleFonts.textMeOne(
+                      color: DcColors.white, fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 30),
+            ],
+          )),
+          BlocBuilder<ProfileCubit, ProfileState>(
+            builder: (context, state) {
+              if (state is ProfileStateLoaded &&
+                  state.user.account != null &&
+                  state.user.account!.posts != null) {
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (ctx, index) {
+                      return UnicornPost(
+                          post: state.user.account!.posts![index]);
+                    },
+                    childCount: state.user.account!.posts!.length,
+                  ),
+                );
+              }
+
+              if (state is ProfileStateSaved &&
+                  state.user.account != null &&
+                  state.user.account!.posts != null) {
+                return state.savedPosts.isNotEmpty
+                    ? SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (ctx, index) {
+                            return UnicornPost(post: state.savedPosts[index]);
+                          },
+                          childCount: state.user.account!.posts!.length,
+                        ),
+                      )
+                    : SliverToBoxAdapter(
+                        child: Center(
+                        child: Column(
+                          children: [
+                            Text(
+                              'No Saved posts',
+                              style: GoogleFonts.aBeeZee(
+                                  color: Colors.white, fontSize: 25),
+                            ),
+                            const SizedBox(height: 200),
+                          ],
+                        ),
+                      ));
+              }
+
+              if (state is ProfileStateLoaded) {
+                return SliverToBoxAdapter(
+                  child: Center(
+                    child: Image.asset('assets/music.gif'),
+                  ),
+                );
+              }
+
+              return const SliverPadding(padding: EdgeInsets.all(1));
+            },
+          ),
+          const SliverPadding(padding: EdgeInsets.only(bottom: 200)),
+        ],
+      ),
     );
   }
 }
