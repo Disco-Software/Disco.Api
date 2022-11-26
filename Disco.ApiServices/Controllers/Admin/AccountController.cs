@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Cors;
 using Disco.Business.Constants;
 using AutoMapper;
 using System;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Disco.ApiServices.Controllers.Admin
 {
@@ -68,6 +69,7 @@ namespace Disco.ApiServices.Controllers.Admin
             userResponseDto.AccessToken = accessToken;
             userResponseDto.RefreshToken = refreshToken;
             userResponseDto.User = user;
+            userResponseDto.AccessTokenExpirce = _tokenService.GetTokenExpirce();
 
             return Ok(userResponseDto);
         }

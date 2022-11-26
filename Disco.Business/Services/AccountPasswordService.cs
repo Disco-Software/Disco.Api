@@ -19,8 +19,8 @@ namespace Disco.Business.Services
 
         public async Task ChengePasswordAsync(User user, string token, string newPassword)
         {
-            var response = await _userManager.ResetPasswordAsync(user, token, newPassword);
-            if(!response.Succeeded)
+            var response = _userManager.ResetPasswordAsync(user, token, newPassword);
+            if(!response.IsCompletedSuccessfully)
             {
                 throw new Exception();
             }

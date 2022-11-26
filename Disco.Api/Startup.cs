@@ -73,6 +73,8 @@ namespace Disco.Api
             services.ConfigureIdentity();
             services.AddAuthorization();
 
+            services.ConfigureCorsPolicy();
+
             services.ConfigureAzureServices(Configuration);
             services.AddSignalR(options => {
                 options.EnableDetailedErrors = true;
@@ -134,9 +136,12 @@ namespace Disco.Api
 
             app.UseExceptionHandler("/Error");
             app.UseHsts();
+            app.UseHttpsRedirection();
 
             ILogger logger = loggerFactory.CreateLogger("ClientErrorLogger");
-            
+
+            app.UseCors();
+
             app.UseRouting();
             app.ApplicationServices.CreateScope();
             app.UseAuthentication();

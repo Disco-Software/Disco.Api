@@ -1,4 +1,5 @@
 ﻿using Disco.Domain.Models;
+using System;
 using System.Security.Claims;
 
 namespace Disco.Business.Interfaces
@@ -7,6 +8,6 @@ namespace Disco.Business.Interfaces
     {
         string GenerateAccessToken(User user);
         string GenerateRefreshToken();
-        ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
+        int GetTokenExpirce();
     }
 }

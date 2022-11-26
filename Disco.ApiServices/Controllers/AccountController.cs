@@ -69,6 +69,7 @@ namespace Disco.ApiServices.Controllers
             var responseDto = _mapper.Map<UserResponseDto>(user);
             responseDto.AccessToken = accessToken;
             responseDto.RefreshToken = refreshToken;
+            responseDto.AccessTokenExpirce = _tokenService.GetTokenExpirce();
             responseDto.User = user;
 
             return Ok(responseDto);
