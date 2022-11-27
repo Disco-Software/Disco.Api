@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PostAuthor extends StatelessWidget {
-  const PostAuthor({
-    Key? key,
-    required this.post,
-  }) : super(key: key);
+  const PostAuthor({Key? key, required this.userName, required this.photo})
+      : super(key: key);
 
-  final Post post;
+  final String? photo;
+  final String? userName;
 
   @override
   Widget build(BuildContext context) {
@@ -34,15 +33,16 @@ class PostAuthor extends StatelessWidget {
                       spreadRadius: 7,
                       blurRadius: 7)
                 ]),
-            child: post.account?.photo != null
+            child: photo != null
                 ? ClipRRect(
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(100),
                       bottomRight: Radius.circular(100),
                     ),
                     child: CachedNetworkImage(
-                      imageUrl: post.account?.photo ?? '',
-                      placeholder: (context, url) => Image.asset('assets/ic_photo.png'),
+                      imageUrl: photo ?? '',
+                      placeholder: (context, url) =>
+                          Image.asset('assets/ic_photo.png'),
                       fit: BoxFit.fill,
                     ),
                   )
@@ -69,7 +69,7 @@ class PostAuthor extends StatelessWidget {
           const SizedBox(
             width: 16,
           ),
-          Text(post.account?.user?.userName ?? "",
+          Text(userName ?? "",
               style: GoogleFonts.aBeeZee(
                 color: const Color(0xFFE6E0D2),
                 fontSize: 24,

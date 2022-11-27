@@ -187,6 +187,44 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   textAlign: TextAlign.center,
                 ),
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: _onSubscribe(),
+                    style: ButtonStyle(
+                        padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(horizontal: 8),
+                        ),
+                        backgroundColor:
+                            MaterialStateProperty.all(DcColors.violet)),
+                    icon: const Icon(CupertinoIcons.add),
+                    label: Text(
+                      'Subscribe',
+                      style: GoogleFonts.aBeeZee(
+                          fontSize: 24, color: DcColors.white),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: _onSubscribe(),
+                    style: ButtonStyle(
+                        padding: MaterialStateProperty.all(
+                            const EdgeInsets.symmetric(horizontal: 8))),
+                    icon: const Icon(CupertinoIcons.chat_bubble_text),
+                    label: Text(
+                      'Message',
+                      style: GoogleFonts.aBeeZee(
+                          fontSize: 24, color: DcColors.white),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 30),
             ],
           )),
@@ -199,6 +237,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   delegate: SliverChildBuilderDelegate(
                     (ctx, index) {
                       return UnicornPost(
+                          userName: state.user.userName,
                           post: state.user.account!.posts![index]);
                     },
                     childCount: state.user.account!.posts!.length,
@@ -213,7 +252,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     ? SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (ctx, index) {
-                            return UnicornPost(post: state.savedPosts[index]);
+                            return UnicornPost(
+                                post: state.savedPosts[index],
+                                userName: state.user.userName);
                           },
                           childCount: state.user.account!.posts!.length,
                         ),
@@ -249,6 +290,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
       ),
     );
   }
+
+  _onSubscribe() {}
 }
 
 class _IconButton extends StatelessWidget {

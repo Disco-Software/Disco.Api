@@ -19,12 +19,11 @@ import '../../../injection.dart';
 import '../post_button.dart';
 
 class UnicornPost extends StatefulWidget {
-  const UnicornPost({
-    Key? key,
-    required this.post,
-  }) : super(key: key);
+  const UnicornPost({Key? key, required this.post, this.userName})
+      : super(key: key);
 
   final Post post;
+  final String? userName;
 
   @override
   State<UnicornPost> createState() => _UnicornPostState();
@@ -59,7 +58,10 @@ class _UnicornPostState extends State<UnicornPost>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          PostAuthor(post: widget.post),
+          PostAuthor(
+            userName: _getUserName(widget.post, widget.userName),
+            photo: widget.post.account?.photo,
+          ),
           const SizedBox(height: 27),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 35),
@@ -282,6 +284,16 @@ class _UnicornPostState extends State<UnicornPost>
     final summ = imagesLength + songsLength + videosLength;
 
     return summ > 1;
+  }
+
+  String _getUserName(Post post, String? userName) {
+    if (post.account != null &&
+        post.account!.user != null &&
+        post.account!.user!.userName != null) {
+      return post.account!.user!.userName!;
+    } else {
+      return userName ?? '';
+    }
   }
 
 // Future<bool> _isPostLiked(List<Like>? likes) async {

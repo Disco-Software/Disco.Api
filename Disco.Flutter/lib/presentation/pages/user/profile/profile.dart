@@ -295,6 +295,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           delegate: SliverChildBuilderDelegate(
                             (ctx, index) {
                               return UnicornPost(
+                                  userName: state.user.userName,
                                   post: state.user.account!.posts![index]);
                             },
                             childCount: state.user.account!.posts!.length,
@@ -310,6 +311,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 delegate: SliverChildBuilderDelegate(
                                   (ctx, index) {
                                     return UnicornPost(
+                                        userName: state.user.userName,
                                         post: state.savedPosts[index]);
                                   },
                                   childCount: state.user.account!.posts!.length,
