@@ -90,16 +90,20 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           child: Text(
                             "E-mail",
-                            style: TextStyle(fontSize: 16, color: DcColors.darkWhite),
+                            style: TextStyle(
+                                fontSize: 16, color: DcColors.darkWhite),
                           ),
                         ),
                         TextFormField(
                           controller: _emailController,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) => _onEmailValidate(_emailController.text),
+                          validator: (value) =>
+                              _onEmailValidate(_emailController.text),
                           style: const TextStyle(color: DcColors.darkWhite),
                           decoration: InputDecoration(
-                              errorText: state is LogInErrorState ? state.emailError : null),
+                              errorText: state is LogInErrorState
+                                  ? state.emailError
+                                  : null),
                         ),
                         const SizedBox(height: 24),
                         const Padding(
@@ -109,17 +113,21 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           child: Text(
                             "Password",
-                            style: TextStyle(fontSize: 16, color: DcColors.darkWhite),
+                            style: TextStyle(
+                                fontSize: 16, color: DcColors.darkWhite),
                           ),
                         ),
                         TextFormField(
                           style: const TextStyle(color: DcColors.darkWhite),
                           obscureText: _passwordVisible,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) => _onPasswordValidate(_passwordController.text),
+                          validator: (value) =>
+                              _onPasswordValidate(_passwordController.text),
                           controller: _passwordController,
                           decoration: InputDecoration(
-                              errorText: state is LogInErrorState ? state.passwordError : null,
+                              errorText: state is LogInErrorState
+                                  ? state.passwordError
+                                  : null,
                               suffixIcon: IconButton(
                                 icon: Icon(_passwordVisible
                                     ? CupertinoIcons.eye_slash
@@ -145,7 +153,9 @@ class _LoginPageState extends State<LoginPage> {
                                 ? const Center(
                                     child: CircularProgressIndicator(),
                                   )
-                                : ElevatedButton(onPressed: _onLogin, child: const Text('Log In')),
+                                : ElevatedButton(
+                                    onPressed: _onLogin,
+                                    child: const Text('Log In')),
                           ),
                         ),
                         const SizedBox(
@@ -178,7 +188,8 @@ class _LoginPageState extends State<LoginPage> {
   void _blocListener(BuildContext context, Object? state) {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       if (state is LoggedInState) {
-        context.router.pushAndPopUntil(HomeRoute(), predicate: (route) => false);
+        context.router
+            .pushAndPopUntil(HomeRoute(), predicate: (route) => false);
       }
     });
   }
@@ -187,12 +198,15 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState?.validate() ?? false) {
       final email = _emailController.text;
       final password = _passwordController.text;
-      context.read<LoginBloc>().add(LoginEvent(email: email, password: password));
+      context
+          .read<LoginBloc>()
+          .add(LoginEvent(email: email, password: password));
     }
   }
 
   String? _onEmailValidate(String value) {
-    bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+    bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(value);
     if (value.isEmpty) {
       return "Email can not be empty";

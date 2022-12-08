@@ -177,10 +177,14 @@ class _SearchPageState extends State<SearchPage>
                               ),
                               child: InkWell(
                                 onTap: () {
-                                  context.router.push(UserProfileRoute(
-                                      userId:
-                                          state.items.users?[index].userId ??
-                                              0));
+                                  if (state.items.users != null &&
+                                      state.items.users![index].userId !=
+                                          null) {
+                                    context.router.push(UserProfileRoute(
+                                        userId:
+                                            state.items.users?[index].userId ??
+                                                0));
+                                  }
                                 },
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
