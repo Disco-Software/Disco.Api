@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Disco.Domain.Interfaces;
+using Disco.Business.Dtos.Followers;
 
 namespace Disco.Business.Services
 {
@@ -23,7 +24,7 @@ namespace Disco.Business.Services
             _mapper = mapper;
         }
 
-        public async Task<UserFollower> CreateAsync(User user, User following, CreateFollowerDto dto)
+        public async Task<FollowerResponseDto> CreateAsync(User user, User following, CreateFollowerDto dto)
         {
             var userFollower = _mapper.Map<UserFollower>(user);
             userFollower.FollowerAccount = user.Account;
@@ -44,8 +45,13 @@ namespace Disco.Business.Services
             userFollower.IsFollowing = true;
 
             await _followerRepository.AddAsync(userFollower);
+
+            var userFollowerResponseDto = _mapper.Map<FollowerResponseDto>(userFollower);
+            userFollowerResponseDto.IsFollowing = userFollower.IsFollowing;
+            userFollowerResponseDto.FollowingAccount = userFollower.FollowingAccount;
+            userFollowerResponseDto.FollowerAccount = userFollower.FollowerAccount;
             
-            return userFollower;
+            return userFollowerResponseDto;
         }
 
         public async Task DeleteAsync(int id)
@@ -53,21 +59,28 @@ namespace Disco.Business.Services
             await _followerRepository.Remove(id);
         }
 
-        public async Task<List<UserFollower>> GetAllAsync(GetAllFollowersDto dto)
+        public async Task<List<FollowerResponseDto>> GetAllAsync(GetAllFollowersDto dto)
         {
             var followers = await _followerRepository.GetAllAsync(dto.UserId, dto.PageNumber, dto.PageSize);
 
-            return followers;
+            var followersDto = _mapper.Map<List<FollowerResponseDto>>(followers);
+
+            return followersDto;
         }
 
-        public async Task<UserFollower> GetAsync(int id)
+        public async Task<FollowerResponseDto> GetAsync(int id)
         {
             var follower = await _followerRepository.GetAsync(id);
 
             if (follower == null)
                 throw new Exception("freind not found");
 
-            return follower;
+            var followerDto = _mapper.Map<FollowerResponseDto>(follower);
+            followerDto.FollowerAccount = follower.FollowerAccount;
+            followerDto.FollowingAccount = follower.FollowingAccount;
+            followerDto.IsFollowing = follower.IsFollowing;
+
+            return followerDto;
         }
     }
 }

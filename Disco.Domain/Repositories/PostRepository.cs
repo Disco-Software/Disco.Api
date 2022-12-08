@@ -158,6 +158,8 @@ namespace Disco.Domain.Repositories
                 .Include(p => p.PostSongs)
                 .Include(p => p.PostVideos)
                 .Include(p => p.Likes)
+                .Include(p => p.Account)
+                .ThenInclude(a => a.User)
                 .Where(p => p.Account.UserId == userId)
                 .OrderByDescending(p => p.DateOfCreation)
                 .ToListAsync();

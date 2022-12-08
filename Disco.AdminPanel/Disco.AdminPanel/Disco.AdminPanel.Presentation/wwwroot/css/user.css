@@ -1,0 +1,8 @@
+﻿.user-body {
+    background: radial-gradient(101.53% 101.28% at 100% 0%, #2E1257 0%, #221338 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+    box-shadow: 1px 4px 10px rgba(160, 68, 255, 0.7), 2px 2px 20px rgba(0, 0, 0, 0.25);
+}
+
+.user-body__span{
+    color : white;
+}

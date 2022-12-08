@@ -25,7 +25,20 @@ namespace Disco.AdminPanel.Presentation.Service
 
             var httpClient = _httpClientFactory.CreateClient();
 
-            var response = await httpClient.PostAsJsonAsync("https://localhost:44302/api/admin/account/log-in");
+            var response = await httpClient.PostAsync("https://localhost:44302/api/admin/account/log-in", content);
+            var result = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<UserResponseModel>(result);
+        }
+
+        public async Task<UserResponseModel> RefreshToken(RefreshTokenModel model)
+        {
+            var httpClient = _httpClientFactory.CreateClient();
+
+            var json = JsonConvert.SerializeObject(model);
+            var content = new StringContent(json, Encoding.UTF8);
+
+            var response = await httpClient.PutAsync("https://localhost:44302/api/admin/account/refresh", content);
             var result = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<UserResponseModel>(result);

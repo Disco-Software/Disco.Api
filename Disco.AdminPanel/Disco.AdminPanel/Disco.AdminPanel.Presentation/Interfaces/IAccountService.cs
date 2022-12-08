@@ -6,5 +6,6 @@ namespace Disco.AdminPanel.Presentation.Interfaces
     public interface IAccountService
     {
         Task<UserResponseModel> LoginAsync(LoginViewModel model);
+        Task<UserResponseModel> RefreshToken(RefreshTokenModel model);
     }
 }

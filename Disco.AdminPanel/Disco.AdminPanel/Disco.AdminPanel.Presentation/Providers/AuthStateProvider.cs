@@ -30,7 +30,11 @@ namespace Disco.AdminPanel.Presentation.Providers
 
             if (string.IsNullOrWhiteSpace(token) || DateTime.UtcNow > DateTime.UtcNow.AddMinutes(Convert.ToInt32(tokenExpiers)))
             {
-
+                await _accountService.RefreshToken(new Models.Account.RefreshTokenModel 
+                { 
+                    AccessToken = await _localStorageService.GetStringAsync("accessToken"),
+                    RefreshToken = await _localStorageService.GetStringAsync("refreshToken"),
+                });
             }
 
             var claims = new List<Claim>

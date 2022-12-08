@@ -3,6 +3,7 @@ using Disco.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,10 +20,10 @@ namespace Disco.Business.Services
 
         public async Task ChengePasswordAsync(User user, string token, string newPassword)
         {
-            var response = _userManager.ResetPasswordAsync(user, token, newPassword);
-            if(!response.IsCompletedSuccessfully)
+            var response = await _userManager.ResetPasswordAsync(user, token, newPassword);
+            if (response == null || response.Errors.Count() > 0)
             {
-                throw new Exception();
+                throw new NullReferenceException();
             }
         }
 

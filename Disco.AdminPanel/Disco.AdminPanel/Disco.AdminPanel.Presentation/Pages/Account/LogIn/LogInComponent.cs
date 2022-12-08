@@ -29,10 +29,9 @@ namespace Disco.AdminPanel.Presentation.Pages.Account.LogIn
             await LocalStorageService.SetStringAsync("accessToken", userResponseModel.AccessToken);
             await LocalStorageService.SetStringAsync("refreshToken", userResponseModel.RefreshToken);
             await LocalStorageService.SetStringAsync("accessTokenExpiers", userResponseModel.AccessTokenExpirce.ToString());
-            await LocalStorageService.SetStringAsync("id", userResponseModel.User.Id.ToString());
             await LocalStorageService.SetStringAsync("role", userResponseModel.User.RoleName);
 
-            NavigationManager.NavigateTo("/counter");
+            NavigationManager.NavigateTo("/dashbord");
         }
     }
 }

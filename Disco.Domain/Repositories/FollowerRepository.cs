@@ -18,7 +18,8 @@ namespace Disco.Domain.Repositories
 
         public override async Task AddAsync(UserFollower userFollower)
         {
-            await _ctx.UserFollowers.AddAsync(userFollower);
+            await _ctx.UserFollowers
+                .AddAsync(userFollower);
 
             await _ctx.SaveChangesAsync();
         }
@@ -45,7 +46,7 @@ namespace Disco.Domain.Repositories
             
             await _ctx.SaveChangesAsync();
         }
-        public async Task<List<UserFollower>> GetAllAsync(int id, int pageNumber, int pageSize)
+        public async Task<IEnumerable<UserFollower>> GetAllAsync(int id, int pageNumber, int pageSize)
         {
             return await _ctx.UserFollowers
                 .Include(u => u.FollowingAccount)

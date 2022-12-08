@@ -15,23 +15,23 @@ namespace Disco.AdminPanel.Presentation.Service
 
         public async Task<T> GetItemAsync<T>(string key)
         {
-            return await _jsRuntime.InvokeAsync<T>("get", key);
+            return await _jsRuntime.InvokeAsync<T>("localStorage.getItem", key);
         }
 
         public async Task<string> GetStringAsync(string key)
         {
-            return await _jsRuntime.InvokeAsync<string>("get", key);
+            return await _jsRuntime.InvokeAsync<string>("localStorage.getItem", key);
         }
 
         public async Task RemoveItemAsync(string key)
         {
-            await _jsRuntime.InvokeVoidAsync("remove", key);
+            await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", key);
         }
 
         public async Task SetItemAsync<T>(string key, T value)
         {
             var json = JsonSerializer.Serialize(value);
-            await _jsRuntime.InvokeVoidAsync("set", key, json);
+            await _jsRuntime.InvokeVoidAsync("localStorage.setItem", key, json);
         }
 
         public async Task SetStringAsync(string key, string value)
