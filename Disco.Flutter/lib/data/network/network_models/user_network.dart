@@ -16,7 +16,7 @@ class UserTokenResponse {
   UserTokenResponse.fromJson(Map<String, dynamic> json) {
     try {
       user = json['user'] != null ? User.fromJson(json['user']) : null;
-      accesToken = json.entries.elementAt(json.length - 2).value;
+      accesToken = json['accessToken'];
       refreshToken = json['refreshToken'];
     } catch (err) {
       print('loginError--> $err');

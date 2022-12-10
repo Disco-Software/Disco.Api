@@ -115,11 +115,8 @@ class AppRouter extends _i1.RootStackRouter {
         }),
     FeedRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
-        builder: (data) {
-          final args =
-              data.argsAs<FeedRouteArgs>(orElse: () => const FeedRouteArgs());
-          return _i13.MainPage(
-              key: args.key, shouldLoadData: args.shouldLoadData);
+        builder: (_) {
+          return const _i13.MainPage();
         }),
     SavedItemsRoute.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
@@ -337,21 +334,10 @@ class HomeRouteArgs {
   final bool shouldLoadData;
 }
 
-class FeedRoute extends _i1.PageRouteInfo<FeedRouteArgs> {
-  FeedRoute({_i2.Key? key, bool shouldLoadData = true})
-      : super(name,
-            path: 'feed',
-            args: FeedRouteArgs(key: key, shouldLoadData: shouldLoadData));
+class FeedRoute extends _i1.PageRouteInfo<void> {
+  const FeedRoute() : super(name, path: 'feed');
 
   static const String name = 'FeedRoute';
-}
-
-class FeedRouteArgs {
-  const FeedRouteArgs({this.key, this.shouldLoadData = true});
-
-  final _i2.Key? key;
-
-  final bool shouldLoadData;
 }
 
 class SavedItemsRoute extends _i1.PageRouteInfo<void> {

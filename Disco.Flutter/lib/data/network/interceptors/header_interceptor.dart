@@ -51,7 +51,7 @@ class HeaderInterceptor extends Interceptor {
             .write(key: Strings.token, value: newToken?.accesToken ?? '');
         await getIt
             .get<SecureStorageRepository>()
-            .write(key: Strings.refreshToken, value: newToken?.accesToken ?? '');
+            .write(key: Strings.refreshToken, value: newToken?.refreshToken ?? '');
       } catch (err) {
         print('Error _refreshToken | header_interceptor-> $err');
       }
