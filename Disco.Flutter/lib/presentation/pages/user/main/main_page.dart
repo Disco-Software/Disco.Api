@@ -16,27 +16,22 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'bloc/posts_state.dart';
 
-const String title = 'Your story';
-
 class MainPage extends StatelessWidget {
-  const MainPage({Key? key, this.shouldLoadData = true}) : super(key: key);
-  final bool shouldLoadData;
+  const MainPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xff1C142E),
-      body: _SuccessStateWidget(
-        shouldLoadData: shouldLoadData,
-      ),
+    return const Scaffold(
+      backgroundColor: Color(0xff1C142E),
+      body: _SuccessStateWidget(),
     );
   }
 }
 
 class _SuccessStateWidget extends StatefulWidget {
-  final bool shouldLoadData;
-
-  const _SuccessStateWidget({Key? key, required this.shouldLoadData}) : super(key: key);
+  const _SuccessStateWidget({Key? key}) : super(key: key);
 
   @override
   State<_SuccessStateWidget> createState() => _SuccessStateWidgetState();

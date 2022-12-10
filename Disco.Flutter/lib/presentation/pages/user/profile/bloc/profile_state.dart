@@ -12,7 +12,8 @@ class ProfileState with _$ProfileState {
 
   const factory ProfileState.loaded({required User user}) = ProfileStateLoaded;
 
-  const factory ProfileState.saved({required User user, required List<Post> savedPosts}) = ProfileStateSaved;
+  const factory ProfileState.saved(
+      {required User user, required List<Post> savedPosts}) = ProfileStateSaved;
 
   const factory ProfileState.error() = ProfileStateError;
 }

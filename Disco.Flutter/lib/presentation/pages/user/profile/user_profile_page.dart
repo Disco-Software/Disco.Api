@@ -8,6 +8,8 @@ import 'package:disco_app/domain/stored_user_model.dart';
 import 'package:disco_app/presentation/common_widgets/post/post.dart';
 import 'package:disco_app/presentation/pages/user/profile/bloc/profile_cubit.dart';
 import 'package:disco_app/presentation/pages/user/profile/bloc/profile_state.dart';
+import 'package:disco_app/presentation/pages/user/profile/bloc/subscribe_cubit.dart';
+import 'package:disco_app/presentation/pages/user/profile/bloc/subscribe_state.dart';
 import 'package:disco_app/res/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -27,9 +29,18 @@ class UserProfilePage extends StatefulWidget implements AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(context) {
-    return BlocProvider<ProfileCubit>(
-      create: (context) =>
-          getIt()..loadMine(ProfilePageType.followerProfile, userId),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<SubscribeCubit>(
+          create: (context) => getIt(),
+          child: this,
+        ),
+        BlocProvider<ProfileCubit>(
+          create: (context) =>
+              getIt()..loadMine(ProfilePageType.followerProfile, userId),
+          child: this,
+        ),
+      ],
       child: this,
     );
   }
@@ -46,7 +57,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   int _currentFollowers = 0;
   String _photo = '';
   String _userName = '';
-
+  int _id = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,7 +158,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       state.maybeMap(
                           orElse: () {},
                           loaded: (state) {
+                            context.read<SubscribeCubit>().init(state.user);
                             setState(() {
+                              _id = state.user.account?.userId ?? 0;
                               _lastStatus =
                                   state.user.account?.status?.lastStatus ?? '';
                               _photo = state.user.account?.photo ?? '';
@@ -193,26 +206,54 @@ class _UserProfilePageState extends State<UserProfilePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton.icon(
-                    onPressed: _onSubscribe(),
-                    style: ButtonStyle(
-                        padding: MaterialStateProperty.all(
-                          const EdgeInsets.symmetric(horizontal: 8),
-                        ),
-                        backgroundColor:
-                            MaterialStateProperty.all(DcColors.violet)),
-                    icon: const Icon(CupertinoIcons.add),
-                    label: Text(
-                      'Subscribe',
-                      style: GoogleFonts.aBeeZee(
-                          fontSize: 24, color: DcColors.white),
-                    ),
+                  BlocBuilder<SubscribeCubit, SubscribeState>(
+                    builder: (context, state) {
+                      if (state is SubscribeStateUnsubscribed) {
+                        return ElevatedButton.icon(
+                          onPressed: () {
+                            context.read<SubscribeCubit>().subscribe(_id);
+                          },
+                          style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                const EdgeInsets.symmetric(horizontal: 8),
+                              ),
+                              backgroundColor:
+                                  MaterialStateProperty.all(DcColors.violet)),
+                          icon: const Icon(CupertinoIcons.add),
+                          label: Text(
+                            'Subscribe',
+                            style: GoogleFonts.aBeeZee(
+                                fontSize: 24, color: DcColors.white),
+                          ),
+                        );
+                      } else if (state is SubscribeStateSubscribed) {
+                        return ElevatedButton.icon(
+                          onPressed: () =>
+                              context.read<SubscribeCubit>().unsubscribe(_id),
+                          style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                const EdgeInsets.symmetric(horizontal: 8),
+                              ),
+                              backgroundColor:
+                                  MaterialStateProperty.all(DcColors.violet)),
+                          icon: const Icon(CupertinoIcons.minus),
+                          label: Text(
+                            'Unsubscribe',
+                            style: GoogleFonts.aBeeZee(
+                                fontSize: 24, color: DcColors.white),
+                          ),
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
                   ),
                   const SizedBox(
                     width: 10,
                   ),
                   OutlinedButton.icon(
-                    onPressed: _onSubscribe(),
+                    onPressed: () =>
+                        context.read<SubscribeCubit>().unsubscribe(_id),
                     style: ButtonStyle(
                         padding: MaterialStateProperty.all(
                             const EdgeInsets.symmetric(horizontal: 8))),
@@ -290,8 +331,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
       ),
     );
   }
-
-  _onSubscribe() {}
 }
 
 class _IconButton extends StatelessWidget {

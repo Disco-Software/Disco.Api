@@ -58,6 +58,8 @@ class SecureStorageRepository {
   }
 
   Future<void> deleteAll() async {
+    await secureStorage.delete(key: Strings.token);
+    await secureStorage.delete(key: Strings.refreshToken);
     return await secureStorage.deleteAll();
   }
 }
