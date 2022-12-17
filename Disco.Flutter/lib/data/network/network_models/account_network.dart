@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:disco_app/data/network/network_models/friend_model.dart';
 import 'package:disco_app/data/network/network_models/post_network.dart';
 import 'package:disco_app/data/network/network_models/status_model.dart';
@@ -26,30 +28,34 @@ class Account {
       this.id});
 
   Account.fromJson(Map<String, dynamic> json) {
-    status = json['status'] != null ? StatusModel.fromJson(json['status']) : null;
-    creed = json['creed'];
-    photo = json['photo'];
-    if (json['posts'] != null) {
-      posts = <Post>[];
-      json['posts'].forEach((v) {
-        posts!.add(Post.fromJson(v));
-      });
+    try {
+      status = json['status'] != null ? StatusModel.fromJson(json['status']) : null;
+      creed = json['cread'];
+      photo = json['photo'];
+      if (json['posts'] != null) {
+        posts = <Post>[];
+        json['posts'].forEach((v) {
+          posts!.add(Post.fromJson(v));
+        });
+      }
+      if (json['followers'] != null) {
+        followers = <FriendModel>[];
+        json['followers'].forEach((v) {
+          followers!.add(FriendModel.fromJson(v));
+        });
+      }
+      if (json['following'] != null) {
+        following = <FriendModel>[];
+        json['following'].forEach((v) {
+          following!.add(FriendModel.fromJson(v));
+        });
+      }
+      userId = json['userId'];
+      user = json['user'] != null ? User.fromJson(json['user']) : null;
+      id = json['id'];
+    } catch (err) {
+      log("$err", name: 'Account parsing error');
     }
-    if (json['followers'] != null) {
-      followers = <FriendModel>[];
-      json['followers'].forEach((v) {
-        followers!.add(FriendModel.fromJson(v));
-      });
-    }
-    if (json['following'] != null) {
-      following = <FriendModel>[];
-      json['following'].forEach((v) {
-        following!.add(FriendModel.fromJson(v));
-      });
-    }
-    userId = json['userId'];
-    user = json['user'] != null ? User.fromJson(json['user']) : null;
-    id = json['id'];
   }
 
   Map<String, dynamic> toJson() {

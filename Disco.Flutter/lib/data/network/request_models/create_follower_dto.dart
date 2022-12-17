@@ -15,4 +15,9 @@ class CreateFollowerDto {
     data['installationId'] = installationId;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'CreateFollowerDto{installationId: $installationId, followerAccountId: $followerAccountId}';
+  }
 }

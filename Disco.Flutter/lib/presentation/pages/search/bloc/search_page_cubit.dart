@@ -14,7 +14,6 @@ class SearchItemCubit extends Cubit<SearchItemState> {
 
   final SearchRepository searchRepository;
 
-  bool isLastPage = false;
 
   Future<void> search(String text) async {
     try {

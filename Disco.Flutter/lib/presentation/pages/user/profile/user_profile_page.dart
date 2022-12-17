@@ -3,8 +3,7 @@ import 'dart:math';
 import 'package:auto_route/auto_route.dart';
 import 'package:disco_app/app/app_router.gr.dart';
 import 'package:disco_app/data/local/local_storage.dart';
-import 'package:disco_app/data/network/request_models/google_login_request_model.dart';
-import 'package:disco_app/domain/stored_user_model.dart';
+import 'package:disco_app/data/network/network_models/friend_model.dart';
 import 'package:disco_app/presentation/common_widgets/post/post.dart';
 import 'package:disco_app/presentation/pages/user/profile/bloc/profile_cubit.dart';
 import 'package:disco_app/presentation/pages/user/profile/bloc/profile_state.dart';
@@ -36,8 +35,7 @@ class UserProfilePage extends StatefulWidget implements AutoRouteWrapper {
           child: this,
         ),
         BlocProvider<ProfileCubit>(
-          create: (context) =>
-              getIt()..loadMine(ProfilePageType.followerProfile, userId),
+          create: (context) => getIt()..loadUser(userId),
           child: this,
         ),
       ],
@@ -47,9 +45,7 @@ class UserProfilePage extends StatefulWidget implements AutoRouteWrapper {
 }
 
 class _UserProfilePageState extends State<UserProfilePage> {
-  bool _shouldShowSaved = false;
-  final storedUsername =
-      getIt.get<SecureStorageRepository>().getStoredUserModel();
+  final storedUsername = getIt.get<SecureStorageRepository>().getStoredUserModel();
 
   String _lastStatus = '';
   String _creed = '';
@@ -58,6 +54,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
   String _photo = '';
   String _userName = '';
   int _id = 0;
+  int _userId = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,10 +117,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   DecoratedBox(
                     decoration: const BoxDecoration(
                       boxShadow: [
-                        BoxShadow(
-                            color: Color(0xffb2a044ff),
-                            offset: Offset(0, 5),
-                            blurRadius: 10),
+                        BoxShadow(color: Color(0xffb2a044ff), offset: Offset(0, 5), blurRadius: 10),
                       ],
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(100),
@@ -157,21 +152,25 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     listener: (context, state) {
                       state.maybeMap(
                           orElse: () {},
-                          loaded: (state) {
-                            context.read<SubscribeCubit>().init(state.user);
+                          loaded: (userState) {
                             setState(() {
-                              _id = state.user.account?.userId ?? 0;
-                              _lastStatus =
-                                  state.user.account?.status?.lastStatus ?? '';
-                              _photo = state.user.account?.photo ?? '';
-                              _userName = state.user.userName ?? '';
-                              _creed = state.user.account?.creed ?? '';
-                              _userTarget =
-                                  state.user.account?.status?.userTarget ?? 0;
+                              _id = userState.user.account?.followers
+                                      ?.firstWhere(
+                                          (element) =>
+                                              element.followingAccount?.userId == widget.userId,
+                                          orElse: () => FriendModel())
+                                      .id ??
+                                  0;
+                              _userId = userState.user.account?.userId ?? 0;
+                              _lastStatus = userState.user.account?.status?.lastStatus ?? '';
+                              _photo = userState.user.account?.photo ?? '';
+                              _userName = userState.user.userName ?? '';
+                              _creed = userState.user.account?.creed ?? '';
+                              _userTarget = userState.user.account?.status?.userTarget ?? 0;
                               _currentFollowers =
-                                  state.user.account?.status?.followersCount ??
-                                      0;
+                                  userState.user.account?.status?.followersCount ?? 0;
                             });
+                            context.read<SubscribeCubit>().init(userState.user);
                           });
                     },
                     child: _CircularPercentage(
@@ -184,8 +183,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     top: 380,
                     child: Text(
                       _userName,
-                      style: GoogleFonts.aBeeZee(
-                          color: DcColors.white, fontSize: 30),
+                      style: GoogleFonts.aBeeZee(color: DcColors.white, fontSize: 30),
                     ),
                   ),
                 ],
@@ -195,8 +193,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 65),
                 child: Text(
                   _creed,
-                  style: GoogleFonts.textMeOne(
-                      color: DcColors.white, fontSize: 20),
+                  style: GoogleFonts.textMeOne(color: DcColors.white, fontSize: 20),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -211,36 +208,31 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       if (state is SubscribeStateUnsubscribed) {
                         return ElevatedButton.icon(
                           onPressed: () {
-                            context.read<SubscribeCubit>().subscribe(_id);
+                            context.read<SubscribeCubit>().subscribe(_userId);
                           },
                           style: ButtonStyle(
                               padding: MaterialStateProperty.all(
                                 const EdgeInsets.symmetric(horizontal: 8),
                               ),
-                              backgroundColor:
-                                  MaterialStateProperty.all(DcColors.violet)),
+                              backgroundColor: MaterialStateProperty.all(DcColors.violet)),
                           icon: const Icon(CupertinoIcons.add),
                           label: Text(
                             'Subscribe',
-                            style: GoogleFonts.aBeeZee(
-                                fontSize: 24, color: DcColors.white),
+                            style: GoogleFonts.aBeeZee(fontSize: 24, color: DcColors.white),
                           ),
                         );
                       } else if (state is SubscribeStateSubscribed) {
                         return ElevatedButton.icon(
-                          onPressed: () =>
-                              context.read<SubscribeCubit>().unsubscribe(_id),
+                          onPressed: () => context.read<SubscribeCubit>().unsubscribe(_id),
                           style: ButtonStyle(
                               padding: MaterialStateProperty.all(
                                 const EdgeInsets.symmetric(horizontal: 8),
                               ),
-                              backgroundColor:
-                                  MaterialStateProperty.all(DcColors.violet)),
+                              backgroundColor: MaterialStateProperty.all(DcColors.violet)),
                           icon: const Icon(CupertinoIcons.minus),
                           label: Text(
                             'Unsubscribe',
-                            style: GoogleFonts.aBeeZee(
-                                fontSize: 24, color: DcColors.white),
+                            style: GoogleFonts.aBeeZee(fontSize: 24, color: DcColors.white),
                           ),
                         );
                       } else {
@@ -252,16 +244,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     width: 10,
                   ),
                   OutlinedButton.icon(
-                    onPressed: () =>
-                        context.read<SubscribeCubit>().unsubscribe(_id),
+                    onPressed: () => context.read<SubscribeCubit>().unsubscribe(_id),
                     style: ButtonStyle(
-                        padding: MaterialStateProperty.all(
-                            const EdgeInsets.symmetric(horizontal: 8))),
+                        padding:
+                            MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 8))),
                     icon: const Icon(CupertinoIcons.chat_bubble_text),
                     label: Text(
                       'Message',
-                      style: GoogleFonts.aBeeZee(
-                          fontSize: 24, color: DcColors.white),
+                      style: GoogleFonts.aBeeZee(fontSize: 24, color: DcColors.white),
                     ),
                   ),
                 ],
@@ -278,8 +268,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   delegate: SliverChildBuilderDelegate(
                     (ctx, index) {
                       return UnicornPost(
-                          userName: state.user.userName,
-                          post: state.user.account!.posts![index]);
+                          userName: state.user.userName, post: state.user.account!.posts![index]);
                     },
                     childCount: state.user.account!.posts!.length,
                   ),
@@ -351,8 +340,8 @@ class _CircularPercentageState extends State<_CircularPercentage>
 
   @override
   void initState() {
-    _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1500));
+    _animationController =
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 1500));
     _animationController.forward();
     super.initState();
   }
@@ -390,8 +379,7 @@ class _CircularPercentageState extends State<_CircularPercentage>
               ),
               painter: ProgressBar(
                 progressColor: Colors.orange,
-                arc: _getCurrentValue(widget.current, widget.target) *
-                    _animationController.value,
+                arc: _getCurrentValue(widget.current, widget.target) * _animationController.value,
                 isBackground: false,
                 screenWidth: width,
               ),
@@ -423,8 +411,7 @@ class _CircularPercentageState extends State<_CircularPercentage>
     );
   }
 
-  double _getCurrentValue(int current, int followerTarget) =>
-      current / (followerTarget / 3.15);
+  double _getCurrentValue(int current, int followerTarget) => current / (followerTarget / 3.15);
 }
 
 class ProgressBar extends CustomPainter {

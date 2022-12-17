@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:disco_app/data/network/network_models/account_network.dart';
 import 'package:disco_app/data/network/network_models/song_network.dart';
 import 'package:disco_app/data/network/network_models/video_network.dart';
@@ -26,34 +28,38 @@ class Post {
       this.id});
 
   Post.fromJson(Map<String, dynamic> json) {
-    description = json['description'];
-    if (json['postImages'] != null) {
-      postImages = <PostImage>[];
-      json['postImages'].forEach((v) {
-        postImages!.add(PostImage.fromJson(v));
-      });
+    try {
+      description = json['description'];
+      if (json['postImages'] != null) {
+        postImages = <PostImage>[];
+        json['postImages'].forEach((v) {
+          postImages!.add(PostImage.fromJson(v));
+        });
+      }
+      if (json['likes'] != null) {
+        likes = <Like>[];
+        json['likes'].forEach((v) {
+          likes!.add(Like.fromJson(v));
+        });
+      }
+      if (json['postSongs'] != null) {
+        postSongs = <PostSong>[];
+        json['postSongs'].forEach((v) {
+          postSongs!.add(PostSong.fromJson(v));
+        });
+      }
+      if (json['postVideos'] != null) {
+        postVideos = <PostVideo>[];
+        json['postVideos'].forEach((v) {
+          postVideos!.add(PostVideo.fromJson(v));
+        });
+      }
+      profileId = json['profileId'];
+      account = json['account'] != null ? Account.fromJson(json['account']) : null;
+      id = json['id'];
+    } catch (err) {
+      log('$err', name: 'Post model error');
     }
-    if (json['likes'] != null) {
-      likes = <Like>[];
-      json['likes'].forEach((v) {
-        likes!.add(Like.fromJson(v));
-      });
-    }
-    if (json['postSongs'] != null) {
-      postSongs = <PostSong>[];
-      json['postSongs'].forEach((v) {
-        postSongs!.add(PostSong.fromJson(v));
-      });
-    }
-    if (json['postVideos'] != null) {
-      postVideos = <PostVideo>[];
-      json['postVideos'].forEach((v) {
-        postVideos!.add(PostVideo.fromJson(v));
-      });
-    }
-    profileId = json['profileId'];
-    account = json['account'] != null ? Account.fromJson(json['account']) : null;
-    id = json['id'];
   }
 
   Map<String, dynamic> toJson() {
