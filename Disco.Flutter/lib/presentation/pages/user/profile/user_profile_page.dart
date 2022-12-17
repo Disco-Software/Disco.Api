@@ -286,36 +286,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 );
               }
 
-              if (state is ProfileStateSaved &&
-                  state.user.account != null &&
-                  state.user.account!.posts != null) {
-                return state.savedPosts.isNotEmpty
-                    ? SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (ctx, index) {
-                            return UnicornPost(
-                                post: state.savedPosts[index],
-                                userName: state.user.userName);
-                          },
-                          childCount: state.user.account!.posts!.length,
-                        ),
-                      )
-                    : SliverToBoxAdapter(
-                        child: Center(
-                        child: Column(
-                          children: [
-                            Text(
-                              'No Saved posts',
-                              style: GoogleFonts.aBeeZee(
-                                  color: Colors.white, fontSize: 25),
-                            ),
-                            const SizedBox(height: 200),
-                          ],
-                        ),
-                      ));
-              }
-
-              if (state is ProfileStateLoaded) {
+              if (state is ProfileStateLoading) {
                 return SliverToBoxAdapter(
                   child: Center(
                     child: Image.asset('assets/music.gif'),
