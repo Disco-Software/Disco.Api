@@ -34,8 +34,7 @@ class SearchPage extends StatefulWidget implements AutoRouteWrapper {
   }
 }
 
-class _SearchPageState extends State<SearchPage>
-    with SingleTickerProviderStateMixin {
+class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateMixin {
   final _searchController = TextEditingController();
   late AnimationController _animationController;
   bool shouldShowSearchIcon = true;
@@ -46,11 +45,11 @@ class _SearchPageState extends State<SearchPage>
   void initState() {
     super.initState();
     if (mounted) {
-      _animationController = AnimationController(
-          vsync: this, duration: const Duration(milliseconds: 1500))
-        ..addListener(() {
-          setState(() {});
-        });
+      _animationController =
+          AnimationController(vsync: this, duration: const Duration(milliseconds: 1500))
+            ..addListener(() {
+              setState(() {});
+            });
       _animationController.forward();
     }
   }
@@ -73,9 +72,7 @@ class _SearchPageState extends State<SearchPage>
               SliverAppBar(
                 centerTitle: false,
                 backgroundColor: const Color(0xFF1C142D),
-                titleSpacing: _animationController
-                    .drive(Tween(begin: 0.0, end: 100.0))
-                    .value,
+                titleSpacing: _animationController.drive(Tween(begin: 0.0, end: 100.0)).value,
                 leading: IconButton(
                   icon: const Icon(CupertinoIcons.chevron_back),
                   onPressed: () {
@@ -101,13 +98,10 @@ class _SearchPageState extends State<SearchPage>
                         shouldShowSearchIcon = !shouldShowSearchIcon;
                       });
                       _debounce = Timer(const Duration(milliseconds: 600), () {
-                        context
-                            .read<SearchItemCubit>()
-                            .search(_searchController.text);
+                        context.read<SearchItemCubit>().search(_searchController.text);
                       });
                     },
-                    style: const TextStyle(
-                        color: DcColors.darkWhite, fontSize: 30),
+                    style: const TextStyle(color: DcColors.darkWhite, fontSize: 30),
                     controller: _searchController,
                     decoration: InputDecoration(
                       isDense: true,
@@ -126,22 +120,18 @@ class _SearchPageState extends State<SearchPage>
                   ),
                 ),
               ),
-              const SliverPadding(
-                  padding: EdgeInsets.symmetric(vertical: 20.0)),
+              const SliverPadding(padding: EdgeInsets.symmetric(vertical: 20.0)),
               if (_shoudlShowNothing(state))
                 const SliverToBoxAdapter(
                   child: Text(
                     "Nothing found",
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: DcColors.white),
+                    style:
+                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: DcColors.white),
                     textAlign: TextAlign.center,
                   ),
                 ),
               if (state is LoadingSearchItemState)
-                SliverToBoxAdapter(
-                    child: Center(child: Image.asset('assets/music.gif')))
+                SliverToBoxAdapter(child: Center(child: Image.asset('assets/music.gif')))
               else ...[
                 if (state is SuccessSearchItemState &&
                     state.items.users != null &&
@@ -150,14 +140,11 @@ class _SearchPageState extends State<SearchPage>
                     child: Text(
                       "Users",
                       style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: DcColors.white),
+                          fontSize: 24, fontWeight: FontWeight.bold, color: DcColors.white),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                const SliverPadding(
-                    padding: EdgeInsets.symmetric(vertical: 20.0)),
+                const SliverPadding(padding: EdgeInsets.symmetric(vertical: 20.0)),
                 if (state is SuccessSearchItemState)
                   SliverGrid(
                     delegate: SliverChildBuilderDelegate((context, index) {
@@ -178,25 +165,19 @@ class _SearchPageState extends State<SearchPage>
                               child: InkWell(
                                 onTap: () {
                                   if (state.items.users != null &&
-                                      state.items.users![index].userId !=
-                                          null) {
+                                      state.items.users![index].userId != null) {
                                     context.router.push(UserProfileRoute(
-                                        userId:
-                                            state.items.users?[index].userId ??
-                                                0));
+                                        userId: state.items.users?[index].userId ?? 0));
                                   }
                                 },
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
                                   child: CachedNetworkImage(
                                     fit: BoxFit.cover,
-                                    imageUrl:
-                                        state.items.users?[index].photo ?? '',
-                                    errorWidget: (context, string, err) =>
-                                        Container(
-                                            color: Colors.white,
-                                            child: Image.asset(
-                                                'assets/ic_photo.png')),
+                                    imageUrl: state.items.users?[index].photo ?? '',
+                                    errorWidget: (context, string, err) => Container(
+                                        color: Colors.white,
+                                        child: Image.asset('assets/ic_photo.png')),
                                   ),
                                 ),
                               ),
@@ -234,14 +215,11 @@ class _SearchPageState extends State<SearchPage>
                     child: Text(
                       "Posts",
                       style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: DcColors.white),
+                          fontSize: 24, fontWeight: FontWeight.bold, color: DcColors.white),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                const SliverPadding(
-                    padding: EdgeInsets.symmetric(vertical: 20.0)),
+                const SliverPadding(padding: EdgeInsets.symmetric(vertical: 20.0)),
                 if (state is InitialSearchItemState)
                   BlocBuilder<PostsCubit, PostsState>(
                     builder: (context, state) {
@@ -261,14 +239,12 @@ class _SearchPageState extends State<SearchPage>
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (ctx, index) {
-                        return UnicornPost(
-                            post: state.items.posts?[index] ?? Post());
+                        return UnicornPost(post: state.items.posts?[index] ?? Post());
                       },
                       childCount: state.items.posts?.length ?? 0,
                     ),
                   ),
-                const SliverPadding(
-                    padding: EdgeInsets.symmetric(vertical: 100.0)),
+                const SliverPadding(padding: EdgeInsets.symmetric(vertical: 100.0)),
               ],
             ],
           );

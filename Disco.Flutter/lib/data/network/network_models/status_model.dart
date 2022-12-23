@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class StatusModel {
   String? lastStatus;
   int? followersCount;
@@ -8,11 +10,15 @@ class StatusModel {
   StatusModel({this.lastStatus, this.followersCount, this.nextStatusId, this.userTarget, this.id});
 
   StatusModel.fromJson(Map<String, dynamic> json) {
-    lastStatus = json['lastStatus'];
-    followersCount = json['followersCount'];
-    nextStatusId = json['nextStatusId'];
-    userTarget = json['userTarget'];
-    id = json['id'];
+    try{
+      lastStatus = json['lastStatus'];
+      followersCount = json['followersCount'];
+      nextStatusId = json['nextStatusId'];
+      userTarget = json['userTarget'];
+      id = json['id'];
+    }catch(err){
+      log('$err',name: 'Status model error');
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -16,6 +16,7 @@ class FollowerRepository {
   FollowerRepository({required this.followerApi});
 
   Future<FollowerResponseModel> createFollower(CreateFollowerDto dto) async {
+    print('$dto lol229');
     try {
       return followerApi.createFollower(dto).then((follower) {
         return FollowerResponseModel.fromJson(follower);

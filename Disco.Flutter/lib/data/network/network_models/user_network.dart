@@ -93,8 +93,7 @@ class User {
       lockoutEnd = json['lockoutEnd'];
       lockoutEnabled = json['lockoutEnabled'];
       accessFailedCount = json['accessFailedCount'];
-      account =
-          json['account'] != null ? Account.fromJson(json['account']) : null;
+      account = json['account'] != null ? Account.fromJson(json['account']) : null;
     } catch (ex) {
       log(ex.toString(), name: "user from json error");
     }

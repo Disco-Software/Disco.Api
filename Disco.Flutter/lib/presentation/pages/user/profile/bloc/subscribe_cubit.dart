@@ -13,8 +13,7 @@ import 'profile_state.dart';
 
 @injectable
 class SubscribeCubit extends Cubit<SubscribeState> {
-  SubscribeCubit(
-      {required this.userRepository, required this.followerRepository})
+  SubscribeCubit({required this.userRepository, required this.followerRepository})
       : super(const SubscribeState.loading());
 
   final UserRepository userRepository;
@@ -22,9 +21,8 @@ class SubscribeCubit extends Cubit<SubscribeState> {
 
   Future<void> init(User user) async {
     final currentUser = await userRepository.getUserDetails();
-    final followingUsers =
-        currentUser?.account?.following?.map((e) => e.userProfile?.id) ?? [];
-    if (followingUsers.contains(user.id)) {
+    final followersUsers = user.account?.followers?.map((e) => e.followerAccount?.userId) ?? [];
+    if (followersUsers.contains(currentUser?.id)) {
       emit(const SubscribeState.subscribed());
     } else {
       emit(const SubscribeState.unsubscribed());
@@ -33,8 +31,8 @@ class SubscribeCubit extends Cubit<SubscribeState> {
 
   Future<void> subscribe(int userId, [String? installationId]) async {
     emit(const SubscribeState.loading());
-    followerRepository.createFollower(CreateFollowerDto(
-        followerAccountId: userId.toString(), installationId: installationId));
+    followerRepository.createFollower(
+        CreateFollowerDto(followerAccountId: userId.toString(), installationId: installationId));
     emit(const SubscribeState.subscribed());
   }
 

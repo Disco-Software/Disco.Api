@@ -9,10 +9,6 @@ import 'package:injectable/injectable.dart';
 
 import 'profile_state.dart';
 
-enum ProfilePageType {
-  userProfile,
-  followerProfile,
-}
 
 @injectable
 class ProfileCubit extends Cubit<ProfileState> {
@@ -25,6 +21,19 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   Future<void> init(List<Like>? likes) async {}
 
+  Future<void> loadMine() async {
+    try {
+      emit(const ProfileState.loading());
+      final user = await userRepository.getUserDetails();
+      if (user != null && user.id != null) {
+        emit(ProfileState.loaded(user: user));
+      }
+    } catch (err) {
+      emit(const ProfileState.error());
+      developer.log('$err', name: 'Profile cubit error');
+    }
+  }
+
   Future<void> setPhoto(String photoPath) async {
     try {
       emit(const ProfileState.loading());
@@ -36,16 +45,12 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  Future<void> loadMine(ProfilePageType type, [int? id]) async {
+
+  Future<void> loadUser(int id) async {
     try {
       emit(const ProfileState.loading());
-      User? user;
-      if (type == ProfilePageType.userProfile) {
-        user = await userRepository.getUserDetails();
-      } else {
-        user = await userRepository.getUserById(id ?? 0);
-      }
-      if (user != null) {
+      final user = await userRepository.getUserById(id);
+      if (user != null && user.id != null) {
         emit(ProfileState.loaded(user: user));
       }
     } catch (err) {
