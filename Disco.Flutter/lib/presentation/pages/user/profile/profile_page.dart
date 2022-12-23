@@ -14,6 +14,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../injection.dart';
 
@@ -110,38 +111,86 @@ class _ProfilePageState extends State<ProfilePage> {
                       Stack(
                         alignment: Alignment.topCenter,
                         children: [
-                          DecoratedBox(
-                            decoration: const BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Color(0xffb2a044ff),
-                                    offset: Offset(0, 5),
-                                    blurRadius: 10),
-                              ],
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(100),
-                                bottomRight: Radius.circular(100),
+                          InkWell(
+                            onTap: () {
+                              print("hello 1");
+                              showCupertinoModalPopup(
+                                  context: context,
+                                  builder: (context) => CupertinoActionSheet(
+                                        cancelButton:
+                                            CupertinoActionSheetAction(
+                                          onPressed: () => Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop(),
+                                          child: const Text('Cancel'),
+                                        ),
+                                        actions: [
+                                          CupertinoActionSheetAction(
+                                            onPressed: () async {
+                                              final ImagePicker _picker =
+                                                  ImagePicker();
+
+                                              final XFile? image =
+                                                  await _picker.pickImage(
+                                                      source:
+                                                          ImageSource.camera);
+                                              context
+                                                  .read<ProfileCubit>()
+                                                  .setPhoto(image?.path ?? "");
+                                            },
+                                            child: const Text('Take a photo'),
+                                          ),
+                                          CupertinoActionSheetAction(
+                                            onPressed: () async {
+                                              final ImagePicker _picker =
+                                                  ImagePicker();
+
+                                              final XFile? image =
+                                                  await _picker.pickImage(
+                                                      source:
+                                                          ImageSource.gallery);
+                                              context
+                                                  .read<ProfileCubit>()
+                                                  .setPhoto(image?.path ?? "");
+                                            },
+                                            child: const Text('Select a photo'),
+                                          ),
+                                        ],
+                                      ));
+                            },
+                            child: DecoratedBox(
+                              decoration: const BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Color(0xffb2a044ff),
+                                      offset: Offset(0, 5),
+                                      blurRadius: 10),
+                                ],
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(100),
+                                  bottomRight: Radius.circular(100),
+                                ),
                               ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(100),
-                                bottomRight: Radius.circular(100),
-                              ),
-                              child: Image.network(
-                                '${(data.data as StoredUserModel).userPhoto}',
-                                height: 270,
-                                width: 300,
-                                fit: BoxFit.cover,
-                                alignment: Alignment.center,
-                                errorBuilder: (ctx, onj, trace) => Container(
-                                  color: Colors.white,
-                                  child: Image.asset(
-                                    'assets/ic_photo.png',
-                                    height: 270,
-                                    width: 300,
-                                    fit: BoxFit.fill,
-                                    alignment: Alignment.center,
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(100),
+                                  bottomRight: Radius.circular(100),
+                                ),
+                                child: Image.network(
+                                  '${(data.data as StoredUserModel).userPhoto}',
+                                  height: 270,
+                                  width: 300,
+                                  fit: BoxFit.cover,
+                                  alignment: Alignment.center,
+                                  errorBuilder: (ctx, onj, trace) => Container(
+                                    color: Colors.white,
+                                    child: Image.asset(
+                                      'assets/ic_photo.png',
+                                      height: 270,
+                                      width: 300,
+                                      fit: BoxFit.fill,
+                                      alignment: Alignment.center,
+                                    ),
                                   ),
                                 ),
                               ),
