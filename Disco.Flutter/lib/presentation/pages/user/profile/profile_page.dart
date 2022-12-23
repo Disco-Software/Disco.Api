@@ -107,57 +107,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   SliverList(
                       delegate: SliverChildListDelegate(
                     [
-                      Stack(
-                        alignment: Alignment.topCenter,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              print("hello 1");
-                              showCupertinoModalPopup(
-                                  context: context,
-                                  builder: (context) => CupertinoActionSheet(
-                                        cancelButton:
-                                            CupertinoActionSheetAction(
-                                          onPressed: () => Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop(),
-                                          child: const Text('Cancel'),
-                                        ),
-                                        actions: [
-                                          CupertinoActionSheetAction(
-                                            onPressed: () async {
-                                              final ImagePicker _picker =
-                                                  ImagePicker();
-
-                                              final XFile? image =
-                                                  await _picker.pickImage(
-                                                      source:
-                                                          ImageSource.camera);
-                                              context
-                                                  .read<ProfileCubit>()
-                                                  .setPhoto(image?.path ?? "");
-                                            },
-                                            child: const Text('Take a photo'),
-                                          ),
-                                          CupertinoActionSheetAction(
-                                            onPressed: () async {
-                                              final ImagePicker _picker =
-                                                  ImagePicker();
-
-                                              final XFile? image =
-                                                  await _picker.pickImage(
-                                                      source:
-                                                          ImageSource.gallery);
-                                              context
-                                                  .read<ProfileCubit>()
-                                                  .setPhoto(image?.path ?? "");
-                                            },
-                                            child: const Text('Select a photo'),
-                                          ),
-                                        ],
-                                      ));
-                            },
-                            child: DecoratedBox(
+                      GestureDetector(
+                        onTap: () async {
+                          await _onPhotoTap(context);
+                        },
+                        child: Stack(
+                          alignment: Alignment.topCenter,
+                          children: [
+                            DecoratedBox(
                               decoration: const BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
@@ -194,43 +151,43 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                             ),
-                          ),
-                          BlocListener<ProfileCubit, ProfileState>(
-                            listener: (context, state) {
-                              state.maybeMap(
-                                  orElse: () {},
-                                  loaded: (state) {
-                                    setState(() {
-                                      _lastStatus = state.user.account?.status?.lastStatus ?? '';
-                                      _creed = state.user.account?.creed ?? '';
-                                      _userTarget = state.user.account?.status?.userTarget ?? 0;
-                                      _currentFollowers =
-                                          state.user.account?.status?.followersCount ?? 0;
+                            BlocListener<ProfileCubit, ProfileState>(
+                              listener: (context, state) {
+                                state.maybeMap(
+                                    orElse: () {},
+                                    loaded: (state) {
+                                      setState(() {
+                                        _lastStatus = state.user.account?.status?.lastStatus ?? '';
+                                        _creed = state.user.account?.creed ?? '';
+                                        _userTarget = state.user.account?.status?.userTarget ?? 0;
+                                        _currentFollowers =
+                                            state.user.account?.status?.followersCount ?? 0;
+                                      });
+                                    },
+                                    saved: (state) {
+                                      setState(() {
+                                        _lastStatus = state.user.account?.status?.lastStatus ?? '';
+                                        _userTarget = state.user.account?.status?.userTarget ?? 0;
+                                        _currentFollowers =
+                                            state.user.account?.status?.followersCount ?? 0;
+                                      });
                                     });
-                                  },
-                                  saved: (state) {
-                                    setState(() {
-                                      _lastStatus = state.user.account?.status?.lastStatus ?? '';
-                                      _userTarget = state.user.account?.status?.userTarget ?? 0;
-                                      _currentFollowers =
-                                          state.user.account?.status?.followersCount ?? 0;
-                                    });
-                                  });
-                            },
-                            child: _CircularPercentage(
-                              status: _lastStatus,
-                              target: _userTarget,
-                              current: _currentFollowers,
+                              },
+                              child: _CircularPercentage(
+                                status: _lastStatus,
+                                target: _userTarget,
+                                current: _currentFollowers,
+                              ),
                             ),
-                          ),
-                          Positioned(
-                            top: 380,
-                            child: Text(
-                              '${(data.data as StoredUserModel).userName}',
-                              style: GoogleFonts.aBeeZee(color: DcColors.white, fontSize: 30),
+                            Positioned(
+                              top: 380,
+                              child: Text(
+                                '${(data.data as StoredUserModel).userName}',
+                                style: GoogleFonts.aBeeZee(color: DcColors.white, fontSize: 30),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 20),
                       Padding(
@@ -315,6 +272,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   )),
                   BlocBuilder<ProfileCubit, ProfileState>(
                     builder: (context, state) {
+                      if(state is ProfileStateLoading){
+                        return const CircularProgressIndicator.adaptive();
+                      }
                       if (state is ProfileStateLoaded &&
                           state.user.account != null &&
                           state.user.account!.posts != null) {
@@ -376,6 +336,39 @@ class _ProfilePageState extends State<ProfilePage> {
             return const SizedBox();
           }),
     );
+  }
+
+  Future<void> _onPhotoTap(BuildContext context) async {
+    showCupertinoModalPopup(
+        context: context,
+        builder: (ctx) => CupertinoActionSheet(
+              cancelButton: CupertinoActionSheetAction(
+                onPressed: () => Navigator.of(ctx, rootNavigator: true).pop(),
+                child: const Text('Cancel'),
+              ),
+              actions: [
+                CupertinoActionSheetAction(
+                  onPressed: () async {
+                    final ImagePicker _picker = ImagePicker();
+
+                    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+                    context.read<ProfileCubit>().setPhoto(image?.path ?? "");
+                    setState(() {});
+                  },
+                  child: const Text('Take a photo'),
+                ),
+                CupertinoActionSheetAction(
+                  onPressed: () async {
+                    final ImagePicker _picker = ImagePicker();
+
+                    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+                    context.read<ProfileCubit>().setPhoto(image?.path ?? "");
+                    setState(() {});
+                  },
+                  child: const Text('Select a photo'),
+                ),
+              ],
+            ));
   }
 }
 
