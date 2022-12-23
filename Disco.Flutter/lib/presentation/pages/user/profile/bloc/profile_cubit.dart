@@ -9,7 +9,6 @@ import 'package:injectable/injectable.dart';
 
 import 'profile_state.dart';
 
-
 @injectable
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit(
@@ -44,7 +43,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       developer.log('$error', name: 'Profile cubit error');
     }
   }
-
 
   Future<void> loadUser(int id) async {
     try {
