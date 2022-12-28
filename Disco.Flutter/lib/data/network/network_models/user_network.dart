@@ -16,7 +16,7 @@ class UserTokenResponse {
   UserTokenResponse.fromJson(Map<String, dynamic> json) {
     try {
       user = json['user'] != null ? User.fromJson(json['user']) : null;
-      accesToken = json.entries.elementAt(json.length - 2).value;
+      accesToken = json['accessToken'];
       refreshToken = json['refreshToken'];
     } catch (err) {
       print('loginError--> $err');
@@ -93,8 +93,7 @@ class User {
       lockoutEnd = json['lockoutEnd'];
       lockoutEnabled = json['lockoutEnabled'];
       accessFailedCount = json['accessFailedCount'];
-      account =
-          json['account'] != null ? Account.fromJson(json['account']) : null;
+      account = json['account'] != null ? Account.fromJson(json['account']) : null;
     } catch (ex) {
       log(ex.toString(), name: "user from json error");
     }

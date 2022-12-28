@@ -237,7 +237,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                   provider.setSongIndex(index + 1);
                                   provider.setUrl(urls[index + 1]);
 
-                                  // await audioPlayer.setUrl(urls[index]);
+                                  // await laudioPlayer.setUrl(urls[index]);
                                   audioPlayer.play();
                                 } else {}
                               },
@@ -309,34 +309,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                               )),
                           BottomNavigationBarItem(
                             label: '',
-                            // icon: Container(
-                            //   height: 55.0,
-                            //   width: 55.0,
-                            //   decoration: const BoxDecoration(
-                            //     shape: BoxShape.circle,
-                            //     gradient: LinearGradient(colors: [
-                            //       Color(0xffDE9237),
-                            //       Color(0xFFF6EA7D),
-                            //     ]),
-                            //   ),
-                            //   child: Container(
-                            //     height: 50.0,
-                            //     width: 50.0,
-                            //     decoration: const BoxDecoration(
-                            //       shape: BoxShape.circle,
-                            //       color: Color(0xFF543388),
-                            //     ),
-                            //     child: Padding(
-                            //       padding: const EdgeInsets.only(top: 5),
-                            //       child: Center(
-                            //           child: SvgPicture.asset(
-                            //         'assets/ic_plus.svg',
-                            //         width: 40,
-                            //         height: 40,
-                            //       )),
-                            //     ),
-                            //   ),
-                            // ),
                             icon: IgnorePointer(
                               ignoring: true,
                               child: FloatingActionButton(
@@ -393,12 +365,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           );
         },
         navigatorObservers: () => [AddPostObserver()],
-        routes: [
-          FeedRoute(shouldLoadData: widget.shouldLoadData),
-          const SavedItemsRoute(),
-          const AddPostRouter(),
-          const ChatRoute(),
-          const ProfileRoute(),
+        routes: const [
+          FeedRoute(),
+          SavedItemsRoute(),
+          AddPostRouter(),
+          ChatRoute(),
+          ProfileRoute(),
         ]);
   }
 }

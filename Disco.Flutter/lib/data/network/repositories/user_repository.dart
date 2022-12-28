@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:disco_app/data/network/api/auth_api.dart';
 import 'package:disco_app/data/network/network_models/user_network.dart';
 import 'package:disco_app/data/network/request_models/access_token_requset_model.dart';
@@ -19,15 +21,20 @@ class UserRepository {
         return UserTokenResponse.fromJson(response);
       });
 
-  Future<User?> getUserDetails() async =>
-      await authApi.getUserDetails().then((response) {
+  Future<User?> getUserDetails() async => await authApi.getUserDetails().then((response) {
         return User.fromJson(response);
       });
 
-  Future<User?> getUserById(int id) async =>
-      await authApi.getUserById(id).then((response) {
-        return User.fromJson(response);
+  Future<User?> getUserById(int id) async {
+    try {
+      final user = await authApi.getUserById(id).then((response) {
+        return User.fromJson(response['user']);
       });
+      return user;
+    } catch (err) {
+      log('$err', name: 'getUserById Error');
+    }
+  }
 
   Future<UserTokenResponse?> registration(RegisterRequestModel model) async =>
       await authApi.registration(model).then((response) {
@@ -49,8 +56,7 @@ class UserRepository {
         return response;
       });
 
-  Future<UserTokenResponse?> resetPassword(
-          ResetPasswordRequestModel model) async =>
+  Future<UserTokenResponse?> resetPassword(ResetPasswordRequestModel model) async =>
       await authApi.resetPassword(model).then((user) {
         return user;
       });
