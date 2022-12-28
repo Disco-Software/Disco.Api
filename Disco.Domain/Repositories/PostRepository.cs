@@ -2,10 +2,12 @@
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
 using Disco.Domain.Repositories.Base;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories
@@ -42,90 +44,7 @@ namespace Disco.Domain.Repositories
             await _ctx.SaveChangesAsync();
         }
 
-        public async Task<List<Post>> GetAll(int userId, int pageSize, int pageNumber)
-        {
-            var posts = new List<Post>();
-
-            var user = await _ctx.Users
-                .Include(p => p.Account)
-                .ThenInclude(f => f.Followers)
-                .Include(p => p.Account)
-                .ThenInclude(p => p.Following)
-                .Include(p => p.Account)
-                .ThenInclude(p => p.Posts)
-                .ThenInclude(p => p.PostImages)
-                .Include(p => p.Account)
-                .ThenInclude(p => p.Posts)
-                .ThenInclude(s => s.PostSongs)
-                .Include(p => p.Account)
-                .ThenInclude(p => p.Posts)
-                .ThenInclude(p => p.PostVideos)
-                .Include(p => p.Account)
-                .ThenInclude(p => p.Posts)
-                .ThenInclude(l => l.Likes)
-                .Where(s => s.Id == userId)
-                .FirstOrDefaultAsync();
-
-            posts.AddRange(user.Account.Posts);
-
-            foreach (var following in user.Account.Following)
-            {
-                following.FollowerAccount = await _ctx.Accounts
-                    .Include(p => p.Posts)
-                    .ThenInclude(i => i.PostImages)
-                    .Include(p => p.Posts)
-                    .ThenInclude(s => s.PostSongs)
-                    .Include(p => p.Posts)
-                    .ThenInclude(v => v.PostVideos)
-                    .Include(u => u.User)
-                    .ThenInclude(l => l.Account)
-                    .ThenInclude(p => p.Posts)
-                    .ThenInclude(l => l.Likes)
-                    .Where(f => f.Id == following.FollowerAccountId)
-                    .FirstOrDefaultAsync();
-                posts.AddRange(following.FollowerAccount.Posts);             
-            }
-
-            foreach (var follower in user.Account.Followers)
-            {
-                follower.FollowerAccount = await _ctx.Accounts
-                    .Include(p => p.Posts)
-                    .ThenInclude(i => i.PostImages)
-                    .Include(p => p.Posts)
-                    .ThenInclude(s => s.PostSongs)
-                    .Include(p => p.Posts)
-                    .ThenInclude(v => v.PostVideos)
-                    .Include(u => u.User)
-                    .Include(u => u.User)
-                    .ThenInclude(l => l.Account)
-                    .ThenInclude(p => p.Posts)
-                    .ThenInclude(l => l.Likes)
-                    .Where(f => f.Id == follower.FollowerAccountId)
-                    .FirstOrDefaultAsync();
-                posts.AddRange(follower.FollowerAccount.Posts);
-            }
-
-            return posts
-                .OrderByDescending(d => d.DateOfCreation)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-        }
-
-        public async Task<List<Post>> GetAllUserPosts(int userId, int pageSize, int pageNumber)
-        {
-            var user = await _ctx.Users
-                .Include(p => p.Account)
-                .ThenInclude(p => p.Posts)
-                .Where(u => u.Id == userId)
-                .FirstOrDefaultAsync();
-
-           return user.Account.Posts
-                .OrderByDescending(d => d.DateOfCreation)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-        }
+        //public async Task<List<Post>> GetUserPostsAsync(int userId, int pageSize, int pageNumber)
 
         public override Task<Post> GetAsync(int id)
         {
@@ -161,19 +80,64 @@ namespace Disco.Domain.Repositories
                 .Include(p => p.Account)
                 .ThenInclude(a => a.User)
                 .Where(p => p.Account.UserId == userId)
-                .OrderByDescending(p => p.DateOfCreation)
                 .ToListAsync();
 
         }
 
-        public async Task<List<Post>> GetAllUserPostsAsync(int accountId)
+        public async Task<List<Post>> GetFollowersPostsAsync(List<UserFollower> followers)
         {
-            return await _ctx.Posts
-                .Include(p => p.PostSongs)
-                .Include(p => p.PostImages)
-                .Include(p => p.PostVideos)
-                .Where(p => p.AccountId == accountId)
-                .ToListAsync();
+            var posts = new List<Post>();
+            
+            foreach (var follower in followers)
+            {
+                var account = await _ctx.Accounts
+                    .Include(a => a.Posts)
+                    .ThenInclude(p => p.PostImages)
+                    .Include(a => a.Posts)
+                    .ThenInclude(p => p.PostSongs)
+                    .Include(p => p.Posts)
+                    .ThenInclude(a => a.PostVideos)
+                    .Include(p => p.Posts)
+                    .ThenInclude(l => l.Likes)
+                    .Where(a => a.Id == follower.FollowerAccountId)
+                    .FirstOrDefaultAsync();
+                
+                posts.AddRange(account.Posts);
+            }
+
+            return posts;
+        }
+
+        public async Task<List<Post>> GetFollowingPostsAsync(List<UserFollower> followings)
+        {
+            var posts = new List<Post>();
+
+            foreach (var following in followings)
+            {
+                var account = await _ctx.Accounts
+                    .Include(a => a.Posts)
+                    .ThenInclude(p => p.PostImages)
+                    .Include(a => a.Posts)
+                    .ThenInclude(p => p.PostSongs)
+                    .Include(p => p.Posts)
+                    .ThenInclude(a => a.PostVideos)
+                    .Include(p => p.Posts)
+                    .ThenInclude(l => l.Likes)
+                    .Include(p => p.Posts)
+                    .ThenInclude(p => p.Account)
+                    .ThenInclude(a => a.User)
+                    .Where(a => a.Id == following.FollowingAccountId)
+                    .FirstOrDefaultAsync();
+
+                posts.AddRange(account.Posts);
+            }
+
+            return posts;
+        }
+
+        public Task<List<Post>> GetAllUserPosts(int userId, int pageSize, int pageNumber)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -18,10 +18,7 @@ namespace Disco.Domain.Repositories
 
         public override async Task AddAsync(UserFollower userFollower)
         {
-            await _ctx.UserFollowers
-                .AddAsync(userFollower);
-
-            await _ctx.SaveChangesAsync();
+           await base.AddAsync(userFollower);
         }
         public override async Task<UserFollower> GetAsync(int id)
         {
@@ -60,6 +57,41 @@ namespace Disco.Domain.Repositories
                 .Take((pageNumber - 1) * pageSize)
                 .Skip(pageSize)
                 .ToListAsync();
+        }
+
+        public async Task<List<UserFollower>> GetFollowingAsync(int userId)
+        {
+            var followings = await _ctx.UserFollowers
+                .Include(f => f.FollowingAccount)
+                .ThenInclude(a => a.User)
+                .Include(f => f.FollowingAccount)
+                .ThenInclude(a => a.Status)
+                .Include(f => f.FollowerAccount)
+                .ThenInclude(a => a.User)
+                .Include(f => f.FollowerAccount)
+                .ThenInclude(a => a.Status)
+                .Where(u => u.FollowerAccount.UserId == userId)
+                .OrderBy(f => f.FollowingAccount.User.UserName)
+                .ToListAsync();
+
+            return followings;
+        }
+
+        public async Task<List<UserFollower>> GetFollowersAsync(int userId)
+        {
+            var followers = await _ctx.UserFollowers
+                .Include(f => f.FollowerAccount)
+                .ThenInclude(a => a.User)
+                .Include(f => f.FollowerAccount.Status)
+                .Include(f => f.FollowingAccount.Status)
+                .Include(f => f.FollowingAccount)
+                .ThenInclude(a => a.User)
+                .Where(f => f.FollowingAccount.UserId == userId)
+                .OrderBy(f => f.FollowerAccount.User.UserName)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return followers;
         }
     }
 }

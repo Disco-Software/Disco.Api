@@ -7,6 +7,8 @@ using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using Disco.Business.Dtos.AccountDetails;
+using System.Linq;
 
 namespace Disco.Business.Services
 {
@@ -16,16 +18,20 @@ namespace Disco.Business.Services
         private readonly IAccountRepository _accountRepository;
         private readonly IUserRepository _userRepository;
         private readonly IAccountStatusRepository _accountStatusRepository;
+        private readonly IFollowerRepository _followerRepository;
+
         public AccountDetailsService(
             BlobServiceClient blobServiceClient,
             IAccountRepository accountRepository,
             IAccountStatusRepository accountStatusRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IFollowerRepository followerRepository)
         {
             _blobServiceClient = blobServiceClient;
             _accountRepository = accountRepository;
             _accountStatusRepository = accountStatusRepository;
             _userRepository = userRepository;
+            _followerRepository = followerRepository;
         }
 
         public async Task<User> ChengePhotoAsync(User user, IFormFile formFile)
@@ -53,6 +59,17 @@ namespace Disco.Business.Services
         public async Task RemoveAsync(Account account)
         {
            await _accountRepository.RemoveAccountAsync(account.Id);
+        }
+
+        public async Task<UserDetailsResponseDto> GetUserDatailsAsync(User user)
+        {
+            user.Account.Following = await _followerRepository.GetFollowingAsync(user.Id);
+            user.Account.Followers = await _followerRepository.GetFollowersAsync(user.Id);
+
+            UserDetailsResponseDto userDetailsResponseDto = new UserDetailsResponseDto();
+            userDetailsResponseDto.User = user;
+
+            return userDetailsResponseDto;
         }
     }
 }

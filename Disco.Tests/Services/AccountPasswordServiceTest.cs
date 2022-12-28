@@ -1,4 +1,5 @@
-﻿using Disco.Business.Services;
+﻿using Disco.Business.Interfaces;
+using Disco.Business.Services;
 using Disco.Domain.Models;
 using Disco.Tests.Mock;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +16,7 @@ namespace Disco.Tests.Services
     public class AccountPasswordServiceTest
     {
         [TestMethod]
-        public async Task ChangePasswordAsync_ReturnsSuccessResponse()
+        public async Task ChangePasswordAsync_ReturnsTrueResponse()
         {
             var list = new List<User>();
 
@@ -23,20 +24,17 @@ namespace Disco.Tests.Services
 
             var mockedUserManager = MockedUserManager.MockUserManager(list);
             mockedUserManager.Setup(u => u.ResetPasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(It.IsAny<IdentityResult>());
+                .ReturnsAsync(IdentityResult.Success);
             mockedUserManager.Setup(u => u.GeneratePasswordResetTokenAsync(It.IsAny<User>()))
-                .ReturnsAsync("lusha_token");
+                .ReturnsAsync(It.IsAny<string>());
 
             var accountPasswordService = new AccountPasswordService(mockedUserManager.Object);
-            var passwordResetToken = await mockedUserManager.Object.GeneratePasswordResetTokenAsync(user);
-            var response = accountPasswordService.ChengePasswordAsync(user, passwordResetToken, "StasZeus2021!");
+            var response = accountPasswordService.ChengePasswordAsync(user, Guid.NewGuid().ToString(), "StasZeus2021!");
 
             Assert.IsTrue(response.IsCompletedSuccessfully);
         }
-
         [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
-        public async Task ChangePasswordReturnsExceptionResponse()
+        public async Task ChangePasswordAsync_ReturnsFalseResponse()
         {
             var list = new List<User>();
 
@@ -44,15 +42,30 @@ namespace Disco.Tests.Services
 
             var mockedUserManager = MockedUserManager.MockUserManager(list);
             mockedUserManager.Setup(u => u.ResetPasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(It.IsAny<IdentityResult>());
+                .ReturnsAsync(IdentityResult.Failed());
             mockedUserManager.Setup(u => u.GeneratePasswordResetTokenAsync(It.IsAny<User>()))
-                .ReturnsAsync("lusha_token");
+                .ReturnsAsync(It.IsAny<string>());
 
             var accountPasswordService = new AccountPasswordService(mockedUserManager.Object);
-            var passwordResetToken = await mockedUserManager.Object.GeneratePasswordResetTokenAsync(null);
-            var response = accountPasswordService.ChengePasswordAsync(user, passwordResetToken, "StasZeus2021!");
+            var response = accountPasswordService.ChengePasswordAsync(user, Guid.NewGuid().ToString(), "StasZeus2021!");
 
-            Assert.ThrowsException<NullReferenceException>(() => true);
+            Assert.IsFalse(response.IsCompletedSuccessfully);
+            Assert.IsTrue(response.IsFaulted);
+        }
+
+        [TestMethod]
+        public async Task VarifyPasswordAsync_ReturnsTrueResponse()
+        {
+            var user = new User { Id = 1, UserName = "vasya_pupkin", Email = "vasya.pupkin@gmail.com", PasswordHash= Convert.ToBase64String(Encoding.UTF8.GetBytes(Guid.NewGuid().ToString())), Account = new Account { Followers = new List<UserFollower>() } };
+
+            var mockedUserManager = MockedUserManager.MockUserManager(new List<User>() { user });
+            mockedUserManager.Setup(m => m.PasswordHasher.VerifyHashedPassword(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(PasswordVerificationResult.Success);
+
+            var accountPasswordService = new AccountPasswordService(mockedUserManager.Object);
+            var response = await accountPasswordService.VerifyPasswordAsync(user, "54321");
+
+            Assert.IsTrue(response == PasswordVerificationResult.Success);
         }
     }
 }

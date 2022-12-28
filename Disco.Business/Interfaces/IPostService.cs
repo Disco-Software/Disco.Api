@@ -10,9 +10,9 @@ namespace Disco.Business.Interfaces
         Task CreatePostAsync(Post post);
         Task<List<Post>> GetAllUserPosts(User user, GetAllPostsDto dto);
         Task<List<Post>> GetAllUserPosts(User user);
-        Task<List<Post>> GetAllPosts(User user,GetAllPostsDto dto);
         Task DeletePostAsync(int postId);
         Task<Post> GetPostAsync(int id);
         Task<List<Post>> GetPostsByDescriptionAsync(string search);
+        Task<List<Post>> GetAllPostsAsync(User user);
     }
 }

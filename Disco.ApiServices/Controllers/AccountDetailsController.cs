@@ -54,8 +54,10 @@ namespace Disco.ApiServices.Controllers
             var user = await _accountService.GetByIdAsync(id);
 
             user.Account.Posts = await _postService.GetAllUserPosts(user);
+            
+            var userDetailsResponseDto = await _accountDetailsService.GetUserDatailsAsync(user);
 
-            return Ok(user);
+            return Ok(userDetailsResponseDto);
         }
     }
 }

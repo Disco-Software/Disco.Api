@@ -68,6 +68,11 @@ namespace Disco.Business.Services
             return followersDto;
         }
 
+        public async Task<List<UserFollower>> GetFollowingAsync(int userId)
+        {
+            return await _followerRepository.GetFollowingAsync(userId);
+        }
+
         public async Task<FollowerResponseDto> GetAsync(int id)
         {
             var follower = await _followerRepository.GetAsync(id);
@@ -81,6 +86,11 @@ namespace Disco.Business.Services
             followerDto.IsFollowing = follower.IsFollowing;
 
             return followerDto;
+        }
+
+        public async Task<List<UserFollower>> GetFollowersAsync(int userId)
+        {
+            return await _followerRepository.GetFollowersAsync(userId);
         }
     }
 }

@@ -23,6 +23,7 @@ using Disco.Business.Constants;
 using Disco.ApiServices.Hubs;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
+using Disco.ApiServices.Filters;
 
 namespace Disco.Api
 {
@@ -107,12 +108,12 @@ namespace Disco.Api
             services.ConfigureAutoMapper();
 
             services.AddControllers()
-                .AddControllersAsServices()
-                .AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()))
-                .AddNewtonsoftJson(options =>
-                {
-                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                });
+            .AddControllersAsServices()
+            .AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()))
+            .AddNewtonsoftJson(options =>
+            {
+               options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

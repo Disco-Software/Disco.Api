@@ -28,6 +28,7 @@ namespace Disco.ApiServices.Controllers
         private readonly ISongService _songService;
         private readonly IVideoService _videoService;
         private readonly ILikeService _likeService;
+        private readonly IFollowerService _followerService;
         private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
 
@@ -37,6 +38,7 @@ namespace Disco.ApiServices.Controllers
             ISongService songService,
             IVideoService videoService,
             ILikeService likeService,
+            IFollowerService followerService,
             IAccountService accountService,
             IMapper mapper)
         {
@@ -46,6 +48,7 @@ namespace Disco.ApiServices.Controllers
             _videoService = videoService;
             _accountService = accountService;
             _likeService = likeService;
+            _followerService = followerService;
             _mapper = mapper;
         }
 
@@ -137,8 +140,12 @@ namespace Disco.ApiServices.Controllers
         public async Task<ActionResult<List<Post>>> GetAllPosts([FromQuery] GetAllPostsDto dto)
         {
             var user = await _accountService.GetAsync(HttpContext.User);
+            
+            user.Account.Following = await _followerService.GetFollowingAsync(user.Id);
+            user.Account.Followers = await _followerService.GetFollowersAsync(user.Id);
 
-            var posts = await _postService.GetAllPosts(user, dto);
+            var posts = await _postService.GetAllPostsAsync(user);
+
             for (int i = 0; i < posts.Count; i++)
             {
                 var post = posts[i];

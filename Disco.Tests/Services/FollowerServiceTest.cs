@@ -18,7 +18,11 @@ namespace Disco.Tests.Services
         [TestMethod]
         public async Task CreateAsync_ReturnsSuccessResponse()
         {
-            var mapperConfig = new MapperConfiguration(ms => ms.AddProfile(new AccountMapProfile()));
+            var mapperConfig = new MapperConfiguration(ms =>
+            {
+                ms.AddProfile(new AccountMapProfile());
+                ms.AddProfile(new FollowerMapProfile());
+            });
 
             IMapper mapper = mapperConfig.CreateMapper();
 
@@ -30,7 +34,7 @@ namespace Disco.Tests.Services
 
             var service = new FollowerService(mapper, mockedFollowerRepo.Object);
 
-            var user = new User
+            var following = new User
             {
                 Id = 1,
                 Account = new Account
@@ -57,12 +61,12 @@ namespace Disco.Tests.Services
                 IntalationId = "fjkldjasdf;fjdaskljf;"
             };
 
-            var response = await service.CreateAsync(user, follower, dto);
-            response.FollowerAccountId = follower.Account.Id;
+            var response = await service.CreateAsync(follower, following, dto);
 
 
-            Assert.AreEqual(follower.Id, response.FollowerAccountId);
-            Assert.AreNotEqual(user.Id, follower.Id);
+            Assert.AreEqual(following.Account.Id, response.FollowingAccount.Id);
+            Assert.AreEqual(follower.Account.Id, response.FollowerAccount.Id);
+            Assert.AreNotEqual(following.Account.Id, follower.Account.Id);
         }
         
         [TestMethod]

@@ -31,12 +31,19 @@ namespace Disco.Domain.EF
                 .HasOne(p => p.Account)
                 .WithOne(u => u.User)
                 .HasForeignKey<Account>(p => p.UserId);
-            
-            modelBuilder.Entity<Account>()
-                .HasMany(f => f.Followers)
-                .WithOne(p => p.FollowingAccount)
-                .HasForeignKey(f => f.FollowingAccountId)
-                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserFollower>(builder =>
+            {
+                builder.HasOne(u => u.FollowerAccount)
+                    .WithMany(f => f.Following)
+                    .HasForeignKey(f => f.FollowerAccountId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                builder.HasOne(f => f.FollowingAccount)
+                    .WithMany(f => f.Followers)
+                    .HasForeignKey(f => f.FollowingAccountId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
 
             modelBuilder.Entity<Like>()
                 .HasOne(l => l.Account)
