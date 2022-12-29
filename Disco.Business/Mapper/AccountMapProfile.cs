@@ -16,9 +16,10 @@ namespace Disco.Business.Mapper
         {
             CreateMap<RegistrationDto, User>();
             CreateMap<User, UserResponseDto>()
-                .ForMember(source => source.RefreshToken, opt => opt.Ignore())
+                .ForMember(source => source.RefreshToken, opt => opt.MapFrom(user => user.RefreshToken))
                 .ForMember(source => source.AccessToken, opt => opt.Ignore())
-                .ForMember(source => source.AccessTokenExpirce, opt => opt.Ignore());
+                .ForMember(source => source.AccessTokenExpirce, opt => opt.Ignore())
+                .ForMember(source => source.User, opt => opt.MapFrom(user => user));
             CreateMap<Account, AccountDto>();
             CreateMap<FacebookDto, User>()
                 .ForMember(source => source.UserName, f => f.Ignore())
