@@ -45,7 +45,9 @@ namespace Disco.ApiServices.Controllers
            var user = await _accountService.GetAsync(HttpContext.User);
            user.Account.Posts = await _postService.GetAllUserPosts(user);
 
-            return Ok(user);
+            var accountDetails = await _accountDetailsService.GetUserDatailsAsync(user);
+
+            return Ok(accountDetails);
         }
 
         [HttpGet("user/{id:int}")]

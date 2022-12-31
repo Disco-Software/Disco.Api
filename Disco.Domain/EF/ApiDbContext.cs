@@ -9,7 +9,7 @@ namespace Disco.Domain.EF
     public class ApiDbContext : IdentityDbContext<User,Role,int>, IDesignTimeDbContextFactory<ApiDbContext>
     {
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<AccountStatus> AccountStatuses { get; set; }
+        public DbSet<Status> AccountStatuses { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<PostSong> PostSongs { get; set; }
@@ -20,6 +20,8 @@ namespace Disco.Domain.EF
         public DbSet<Story> Stories { get; set; }
         public DbSet<StoryImage> StoryImages { get; set; }
         public DbSet<StoryVideo> StoryVideos { get; set; }
+        public DbSet<Status> Statuses { get; set; }
+
         public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options) { }
         public ApiDbContext() { }
 
@@ -66,6 +68,11 @@ namespace Disco.Domain.EF
                 .WithMany(c => c.Comments)
                 .HasForeignKey(f => f.PostId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Account>()
+                .HasOne(s => s.AccountStatus)
+                .WithOne(a => a.Account)
+                .HasForeignKey<AccountStatus>(f => f.AccountId);
         }
 
         public ApiDbContext CreateDbContext(string[] args)

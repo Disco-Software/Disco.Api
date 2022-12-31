@@ -23,7 +23,6 @@ using Disco.Business.Constants;
 using Disco.ApiServices.Hubs;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
-using Disco.ApiServices.Filters;
 
 namespace Disco.Api
 {

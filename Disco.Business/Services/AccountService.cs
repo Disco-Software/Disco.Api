@@ -48,7 +48,7 @@ namespace Disco.Business.Services
 
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
-            user.Account.Status = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
+            user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Following.Count);
 
             return user;
         }
@@ -74,7 +74,9 @@ namespace Disco.Business.Services
 
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
-            user.Account.Status = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
+            user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
+            user.Account.AccountStatus.Account = user.Account;
+            user.Account.AccountStatus.AccountId = user.AccountId;
 
             return user;
         }
@@ -90,7 +92,7 @@ namespace Disco.Business.Services
 
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
-            user.Account.Status = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
+            user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
 
             return user;
         }
@@ -99,7 +101,7 @@ namespace Disco.Business.Services
         {
            user.NormalizedEmail = _userManager.NormalizeEmail(user.Email);
            user.NormalizedUserName = _userManager.NormalizeName(user.UserName);
-           user.Account.Status = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
+           user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
 
            var identityReesult = await _userManager.CreateAsync(user);
            if(identityReesult.Errors.Count() > 0)
@@ -125,7 +127,9 @@ namespace Disco.Business.Services
 
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
-            user.Account.Status = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
+            user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
+            user.Account.AccountStatus.Account = user.Account;
+            user.Account.AccountStatus.AccountId = user.AccountId;
 
             return user;
         }
@@ -141,7 +145,7 @@ namespace Disco.Business.Services
 
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
-            user.Account.Status = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
+            user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
 
             return user;
         }

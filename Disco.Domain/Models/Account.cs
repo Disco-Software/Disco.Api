@@ -5,7 +5,7 @@ namespace Disco.Domain.Models
 {
     public class Account : BaseModel<int>
     {
-        public AccountStatus Status { get; set; }
+        public AccountStatus AccountStatus { get; set; }
         public string Cread { get; set; } = string.Empty;
         public string Photo { get; set; }
         public List<Post> Posts { get; set; } = new List<Post>();
