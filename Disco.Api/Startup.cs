@@ -123,13 +123,13 @@ namespace Disco.Api
 
             if (env.IsDevelopment())
             {
-                app.UseSwagger(swagger =>
-                {
-                    swagger.SerializeAsV2 = true;
-                });
-                app.UseSwaggerUI(swagger => {
-                    swagger.SwaggerEndpoint("v1/swagger.json", "Disco.Api");
-                });
+                //app.UseSwagger(swagger =>
+                //{
+                //    swagger.SerializeAsV2 = true;
+                //});
+                //app.UseSwaggerUI(swagger => {
+                //    swagger.SwaggerEndpoint("v1/swagger.json", "Disco.Api");
+                //});
 
                 app.UseDeveloperExceptionPage();
             }
