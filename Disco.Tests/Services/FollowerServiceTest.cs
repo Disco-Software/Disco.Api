@@ -76,44 +76,10 @@ namespace Disco.Tests.Services
 
             IMapper mapper = mapperConfig.CreateMapper();
 
-            var userFollower = new UserFollower
-            {
-                FollowerAccount = new Account
-                {
-                    Followers = new List<UserFollower>
-                    {
-                        new UserFollower
-                        {
-                            FollowerAccount = new Account
-                            {
-                                User = new User
-                                {
-                                    Email = "vasya_pupkin@gmail.com",
-                                    UserName = "vasya_pupkin"
-                                }
-                            },
-                            FollowingAccount = new Account
-                            {
-                                User = new User
-                                {
-                                    Email = "vasya_pupkin1@gmail.com",
-                                    UserName = "vasya_pupkin1"
-                                }
-                            }
-                        }
-                    },
-                    User = new User
-                    {
-                        UserName = "vasya_pupkin",
-                        Email = "vasya_pupkin@gmail.com",
-                    }
-                }
-            };
-
             var mockedFollowerRepository = new Mock<IFollowerRepository>();
             
-            mockedFollowerRepository.Setup(f => f.Remove(It.IsAny<UserFollower>()))
-                .Returns(It.IsAny<Task>());
+            mockedFollowerRepository.Setup(f => f.Remove(2))
+                .Returns(Task.CompletedTask);
 
             var service = new FollowerService(mapper, mockedFollowerRepository.Object);
 

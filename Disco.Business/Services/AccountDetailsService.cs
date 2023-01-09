@@ -63,6 +63,8 @@ namespace Disco.Business.Services
 
         public async Task<UserDetailsResponseDto> GetUserDatailsAsync(User user)
         {
+            user.Account.Following = await _followerRepository.GetFollowingAsync(user.Id);
+            user.Account.Followers = await _followerRepository.GetFollowersAsync(user.Id);
             user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Following.Count);
 
             UserDetailsResponseDto userDetailsResponseDto = new UserDetailsResponseDto();

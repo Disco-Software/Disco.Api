@@ -30,8 +30,15 @@ namespace Disco.Domain.Repositories
                 .Where(f => f.Id == id)
                 .FirstOrDefaultAsync();
         }
-        public async Task Remove(UserFollower userFollower)
+        public override async Task Remove(int id)
         {
+          var userFollower = await _ctx.UserFollowers
+                .Include(u => u.FollowingAccount)
+                .ThenInclude(u => u.User)
+                .Include(f => f.FollowerAccount)
+                .ThenInclude(f => f.User)
+                .Where(f => f.Id == id)
+                .FirstOrDefaultAsync();
             _ctx.UserFollowers.Remove(userFollower);
             
             await _ctx.SaveChangesAsync();

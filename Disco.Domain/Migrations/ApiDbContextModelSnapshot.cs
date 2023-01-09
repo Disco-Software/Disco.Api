@@ -29,9 +29,6 @@ namespace Disco.Domain.Migrations
                     b.Property<string>("Cread")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Photo")
                         .HasColumnType("nvarchar(max)");
 
@@ -40,34 +37,10 @@ namespace Disco.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId");
-
                     b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("Accounts");
-                });
-
-            modelBuilder.Entity("Disco.Domain.Models.AccountGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("GroupId");
-
-                    b.ToTable("AccountGroups");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.AccountStatus", b =>
@@ -125,21 +98,6 @@ namespace Disco.Domain.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Group", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Groups");
-                });
-
             modelBuilder.Entity("Disco.Domain.Models.Like", b =>
                 {
                     b.Property<int>("Id")
@@ -160,34 +118,6 @@ namespace Disco.Domain.Migrations
                     b.HasIndex("PostId");
 
                     b.ToTable("Likes");
-                });
-
-            modelBuilder.Entity("Disco.Domain.Models.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("GroupId");
-
-                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.Post", b =>
@@ -611,10 +541,6 @@ namespace Disco.Domain.Migrations
 
             modelBuilder.Entity("Disco.Domain.Models.Account", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Group", null)
-                        .WithMany("Accounts")
-                        .HasForeignKey("GroupId");
-
                     b.HasOne("Disco.Domain.Models.User", "User")
                         .WithOne("Account")
                         .HasForeignKey("Disco.Domain.Models.Account", "UserId")
@@ -622,25 +548,6 @@ namespace Disco.Domain.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Disco.Domain.Models.AccountGroup", b =>
-                {
-                    b.HasOne("Disco.Domain.Models.Account", "Account")
-                        .WithMany("AccountGroups")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Disco.Domain.Models.Group", "Group")
-                        .WithMany("AccountGroups")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-
-                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.AccountStatus", b =>
@@ -690,25 +597,6 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Account");
 
                     b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("Disco.Domain.Models.Message", b =>
-                {
-                    b.HasOne("Disco.Domain.Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Disco.Domain.Models.Group", "Group")
-                        .WithMany("Messages")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-
-                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.Post", b =>
@@ -860,8 +748,6 @@ namespace Disco.Domain.Migrations
 
             modelBuilder.Entity("Disco.Domain.Models.Account", b =>
                 {
-                    b.Navigation("AccountGroups");
-
                     b.Navigation("AccountStatus");
 
                     b.Navigation("Comments");
@@ -875,15 +761,6 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Posts");
 
                     b.Navigation("Stories");
-                });
-
-            modelBuilder.Entity("Disco.Domain.Models.Group", b =>
-                {
-                    b.Navigation("AccountGroups");
-
-                    b.Navigation("Accounts");
-
-                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.Post", b =>

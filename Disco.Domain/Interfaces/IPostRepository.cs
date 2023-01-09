@@ -8,6 +8,8 @@ namespace Disco.Domain.Interfaces
     {
         Task AddAsync(Post post);
         Task Remove(int id);
+        Task<List<Post>> GetFollowersPostsAsync(List<UserFollower> followers);
+        Task<List<Post>> GetFollowingPostsAsync(List<UserFollower> following);
         Task<Post> GetAsync(int id);
         Task<List<Post>> GetPostsByDescriptionAsync(string search);
         Task<List<Post>> GetUserPostsAsync(int userId);

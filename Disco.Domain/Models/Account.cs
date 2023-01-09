@@ -8,7 +8,6 @@ namespace Disco.Domain.Models
         public AccountStatus AccountStatus { get; set; }
         public string Cread { get; set; } = string.Empty;
         public string Photo { get; set; }
-        public List<AccountGroup> AccountGroups { get; set; }
         public List<Post> Posts { get; set; } = new List<Post>();
         public List<Comment> Comments { get; set; }
         public List<Like> Likes { get; set; } = new List<Like>();

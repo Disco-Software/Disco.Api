@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using Disco.Business.Constants;
 using Disco.Business.Interfaces;
 using Disco.Domain.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Identity.Client;
 using System;
@@ -12,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Hubs
 {
-     public class CommentHub : Hub
+    public class CommentHub : Hub
     {
         private readonly IAccountService _accountService;
         private readonly ICommentService _commentService;
@@ -45,7 +43,7 @@ namespace Disco.ApiServices.Hubs
 
             await _commentService.AddCommentAsync(comment);
 
-            await Clients.All.SendAsync("sendCommentAsync", user, post);
+            await Clients.All.SendAsync("SendCommentAsync", user, post);
         }
 
         public async Task RemoveCommentAsync(int commentId, int postId, int userId)

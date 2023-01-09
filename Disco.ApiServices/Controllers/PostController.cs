@@ -144,7 +144,7 @@ namespace Disco.ApiServices.Controllers
             user.Account.Following = await _followerService.GetFollowingAsync(user.Id);
             user.Account.Followers = await _followerService.GetFollowersAsync(user.Id);
 
-            var posts = await _postService.GetAllPostsAsync(user, dto.PageNumber, dto.PageSize);
+            var posts = await _postService.GetAllPostsAsync(user);
 
             for (int i = 0; i < posts.Count; i++)
             {
