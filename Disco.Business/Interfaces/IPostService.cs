@@ -13,6 +13,6 @@ namespace Disco.Business.Interfaces
         Task DeletePostAsync(int postId);
         Task<Post> GetPostAsync(int id);
         Task<List<Post>> GetPostsByDescriptionAsync(string search);
-        Task<List<Post>> GetAllPostsAsync(User user);
+        Task<List<Post>> GetAllPostsAsync(User user, int pageNumber, int pageSize);
     }
 }

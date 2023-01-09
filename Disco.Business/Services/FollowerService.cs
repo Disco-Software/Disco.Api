@@ -56,7 +56,12 @@ namespace Disco.Business.Services
 
         public async Task DeleteAsync(int id)
         {
-            await _followerRepository.Remove(id);
+            var userFollower = await _followerRepository.GetAsync(id);
+
+            userFollower.FollowerAccount.Following.Remove(userFollower);
+            userFollower.FollowingAccount.Followers.Remove(userFollower);
+
+            await _followerRepository.Remove(userFollower);
         }
 
         public async Task<List<FollowerResponseDto>> GetAllAsync(GetAllFollowersDto dto)
@@ -70,7 +75,18 @@ namespace Disco.Business.Services
 
         public async Task<List<UserFollower>> GetFollowingAsync(int userId)
         {
-            return await _followerRepository.GetFollowingAsync(userId);
+            var followings = await _followerRepository.GetFollowingAsync(userId);
+
+            foreach (var following in followings.ToList())
+            {
+                if(followings.Where(f => f.FollowingAccountId == following.FollowingAccountId).ToList().Count > 1)
+                {
+                    followings.Remove(following);
+                    continue;
+                }
+            }
+
+            return followings;
         }
 
         public async Task<FollowerResponseDto> GetAsync(int id)
@@ -90,7 +106,18 @@ namespace Disco.Business.Services
 
         public async Task<List<UserFollower>> GetFollowersAsync(int userId)
         {
-            return await _followerRepository.GetFollowersAsync(userId);
+            var followers = await _followerRepository.GetFollowersAsync(userId);
+
+            foreach (var follower in followers.ToList())
+            {
+                if(followers.Where(f => f.FollowerAccountId == follower.FollowerAccountId).Count() > 1)
+                {
+                    followers.Remove(follower);
+                    continue;
+                }
+            }
+
+            return followers;
         }
     }
 }
