@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using System.Linq;
 using System.Reflection;
 
 namespace Disco.Domain.EF
@@ -21,6 +22,9 @@ namespace Disco.Domain.EF
         public DbSet<StoryImage> StoryImages { get; set; }
         public DbSet<StoryVideo> StoryVideos { get; set; }
         public DbSet<Status> Statuses { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<AccountGroup> AccountGroups { get; set; }
 
         public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options) { }
         public ApiDbContext() { }
@@ -73,6 +77,17 @@ namespace Disco.Domain.EF
                 .HasOne(s => s.AccountStatus)
                 .WithOne(a => a.Account)
                 .HasForeignKey<AccountStatus>(f => f.AccountId);
+
+            modelBuilder.Entity<Account>()
+                .HasMany(a => a.AccountGroups)
+                .WithOne(g => g.Account)
+                .HasForeignKey(g => g.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Group>()
+                .HasMany(g => g.AccountGroups)
+                .WithOne(a => a.Group)
+                .HasForeignKey(a => a.GroupId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         public ApiDbContext CreateDbContext(string[] args)

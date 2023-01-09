@@ -19,14 +19,18 @@ namespace Disco.ApiServices.Controllers
         private readonly IAccountDetailsService _accountDetailsService;
         private readonly IAccountService _accountService;
         private readonly IPostService _postService;
+        private readonly IFollowerService _followerService;
+
         public AccountDetailsController(
             IAccountDetailsService accountDetailsService,
             IAccountService accountService,
-            IPostService postService)
+            IPostService postService,
+            IFollowerService followerService)
         {
             _accountDetailsService = accountDetailsService;
             _accountService = accountService;
             _postService = postService;
+            _followerService = followerService;
         }
 
         [HttpPut("change/photo")]
@@ -42,8 +46,10 @@ namespace Disco.ApiServices.Controllers
         [HttpGet("user")]
         public async Task<IActionResult> GetCurrentUserAsync()
         {
-           var user = await _accountService.GetAsync(HttpContext.User);
-           user.Account.Posts = await _postService.GetAllUserPosts(user);
+            var user = await _accountService.GetAsync(HttpContext.User);
+            user.Account.Posts = await _postService.GetAllUserPosts(user);
+            user.Account.Following = await _followerService.GetFollowingAsync(user.Id);
+            user.Account.Followers = await _followerService.GetFollowersAsync(user.Id);
 
             var accountDetails = await _accountDetailsService.GetUserDatailsAsync(user);
 
@@ -54,9 +60,10 @@ namespace Disco.ApiServices.Controllers
         public async Task<IActionResult> GetUserByIdAsync([FromRoute] int id)
         {
             var user = await _accountService.GetByIdAsync(id);
-
             user.Account.Posts = await _postService.GetAllUserPosts(user);
-            
+            user.Account.Followers = await _followerService.GetFollowersAsync(user.Id);
+            user.Account.Following = await _followerService.GetFollowingAsync(user.Id);
+
             var userDetailsResponseDto = await _accountDetailsService.GetUserDatailsAsync(user);
 
             return Ok(userDetailsResponseDto);

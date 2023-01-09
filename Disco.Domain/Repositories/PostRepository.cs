@@ -69,43 +69,27 @@ namespace Disco.Domain.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<Post>> GetUserPostsAsync(int userId)
+        public async Task<List<Post>> GetUserPostsAsync(int accountId)
         {
-            return await _ctx.Posts
+            return await _ctx.Accounts
+                .SelectMany(account => account.Posts)
+                .Include(post => post.PostImages)
+                .Include(post => post.PostSongs)
+                .Include(post => post.PostVideos)
+                .Where(account => account.Id == accountId)
+                .ToListAsync();
+        }
+
+        public async Task<List<Post>> GetFollowerPostsAsync(int accountId)
+        {
+            return await _ctx.Accounts
+                .SelectMany(a => a.Posts)
                 .Include(p => p.Likes)
                 .Include(p => p.PostImages)
                 .Include(p => p.PostSongs)
                 .Include(p => p.PostVideos)
-                .Include(p => p.Likes)
-                .Include(p => p.Account)
-                .ThenInclude(a => a.User)
-                .Where(p => p.Account.UserId == userId)
+                .Where(p => p.AccountId == accountId)
                 .ToListAsync();
-
-        }
-
-        public async Task<List<Post>> GetFollowersPostsAsync(List<UserFollower> followers)
-        {
-            var posts = new List<Post>();
-            
-            foreach (var follower in followers)
-            {
-                var account = await _ctx.Accounts
-                    .Include(a => a.Posts)
-                    .ThenInclude(p => p.PostImages)
-                    .Include(a => a.Posts)
-                    .ThenInclude(p => p.PostSongs)
-                    .Include(p => p.Posts)
-                    .ThenInclude(a => a.PostVideos)
-                    .Include(p => p.Posts)
-                    .ThenInclude(l => l.Likes)
-                    .Where(a => a.Id == follower.FollowerAccountId)
-                    .FirstOrDefaultAsync();
-                
-                posts.AddRange(account.Posts);
-            }
-
-            return posts;
         }
 
         public async Task<List<Post>> GetFollowingPostsAsync(List<UserFollower> followings)
