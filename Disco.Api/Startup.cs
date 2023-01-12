@@ -23,6 +23,9 @@ using Disco.Business.Constants;
 using Disco.ApiServices.Hubs;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Threading.Tasks;
 
 namespace Disco.Api
 {
@@ -76,14 +79,38 @@ namespace Disco.Api
             services.ConfigureCorsPolicy();
 
             services.ConfigureAzureServices(Configuration);
-            services.AddSignalR(options => {
+            services.AddSignalR(options =>
+            {
                 options.EnableDetailedErrors = true;
+                options.HandshakeTimeout = TimeSpan.FromMinutes(2);
             });
             services.AddOptions<AuthenticationOptions>();
             services.Configure<EmailOptions>(Configuration.GetSection("EmailSettings"));
             services.Configure<GoogleOptions>(Configuration.GetSection("Google"));
             services.ConfigureAuthentication(Configuration);
 
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //    .AddJwtBearer(opt =>
+            //    {
+            //        opt.TokenValidationParameters = new TokenValidationParameters
+            //        {
+            //            // token validation code
+            //        };
+            //        opt.Events = new JwtBearerEvents
+            //        {
+            //            OnMessageReceived = context =>
+            //            {
+            //                var accessToken = context.Request.Query["access_token"];
+            //                var path = context.HttpContext.Request.Path;
+            //                if (!string.IsNullOrEmpty(accessToken)
+            //                    && path.StartsWithSegments("/kitchen"))
+            //                {
+            //                    context.Token = accessToken;
+            //                }
+            //                return Task.CompletedTask;
+            //            }
+            //        };
+            //    });
             services.AddHttpContextAccessor();
             services.AddHttpClient();
             services.AddLogging();
@@ -136,7 +163,7 @@ namespace Disco.Api
 
             app.UseExceptionHandler("/Error");
             app.UseHsts();
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             ILogger logger = loggerFactory.CreateLogger("ClientErrorLogger");
 
@@ -156,6 +183,7 @@ namespace Disco.Api
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<CommentHub>("/hub/comments");
+                endpoints.MapHub<ChatHub>("/hub/chat");
             });
         }
     }

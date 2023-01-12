@@ -4,14 +4,16 @@ using Disco.Domain.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Disco.Domain.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230112140724_MessageMigration")]
+    partial class MessageMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -723,9 +725,9 @@ namespace Disco.Domain.Migrations
             modelBuilder.Entity("Disco.Domain.Models.Message", b =>
                 {
                     b.HasOne("Disco.Domain.Models.Account", "Account")
-                        .WithMany("Messages")
+                        .WithMany()
                         .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Disco.Domain.Models.Group", "Group")
@@ -901,8 +903,6 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Following");
 
                     b.Navigation("Likes");
-
-                    b.Navigation("Messages");
 
                     b.Navigation("Posts");
 

@@ -24,7 +24,8 @@ namespace Disco.Domain
             .AddTransient<IVideoRepository, VideoRepository>()
             .AddTransient<IRoleRepository, RoleRepository>()
             .AddTransient<IGroupRepository, GroupRepository>()
-            .AddTransient<IMessageRepository, MessageRepository>();
+            .AddTransient<IMessageRepository, MessageRepository>()
+            .AddTransient<IConnectionRepository, ConnectionRepository>();
         }
     }
 }

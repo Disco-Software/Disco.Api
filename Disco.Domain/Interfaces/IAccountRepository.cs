@@ -1,5 +1,6 @@
 ﻿using Disco.Domain.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Disco.Domain.Interfaces
@@ -10,5 +11,6 @@ namespace Disco.Domain.Interfaces
         Task<Account> Update(Account newItem);
         Task<List<Account>> FindAccountsByUserNameAsync(string search);
         Task RemoveAccountAsync(int accountId);
+        Task<List<Connection>> GetAllAccountConnectionsAsync(int userId);
     }
 }

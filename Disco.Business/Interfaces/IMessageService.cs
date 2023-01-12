@@ -8,7 +8,7 @@ namespace Disco.Business.Interfaces
 {
     public interface IMessageService
     {
-        Task CreateAsync(Message message);
+        Task<Message> CreateAsync(string message, Account account, Group group);
         Task DeleteAsync(Message message);
         Task<List<Message>> GetAllAsync(int groupId, int pageNumber, int pageSize);
         Task<Message> GetByIdAsync(int id);

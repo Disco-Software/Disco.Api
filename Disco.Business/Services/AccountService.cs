@@ -27,14 +27,17 @@ namespace Disco.Business.Services
         private readonly UserManager<User> _userManager;
         private readonly IUserRepository _userRepository;
         private readonly IAccountStatusRepository _accountStatusRepository;
+        private readonly IAccountRepository _accountRepository;
 
         public AccountService(
             UserManager<User> userManager,
             IUserRepository userRepository,
+            IAccountRepository accountRepository,
             IAccountStatusRepository accountStatusRepository)
         {
             _userManager = userManager;
             _userRepository = userRepository;
+            _accountRepository = accountRepository;
             _accountStatusRepository = accountStatusRepository;
         }
 
@@ -49,6 +52,7 @@ namespace Disco.Business.Services
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
             user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Following.Count);
+            user.Account.Connections = await _accountRepository.GetAllAccountConnectionsAsync(user.Account.Id);
 
             return user;
         }
@@ -77,6 +81,7 @@ namespace Disco.Business.Services
             user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
             user.Account.AccountStatus.Account = user.Account;
             user.Account.AccountStatus.AccountId = user.AccountId;
+            user.Account.Connections = await _accountRepository.GetAllAccountConnectionsAsync(user.Account.Id);
 
             return user;
         }
@@ -93,6 +98,7 @@ namespace Disco.Business.Services
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
             user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
+            user.Account.Connections = await _accountRepository.GetAllAccountConnectionsAsync(user.Account.Id);
 
             return user;
         }
@@ -130,6 +136,7 @@ namespace Disco.Business.Services
             user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
             user.Account.AccountStatus.Account = user.Account;
             user.Account.AccountStatus.AccountId = user.AccountId;
+            user.Account.Connections = await _accountRepository.GetAllAccountConnectionsAsync(user.Account.Id);
 
             return user;
         }
@@ -146,6 +153,7 @@ namespace Disco.Business.Services
             await _userRepository.GetUserInfosAsync(user);
             user.RoleName = _userRepository.GetUserRole(user);
             user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
+            user.Account.Connections = await _accountRepository.GetAllAccountConnectionsAsync(user.Account.Id);
 
             return user;
         }

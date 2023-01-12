@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Disco.Business.Dtos.AccountDetails;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Disco.Business.Services
 {
@@ -53,7 +54,18 @@ namespace Disco.Business.Services
 
         public async Task<List<Account>> GetAccountsByNameAsync(string search)
         {
-            return await _accountRepository.FindAccountsByUserNameAsync(search);
+            var accounts = await _accountRepository.FindAccountsByUserNameAsync(search);
+
+            foreach (var account in accounts.ToList())
+            {
+                if (accounts.Where(a => a.Id == account.Id).ToList().Count > 1)
+                {
+                    accounts.Remove(account);
+                    continue;
+                }
+            }
+
+            return accounts;
         }
 
         public async Task RemoveAsync(Account account)

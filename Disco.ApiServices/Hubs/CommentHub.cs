@@ -17,18 +17,37 @@ namespace Disco.ApiServices.Hubs
         private readonly IAccountService _accountService;
         private readonly ICommentService _commentService;
         private readonly IPostService _postService;
+        private readonly IConnectionService _connectionService;
         private readonly IMapper _mapper;
 
         public CommentHub(
             IAccountService accountService,
             ICommentService commentService,
             IPostService postService,
+            IConnectionService connectionService,
             IMapper mapper)
         {
             _accountService = accountService;
             _commentService = commentService;
             _postService = postService;
+            _connectionService = connectionService;
             _mapper = mapper;
+        }
+
+        public override async Task OnConnectedAsync()
+        {
+            var user = await _accountService.GetAsync(Context.User);
+
+            var connnection = new Connection()
+            {
+                IsConnected = true,
+                UserAgent = Context.GetHttpContext().Request.Headers["User-Agent"],
+                Id = Context.ConnectionId
+            };
+
+            await _connectionService.CreateAsync(connnection, user.Account);
+
+            await base.OnConnectedAsync();
         }
 
         public async Task SendCommentAsync(string message, int userId, int postId)
@@ -57,6 +76,16 @@ namespace Disco.ApiServices.Hubs
             await _commentService.RemoveCommentAsync(comment);
 
             await Clients.All.SendAsync("RemoveCommentAsync", user, comment, post);
+        }
+
+        public override async Task OnDisconnectedAsync(Exception exception)
+        {
+            var user = await _accountService.GetAsync(Context.User);
+            var connection = await _connectionService.GetAsync(Context.ConnectionId);
+
+            await _connectionService.DeleteAsync(connection, user.Account); ;
+
+            await base.OnDisconnectedAsync(exception);
         }
     }
 }

@@ -46,9 +46,9 @@ namespace Disco.Business.Services
             throw new NotImplementedException();
         }
 
-        public Task<GroupResponseDto> GetAsync(int id)
+        public async Task<Group> GetAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _groupRepository.GetAsync(id);
         }
 
         public Task<GroupResponseDto> UpdateAsync(Group group)

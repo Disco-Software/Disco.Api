@@ -14,7 +14,7 @@ namespace Disco.Business.Interfaces
         Task<Domain.Models.Group> CreateAsync(Account userAccount, Account followerAccount);
         Task DeleteAsync(int id);
         Task<IEnumerable<Group>> GetAllAsync(int id, int pageNumber, int pageSize);
-        Task<GroupResponseDto> GetAsync(int id);
+        Task<Group> GetAsync(int id);
         Task<GroupResponseDto> UpdateAsync(Group group);
     }
 }

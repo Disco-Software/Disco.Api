@@ -31,15 +31,6 @@ namespace Disco.Domain.Repositories
             return profile;
         }
 
-        public async Task<List<Account>> FindAccountsByUserNameAsync(string search)
-        {
-            return await _ctx.Accounts
-                .Include(u => u.User)
-                .Include(s => s.AccountStatus)
-                .Where(u => u.User.UserName.StartsWith(search))
-                .ToListAsync();
-        }
-
         public async Task RemoveAccountAsync(int accountId)
         {
             var account = _ctx.Accounts
@@ -50,6 +41,23 @@ namespace Disco.Domain.Repositories
             _ctx.Remove(account);
 
             await _ctx.SaveChangesAsync();
+        }
+
+        public async Task<List<Connection>> GetAllAccountConnectionsAsync(int accountId)
+        {
+            return await _ctx.Accounts
+                .Where(a => a.Id == accountId)
+                .SelectMany(a => a.Connections)
+                .ToListAsync();
+        }
+
+        public async Task<List<Account>> FindAccountsByUserNameAsync(string search)
+        {
+            return await _ctx.Accounts
+                .Include(u => u.User)
+                .Include(s => s.AccountStatus)
+                .Where(u => u.User.UserName.StartsWith(search))
+                .ToListAsync();
         }
     }
 }

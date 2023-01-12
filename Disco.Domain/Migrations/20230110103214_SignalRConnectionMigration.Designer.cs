@@ -4,14 +4,16 @@ using Disco.Domain.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Disco.Domain.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230110103214_SignalRConnectionMigration")]
+    partial class SignalRConnectionMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,7 +145,7 @@ namespace Disco.Domain.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("Connections");
+                    b.ToTable("Connection");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.Group", b =>
@@ -723,15 +725,15 @@ namespace Disco.Domain.Migrations
             modelBuilder.Entity("Disco.Domain.Models.Message", b =>
                 {
                     b.HasOne("Disco.Domain.Models.Account", "Account")
-                        .WithMany("Messages")
+                        .WithMany()
                         .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Disco.Domain.Models.Group", "Group")
                         .WithMany("Messages")
                         .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Account");
@@ -901,8 +903,6 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Following");
 
                     b.Navigation("Likes");
-
-                    b.Navigation("Messages");
 
                     b.Navigation("Posts");
 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Linq;
+using Disco.ApiServices.Validators;
 
 namespace Disco.ApiServices.Controllers
 {
@@ -26,6 +27,14 @@ namespace Disco.ApiServices.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] CreateFollowerDto dto)
         {
+            var followerValidator = await CreateFollowerValidator.Create(_accountService, HttpContext.User)
+                .ValidateAsync(dto);
+
+            if(followerValidator.Errors.Count > 0)
+            {
+                return BadRequest(followerValidator.Errors);
+            }
+
             var user = await _accountService.GetAsync(HttpContext.User);
             var following = await _accountService.GetByIdAsync(dto.FollowerAccountId);
 

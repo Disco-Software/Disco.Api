@@ -25,6 +25,7 @@ namespace Disco.Domain.EF
         public DbSet<Group> Groups { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<AccountGroup> AccountGroups { get; set; }
+        public DbSet<Connection> Connections { get; set; }
 
         public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options) { }
         public ApiDbContext() { }
@@ -87,6 +88,21 @@ namespace Disco.Domain.EF
                 .HasMany(g => g.AccountGroups)
                 .WithOne(a => a.Group)
                 .HasForeignKey(a => a.GroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Group)
+                .WithMany(g => g.Messages)
+                .HasForeignKey(m => m.GroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Account>()
+                .HasMany(a => a.Messages)
+                .WithOne(m => m.Account)
+                .HasForeignKey(m => m.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Account)
+                .WithMany(a => a.Messages)
+                .HasForeignKey(m => m.AccountId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
 
