@@ -5,6 +5,7 @@ using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -15,13 +16,16 @@ namespace Disco.Business.Services
     public class GroupService : IGroupService
     {
         private readonly IGroupRepository _groupRepository;
+        private readonly IAccountGroupRepository _accountGroupRepository;
         private readonly IMapper _mapper;
 
         public GroupService(
             IGroupRepository groupRepository,
+            IAccountGroupRepository accountGroupRepository,
             IMapper mapper)
         {
             _groupRepository = groupRepository;
+            _accountGroupRepository = accountGroupRepository;
             _mapper = mapper;
         }
 
@@ -31,19 +35,43 @@ namespace Disco.Business.Services
             group.Accounts.Add(followerAccount);
             group.Accounts.Add(userAccount);
 
+            var currentUserAccountGroup = _mapper.Map<AccountGroup>(userAccount);
+            currentUserAccountGroup.Group = group;
+            currentUserAccountGroup.GroupId = group.Id;
+
+            userAccount.AccountGroups.Add(currentUserAccountGroup);
+
+            var userAccountGroup = _mapper.Map<AccountGroup>(followerAccount);
+            userAccountGroup.Group = group;
+            userAccountGroup.GroupId = group.Id;
+
+            followerAccount.AccountGroups.Add(userAccountGroup);
+
             await _groupRepository.CreateAsync(group);
 
             return group;
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(Group group, Account account)
         {
-            throw new NotImplementedException();
+            var accountGroup = group.AccountGroups
+                .Where(group => group.AccountId == account.Id)
+                .FirstOrDefault();
+
+            account.AccountGroups.Remove(accountGroup);
+
+            if(group.Accounts.Count < 2)
+            {
+                foreach (var userAccount in group.Accounts)
+                    userAccount.AccountGroups.Remove(accountGroup);
+            }
+
+            await _groupRepository.DeleteAsync(group);
         }
 
-        public Task<IEnumerable<Group>> GetAllAsync(int id, int pageNumber, int pageSize)
+        public async Task<IEnumerable<Group>> GetAllAsync(int id, int pageNumber, int pageSize)
         {
-            throw new NotImplementedException();
+            return await _groupRepository.GetAllAsync(id, pageNumber, pageSize);
         }
 
         public async Task<Group> GetAsync(int id)
@@ -51,14 +79,11 @@ namespace Disco.Business.Services
             return await _groupRepository.GetAsync(id);
         }
 
-        public Task<GroupResponseDto> UpdateAsync(Group group)
+        public async Task<Group> UpdateAsync(Group group)
         {
-            throw new NotImplementedException();
-        }
+            await _groupRepository.UpdateAsync(group);
 
-        Task<IEnumerable<Domain.Models.Group>> IGroupService.GetAllAsync(int id, int pageNumber, int pageSize)
-        {
-            throw new NotImplementedException();
+            return group;
         }
     }
 }

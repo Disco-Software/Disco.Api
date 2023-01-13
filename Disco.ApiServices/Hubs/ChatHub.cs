@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Storage.Blobs.Models;
 using Disco.Business.Constants;
 using Disco.Business.Dtos.Chat;
 using Disco.Business.Interfaces;
@@ -52,6 +53,7 @@ namespace Disco.ApiServices.Hubs
 
             await base.OnConnectedAsync();
         }
+       
         public async Task SendAsync(int groupId, string textMessage)
         {
             var user = await _accountService.GetAsync(Context.User);
@@ -66,6 +68,18 @@ namespace Disco.ApiServices.Hubs
             await Groups.AddToGroupAsync(this.Context.ConnectionId, group.Name);
 
             await Clients.Group(group.Name).SendAsync("sendAsync", messageDto);
+        }
+
+        public async Task JoinAsync(int userId)
+        {
+            var currentUser = await _accountService.GetAsync(Context.User);
+            var user = await _accountService.GetByIdAsync(userId);
+
+            var group = await _groupService.CreateAsync(currentUser.Account, user.Account);
+
+            await Groups.AddToGroupAsync(this.Context.ConnectionId, group.Name);
+
+            await Clients.Group(group.Name).SendAsync("joinAsync", $"Users: {currentUser.UserName}, {user.UserName} joined the chat");
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)

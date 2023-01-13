@@ -10,8 +10,8 @@ namespace Disco.Domain.Interfaces
     public interface IMessageRepository
     {
         Task CreateAsync(Message message, CancellationToken cancellationToken = default);
-        Task DeleteAsync(int id, CancellationToken cancellationToken = default);
-        Task<List<Message>> GetAllAsync(int mssageId, int groupId, int pageNumber, int pageSize);
+        Task DeleteAsync(Message message, CancellationToken cancellationToken = default);
+        Task<List<Message>> GetAllAsync(int groupId, int pageNumber, int pageSize);
         Task<Message> GetByIdAsync(int id);
         Task UpdateAsync(Message message, CancellationToken cancellationToken = default);
     }

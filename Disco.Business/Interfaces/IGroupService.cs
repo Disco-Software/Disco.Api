@@ -12,9 +12,9 @@ namespace Disco.Business.Interfaces
     public interface IGroupService
     {
         Task<Domain.Models.Group> CreateAsync(Account userAccount, Account followerAccount);
-        Task DeleteAsync(int id);
+        Task DeleteAsync(Group group, Account account);
         Task<IEnumerable<Group>> GetAllAsync(int id, int pageNumber, int pageSize);
         Task<Group> GetAsync(int id);
-        Task<GroupResponseDto> UpdateAsync(Group group);
+        Task<Group> UpdateAsync(Group group);
     }
 }

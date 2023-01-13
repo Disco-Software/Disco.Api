@@ -23,17 +23,14 @@ namespace Disco.Domain.Repositories
             await _ctx.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Message message, CancellationToken cancellationToken = default)
         {
-            var message = await _ctx.Messages
-                .Where(m => m.Id == id)
-                .FirstOrDefaultAsync(cancellationToken);
             _ctx.Messages.Remove(message);
 
             await _ctx.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<List<Message>> GetAllAsync(int mssageId, int groupId, int pageNumber, int pageSize)
+        public async Task<List<Message>> GetAllAsync(int groupId, int pageNumber, int pageSize)
         {
             return await _ctx.Messages
                 .Where(m => m.GroupId == groupId)

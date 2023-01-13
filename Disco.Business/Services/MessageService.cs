@@ -37,12 +37,15 @@ namespace Disco.Business.Services
 
         public async Task DeleteAsync(Message message)
         {
-            await _messageRepository.DeleteAsync(message.Id);
+            message.Account.Messages.Remove(message);
+            message.Group.Messages.Remove(message);
+
+            await _messageRepository.DeleteAsync(message);
         }
 
         public async Task<List<Message>> GetAllAsync(int groupId, int pageNumber, int pageSize)
         {
-            return await _messageRepository.GetAllAsync(groupId, groupId, pageNumber, pageSize);
+            return await _messageRepository.GetAllAsync(groupId, pageNumber, pageSize);
         }
 
         public async Task<Message> GetByIdAsync(int id)

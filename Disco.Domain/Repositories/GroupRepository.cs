@@ -24,13 +24,8 @@ namespace Disco.Domain.Repositories
             await _ctx.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Group group, CancellationToken cancellationToken = default)
         {
-            var group = await _ctx.Groups
-                .Where(g => g.Id == id)
-                .FirstOrDefaultAsync(cancellationToken);
-            _ctx.Groups.Remove(group);
-
             _ctx.Remove(group);
 
             await _ctx.SaveChangesAsync(cancellationToken);

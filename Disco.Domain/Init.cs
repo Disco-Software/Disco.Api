@@ -25,7 +25,8 @@ namespace Disco.Domain
             .AddTransient<IRoleRepository, RoleRepository>()
             .AddTransient<IGroupRepository, GroupRepository>()
             .AddTransient<IMessageRepository, MessageRepository>()
-            .AddTransient<IConnectionRepository, ConnectionRepository>();
+            .AddTransient<IConnectionRepository, ConnectionRepository>()
+            .AddTransient<IAccountGroupRepository, AccountGroupRepository>();
         }
     }
 }
