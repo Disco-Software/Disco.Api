@@ -1,4 +1,6 @@
-﻿using Disco.Business.Constants;
+﻿using AutoMapper;
+using Disco.Business.Constants;
+using Disco.Business.Dtos.Chat;
 using Disco.Business.Interfaces;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -19,17 +21,20 @@ namespace Disco.ApiServices.Hubs
         private readonly IMessageService _messageService;
         private readonly IConnectionService _connectionService;
         private readonly IAccountService _accountService;
+        private readonly IMapper _mapper;
 
         public ChatHub(
             IGroupService groupService, 
             IMessageService messageService,
             IConnectionService connectionService,
-            IAccountService accountService)
+            IAccountService accountService,
+            IMapper mapper)
         {
             _groupService = groupService;
             _messageService = messageService;
             _connectionService = connectionService;
             _accountService = accountService;
+            _mapper = mapper;
         }
 
         public override async Task OnConnectedAsync()
@@ -54,7 +59,13 @@ namespace Disco.ApiServices.Hubs
 
             var message = await _messageService.CreateAsync(textMessage, user.Account, group);
 
-            await Clients.Group(group.Name).SendAsync("sendAsync", arg1: message);
+            var messageDto = _mapper.Map<MessageDto>(message);
+            messageDto.Account = _mapper.Map<AccountDto>(user.Account);
+            messageDto.Account.User = _mapper.Map<UserDto>(user);
+
+            await Groups.AddToGroupAsync(this.Context.ConnectionId, group.Name);
+
+            await Clients.Group(group.Name).SendAsync("sendAsync", messageDto);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)

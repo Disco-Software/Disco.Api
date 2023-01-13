@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Hubs
 {
+    [Authorize(AuthenticationSchemes = AuthSchema.UserToken)]
      public class CommentHub : Hub
     {
         private readonly IAccountService _accountService;
@@ -64,7 +65,7 @@ namespace Disco.ApiServices.Hubs
 
             await _commentService.AddCommentAsync(comment);
 
-            await Clients.All.SendAsync("sendCommentAsync", user, post);
+            await Clients.All.SendAsync("sendCommentAsync", user.Id, post.Id, comment.CommentDescription);
         }
 
         public async Task RemoveCommentAsync(int commentId, int postId, int userId)
