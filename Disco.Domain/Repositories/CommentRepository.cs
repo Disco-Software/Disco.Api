@@ -16,9 +16,7 @@ namespace Disco.Domain.Repositories
 
         public override async Task AddAsync(Comment item)
         {
-            await _ctx.Comments.AddAsync(item);
-
-            await _ctx.SaveChangesAsync();
+            await base.AddAsync(item);
         }
 
         public override async Task Remove(int id)
@@ -28,6 +26,8 @@ namespace Disco.Domain.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
             _ctx.Comments.Remove(comment);
+
+            await _ctx.SaveChangesAsync();
         }
     }
 }

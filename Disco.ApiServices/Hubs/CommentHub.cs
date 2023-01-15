@@ -1,5 +1,11 @@
 ﻿using AutoMapper;
 using Disco.Business.Constants;
+using Disco.Business.Dtos.Chat;
+using Disco.Business.Dtos.Comments;
+using Disco.Business.Dtos.Images;
+using Disco.Business.Dtos.Posts;
+using Disco.Business.Dtos.Songs;
+using Disco.Business.Dtos.Videos;
 using Disco.Business.Interfaces;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +13,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -53,7 +60,7 @@ namespace Disco.ApiServices.Hubs
 
         public async Task SendCommentAsync(string message, int userId, int postId)
         {
-            var user = await _accountService.GetByIdAsync(userId);
+            var user = await _accountService.GetAsync(Context.User);
             var post = await _postService.GetPostAsync(postId);
 
             var comment = _mapper.Map<Comment>(post);
@@ -65,13 +72,18 @@ namespace Disco.ApiServices.Hubs
 
             await _commentService.AddCommentAsync(comment);
 
-            await Clients.All.SendAsync("sendCommentAsync", user.Id, post.Id, comment.CommentDescription);
+            var commentDto = _mapper.Map<CommentDto>(comment);
+            commentDto.Account = _mapper.Map<AccountDto>(comment.Account);
+            commentDto.Account.User = _mapper.Map<UserDto>(comment.Account.User);
+
+            await Clients.All.SendAsync("sendCommentAsync", user.Id, post.Id, commentDto);
         }
 
         public async Task RemoveCommentAsync(int commentId, int postId, int userId)
         {
             var post = await _postService.GetPostAsync(postId);
-            var user = await _accountService.GetByIdAsync(userId);
+            var user = await _accountService.GetAsync(Context.User);
+
             var comment = await _commentService.GetCommentAsync(commentId);
 
             await _commentService.RemoveCommentAsync(comment);
