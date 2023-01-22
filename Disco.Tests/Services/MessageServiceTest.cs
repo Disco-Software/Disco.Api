@@ -35,11 +35,8 @@ namespace Disco.Tests.Services
             var group = new Group
             {
                 Name = Guid.NewGuid().ToString(),
-                Accounts = new List<Account>(),
                 Id = 1,
             };
-
-            group.Accounts.Add(account);
 
             var mockedRepository = new Mock<IMessageRepository>();
             mockedRepository.Setup(x => x.CreateAsync(It.IsAny<Message>(), CancellationToken.None))
@@ -54,9 +51,6 @@ namespace Disco.Tests.Services
             var result = await messageService.CreateAsync("post is so cool", account, group);
 
             Assert.IsNotNull(result);
-            Assert.IsNotNull(group.Accounts);
-            Assert.AreEqual(1, group.Accounts.Count);
-            Assert.AreEqual(account, group.Accounts[0]);
             Assert.AreEqual(result.Description, "post is so cool");
         }
 
@@ -76,7 +70,6 @@ namespace Disco.Tests.Services
             var group = new Group
             {
                 Name = Guid.NewGuid().ToString(),
-                Accounts = new List<Account>(),
                 Messages = new List<Message>(),
                 Id = 1,
             };
@@ -89,7 +82,6 @@ namespace Disco.Tests.Services
                 Description = "This is post is cool"
             };
 
-            group.Accounts.Add(account);
             group.Messages.Add(message);
 
             var mockedRepository = new Mock<IMessageRepository>();
@@ -137,7 +129,6 @@ namespace Disco.Tests.Services
             {
                 Name = Guid.NewGuid().ToString(),
                 Id = 1,
-                Accounts = accounts,
             };
 
             var accountGroups = new List<AccountGroup>()
@@ -200,7 +191,6 @@ namespace Disco.Tests.Services
             {
                 Name = Guid.NewGuid().ToString(),
                 Id = 1,
-                Accounts = accounts,
             };
 
             var accountGroups = new List<AccountGroup>()
@@ -262,7 +252,6 @@ namespace Disco.Tests.Services
             {
                 Name = Guid.NewGuid().ToString(),
                 Id = 1,
-                Accounts = accounts,
             };
 
             var accountGroups = new List<AccountGroup>()

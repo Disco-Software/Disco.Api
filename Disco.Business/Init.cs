@@ -32,6 +32,7 @@ namespace Disco.Business
                 .AddScoped<IPushNotificationService, PushNotificationService>()
                 .AddScoped<IConnectionService, ConnectionService>()
                 .AddScoped<IGroupService, GroupService>()
+                .AddScoped<IAccountGroupService, AccountGroupService>()
                 .AddScoped<IMessageService, MessageService>();
         }
     }

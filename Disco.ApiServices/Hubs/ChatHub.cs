@@ -22,6 +22,7 @@ namespace Disco.ApiServices.Hubs
         private readonly IMessageService _messageService;
         private readonly IConnectionService _connectionService;
         private readonly IAccountService _accountService;
+        private readonly IAccountGroupService _accountGroupService;
         private readonly IMapper _mapper;
 
         public ChatHub(
@@ -29,12 +30,14 @@ namespace Disco.ApiServices.Hubs
             IMessageService messageService,
             IConnectionService connectionService,
             IAccountService accountService,
+            IAccountGroupService accountGroupService,
             IMapper mapper)
         {
             _groupService = groupService;
             _messageService = messageService;
             _connectionService = connectionService;
             _accountService = accountService;
+            _accountGroupService = accountGroupService;
             _mapper = mapper;
         }
 
@@ -75,7 +78,11 @@ namespace Disco.ApiServices.Hubs
             var currentUser = await _accountService.GetAsync(Context.User);
             var user = await _accountService.GetByIdAsync(userId);
 
-            var group = await _groupService.CreateAsync(currentUser.Account, user.Account);
+            var group = await _groupService.CreateAsync();
+
+            var currentUserAccountGroup = await _accountGroupService.CreateAsync(currentUser.Account, group);
+            var userAccountGroup = await _accountGroupService.CreateAsync(currentUser.Account, group);
+
 
             await Groups.AddToGroupAsync(this.Context.ConnectionId, group.Name);
 

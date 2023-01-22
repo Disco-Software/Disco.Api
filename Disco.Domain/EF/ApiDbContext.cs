@@ -88,6 +88,7 @@ namespace Disco.Domain.EF
                 .HasMany(g => g.AccountGroups)
                 .WithOne(a => a.Group)
                 .HasForeignKey(a => a.GroupId)
+                .HasPrincipalKey(a => a.Id)
                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Message>()
                 .HasOne(m => m.Group)
@@ -104,6 +105,17 @@ namespace Disco.Domain.EF
                 .WithMany(a => a.Messages)
                 .HasForeignKey(m => m.AccountId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Group>()
+                .HasMany(g => g.AccountGroups)
+                .WithOne(g => g.Group)
+                .HasForeignKey(g => g.GroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Group>()
+                .HasMany(m => m.Messages)
+                .WithOne(g => g.Group)
+                .HasForeignKey(g => g.GroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
 
         public ApiDbContext CreateDbContext(string[] args)

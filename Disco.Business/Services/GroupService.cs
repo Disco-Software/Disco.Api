@@ -29,24 +29,13 @@ namespace Disco.Business.Services
             _mapper = mapper;
         }
 
-        public async Task<Domain.Models.Group> CreateAsync(Account userAccount, Account followerAccount)
+        public async Task<Domain.Models.Group> CreateAsync()
         {
-            var group = _mapper.Map<Domain.Models.Group>(userAccount);
-            group.Accounts.Add(followerAccount);
-            group.Accounts.Add(userAccount);
-
-            var currentUserAccountGroup = _mapper.Map<AccountGroup>(userAccount);
-            currentUserAccountGroup.Group = group;
-            currentUserAccountGroup.GroupId = group.Id;
-
-            userAccount.AccountGroups.Add(currentUserAccountGroup);
-
-            var userAccountGroup = _mapper.Map<AccountGroup>(followerAccount);
-            userAccountGroup.Group = group;
-            userAccountGroup.GroupId = group.Id;
-
-            followerAccount.AccountGroups.Add(userAccountGroup);
-
+            var group = new Group();
+            group.Name = Guid.NewGuid().ToString();
+            group.AccountGroups = new List<AccountGroup>();
+            group.Messages = new List<Message>();
+            
             await _groupRepository.CreateAsync(group);
 
             return group;
@@ -60,10 +49,10 @@ namespace Disco.Business.Services
 
             account.AccountGroups.Remove(accountGroup);
 
-            if(group.Accounts.Count < 2)
+            if(group.AccountGroups.Count < 2)
             {
-                foreach (var userAccount in group.Accounts)
-                    userAccount.AccountGroups.Remove(accountGroup);
+                foreach (var userAccount in group.AccountGroups)
+                    await _accountGroupRepository.DeleteAsync(accountGroup);
             }
 
             await _groupRepository.DeleteAsync(group);

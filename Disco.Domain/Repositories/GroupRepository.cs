@@ -52,7 +52,6 @@ namespace Disco.Domain.Repositories
         {
             return await _ctx.Groups
                 .Include(g => g.AccountGroups)
-                .Include(g => g.Accounts)
                 .Include(g => g.Messages)
                 .Where(g => g.Id == id)
                 .FirstOrDefaultAsync();

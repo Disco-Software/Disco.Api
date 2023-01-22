@@ -11,7 +11,7 @@ namespace Disco.Business.Interfaces
 {
     public interface IGroupService
     {
-        Task<Domain.Models.Group> CreateAsync(Account userAccount, Account followerAccount);
+        Task<Domain.Models.Group> CreateAsync();
         Task DeleteAsync(Group group, Account account);
         Task<IEnumerable<Group>> GetAllAsync(int id, int pageNumber, int pageSize);
         Task<Group> GetAsync(int id);

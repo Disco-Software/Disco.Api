@@ -1,4 +1,5 @@
 ﻿using Disco.Business.Constants;
+using Disco.Business.Dtos.Chat;
 using Disco.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,22 +18,28 @@ namespace Disco.ApiServices.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly IGroupService _groupService;
+        private readonly IAccountGroupService _accountGroupService;
 
         public GroupController(
             IAccountService accountService,
-            IGroupService groupService)
+            IGroupService groupService,
+            IAccountGroupService accountGroupService)
         {
             _accountService = accountService;
             _groupService = groupService;
+            _accountGroupService = accountGroupService;
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateAsync([FromBody] int userId)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateGroupRequestDto dto)
         {
             var currentUser = await _accountService.GetAsync(HttpContext.User);
-            var user = await _accountService.GetByIdAsync(userId);
+            var user = await _accountService.GetByIdAsync(dto.UserId);
 
-            var group = await _groupService.CreateAsync(currentUser.Account, user.Account);
+            var group = await _groupService.CreateAsync();
+
+            var currentUserAccountGroup = await _accountGroupService.CreateAsync(currentUser.Account, group);
+            var userAccountGroup = await _accountGroupService.CreateAsync(user.Account, group);
 
             return Ok(group);
         }
@@ -47,6 +54,17 @@ namespace Disco.ApiServices.Controllers
             var groups = await _groupService.GetAllAsync(user.Id, pageNumber, pageSize);
 
             return Ok(groups);
+        }
+
+        [HttpDelete("{groupId:int}")]
+        public async Task<IActionResult> DeleteAsync([FromRoute] int groupId)
+        {
+            var user = await _accountService.GetAsync(HttpContext.User);
+            var group = await _groupService.GetAsync(groupId);
+
+            await _groupService.DeleteAsync(group, user.Account);
+
+            return Ok("this group was removed");
         }
     }
 }

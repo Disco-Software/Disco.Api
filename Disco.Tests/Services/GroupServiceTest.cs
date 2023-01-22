@@ -46,10 +46,15 @@ namespace Disco.Tests.Services
                 }
             };
 
+            var accountGroups = new List<AccountGroup>
+            {
+                new AccountGroup {Account = accounts.First(), AccountId = accounts.First().Id},
+                new AccountGroup {Account = accounts.Last(), AccountId = accounts.Last().Id},
+            };
+
             var group = new Group
             {
-                AccountGroups = new List<AccountGroup>(),
-                Accounts = new List<Account>(),
+                AccountGroups = accountGroups,
                 Messages = new List<Message>(),
                 Id = 1,
                 Name = Guid.NewGuid().ToString(),
@@ -69,7 +74,7 @@ namespace Disco.Tests.Services
             }).CreateMapper();
 
             var groupService = new GroupService(mockedRepository.Object, mockedAccountGroupRepository.Object, mapper);
-            var response = await groupService.CreateAsync(accounts.First(), accounts.Last());
+            var response = await groupService.CreateAsync();
 
             Assert.IsNotNull(response);
         }
