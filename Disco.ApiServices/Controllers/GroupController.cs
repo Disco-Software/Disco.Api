@@ -26,6 +26,17 @@ namespace Disco.ApiServices.Controllers
             _groupService = groupService;
         }
 
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateAsync([FromBody] int userId)
+        {
+            var currentUser = await _accountService.GetAsync(HttpContext.User);
+            var user = await _accountService.GetByIdAsync(userId);
+
+            var group = await _groupService.CreateAsync(currentUser.Account, user.Account);
+
+            return Ok(group);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllAsync(
            [FromQuery] int pageNumber, 
