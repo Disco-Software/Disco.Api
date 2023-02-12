@@ -34,6 +34,7 @@ namespace Disco.Domain.Repositories
         public async Task<List<Models.Group>> GetAllAsync(int id, int pageNumber, int pageSize)
         {
             return await _ctx.Groups
+                .Include(group => group.AccountGroups)
                 .Where(g => g.Id == id)
                 .OrderByDescending(g => g.Id)
                 .Skip((pageNumber - 1) * pageSize)
@@ -55,6 +56,13 @@ namespace Disco.Domain.Repositories
                 .Include(g => g.Messages)
                 .Where(g => g.Id == id)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task LoadAccountsAsync(List<AccountGroup> accountGroup)
+        {
+           await _ctx.Entry(accountGroup)
+                .Collection(c => c)
+                .LoadAsync();
         }
     }
 }

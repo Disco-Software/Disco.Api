@@ -83,6 +83,7 @@ namespace Disco.Api
             {
                 options.EnableDetailedErrors = true;
                 options.HandshakeTimeout = TimeSpan.FromMinutes(2);
+                options.KeepAliveInterval = TimeSpan.FromMinutes(1);
             });
             services.AddOptions<AuthenticationOptions>();
             services.Configure<EmailOptions>(Configuration.GetSection("EmailSettings"));

@@ -30,6 +30,8 @@ namespace Disco.Business.Services
             message.Group = group;
             message.GroupId = group.Id;
 
+            message.Group.Messages.Add(message);
+
             await _messageRepository.CreateAsync(message);
 
             return message;

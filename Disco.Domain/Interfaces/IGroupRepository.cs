@@ -14,6 +14,7 @@ namespace Disco.Domain.Interfaces
         Task DeleteAsync(Group group, CancellationToken cancellationToken = default);
         Task<Group> GetAsync(int id);
         Task<List<Group>> GetAllAsync(int id, int pageNumber, int pageSize);
+        Task LoadAccountsAsync(List<AccountGroup> accountGroup);
         Task UpdateAsync(Group group, CancellationToken cancellationToken = default);
     }
 }

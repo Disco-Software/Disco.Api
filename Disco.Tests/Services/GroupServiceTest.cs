@@ -64,6 +64,10 @@ namespace Disco.Tests.Services
             mockedRepository.Setup(r => r.CreateAsync(It.IsAny<Group>(), CancellationToken.None))
                 .Returns(Task.FromResult(group));
 
+            var mockedAccountRepository = new Mock<IAccountRepository>();
+            mockedAccountRepository.Setup(accountRepository => accountRepository.GetAsync(It.IsAny<int>()))
+                .Returns(Task.FromResult(It.IsAny<Account>()));
+
             var mockedAccountGroupRepository = new Mock<IAccountGroupRepository>();
             mockedAccountGroupRepository.Setup(m => m.CreateAsync(It.IsAny<AccountGroup>()))
                 .Returns(Task.CompletedTask);
@@ -73,7 +77,7 @@ namespace Disco.Tests.Services
                 options.AddProfile(new GroupMapProfile());
             }).CreateMapper();
 
-            var groupService = new GroupService(mockedRepository.Object, mockedAccountGroupRepository.Object, mapper);
+            var groupService = new GroupService(mockedRepository.Object, mockedAccountGroupRepository.Object, mockedAccountRepository.Object, mapper);
             var response = await groupService.CreateAsync();
 
             Assert.IsNotNull(response);

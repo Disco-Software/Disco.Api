@@ -91,7 +91,28 @@ namespace Disco.Tests.Services
         [TestMethod]
         public async Task GetAsync_ReturnsUserResponse()
         {
-            var user = new User { Id = 1, RoleName = "Admin", UserName = "vasya_pupkin", Email = "vasya_pupkin@gmail.com", DateOfRegister = DateTime.Now, Account = new Account() { Followers = new List<UserFollower>() } };
+            var user = new User 
+            {
+                Id = 1,
+                RoleName = "Admin", 
+                UserName = "vasya_pupkin", 
+                Email = "vasya_pupkin@gmail.com", 
+                DateOfRegister = DateTime.Now, 
+                Account = new Account() 
+                { 
+                    Followers = new List<UserFollower>(), 
+                    AccountStatus = new AccountStatus() 
+                    { 
+                        FollowersCount = 0, 
+                        LastStatus = "Noubie", 
+                        UserTarget = 50, 
+                        Id = 1, 
+                        NextStatusId = 2, 
+                        Account = new Account(),
+                        AccountId = 1, 
+                    }
+                } 
+            };
 
             var list = new List<User>()
             {
@@ -123,7 +144,11 @@ namespace Disco.Tests.Services
 
             var mockedUserStatausRepository = new Mock<IAccountStatusRepository>();
             mockedUserStatausRepository.Setup(s => s.GetStatusByFollowersCountAsync(It.IsAny<int>()))
-                .Returns(Task.FromResult(It.IsAny<AccountStatus>()));
+                .Returns(Task.FromResult(user.Account.AccountStatus));
+
+            var mockedConnectionRepository = new Mock<IAccountRepository>();
+            mockedConnectionRepository.Setup(options => options.GetAllAccountConnectionsAsync(It.IsAny<int>()))
+                .Returns(Task.FromResult(new List<Connection>()));
 
             var service = new AccountService(mockedUserManager.Object, mockedUserRepository.Object, null, mockedUserStatausRepository.Object);
             var response = await service.GetAsync(claimPricial);

@@ -3,6 +3,7 @@ using Disco.Business.Dtos.Chat;
 using Disco.Business.Interfaces;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,15 +18,18 @@ namespace Disco.Business.Services
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IAccountGroupRepository _accountGroupRepository;
+        private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
 
         public GroupService(
             IGroupRepository groupRepository,
             IAccountGroupRepository accountGroupRepository,
+            IAccountRepository accountRepository,
             IMapper mapper)
         {
             _groupRepository = groupRepository;
             _accountGroupRepository = accountGroupRepository;
+            _accountRepository = accountRepository;
             _mapper = mapper;
         }
 
@@ -60,7 +64,17 @@ namespace Disco.Business.Services
 
         public async Task<IEnumerable<Group>> GetAllAsync(int id, int pageNumber, int pageSize)
         {
-            return await _groupRepository.GetAllAsync(id, pageNumber, pageSize);
+            var groups = await _groupRepository.GetAllAsync(id, pageNumber, pageSize);
+
+            foreach (var group in groups)
+            {
+                foreach (var accountGroup in group.AccountGroups)
+                {
+                    accountGroup.Account = await _accountRepository.GetAsync(accountGroup.AccountId);
+                }
+            }
+
+            return groups;
         }
 
         public async Task<Group> GetAsync(int id)

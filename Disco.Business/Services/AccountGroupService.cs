@@ -29,10 +29,10 @@ namespace Disco.Business.Services
             accountGroup.Group = group;
             accountGroup.GroupId = group.Id;
 
-            await _accountGroupRepository.CreateAsync(accountGroup);
-            
             group.AccountGroups.Add(accountGroup);
 
+            await _accountGroupRepository.CreateAsync(accountGroup);
+            
             return accountGroup;
         }
 
