@@ -1,7 +1,9 @@
 ﻿using Disco.Business.Constants;
 using Disco.Business.Interfaces;
-using Disco.Business.Dtos.Roles;
+using Disco.Business.Interfaces.Dtos.Roles;
+using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models;
+using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;

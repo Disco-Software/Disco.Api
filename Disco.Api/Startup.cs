@@ -5,9 +5,9 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
 using Disco.Api.AppSetup;
 using Disco.Business;
-using Disco.Business.Options;
+using Disco.Business.Interfaces.Options;
 using Disco.Business.Interfaces;
-using Disco.Business.Services;
+using Disco.Business.Services.Services;
 using Disco.Domain;
 using Disco.Domain.Models;
 using FluentValidation.AspNetCore;
@@ -26,6 +26,9 @@ using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Threading.Tasks;
+using Disco.Domain.Data.Extentions;
+using Disco.Business.Services.Extentions;
+using Disco.Domain.Repositories.Extentions;
 
 namespace Disco.Api
 {
@@ -72,13 +75,13 @@ namespace Disco.Api
             //        }
             //    });
             //});
-            services.ConfigureDbContext(connectionStrings.ProdactionConnection);
-            services.ConfigureIdentity();
+            services.AddApiDbContext(connectionStrings.ProdactionConnection);
+            services.AddUserIdentity();
             services.AddAuthorization();
 
             services.ConfigureCorsPolicy();
 
-            services.ConfigureAzureServices(Configuration);
+            services.AddAzureServices(Configuration);
             services.AddSignalR(options =>
             {
                 options.EnableDetailedErrors = true;
@@ -88,7 +91,7 @@ namespace Disco.Api
             services.AddOptions<AuthenticationOptions>();
             services.Configure<EmailOptions>(Configuration.GetSection("EmailSettings"));
             services.Configure<GoogleOptions>(Configuration.GetSection("Google"));
-            services.ConfigureAuthentication(Configuration);
+            services.AddUserAuthentication(Configuration);
 
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             //    .AddJwtBearer(opt =>
@@ -116,8 +119,11 @@ namespace Disco.Api
             services.AddHttpClient();
             services.AddLogging();
 
-            services.ConfigureRepositories();
-            services.ConfigureServices();
+            //services.ConfigureRepositories();
+            //services.ConfigureServices();
+
+            services.AddRepositories();
+            services.AddService();
 
             services.AddOptions<PushNotificationOptions>()
                 .Configure(Configuration.GetSection("NotificationHub").Bind)
@@ -132,7 +138,7 @@ namespace Disco.Api
                 .Configure(Configuration.GetSection("AudDOptions").Bind)
                 .ValidateDataAnnotations();
 
-            services.ConfigureAutoMapper();
+            services.AddAutoMapper();
 
             services.AddControllers()
             .AddControllersAsServices()
@@ -174,9 +180,6 @@ namespace Disco.Api
             app.ApplicationServices.CreateScope();
             app.UseAuthentication();
             app.UseAuthorization();
-
-            var service = serviceScopeFactory.CreateScope().ServiceProvider;
-            service.GetRequiredService(typeof(UserManager<User>));
 
             app.UseWebSockets();
 

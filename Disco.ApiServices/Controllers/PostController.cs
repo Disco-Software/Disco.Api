@@ -1,6 +1,5 @@
 ﻿using Disco.Business.Constants;
 using Disco.Business.Interfaces;
-using Disco.Business.Dtos.Posts;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,20 +7,23 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using System.Linq;
-using Disco.Business.Dtos.Songs;
-using Disco.Business.Dtos.Images;
-using Disco.Business.Dtos.Videos;
+using Disco.Business.Interfaces.Dtos.Songs;
+using Disco.Business.Interfaces.Dtos.Images;
+using Disco.Business.Interfaces.Dtos.Videos;
 using Microsoft.Extensions.Options;
-using Disco.Business.Options;
-using Disco.Business.Dtos.AudD;
+using Disco.Business.Interfaces.Options;
+using Disco.Business.Interfaces.Dtos.AudD;
 using Disco.Business.Services;
+using Disco.Business.Interfaces.Dtos.Posts;
+using Disco.Business.Interfaces.Interfaces;
+using Disco.Domain.Models.Models;
 
 namespace Disco.ApiServices.Controllers
 {
     [ApiController]
     [Authorize(AuthenticationSchemes = AuthSchema.UserToken)]
     [Route("api/user/posts")]
-    public class PostController : Controller
+    public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
         private readonly IImageService _imageService;

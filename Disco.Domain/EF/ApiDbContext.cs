@@ -27,7 +27,7 @@ namespace Disco.Domain.EF
         public DbSet<AccountGroup> AccountGroups { get; set; }
         public DbSet<Connection> Connections { get; set; }
 
-        public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options) { }
+        public ApiDbContext(DbContextOptions<ApiDbContext> options) { }
         public ApiDbContext() { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

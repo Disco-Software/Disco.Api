@@ -26,8 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Disco.Business\Disco.Business.csproj" />
-    <ProjectReference Include="..\Disco.Domain\Disco.Domain.csproj" />
+    <ProjectReference Include="..\Disco.Business.Services\Disco.Business.Services.csproj" />
+    <ProjectReference Include="..\Disco.Domain.Models\Disco.Domain.Models.csproj" />
   </ItemGroup>
 
 </Project>
