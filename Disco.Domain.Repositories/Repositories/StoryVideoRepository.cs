@@ -15,19 +15,20 @@ namespace Disco.Domain.Repositories.Repositories
 
         public override async Task AddAsync(StoryVideo storyVideo)
         {
-            await _ctx.StoryVideos.AddAsync(storyVideo);
+            await _context.StoryVideos.AddAsync(storyVideo);
         }
 
-        public override async Task Remove(int id)
+        public override async Task Remove(StoryVideo item)
         {
-            var storyVideo = await _ctx.StoryVideos
-                .Include(s => s.Story)
-                .Where(s => s.Id == id)
-                .FirstOrDefaultAsync();
+           await base.Remove(item);
+        }
 
-            _ctx.StoryVideos.Remove(storyVideo);
-
-            await _ctx.SaveChangesAsync();
+        public override async Task<StoryVideo> GetAsync(int id)
+        {
+            return await _context.StoryVideos
+                .Include(storyVideo => storyVideo.Story)
+                .Where(storyVideo => storyVideo.Id == id)
+                .FirstOrDefaultAsync() ?? throw new NullReferenceException();
         }
     }
 }

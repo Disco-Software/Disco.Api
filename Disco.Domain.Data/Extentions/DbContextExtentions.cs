@@ -7,9 +7,12 @@ namespace Disco.Domain.Data.Extentions
 {
     public static class DbContextExtentions
     {
-        public static void AddApiDbContext(this IServiceCollection serviceDescriptors, string connectionString)
+        public static void AddApiDbContext(this IServiceCollection serviceDescriptors, string connectionStringName)
         {
-            serviceDescriptors.AddDbContext<ApiDbContext>();
+            serviceDescriptors.AddDbContext<ApiDbContext>(options =>
+            {
+                options.UseSqlServer(connectionStringName);
+            });
         }
     }
 }

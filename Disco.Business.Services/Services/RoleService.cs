@@ -47,7 +47,7 @@ namespace Disco.Business.Services.Services
 
         public async Task<List<Role>> GetAllRoles(GetAllRolesDto dto)
         {
-            return await _roleRepository.GetAll(dto.PageNumber, dto.PageSize);
+            return await _roleRepository.GetAllAsync(dto.PageNumber, dto.PageSize);
         }
     }
 }

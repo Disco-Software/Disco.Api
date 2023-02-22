@@ -14,18 +14,18 @@ namespace Disco.Domain.Repositories.Repositories
     {
         public StoryRepository(ApiDbContext ctx) : base(ctx) { }
 
-        public async Task AddAsync(Story story)
+        public override async Task AddAsync(Story item)
         {
-            await _ctx.Stories.AddAsync(story);
+            await _context.Stories.AddAsync(item);
            
-            await _ctx.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<Story>> GetAllAsync(int accountId, int pageNumber, int pageSize)
         {
             var storyList = new List<Story>();
 
-            var profile = await _ctx.Accounts
+            var profile = await _context.Accounts
                 .Include(u => u.User)
                 .Include(u => u.Stories)
                 .ThenInclude(s => s.StoryImages)
@@ -56,7 +56,7 @@ namespace Disco.Domain.Repositories.Repositories
 
             foreach (var friend in profile.Followers)
             {
-                friend.FollowerAccount = await _ctx.Accounts
+                friend.FollowerAccount = await _context.Accounts
                     .Include(p => p.Stories)
                     .ThenInclude(i => i.StoryImages)
                     .Include(p => p.Stories)
@@ -73,25 +73,19 @@ namespace Disco.Domain.Repositories.Repositories
                 .ToList();
         }
 
-        public override async Task Remove(int id)
+        public override async Task Remove(Story item)
         {
-            var story = await _ctx.Stories
-                .Include(i => i.StoryImages)
-                .Include(v => v.StoryVideos)
-                .Where(s => s.Id == id)
-                .FirstOrDefaultAsync();
-            story.Account.Stories.Remove(story);
-            _ctx.Stories.Remove(story);
+           await base.Remove(item);
         }
 
-        public override Task<Story> GetAsync(int id)
+        public override async Task<Story> GetAsync(int id)
         {
-            var story = _ctx.Stories
+            return await _context.Stories
                 .Include(i => i.StoryImages)
                 .Include(v => v.StoryVideos)
                 .Where(i => i.Id == id)
-                .FirstOrDefaultAsync();
-            return story;
+                .FirstOrDefaultAsync() 
+                ?? throw new NullReferenceException("story not found");
         }
     }
 }

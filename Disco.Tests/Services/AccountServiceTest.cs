@@ -1,6 +1,7 @@
 ﻿using Disco.Business.Services;
 using Disco.Business.Services.Services;
 using Disco.Domain.Interfaces;
+using Disco.Domain.Interfaces.Interfaces;
 using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using Disco.Domain.Repositories;
@@ -48,13 +49,10 @@ namespace Disco.Tests.Services
                 .Returns(Task.FromResult(It.IsAny<Account>()));
 
             var mockedUserStatausRepository = new Mock<IAccountStatusRepository>();
-            mockedUserStatausRepository.Setup(s => s.GetStatusByFollowersCountAsync(It.IsAny<int>()))
+            mockedUserStatausRepository.Setup(s => s.GetAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(It.IsAny<AccountStatus>()));
-            var mockedAccountRepository = new Mock<IAccountRepository>();
-            mockedAccountRepository.Setup(a => a.GetAllAccountConnectionsAsync(It.IsAny<int>()))
-                .ReturnsAsync(It.IsAny<List<Connection>>());
 
-            var accountService = new Business.Services.Services.AccountService(mockedUserManager.Object, null, mockedAccountRepository.Object, mockedUserStatausRepository.Object);
+            var accountService = new Business.Services.Services.AccountService(mockedUserManager.Object, null, null, mockedUserStatausRepository.Object);
             var response = await accountService.GetByEmailAsync("vasya_pupkin@gmail.com");
 
             Assert.AreEqual(response.Email, "vasya_pupkin@gmail.com");
@@ -80,7 +78,7 @@ namespace Disco.Tests.Services
                 .Returns(Task.FromResult(It.IsAny<Account>()));
 
             var mockedUserStatausRepository = new Mock<IAccountStatusRepository>();
-            mockedUserStatausRepository.Setup(s => s.GetStatusByFollowersCountAsync(It.IsAny<int>()))
+            mockedUserStatausRepository.Setup(s => s.GetAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(It.IsAny<AccountStatus>()));
             
 
@@ -145,12 +143,9 @@ namespace Disco.Tests.Services
                 .Returns(Task.FromResult(It.IsAny<Account>()));
 
             var mockedUserStatausRepository = new Mock<IAccountStatusRepository>();
-            mockedUserStatausRepository.Setup(s => s.GetStatusByFollowersCountAsync(It.IsAny<int>()))
+            mockedUserStatausRepository.Setup(s => s.GetAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(user.Account.AccountStatus));
 
-            var mockedConnectionRepository = new Mock<IAccountRepository>();
-            mockedConnectionRepository.Setup(options => options.GetAllAccountConnectionsAsync(It.IsAny<int>()))
-                .Returns(Task.FromResult(new List<Connection>()));
 
             var service = new AccountService(mockedUserManager.Object, null, mockedAccountRepository.Object, mockedUserStatausRepository.Object);
             var response = await service.GetAsync(claimPricial);
@@ -192,7 +187,7 @@ namespace Disco.Tests.Services
                 .Returns(Task.FromResult(It.IsAny<Account>()));
 
             var mockedUserStatausRepository = new Mock<IAccountStatusRepository>();
-            mockedUserStatausRepository.Setup(s => s.GetStatusByFollowersCountAsync(It.IsAny<int>()))
+            mockedUserStatausRepository.Setup(s => s.GetAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(It.IsAny<AccountStatus>()));
 
             var service = new AccountService(mockedUserManager.Object, null, mockedAccountRepository.Object, mockedUserStatausRepository.Object);
@@ -224,7 +219,7 @@ namespace Disco.Tests.Services
                 .Returns(Task.FromResult(It.IsAny<Account>()));
 
             var mockedUserStatausRepository = new Mock<IAccountStatusRepository>();
-            mockedUserStatausRepository.Setup(s => s.GetStatusByFollowersCountAsync(It.IsAny<int>()))
+            mockedUserStatausRepository.Setup(s => s.GetAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(It.IsAny<AccountStatus>()));
 
             var accountService = new AccountService(mockedUserManager.Object, null,mockedAccountRepository.Object, mockedUserStatausRepository.Object);
@@ -256,7 +251,7 @@ namespace Disco.Tests.Services
                 .Returns(Task.FromResult(It.IsAny<Account>()));
 
             var mockedUserStatausRepository = new Mock<IAccountStatusRepository>();
-            mockedUserStatausRepository.Setup(s => s.GetStatusByFollowersCountAsync(It.IsAny<int>()))
+            mockedUserStatausRepository.Setup(s => s.GetAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(It.IsAny<AccountStatus>()));
 
             var accountService = new AccountService(mockedUserManager.Object, null,mockedAccountRepository.Object, mockedUserStatausRepository.Object);
@@ -286,7 +281,7 @@ namespace Disco.Tests.Services
                 .Returns(Task.FromResult(It.IsAny<Account>()));
 
             var mockedUserStatausRepository = new Mock<IAccountStatusRepository>();
-            mockedUserStatausRepository.Setup(s => s.GetStatusByFollowersCountAsync(It.IsAny<int>()))
+            mockedUserStatausRepository.Setup(s => s.GetAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(It.IsAny<AccountStatus>()));
 
             var accountService = new AccountService(mockedUserManager.Object, null, mockedAccountRepository.Object, mockedUserStatausRepository.Object);
@@ -318,7 +313,7 @@ namespace Disco.Tests.Services
                 .Returns(Task.FromResult(It.IsAny<Account>()));
 
             var mockedUserStatausRepository = new Mock<IAccountStatusRepository>();
-            mockedUserStatausRepository.Setup(s => s.GetStatusByFollowersCountAsync(It.IsAny<int>()))
+            mockedUserStatausRepository.Setup(s => s.GetAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(It.IsAny<AccountStatus>()));
 
             var accountService = new AccountService(mockedUserManager.Object, null, mockedAccountRepository.Object, mockedUserStatausRepository.Object);
@@ -348,7 +343,7 @@ namespace Disco.Tests.Services
                 .Returns(Task.FromResult(It.IsAny<Account>()));
 
             var mockedUserStatausRepository = new Mock<IAccountStatusRepository>();
-            mockedUserStatausRepository.Setup(s => s.GetStatusByFollowersCountAsync(It.IsAny<int>()))
+            mockedUserStatausRepository.Setup(s => s.GetAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(It.IsAny<AccountStatus>()));
 
             var accountService = new AccountService(mockedUserManager.Object, null, mockedAccountRepository.Object, mockedUserStatausRepository.Object);
@@ -380,7 +375,7 @@ namespace Disco.Tests.Services
                 .Returns(Task.FromResult(It.IsAny<Account>()));
 
             var mockedUserStatausRepository = new Mock<IAccountStatusRepository>();
-            mockedUserStatausRepository.Setup(s => s.GetStatusByFollowersCountAsync(It.IsAny<int>()))
+            mockedUserStatausRepository.Setup(s => s.GetAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(It.IsAny<AccountStatus>()));
 
             var accountService = new AccountService(mockedUserManager.Object, null, mockedAccountRepository.Object, mockedUserStatausRepository.Object);
@@ -402,8 +397,8 @@ namespace Disco.Tests.Services
                 },
             };
 
-            var mockedUserRepository = new Mock<IUserRepository>();
-            mockedUserRepository.Setup(u => u.GetUserByRefreshTokenAsync(It.IsAny<string>()))
+            var mockedUserRepository = new Mock<IRefreshTokenRepository>();
+            mockedUserRepository.Setup(u => u.GetAsync(It.IsAny<string>()))
                 .ReturnsAsync(user);
 
             var service = new AccountService(null, mockedUserRepository.Object, null, null);
@@ -473,7 +468,7 @@ namespace Disco.Tests.Services
                 .Returns(Task.FromResult(It.IsAny<Account>()));
             
             var mockedUserStatausRepository = new Mock<IAccountStatusRepository>();
-            mockedUserStatausRepository.Setup(s => s.GetStatusByFollowersCountAsync(It.IsAny<int>()))
+            mockedUserStatausRepository.Setup(s => s.GetAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(It.IsAny<AccountStatus>()));
 
             var service = new AccountService(mockedUserManager.Object, null, mockedAccountRepository.Object, mockedUserStatausRepository.Object);
@@ -516,7 +511,7 @@ namespace Disco.Tests.Services
                 .Returns(Task.FromResult(It.IsAny<Account>()));
 
             var mockedUserStatausRepository = new Mock<IAccountStatusRepository>();
-            mockedUserStatausRepository.Setup(s => s.GetStatusByFollowersCountAsync(It.IsAny<int>()))
+            mockedUserStatausRepository.Setup(s => s.GetAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(It.IsAny<AccountStatus>()));
 
             var service = new AccountService(mockedUserManager.Object, null, mockedAccountRepository.Object, mockedUserStatausRepository.Object);

@@ -2,7 +2,7 @@
 using Disco.Business.Interfaces.Interfaces;
 using FluentValidation;
 
-namespace Disco.Business.Interfaces.Validators
+namespace Disco.Business.Interfaces.Validators.Account
 {
     public class RegistrationValidator : AbstractValidator<RegistrationDto>
     {

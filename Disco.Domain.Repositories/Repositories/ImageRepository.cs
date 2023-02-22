@@ -15,20 +15,17 @@ namespace Disco.Domain.Repositories.Repositories
 
         public override async Task AddAsync(PostImage item)
         {
-            await _ctx.PostImages.AddAsync(item);
+            await _context.PostImages.AddAsync(item);
+        }
+        
+        public override async Task Remove(PostImage item)
+        {
+           await base.Remove(item); ;
         }
 
-        public override async Task Remove(int id)
+        public override Task<PostImage> GetAsync(int id)
         {
-            var video = await _ctx.PostVideos
-                .Include(p => p.Post)
-                .Where(s => s.Id == id)
-                .FirstOrDefaultAsync();
-
-            video.Post.PostVideos.Remove(video);
-            _ctx.PostVideos.Remove(video);
-
-            await _ctx.SaveChangesAsync();
+            return base.GetAsync(id);
         }
     }
 }

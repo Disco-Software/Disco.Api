@@ -12,46 +12,46 @@ namespace Disco.Domain.Repositories.Repositories.Base
     public class BaseRepository<T, TKey> : IRepository<T, TKey>
         where T : Models.Base.BaseModel<TKey>
     {
-        protected readonly ApiDbContext _ctx;
+        protected readonly ApiDbContext _context;
 
-        public BaseRepository(ApiDbContext ctx) =>
-            this._ctx = ctx;
+        public BaseRepository(ApiDbContext context) =>
+            _context = context;
 
         public virtual async Task AddAsync(T item)
         {
-            await _ctx.Set<T>().AddAsync(item);
+            await _context.Set<T>().AddAsync(item);
             
-            await _ctx.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public virtual async Task<T> GetAsync(TKey id)
         {
-            var item = await _ctx.Set<T>()
+            return await _context.Set<T>()
                 .Where(i => i.Id.Equals(id))
-                .FirstOrDefaultAsync();
-            return item;
+                .FirstOrDefaultAsync() ?? throw new NullReferenceException();
         }
 
-        public virtual async Task<List<T>> GetAll(Expression<Func<T,bool>> expression)
+        public virtual IQueryable<T> GetAll(int pageNumber, int pageSize)
         {
-            if (expression != null)
-                return await _ctx.Set<T>().Where(expression).ToListAsync();
-            else
-                return await _ctx.Set<T>().ToListAsync();
+            return _context.Set<T>()
+                .OrderBy(i => i.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .AsQueryable();
         }
 
-        public virtual async Task Remove(TKey id)
+        public virtual async Task Remove(T item)
         {
-            var item = await _ctx.Set<T>().Where(t => t.Id.Equals(id)).FirstOrDefaultAsync();
-            _ctx.Remove(item);
+            _context.Remove(item);
+
+            await _context.SaveChangesAsync();
         }
 
-        public virtual async Task<T> Update(T newItem)
+        public virtual async Task Update(T newItem)
         {
-            var item = await _ctx.Set<T>().Where(t => t.Id.Equals(newItem.Id)).FirstOrDefaultAsync();
-            _ctx.Set<T>().Update(newItem);
-            await _ctx.SaveChangesAsync();
-            return item;
+            _context.Set<T>().Update(newItem);
+            
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -58,7 +58,7 @@ namespace Disco.Business.Services.Services
             if(group.AccountGroups.Count < 2)
             {
                 foreach (var userAccount in group.AccountGroups)
-                    await _accountGroupRepository.DeleteAsync(accountGroup);
+                    await _accountGroupRepository.Remove(accountGroup);
             }
 
             await _groupRepository.DeleteAsync(group);

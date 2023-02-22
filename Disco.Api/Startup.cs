@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using Disco.Domain.Data.Extentions;
 using Disco.Business.Services.Extentions;
 using Disco.Domain.Repositories.Extentions;
+using Disco.ApiServices.Extentions;
 
 namespace Disco.Api
 {
@@ -45,36 +46,10 @@ namespace Disco.Api
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionStrings = Configuration.GetSection("ConnectionStrings")
-                .Get<ConnectionStrings>();
+                .Get<ConnectionStringsOptions>();
 
-            //services.AddSwaggerGen(options =>
-            //{
-            //    options.SwaggerDoc("v1", new OpenApiInfo { });
-            //    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            //    {
-            //        In = ParameterLocation.Header,
-            //        Description = "Please enter a valid token",
-            //        Name = "Authorization",
-            //        Type = SecuritySchemeType.Http,
-            //        BearerFormat = "JWT",
-            //        Scheme = "Bearer"
-            //    });
+            services.AddSwagger();
 
-            //    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
-            //    {
-            //        {
-            //            new OpenApiSecurityScheme
-            //            {
-            //                Reference = new OpenApiReference
-            //                {
-            //                    Type = ReferenceType.SecurityScheme,
-            //                    Id = "Bearer"
-            //                }
-            //            },
-            //            new string[]{}
-            //        }
-            //    });
-            //});
             services.AddApiDbContext(connectionStrings.ProdactionConnection);
             services.AddUserIdentity();
             services.AddAuthorization();
@@ -93,41 +68,13 @@ namespace Disco.Api
             services.Configure<GoogleOptions>(Configuration.GetSection("Google"));
             services.AddUserAuthentication(Configuration);
 
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //    .AddJwtBearer(opt =>
-            //    {
-            //        opt.TokenValidationParameters = new TokenValidationParameters
-            //        {
-            //            // token validation code
-            //        };
-            //        opt.Events = new JwtBearerEvents
-            //        {
-            //            OnMessageReceived = context =>
-            //            {
-            //                var accessToken = context.Request.Query["access_token"];
-            //                var path = context.HttpContext.Request.Path;
-            //                if (!string.IsNullOrEmpty(accessToken)
-            //                    && path.StartsWithSegments("/kitchen"))
-            //                {
-            //                    context.Token = accessToken;
-            //                }
-            //                return Task.CompletedTask;
-            //            }
-            //        };
-            //    });
             services.AddHttpContextAccessor();
             services.AddHttpClient();
             services.AddLogging();
 
-            //services.ConfigureRepositories();
-            //services.ConfigureServices();
-
             services.AddRepositories();
             services.AddService();
 
-            services.AddOptions<PushNotificationOptions>()
-                .Configure(Configuration.GetSection("NotificationHub").Bind)
-                .ValidateDataAnnotations();
             services.AddOptions<AuthenticationOptions>()
                 .Configure(Configuration.GetSection("Auth:Jwt").Bind)
                 .ValidateDataAnnotations();
@@ -157,13 +104,14 @@ namespace Disco.Api
 
             if (env.IsDevelopment())
             {
-                //app.UseSwagger(swagger =>
-                //{
-                //    swagger.SerializeAsV2 = true;
-                //});
-                //app.UseSwaggerUI(swagger => {
-                //    swagger.SwaggerEndpoint("v1/swagger.json", "Disco.Api");
-                //});
+                app.UseSwagger(swagger =>
+                {
+                    swagger.SerializeAsV2 = true;
+                });
+                app.UseSwaggerUI(swagger =>
+                {
+                    swagger.SwaggerEndpoint("v1/swagger.json", "Disco.Api");
+                });
 
                 app.UseDeveloperExceptionPage();
             }

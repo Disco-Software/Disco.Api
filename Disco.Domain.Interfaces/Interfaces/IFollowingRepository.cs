@@ -1,11 +1,13 @@
-﻿using Disco.Domain.Models;
-using Disco.Domain.Models.Models;
+﻿using Disco.Domain.Models.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace Disco.Domain.Interfaces
+namespace Disco.Domain.Interfaces.Interfaces
 {
-    public interface IFollowerRepository
+    public interface IFollowingRepository
     {
         Task AddAsync(UserFollower userFollower);
         Task Remove(UserFollower userFollower);

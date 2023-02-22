@@ -11,7 +11,7 @@ namespace Disco.Business.Interfaces.Interfaces
     {
         Task<FollowerResponseDto> CreateAsync(User user, User follower, CreateFollowerDto dto);
         Task DeleteAsync(int id);
-        Task<List<FollowerResponseDto>> GetAllAsync(GetAllFollowersDto dto);
+        Task<List<FollowerResponseDto>> GetFollowersAsync(GetAllFollowersDto dto);
         Task<List<UserFollower>> GetFollowingAsync(int userId);
         Task<List<UserFollower>> GetFollowersAsync(int userId);
         Task<FollowerResponseDto> GetAsync(int id);

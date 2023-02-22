@@ -8,10 +8,10 @@ namespace Disco.Domain.Interfaces
 {
     public interface IAccountRepository
     {
+        Task AddAsync(Account account);
+        Task Remove(Account account);
         Task<Account> GetAsync(int id);
-        Task<Account> Update(Account newItem);
-        Task<List<Account>> FindAccountsByUserNameAsync(string search);
-        Task RemoveAccountAsync(int accountId);
-        Task<List<Connection>> GetAllAccountConnectionsAsync(int userId);
+        IQueryable<Account> GetAll();
+        Task Update(Account newItem);
     }
 }

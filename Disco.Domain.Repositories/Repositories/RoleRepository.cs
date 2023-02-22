@@ -18,13 +18,21 @@ namespace Disco.Domain.Repositories.Repositories
             _ctx = ctx;
         }
 
-        public async Task<List<Role>> GetAll(int pageNumber, int pageSize)
+        public async Task<List<Role>> GetAllAsync(int pageNumber, int pageSize)
         {
             return await _ctx.Roles
                  .OrderBy(x => x.Name)
                  .Skip((pageNumber - 1) * pageSize)
                  .Take(pageSize)
                  .ToListAsync();
+        }
+
+        public Role GetAsync(User user)
+        {
+            return _ctx.UserRoles
+                .Join(_ctx.Roles, r => r.RoleId, u => u.Id, (u, r) => new { Role = r, UserRole = u })
+                .Where(r => r.UserRole.UserId == user.Id)
+                .FirstOrDefaultAsync().Result.Role ?? throw new NullReferenceException("Role not found");
         }
     }
 }

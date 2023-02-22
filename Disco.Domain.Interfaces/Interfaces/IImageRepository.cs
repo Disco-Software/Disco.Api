@@ -7,6 +7,7 @@ namespace Disco.Domain.Interfaces
     public interface IImageRepository
     {
         Task AddAsync(PostImage item);
-        Task Remove(int id);
+        Task Remove(PostImage item);
+        Task<PostImage> GetAsync(int id);
     }
 }

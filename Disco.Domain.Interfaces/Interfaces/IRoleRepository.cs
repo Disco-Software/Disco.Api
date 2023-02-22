@@ -7,6 +7,8 @@ namespace Disco.Domain.Interfaces
 {
     public interface IRoleRepository
     {
-        Task<List<Role>> GetAll(int pageNumber, int pageSize);
+        Task<List<Role>> GetAllAsync(int pageNumber, int pageSize);
+        Role GetAsync(User user);
+
     }
 }

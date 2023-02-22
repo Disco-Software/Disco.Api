@@ -10,9 +10,9 @@ namespace Disco.Domain.Interfaces
 {
     public interface IConnectionRepository
     {
-        Task CreateAsync(Connection connection);
+        Task AddAsync(Connection connection);
         Task DeleteAsync(Connection connection);
         Task<Connection> GetAsync(string id);
-        Task<Connection> UpdateAsync(Connection connection);
+        Task Update(Connection connection);
     }
 }

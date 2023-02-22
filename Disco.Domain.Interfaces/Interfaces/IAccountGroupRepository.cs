@@ -10,9 +10,9 @@ namespace Disco.Domain.Interfaces.Interfaces
 {
     public interface IAccountGroupRepository
     {
-        Task CreateAsync(AccountGroup accountGroup);
-        Task DeleteAsync(AccountGroup accountGroup);
+        Task AddAsync(AccountGroup accountGroup);
+        Task Remove(AccountGroup accountGroup);
         Task<AccountGroup> GetAsync(int id);
-        Task<IEnumerable<AccountGroup>> GetAllAsync(int id);
+        Task<List<AccountGroup>> GetAllAsync(int id);
     }
 }

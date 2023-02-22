@@ -4,7 +4,7 @@ using Disco.Domain.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 
-namespace Disco.Business.Interfaces.Validators
+namespace Disco.Business.Interfaces.Validators.Account
 {
     public class LogInValidator : AbstractValidator<LoginDto>
     {

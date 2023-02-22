@@ -1,5 +1,4 @@
 ﻿using Disco.Business.Interfaces.Dtos.Friends;
-using Disco.Business.Interfaces;
 using Disco.Domain.Models;
 using FluentValidation;
 using System;
@@ -10,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Disco.Business.Interfaces.Interfaces;
 
-namespace Disco.Business.Interfaces.Validators
+namespace Disco.Business.Interfaces.Validators.Follower
 {
     public class CreateFollowerValidator : AbstractValidator<CreateFollowerDto>
     {

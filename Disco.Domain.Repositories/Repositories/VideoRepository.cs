@@ -15,20 +15,14 @@ namespace Disco.Domain.Repositories.Repositories
 
         public override async Task AddAsync(PostVideo postVideo)
         {
-            await _ctx.PostVideos.AddAsync(postVideo);
+            await _context.PostVideos.AddAsync(postVideo);
         }
 
-        public override async Task Remove(int id)
+        public override async Task Remove(PostVideo item)
         {
-            var video = await _ctx.PostVideos
-                .Include(p => p.Post)
-                .Where(s => s.Id == id)
-                .FirstOrDefaultAsync();
-            
-            video.Post.PostVideos.Remove(video);
-            _ctx.PostVideos.Remove(video);
+            _context.PostVideos.Remove(item);
 
-            await _ctx.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

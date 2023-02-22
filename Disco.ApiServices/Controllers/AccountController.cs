@@ -50,7 +50,7 @@ namespace Disco.ApiServices.Controllers
         {
             var user = await _accountService.GetByEmailAsync(dto.Email);
 
-            var passwordResponse = await _accountPasswordService.VerifyPasswordAsync(user, dto.Password);
+            var passwordResponse = _accountPasswordService.VerifyPasswordAsync(user, dto.Password);
             if(passwordResponse == PasswordVerificationResult.Failed)
             {
                 return BadRequest("Not valid password");
@@ -70,15 +70,6 @@ namespace Disco.ApiServices.Controllers
         [HttpPost("log-in/facebook")]
         public async Task<IActionResult> Facebook([FromBody] FacebookRequestDto dto)
         {
-            var validator = await FacebookAccessTokenValidator
-                .Create()
-                .ValidateAsync(dto);
-
-            if (!validator.IsValid)
-            {
-                return BadRequest(validator.Errors);
-            }
-
             var userInfo = await _facebookAuthService.GetUserInfo(dto.AccessToken);
             userInfo.Name = userInfo.Name.Replace(" ", "_");
 
