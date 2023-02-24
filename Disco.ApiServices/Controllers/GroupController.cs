@@ -1,6 +1,7 @@
 ﻿using Disco.Business.Constants;
-using Disco.Business.Dtos.Chat;
+using Disco.Business.Interfaces.Dtos.Chat;
 using Disco.Business.Interfaces;
+using Disco.Business.Interfaces.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;

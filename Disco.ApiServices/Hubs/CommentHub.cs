@@ -1,16 +1,13 @@
 ﻿using AutoMapper;
 using Disco.Business.Constants;
-using Disco.Business.Dtos.Chat;
-using Disco.Business.Dtos.Comments;
-using Disco.Business.Dtos.Images;
-using Disco.Business.Dtos.Posts;
-using Disco.Business.Dtos.Songs;
-using Disco.Business.Dtos.Videos;
 using Disco.Business.Interfaces;
+using Disco.Business.Interfaces.Dtos.Chat;
+using Disco.Business.Interfaces.Dtos.Comments;
+using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models;
+using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +46,6 @@ namespace Disco.ApiServices.Hubs
             var connnection = new Connection()
             {
                 IsConnected = true,
-                UserAgent = Context.GetHttpContext().Request.Headers["User-Agent"],
                 Id = Context.ConnectionId
             };
 

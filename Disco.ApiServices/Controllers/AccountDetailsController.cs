@@ -1,7 +1,7 @@
 ﻿using Disco.Business.Constants;
-using Disco.Business.Dtos.Account;
-using Disco.Business.Dtos.AccountDetails;
-using Disco.Business.Interfaces;
+using Disco.Business.Interfaces.Dtos.Account;
+using Disco.Business.Interfaces.Dtos.AccountDetails;
+using Disco.Business.Interfaces.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,7 +14,7 @@ namespace Disco.ApiServices.Controllers
     [ApiController]
     [Route("api/user/account/details")]
     [Authorize(AuthenticationSchemes = AuthSchema.UserToken)]
-    public class AccountDetailsController : Controller
+    public class AccountDetailsController : ControllerBase
     {
         private readonly IAccountDetailsService _accountDetailsService;
         private readonly IAccountService _accountService;

@@ -7,10 +7,14 @@
     <ItemGroup>
       <PackageReference Include="FluentValidation" Version="11.1.0" />
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="6.0.13" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
+      <PackageReference Include="Microsoft.Extensions.Azure" Version="1.6.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Disco.Business\Disco.Business.csproj" />
+      <ProjectReference Include="..\Disco.Business.Services\Disco.Business.Services.csproj" />
     </ItemGroup>
 
 </Project>

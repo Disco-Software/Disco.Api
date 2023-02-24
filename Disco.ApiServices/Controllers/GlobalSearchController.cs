@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Disco.Business.Constants;
-using Disco.Business.Dtos.Search;
+using Disco.Business.Interfaces.Dtos.Search;
 using Disco.Business.Interfaces;
+using Disco.Business.Interfaces.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
