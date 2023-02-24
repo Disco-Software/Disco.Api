@@ -30,9 +30,7 @@ namespace Disco.Business.Services.Services
 
         public async Task DeleteStoryAsync(int id)
         {
-            var story = await _storyRepository.GetAsync(id);
-
-            await _storyRepository.Remove(story);
+            await _storyRepository.Remove(id);
         }
 
         public async Task<Story> GetStoryAsync(int id)

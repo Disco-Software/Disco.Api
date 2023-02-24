@@ -34,14 +34,14 @@ namespace Disco.Business.Services.Services
 
             group.AccountGroups.Add(accountGroup);
 
-            await _accountGroupRepository.AddAsync(accountGroup);
+            await _accountGroupRepository.CreateAsync(accountGroup);
             
             return accountGroup;
         }
 
         public Task DeleteAsync(AccountGroup accountGroup)
         {
-            return _accountGroupRepository.Remove(accountGroup);
+            return _accountGroupRepository.DeleteAsync(accountGroup);
         }
 
         public async Task<AccountGroup> GetAsync(int id)

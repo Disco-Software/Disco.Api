@@ -31,6 +31,12 @@ namespace Disco.Domain.EF
         public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options) { }
         public ApiDbContext() { }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer("Server=tcp:disco-dev-sql-srv.database.windows.net,1433;Initial Catalog=disco-prod-sql-db;Persist Security Info=False;User ID=disco-dev-sa;Password=StasZeus2021!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            base.OnConfiguring(optionsBuilder);
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

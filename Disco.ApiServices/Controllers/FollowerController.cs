@@ -48,7 +48,7 @@ namespace Disco.ApiServices.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] GetAllFollowersDto dto)
         {
-            var followers = await _followerService.GetFollowersAsync(dto);
+            var followers = await _followerService.GetAllAsync(dto);
 
             return Ok(followers);
         }

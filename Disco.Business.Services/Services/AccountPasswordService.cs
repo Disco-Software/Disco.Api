@@ -29,21 +29,15 @@ namespace Disco.Business.Services.Services
             }
         }
 
-        public PasswordVerificationResult VerifyPasswordAsync(User user, string password)
+        public async Task<PasswordVerificationResult> VerifyPasswordAsync(User user, string password)
         {
-            var passwordRespnose = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
-            switch (passwordRespnose)
+            var passwordRespnose = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash ?? "", password);
+            if(passwordRespnose != PasswordVerificationResult.Success)
             {
-                case PasswordVerificationResult.Failed:
-                    return PasswordVerificationResult.Failed;
-                case PasswordVerificationResult.Success:
-                    return PasswordVerificationResult.Success;
-                case PasswordVerificationResult.SuccessRehashNeeded:
-                    return PasswordVerificationResult.SuccessRehashNeeded;
-                default: 
-                    return passwordRespnose;
-
+                return PasswordVerificationResult.Failed;
             }
+
+            return passwordRespnose;
         }
 
         public async Task<string> GetPasswordConfirmationTokenAsync(User user)

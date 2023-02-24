@@ -8,9 +8,9 @@ namespace Disco.Domain.Interfaces
     public interface IRepository<T,TKey>
     {
         Task AddAsync(T item);
-        Task Remove(T item);
+        Task Remove(TKey id);
         Task<T> GetAsync(TKey id);
-        IQueryable<T> GetAll(int pageNumber, int pageSize);
-        Task Update(T newItem);
+        Task<List<T>> GetAll(Expression<Func<T,bool>> expression);
+        Task<T> Update(T newItem);
     }
 }

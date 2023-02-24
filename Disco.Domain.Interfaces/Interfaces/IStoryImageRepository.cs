@@ -7,7 +7,6 @@ namespace Disco.Domain.Interfaces
     public interface IStoryImageRepository
     {
         Task AddAsync(StoryImage storyImage);
-        Task Remove(StoryImage storyImage);
-        Task<StoryImage> GetAsync(int id);
+        Task Remove(int id);
     }
 }

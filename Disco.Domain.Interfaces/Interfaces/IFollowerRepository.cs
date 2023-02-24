@@ -8,8 +8,10 @@ namespace Disco.Domain.Interfaces
     public interface IFollowerRepository
     {
         Task AddAsync(UserFollower userFollower);
-        Task Remove(UserFollower userFollower);
         Task<UserFollower> GetAsync(int id);
-        IQueryable<UserFollower> GetAll();
+        Task Remove(UserFollower userFollower);
+        Task<IEnumerable<UserFollower>> GetAllAsync(int id, int pageNumber, int pageSize);
+        Task<List<UserFollower>> GetFollowingAsync(int userId);
+        Task<List<UserFollower>> GetFollowersAsync(int userId);
     }
 }

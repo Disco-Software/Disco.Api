@@ -10,26 +10,19 @@ using Disco.Domain.Models;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 using System.Linq;
-using Microsoft.Extensions.Options;
-using Disco.Business.Interfaces.Options;
-using Disco.Business.Utils.Constants;
 
 namespace Disco.Business.Services.Services
 {
     public class PushNotificationService : IPushNotificationService
     {
-        private readonly IOptions<ConnectionStringsOptions> _options;
         private readonly INotificationHubClient _notificationHubClient;
         private readonly Dictionary<string, NotificationPlatform> _installationPlatform;
         private readonly ILogger<PushNotificationService> _logger;
 
-        public PushNotificationService(
-            IOptions<ConnectionStringsOptions> options,
-            ILogger<PushNotificationService> logger)
+        public PushNotificationService(ILogger<PushNotificationService> logger)
         {
-            _options = options;
             _logger = logger;
-            _notificationHubClient = NotificationHubClient.CreateClientFromConnectionString(_options.Value.AzureNotificationHubConnection, NotificationHubNames.NotificationName);
+            _notificationHubClient = NotificationHubClient.CreateClientFromConnectionString(Strings.NotificationConnectionString, Strings.NotificationName);
             _installationPlatform = new Dictionary<string, NotificationPlatform>
             {
                 {nameof(NotificationPlatform.Fcm), NotificationPlatform.Fcm },

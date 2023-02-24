@@ -65,7 +65,7 @@ namespace Disco.Tests.Services
                 .Returns(PasswordVerificationResult.Success);
 
             var accountPasswordService = new AccountPasswordService(mockedUserManager.Object);
-            var response = accountPasswordService.VerifyPasswordAsync(user, "54321");
+            var response = await accountPasswordService.VerifyPasswordAsync(user, "54321");
 
             Assert.IsTrue(response == PasswordVerificationResult.Success);
         }

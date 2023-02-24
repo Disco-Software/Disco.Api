@@ -17,39 +17,43 @@ namespace Disco.Domain.Repositories.Repositories
     {
         public MessageRepository(ApiDbContext ctx) : base(ctx) { }
 
-        public async Task AddAsync(Message message, CancellationToken cancellationToken = default)
+        public async Task CreateAsync(Message message, CancellationToken cancellationToken = default)
         {
-            await base.AddAsync(message);
+           await _ctx.Messages.AddAsync(message, cancellationToken);
+
+            await _ctx.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task Remove(Message message, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(Message message, CancellationToken cancellationToken = default)
         {
-            await base.Remove(message);
+            _ctx.Messages.Remove(message);
+
+            await _ctx.SaveChangesAsync(cancellationToken);
         }
 
-        public override IQueryable<Message> GetAll(int pageNumber, int pageSize)
+        public async Task<List<Message>> GetAllAsync(int groupId, int pageNumber, int pageSize)
         {
-            return _context.Messages
-                .OrderBy(message => message.CreatedDate)
+            return await _ctx.Messages
+                .Where(m => m.GroupId == groupId)
+                .OrderBy(m => m.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .AsQueryable();
+                .ToListAsync();
         }
 
-        public async Task<Message> GetAsync(int id)
+        public async Task<Message> GetByIdAsync(int id)
         {
-            return await _context.Messages
+            return await _ctx.Messages
                 .Include(m => m.Group)
                 .Where(m => m.Id == id)
-                .FirstOrDefaultAsync()
-                ?? throw new NullReferenceException("Message not found");
+                .FirstOrDefaultAsync();
         }
 
         public async Task UpdateAsync(Message message, CancellationToken cancellationToken = default)
         {
-            _context.Messages.Update(message);
+            _ctx.Messages.Update(message);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _ctx.SaveChangesAsync(cancellationToken);
         }
     }
 }

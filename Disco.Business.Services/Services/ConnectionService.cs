@@ -3,7 +3,6 @@ using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +24,7 @@ namespace Disco.Business.Services.Services
         {
             account.Connections.Add(connection);
 
-            await _connectionRepository.AddAsync(connection);
+            await _connectionRepository.CreateAsync(connection);
         }
 
         public async Task DeleteAsync(Connection connection, Account account)

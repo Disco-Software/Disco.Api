@@ -33,7 +33,7 @@ namespace Disco.Business.Services.Services
             comment.Post.Comments.Remove(comment);
             comment.Account.Comments.Remove(comment);
 
-            await _commentRepository.Remove(comment);
+            await _commentRepository.Remove(comment.Id);
         }
 
         public async Task<Comment> GetCommentAsync(int id)

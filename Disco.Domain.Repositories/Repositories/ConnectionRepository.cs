@@ -16,26 +16,34 @@ namespace Disco.Domain.Repositories.Repositories
     {
         public ConnectionRepository(ApiDbContext context) : base(context) { }
 
-        public override async Task AddAsync(Connection connection)
+        public async Task CreateAsync(Connection connection)
         {
-           await base.AddAsync(connection);
+            await _ctx.Connections.AddAsync(connection);
+
+            await _ctx.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Connection connection)
         {
-            await base.Remove(connection);
+            _ctx.Connections.Remove(connection);
+
+            await _ctx.SaveChangesAsync();
         }
 
-        public override async Task<Connection> GetAsync(string id)
+        public override Task<Connection> GetAsync(string id)
         {
-            return await _context.Connections
+            return _ctx.Connections
                 .Where(c => c.Id.Equals(id))
-                .FirstOrDefaultAsync() ?? throw new NullReferenceException("Connection not found");
+                .FirstOrDefaultAsync();
         }
 
-        public override async Task Update(Connection connection)
+        public async Task<Connection> UpdateAsync(Connection connection)
         {
-           await base.Update(connection);
+            _ctx.Connections.Update(connection);
+
+            await _ctx.SaveChangesAsync();
+
+            return connection;
         }
     }
 }

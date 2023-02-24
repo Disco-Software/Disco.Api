@@ -4,12 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Disco.Domain.Interfaces.Interfaces
+namespace Disco.Domain.Interfaces
 {
     public interface IUserRepository
     {
-        Task<User> GetAsync(string refreshToken);
-        IQueryable<User> GetAll(int pageNumber, int pageSize);
-        IQueryable<User> GetAll(DateTime date);
+        Task<User> GetUserByRefreshTokenAsync(string refreshToken);
+        string GetUserRole(User user);
+        Task SaveRefreshTokenAsync(User user, string refreshToken);
+        Task<List<User>> GetAllUsers(int pageNumber, int pageSize);
+        Task<List<User>> GetUsersByPeriotAsync(DateTime date);
+
+        Task<List<User>> GetUsersByPeriotIntAsync(int days);
     }
 }

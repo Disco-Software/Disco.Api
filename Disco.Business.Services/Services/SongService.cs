@@ -66,11 +66,7 @@ namespace Disco.Business.Services.Services
 
         public async Task Remove(int songId)
         {
-            var song = await _songRepository.GetAsync(songId);
-
-            song.Post.PostSongs.Remove(song);
-
-            await _songRepository.Remove(song);
+            await _songRepository.Remove(songId);
         }
     }
 }

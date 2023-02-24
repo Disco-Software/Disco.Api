@@ -21,21 +21,21 @@ namespace Disco.Domain.Repositories
 
         public async Task CreateAsync(Group group, CancellationToken cancellationToken = default)
         {
-            await _context.Groups.AddAsync(group);
+            await _ctx.Groups.AddAsync(group);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _ctx.SaveChangesAsync(cancellationToken);
         }
 
         public async Task DeleteAsync(Group group, CancellationToken cancellationToken = default)
         {
-            _context.Remove(group);
+            _ctx.Remove(group);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _ctx.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<List<Group>> GetAllAsync(int id, int pageNumber, int pageSize)
         {
-            return await _context.Groups
+            return await _ctx.Groups
                 .Include(group => group.AccountGroups)
                 .Where(g => g.Id == id)
                 .OrderByDescending(g => g.Id)
@@ -46,14 +46,14 @@ namespace Disco.Domain.Repositories
 
         public async Task UpdateAsync(Group group, CancellationToken cancellationToken = default)
         {
-            _context.Groups.Update(group);
+            _ctx.Groups.Update(group);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _ctx.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<Group> GetAsync(int id)
         {
-            return await _context.Groups
+            return await _ctx.Groups
                 .Include(g => g.AccountGroups)
                 .Include(g => g.Messages)
                 .Where(g => g.Id == id)
@@ -62,7 +62,7 @@ namespace Disco.Domain.Repositories
 
         public async Task LoadAccountsAsync(List<AccountGroup> accountGroup)
         {
-           await _context.Entry(accountGroup)
+           await _ctx.Entry(accountGroup)
                 .Collection(c => c)
                 .LoadAsync();
         }

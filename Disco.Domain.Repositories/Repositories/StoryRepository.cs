@@ -14,18 +14,18 @@ namespace Disco.Domain.Repositories.Repositories
     {
         public StoryRepository(ApiDbContext ctx) : base(ctx) { }
 
-        public override async Task AddAsync(Story item)
+        public async Task AddAsync(Story story)
         {
-            await _context.Stories.AddAsync(item);
+            await _ctx.Stories.AddAsync(story);
            
-            await _context.SaveChangesAsync();
+            await _ctx.SaveChangesAsync();
         }
 
         public async Task<List<Story>> GetAllAsync(int accountId, int pageNumber, int pageSize)
         {
             var storyList = new List<Story>();
 
-            var profile = await _context.Accounts
+            var profile = await _ctx.Accounts
                 .Include(u => u.User)
                 .Include(u => u.Stories)
                 .ThenInclude(s => s.StoryImages)
@@ -56,7 +56,7 @@ namespace Disco.Domain.Repositories.Repositories
 
             foreach (var friend in profile.Followers)
             {
-                friend.FollowerAccount = await _context.Accounts
+                friend.FollowerAccount = await _ctx.Accounts
                     .Include(p => p.Stories)
                     .ThenInclude(i => i.StoryImages)
                     .Include(p => p.Stories)
@@ -73,19 +73,25 @@ namespace Disco.Domain.Repositories.Repositories
                 .ToList();
         }
 
-        public override async Task Remove(Story item)
+        public override async Task Remove(int id)
         {
-           await base.Remove(item);
+            var story = await _ctx.Stories
+                .Include(i => i.StoryImages)
+                .Include(v => v.StoryVideos)
+                .Where(s => s.Id == id)
+                .FirstOrDefaultAsync();
+            story.Account.Stories.Remove(story);
+            _ctx.Stories.Remove(story);
         }
 
-        public override async Task<Story> GetAsync(int id)
+        public override Task<Story> GetAsync(int id)
         {
-            return await _context.Stories
+            var story = _ctx.Stories
                 .Include(i => i.StoryImages)
                 .Include(v => v.StoryVideos)
                 .Where(i => i.Id == id)
-                .FirstOrDefaultAsync() 
-                ?? throw new NullReferenceException("story not found");
+                .FirstOrDefaultAsync();
+            return story;
         }
     }
 }

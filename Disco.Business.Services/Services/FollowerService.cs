@@ -10,7 +10,6 @@ using Disco.Domain.Interfaces;
 using Disco.Business.Interfaces.Dtos.Followers;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Disco.Business.Services.Services
 {
@@ -67,11 +66,18 @@ namespace Disco.Business.Services.Services
             await _followerRepository.Remove(userFollower);
         }
 
+        public async Task<List<FollowerResponseDto>> GetAllAsync(GetAllFollowersDto dto)
+        {
+            var followers = await _followerRepository.GetAllAsync(dto.UserId, dto.PageNumber, dto.PageSize);
+
+            var followersDto = _mapper.Map<List<FollowerResponseDto>>(followers);
+
+            return followersDto;
+        }
+
         public async Task<List<UserFollower>> GetFollowingAsync(int userId)
         {
-            var followings = await _followerRepository.GetAll()
-                .Where(following => following.FollowerAccountId == userId)
-                .ToListAsync();
+            var followings = await _followerRepository.GetFollowingAsync(userId);
 
             foreach (var following in followings.ToList())
             {
@@ -102,9 +108,7 @@ namespace Disco.Business.Services.Services
 
         public async Task<List<UserFollower>> GetFollowersAsync(int userId)
         {
-            var followers = await _followerRepository.GetAll()
-                .Where(follower => follower.FollowingAccountId == userId)
-                .ToListAsync();
+            var followers = await _followerRepository.GetFollowersAsync(userId);
 
             foreach (var follower in followers.ToList())
             {
@@ -116,19 +120,6 @@ namespace Disco.Business.Services.Services
             }
 
             return followers;
-        }
-
-        public async Task<List<FollowerResponseDto>> GetFollowersAsync(GetAllFollowersDto dto)
-        {
-            var followers = await _followerRepository.GetAll()
-                .Where(follower => follower.FollowingAccountId == dto.AccountId)
-                .OrderBy(follower => follower.FollowerAccount.User.UserName)
-                .Skip((dto.PageNumber - 1) * dto.PageSize)
-                .ToListAsync();
-
-            var followerDtos = _mapper.Map<List<FollowerResponseDto>>(followers);
-
-            return followerDtos.ToList();
         }
     }
 }

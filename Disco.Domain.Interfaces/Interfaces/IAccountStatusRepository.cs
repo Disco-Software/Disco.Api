@@ -9,6 +9,6 @@ namespace Disco.Domain.Interfaces
 {
     public interface IAccountStatusRepository
     {
-        Task<AccountStatus> GetAsync(int followersCount);
+        Task<AccountStatus> GetStatusByFollowersCountAsync(int followersCount);
     }
 }

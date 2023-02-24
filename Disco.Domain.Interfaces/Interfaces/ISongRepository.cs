@@ -7,7 +7,6 @@ namespace Disco.Domain.Interfaces
     public interface ISongRepository
     {
         Task AddAsync(PostSong song);
-        Task Remove(PostSong song);
-        Task<PostSong> GetAsync(int id);
+        Task Remove(int id);
     }
 }

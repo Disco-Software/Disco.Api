@@ -20,11 +20,15 @@ namespace Disco.Domain.Repositories.Repositories
             await base.AddAsync(item);
         }
 
-        public override async Task Remove(Comment item)
+        public override async Task Remove(int id)
         {
-            _context.Comments.Remove(item);
+            var comment = await _ctx.Comments
+                .Where(s => s.Id == id)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+            _ctx.Comments.Remove(comment);
 
-            await _context.SaveChangesAsync();
+            await _ctx.SaveChangesAsync();
         }
     }
 }

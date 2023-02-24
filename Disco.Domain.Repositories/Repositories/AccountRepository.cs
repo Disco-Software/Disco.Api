@@ -15,25 +15,55 @@ namespace Disco.Domain.Repositories.Repositories
     {
         public AccountRepository(ApiDbContext ctx) : base(ctx) { }
 
-        public override Task AddAsync(Account item)
+        public async Task<Account?> GetAsync(int id)
         {
-            return base.AddAsync(item);
+           return await _ctx.Accounts
+                  .Include(a => a.Posts)
+                  .Include(a => a.AccountGroups)
+                  .Include(a => a.Connections)
+                  .Include(a => a.Followers)
+                  .Include(a => a.Following)
+                  .Include(u => u.User)
+                  .Where(p => p.Id == id)
+                  .FirstOrDefaultAsync();
         }
 
-        public override Task Remove(Account item)
+        public override async Task<Account> Update(Account newItem)
         {
-            return base.Remove(item);
+            var account = _ctx.Accounts.Update(newItem).Entity;
+            
+            await _ctx.SaveChangesAsync();
+            
+            return account;
         }
 
-        public IQueryable<Account> GetAll()
+        public async Task RemoveAccountAsync(int accountId)
         {
-            return _context.Accounts
-                .AsQueryable();
+            var account = _ctx.Accounts
+                .Include(u => u.User)
+                .Where(a => a.Id == accountId)
+                .FirstOrDefaultAsync();
+
+            _ctx.Remove(account);
+
+            await _ctx.SaveChangesAsync();
         }
 
-        public override async Task Update(Account newItem)
+        public async Task<List<Connection>> GetAllAccountConnectionsAsync(int accountId)
         {
-           await base.Update(newItem);
+            return await _ctx.Accounts
+                .Where(a => a.Id == accountId)
+                .SelectMany(a => a.Connections)
+                .ToListAsync();
+        }
+
+        public async Task<List<Account>> FindAccountsByUserNameAsync(string search)
+        {
+            return await _ctx.Accounts
+                .Include(u => u.User)
+                .Include(s => s.AccountStatus)
+                .Where(u => u.User.UserName.StartsWith(search))
+                .ToListAsync();
         }
     }
 }

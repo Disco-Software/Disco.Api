@@ -11,8 +11,6 @@ using Disco.Business.Interfaces.Dtos.AccountDetails;
 using System.Linq;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
-using Microsoft.EntityFrameworkCore;
-using Disco.Domain.Interfaces.Interfaces;
 
 namespace Disco.Business.Services.Services
 {
@@ -57,9 +55,7 @@ namespace Disco.Business.Services.Services
 
         public async Task<List<Account>> GetAccountsByNameAsync(string search)
         {
-            var accounts = await _accountRepository.GetAll()
-                .Where(account => account.User.UserName.StartsWith(search))
-                .ToListAsync();
+            var accounts = await _accountRepository.FindAccountsByUserNameAsync(search);
 
             foreach (var account in accounts.ToList())
             {
@@ -75,12 +71,12 @@ namespace Disco.Business.Services.Services
 
         public async Task RemoveAsync(Account account)
         {
-           await _accountRepository.Remove(account);
+           await _accountRepository.RemoveAccountAsync(account.Id);
         }
 
         public async Task<UserDetailsResponseDto> GetUserDatailsAsync(User user)
         {
-            user.Account.AccountStatus = await _accountStatusRepository.GetAsync(user.Account.Following.Count);
+            user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Following.Count);
 
             UserDetailsResponseDto userDetailsResponseDto = new UserDetailsResponseDto();
             userDetailsResponseDto.User = user;

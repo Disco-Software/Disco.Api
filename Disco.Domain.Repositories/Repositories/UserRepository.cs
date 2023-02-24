@@ -1,6 +1,5 @@
 ﻿using Disco.Domain.EF;
 using Disco.Domain.Interfaces;
-using Disco.Domain.Interfaces.Interfaces;
 using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using Microsoft.EntityFrameworkCore;
@@ -13,41 +12,81 @@ namespace Disco.Domain.Repositories.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly ApiDbContext _context;
+        private readonly ApiDbContext _ctx;
 
         public UserRepository(ApiDbContext ctx)
         {
-            _context = ctx;
+            _ctx = ctx;
         }
 
-        public async Task<User> GetAsync(string refreshToken)
+        public async Task<User> GetUserByRefreshTokenAsync(string refreshToken)
         {
-            return await _context.Users
+            return await _ctx.Users
                 .Include(p => p.Account)
                 .ThenInclude(p => p.Posts)
                 .Include(p => p.Account)
                 .ThenInclude(s => s.Stories)
                 .Include(p => p.Account)
                 .ThenInclude(f => f.Followers)
-                .FirstOrDefaultAsync() ?? throw new NullReferenceException("User not found");
+                .FirstOrDefaultAsync();
         }
 
-        public IQueryable<User> GetAll(int pageNumber, int pageSize)
+        public async Task GetUserAccountAsync(User user)
         {
-            return _context.Users
-                .OrderBy(p => p.UserName)
+            await _ctx.Entry(user)
+                .Reference(u => u.Account)
+                .LoadAsync();
+
+            await _ctx.Entry(user.Account)
+                .Collection(p => p.Posts)
+                .LoadAsync();
+        }
+
+        public string GetUserRole(User user)
+        {
+            return _ctx.UserRoles
+                .Join(_ctx.Roles, r => r.RoleId, u => u.Id, (u, r) => new { Role = r, UserRole = u })
+                .Where(r => r.UserRole.UserId == user.Id)
+                .FirstOrDefaultAsync().Result.Role.Name;
+        }
+
+        public async Task SaveRefreshTokenAsync(User user, string refreshToken)
+        {
+            user.RefreshToken = refreshToken;
+            
+            user.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
+
+            await _ctx.SaveChangesAsync();
+        }
+
+        public async Task<List<User>> GetAllUsers(int pageNumber, int pageSize)
+        {
+            return await _ctx.Users
+                .OrderByDescending(d => d.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .AsQueryable();
+                .ToListAsync();
         }
 
-        public IQueryable<User> GetAll(DateTime date)
+        public async Task<List<User>> GetUsersByPeriotAsync(DateTime date)
         {
-            return _context.Users
+            return await _ctx.Users
                 .Include(u => u.Account)
                 .Where(u => u.DateOfRegister == date)
                 .OrderBy(u => u.DateOfRegister)
-                .AsQueryable();
+                .ToListAsync();
+        }
+
+        public async Task<List<User>> GetUsersByPeriotIntAsync(int days)
+        {
+            var date = DateTime.Now;
+            date = date.AddDays(-days);
+
+            return await _ctx.Users
+                .Include(u => u.Account)
+                .Where(u => u.DateOfRegister >= date)
+                .OrderBy(u => u.DateOfRegister)
+                .ToListAsync();
         }
     }
 }

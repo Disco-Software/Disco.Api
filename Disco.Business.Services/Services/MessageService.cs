@@ -4,7 +4,6 @@ using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -35,7 +34,7 @@ namespace Disco.Business.Services.Services
 
             message.Group.Messages.Add(message);
 
-            await _messageRepository.AddAsync(message);
+            await _messageRepository.CreateAsync(message);
 
             return message;
         }
@@ -45,19 +44,17 @@ namespace Disco.Business.Services.Services
             message.Account.Messages.Remove(message);
             message.Group.Messages.Remove(message);
 
-            await _messageRepository.Remove(message);
+            await _messageRepository.DeleteAsync(message);
         }
 
         public async Task<List<Message>> GetAllAsync(int groupId, int pageNumber, int pageSize)
         {
-            return await _messageRepository.GetAll(pageNumber, pageSize)
-                .Where(message => message.GroupId == groupId)
-                .ToListAsync();
+            return await _messageRepository.GetAllAsync(groupId, pageNumber, pageSize);
         }
 
         public async Task<Message> GetByIdAsync(int id)
         {
-            return await _messageRepository.GetAsync(id);
+            return await _messageRepository.GetByIdAsync(id);
         }
 
         public async Task UpdateAsync(Message message)

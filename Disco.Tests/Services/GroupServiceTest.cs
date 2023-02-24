@@ -71,7 +71,7 @@ namespace Disco.Tests.Services
                 .Returns(Task.FromResult(It.IsAny<Account>()));
 
             var mockedAccountGroupRepository = new Mock<IAccountGroupRepository>();
-            mockedAccountGroupRepository.Setup(m => m.AddAsync(It.IsAny<AccountGroup>()))
+            mockedAccountGroupRepository.Setup(m => m.CreateAsync(It.IsAny<AccountGroup>()))
                 .Returns(Task.CompletedTask);
 
             var mapper = new MapperConfiguration(options =>

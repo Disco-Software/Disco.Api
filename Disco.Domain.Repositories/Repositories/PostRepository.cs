@@ -17,19 +17,39 @@ namespace Disco.Domain.Repositories.Repositories
     {
         public PostRepository(ApiDbContext ctx) : base(ctx) { }
 
-        public override async Task AddAsync(Post post)
+        public async Task AddAsync(Post post, User user)
         {
-            await base.AddAsync(post);
+            if(user == null)
+                throw new ArgumentNullException("user is null");
+            
+            await _ctx.Posts.AddAsync(post);
+            user.Account.Posts.Add(post);
+            
+            await _ctx.SaveChangesAsync();
         }
 
-        public override async Task Remove(Post item)
+        public override async Task Remove(int id)
         {
-           await base.Remove(item);
+            var post = await _ctx.Posts
+                .Include(p => p.Account)
+                .Include(v => v.PostVideos)
+                .Include(s => s.PostSongs)
+                .Include(i => i.PostImages)
+                .Where(p => p.Id == id)
+                .FirstOrDefaultAsync();
+
+            post.Account.Posts.Remove(post);
+
+            _ctx.Remove(post);
+
+            await _ctx.SaveChangesAsync();
         }
 
-        public override async Task<Post> GetAsync(int id)
+        //public async Task<List<Post>> GetUserPostsAsync(int userId, int pageSize, int pageNumber)
+
+        public override Task<Post> GetAsync(int id)
         {
-           return await _context.Posts
+           return _ctx.Posts
                 .Include(p => p.Likes)
                 .Include(i => i.PostImages)
                 .Include(s => s.PostSongs)
@@ -37,13 +57,12 @@ namespace Disco.Domain.Repositories.Repositories
                 .Include(p => p.Account)
                 .ThenInclude(u => u.User)
                 .Where(p => p.Id == id)
-                .FirstOrDefaultAsync() 
-                ?? throw new NullReferenceException();
+                .FirstOrDefaultAsync();
         }
 
         public async Task<List<Post>> GetPostsByDescriptionAsync(string search)
         {
-            return await _context.Posts
+            return await _ctx.Posts
                 .Include(p => p.PostImages)
                 .Include(p => p.PostVideos)
                 .Include(p => p.PostSongs)
@@ -53,7 +72,7 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task<List<Post>> GetUserPostsAsync(int accountId)
         {
-            return await _context.Accounts
+            return await _ctx.Accounts
                 .SelectMany(account => account.Posts)
                 .Include(post => post.PostImages)
                 .Include(post => post.PostSongs)
@@ -64,7 +83,7 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task<List<Post>> GetFollowerPostsAsync(int accountId)
         {
-            return await _context.Accounts
+            return await _ctx.Accounts
                 .SelectMany(a => a.Posts)
                 .Include(p => p.Likes)
                 .Include(p => p.PostImages)
@@ -80,7 +99,7 @@ namespace Disco.Domain.Repositories.Repositories
 
             foreach (var following in followings)
             {
-                var account = await _context.Accounts
+                var account = await _ctx.Accounts
                     .Include(a => a.Posts)
                     .ThenInclude(p => p.PostImages)
                     .Include(a => a.Posts)

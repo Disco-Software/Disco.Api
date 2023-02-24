@@ -7,7 +7,6 @@ namespace Disco.Domain.Interfaces
     public interface IStoryVideoRepository
     {
         Task AddAsync(StoryVideo storyVideo);
-        Task Remove(StoryVideo storyVideo);
-        Task<StoryVideo> GetAsync(int id);
+        Task Remove(int id);
     }
 }

@@ -38,7 +38,7 @@ namespace Disco.ApiServices.Controllers.Admin
         {
             var user = await _accountService.GetByEmailAsync(dto.Email);
 
-            var passwordValidator = _accountPasswordService.VerifyPasswordAsync(user, dto.Password);
+            var passwordValidator = await _accountPasswordService.VerifyPasswordAsync(user, dto.Password);
             if (passwordValidator == PasswordVerificationResult.Failed)
             {
                 return Unauthorized(passwordValidator);

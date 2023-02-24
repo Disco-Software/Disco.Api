@@ -17,33 +17,28 @@ namespace Disco.Domain.Repositories.Repositories
     {
         public AccountGroupRepository(ApiDbContext context) : base(context) { }
 
-        public override async Task AddAsync(AccountGroup item)
+        public async Task CreateAsync(AccountGroup accountGroup)
         {
-            await base.AddAsync(item);
+            await _ctx.AccountGroups.AddAsync(accountGroup);
+
+            await _ctx.SaveChangesAsync();
         }
 
-        public async Task<List<AccountGroup>> GetAllAsync(int id)
+        public async Task DeleteAsync(AccountGroup accountGroup)
         {
-            return await _context.AccountGroups
-                .Include(accountGroup => accountGroup.Account)
-                .Include(accountGroup => accountGroup.Group)
-                .Where(accountGroup => accountGroup.AccountId == id)
+            _ctx.AccountGroups.Remove(accountGroup);
+
+            await _ctx.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<AccountGroup>> GetAllAsync(int id)
+        {
+            return await _ctx.AccountGroups
+                .Include(ag => ag.Group)
+                .Include(ag => ag.Account)
+                .Where(a => a.Id == id)
                 .ToListAsync();
         }
 
-        public override async Task<AccountGroup> GetAsync(int id)
-        {
-            return await base.GetAsync(id);
-        }
-
-        public override async Task Remove(AccountGroup item)
-        {
-           await base.Remove(item);
-        }
-
-        public override async Task Update(AccountGroup newItem)
-        {
-            await base.Update(newItem);
-        }
     }
 }

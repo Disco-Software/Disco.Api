@@ -1,5 +1,5 @@
 ﻿using Disco.Business.Interfaces.Attributes;
-using Disco.Business.Interfaces.Validators.Account;
+using Disco.Business.Interfaces.Validators;
 
 namespace Disco.Business.Interfaces.Dtos.Account
 {

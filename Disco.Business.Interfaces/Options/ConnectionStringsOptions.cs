@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Disco.Business.Interfaces.Options
 {
-    public class ConnectionStringsOptions
+    public class ConnectionStrings
     {
         public string DevelopmentConnection { get; set; }
         public string ProdactionConnection { get; set; }

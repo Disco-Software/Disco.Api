@@ -65,13 +65,8 @@ namespace Disco.Business.Services.Services
             return storyVideo;
         }
 
-        public async Task Remove(int id)
-        {
-            var storyVideo = await _storyVideoRepository.GetAsync(id);
-
-            storyVideo.Story.StoryVideos.Remove(storyVideo);
-
-            await _storyVideoRepository.Remove(storyVideo);
-        }            
+        public async Task Remove(int id) =>
+            await _storyVideoRepository.Remove(id);
+            
     }
 }

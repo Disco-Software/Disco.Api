@@ -40,7 +40,7 @@ namespace Disco.Tests.Services
             };
 
             var mockedRepository = new Mock<IMessageRepository>();
-            mockedRepository.Setup(x => x.AddAsync(It.IsAny<Message>(), CancellationToken.None))
+            mockedRepository.Setup(x => x.CreateAsync(It.IsAny<Message>(), CancellationToken.None))
                 .Returns(Task.FromResult(new Message()));
 
             var mapperConfig = new MapperConfiguration(options =>
@@ -86,7 +86,7 @@ namespace Disco.Tests.Services
             group.Messages.Add(message);
 
             var mockedRepository = new Mock<IMessageRepository>();
-            mockedRepository.Setup(m => m.Remove(It.IsAny<Message>(), CancellationToken.None))
+            mockedRepository.Setup(m => m.DeleteAsync(It.IsAny<Message>(), CancellationToken.None))
                 .Returns(Task.FromResult(true));
 
             var service = new MessageService(mockedRepository.Object, null);
@@ -147,8 +147,8 @@ namespace Disco.Tests.Services
             };
 
             var mockedRepository = new Mock<IMessageRepository>();
-            mockedRepository.Setup(x => x.GetAll(It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(It.IsAny<IQueryable<Message>>());
+            mockedRepository.Setup(x => x.GetAllAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(Task.FromResult(list));
 
             var messageService = new MessageService(mockedRepository.Object, null);
             var messages = await messageService.GetAllAsync(1, 1, 3);
@@ -209,7 +209,7 @@ namespace Disco.Tests.Services
             };
 
             var mockedRepository = new Mock<IMessageRepository>();
-            mockedRepository.Setup(m => m.GetAsync(It.IsAny<int>()))
+            mockedRepository.Setup(m => m.GetByIdAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(list.FirstOrDefault()));
 
             var messageService = new MessageService(mockedRepository.Object, null);

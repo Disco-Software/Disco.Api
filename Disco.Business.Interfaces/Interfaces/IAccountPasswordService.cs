@@ -11,7 +11,7 @@ namespace Disco.Business.Interfaces.Interfaces
     public interface IAccountPasswordService
     {
         Task ChengePasswordAsync(User user, string token, string newPassword);
-        PasswordVerificationResult VerifyPasswordAsync(User user, string password);
+        Task<PasswordVerificationResult> VerifyPasswordAsync(User user, string password);
         Task<string> GetPasswordConfirmationTokenAsync(User user);
         string AddPasswod(User user, string password);
     }           
