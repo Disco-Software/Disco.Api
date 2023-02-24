@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
 using Disco.Business.Constants;
-using Disco.Business.Interfaces.Dtos.Images;
-using Disco.Business.Interfaces.Dtos.Stories;
-using Disco.Business.Interfaces.Dtos.StoryImages;
-using Disco.Business.Interfaces.Dtos.StoryVideos;
-using Disco.Business.Services.Mappers;
+using Disco.Business.Dtos.Images;
+using Disco.Business.Dtos.Stories;
+using Disco.Business.Dtos.StoryImages;
+using Disco.Business.Dtos.StoryVideos;
+using Disco.Business.Interfaces;
+using Disco.Business.Mapper;
 using Disco.Business.Services;
 using Disco.Domain.EF;
 using Disco.Domain.Models;
@@ -22,8 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Disco.Domain.Interfaces;
-using Disco.Business.Services.Services;
-using Disco.Domain.Models.Models;
+using Account = Disco.Domain.Models.Account;
 
 namespace Disco.Tests.Services
 {

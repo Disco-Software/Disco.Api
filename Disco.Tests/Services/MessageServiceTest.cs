@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using Disco.Business.Services.Mappers;
-using Disco.Business.Services.Services;
+using Disco.Business.Mapper;
+using Disco.Business.Services;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Migrations;
 using Disco.Domain.Models;
-using Disco.Domain.Models.Models;
 using Disco.Domain.Repositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

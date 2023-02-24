@@ -1,14 +1,15 @@
 ﻿using Disco.Business.Interfaces;
-using Disco.Business.Interfaces.Dtos.Account;
+using Disco.Business.Dtos.Account;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Disco.Domain.Models;
-using Disco.Business.Interfaces.Validators;
+using Disco.ApiServices.Validators;
+using Microsoft.AspNetCore.Cors;
 using Disco.Business.Constants;
 using AutoMapper;
 using System;
-using Disco.Business.Interfaces.Interfaces;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Disco.ApiServices.Controllers.Admin
 {
@@ -36,6 +37,15 @@ namespace Disco.ApiServices.Controllers.Admin
         [HttpPost("log-in")]
         public async Task<IActionResult> LogIn([FromBody] LoginDto dto)
         {
+            var validator = await LogInValidator
+                .Create(_accountService)
+                .ValidateAsync(dto);
+
+            if (!validator.IsValid)
+            {
+                return BadRequest(validator.Errors);
+            }
+
             var user = await _accountService.GetByEmailAsync(dto.Email);
 
             var passwordValidator = await _accountPasswordService.VerifyPasswordAsync(user, dto.Password);
@@ -59,6 +69,7 @@ namespace Disco.ApiServices.Controllers.Admin
             userResponseDto.AccessToken = accessToken;
             userResponseDto.RefreshToken = refreshToken;
             userResponseDto.User = user;
+            userResponseDto.AccessTokenExpirce = _tokenService.GetTokenExpirce();
 
             return Ok(userResponseDto);
         }

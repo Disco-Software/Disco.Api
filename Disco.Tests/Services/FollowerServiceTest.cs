@@ -6,11 +6,9 @@ using Disco.Domain.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Threading.Tasks;
-using Disco.Business.Interfaces.Dtos.Friends;
+using Disco.Business.Dtos.Friends;
 using AutoMapper;
-using Disco.Business.Services.Mappers;
-using Disco.Business.Services.Services;
-using Disco.Domain.Models.Models;
+using Disco.Business.Mapper;
 
 namespace Disco.Tests.Services
 {

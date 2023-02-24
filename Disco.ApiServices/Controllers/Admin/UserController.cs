@@ -1,16 +1,14 @@
 ﻿using Disco.Business.Constants;
 using Disco.Business.Interfaces;
-using Disco.Business.Interfaces.Dtos.Account;
+using Disco.Business.Dtos.Account;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Disco.Business.Interfaces.Validators;
+using Disco.ApiServices.Validators;
 using AutoMapper;
-using Disco.Business.Interfaces.Interfaces;
-using Disco.Domain.Models.Models;
 
 namespace Disco.ApiServices.Controllers.Admin 
 {
@@ -42,10 +40,19 @@ namespace Disco.ApiServices.Controllers.Admin
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] RegistrationDto model)
         {
+            var validator = await RegistrationValidator
+                .Create(_accountService)
+                .ValidateAsync(model);
+
+            if (!validator.IsValid)
+            {
+                return BadRequest(validator.Errors);
+            }
+
             var user = _mapper.Map<User>(model);
             user.Email = model.Email;
             user.UserName = model.UserName;
-            user.Account = new Domain.Models.Models.Account
+            user.Account = new Domain.Models.Account
             {
                 User = user,
                 UserId = user.Id,

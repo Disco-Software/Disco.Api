@@ -1,6 +1,6 @@
 ﻿using Disco.Business.Constants;
-using Disco.Business.Interfaces.Dtos.PushNotifications;
-using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Dtos.PushNotifications;
+using Disco.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;

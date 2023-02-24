@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
+using Azure.Storage.Blobs.Models;
 using Disco.Business.Constants;
+using Disco.Business.Dtos.Chat;
 using Disco.Business.Interfaces;
-using Disco.Business.Interfaces.Dtos.Chat;
-using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models;
-using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
@@ -49,6 +48,7 @@ namespace Disco.ApiServices.Hubs
             var connnection = new Connection()
             {
                 IsConnected = true,
+                UserAgent = Context.GetHttpContext().Request.Headers["User-Agent"],
                 Id = Context.ConnectionId
             };
 

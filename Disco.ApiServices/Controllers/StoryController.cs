@@ -4,12 +4,10 @@ using AuthorizeAttribute = Microsoft.AspNetCore.Authorization.AuthorizeAttribute
 using Disco.Business.Constants;
 using System.Threading.Tasks;
 using Disco.Domain.Models;
+using Disco.Business.Dtos.Stories;
 using System.Collections.Generic;
 using AutoMapper;
 using System;
-using Disco.Business.Interfaces.Dtos.Stories;
-using Disco.Business.Interfaces.Interfaces;
-using Disco.Domain.Models.Models;
 
 namespace Disco.ApiServices.Controllers
 {
@@ -48,7 +46,7 @@ namespace Disco.ApiServices.Controllers
                 foreach (var image in dto.StoryImages)
                 {
                     var storyImage = await _storyImageService.CreateStoryImageAsync(
-                        new Business.Interfaces.Dtos.StoryImages.CreateStoryImageDto { StoryImageFile = image });
+                        new Business.Dtos.StoryImages.CreateStoryImageDto { StoryImageFile = image });
                     story.StoryImages.Add(storyImage);
                 }
 
@@ -56,7 +54,7 @@ namespace Disco.ApiServices.Controllers
                 foreach (var video in dto.StoryVideos)
                 {
                     var storyImage = await _storyVideoService.CreateStoryVideoAsync(
-                        new Business.Interfaces.Dtos.StoryVideos.CreateStoryVideoDto { VideoFile = video });
+                        new Business.Dtos.StoryVideos.CreateStoryVideoDto { VideoFile = video });
                     story.StoryVideos.Add(storyImage);
                 }
 

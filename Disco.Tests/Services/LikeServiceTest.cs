@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using Disco.Business.Interfaces;
-using Disco.Business.Services.Mappers;
+using Disco.Business.Mapper;
 using Disco.Business.Services;
-using Disco.Business.Services.Services;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Disco.Domain.Models.Models;
 
 namespace Disco.Tests.Services
 {

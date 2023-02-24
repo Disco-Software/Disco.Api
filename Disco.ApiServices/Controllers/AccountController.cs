@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Disco.Business.Interfaces.Validators;
+using Disco.ApiServices.Validators;
 using Disco.Business.Constants;
-using Disco.Business.Interfaces.Dtos.Apple;
-using Disco.Business.Interfaces.Dtos.Account;
-using Disco.Business.Interfaces.Dtos.Facebook;
-using Disco.Business.Interfaces.Dtos.Google;
+using Disco.Business.Dtos.Apple;
+using Disco.Business.Dtos.Account;
+using Disco.Business.Dtos.Facebook;
+using Disco.Business.Dtos.Google;
 using Disco.Business.Interfaces;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Identity;
@@ -16,14 +16,12 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using Microsoft.Extensions.Hosting;
-using Disco.Business.Interfaces.Interfaces;
-using Disco.Domain.Models.Models;
 
 namespace Disco.ApiServices.Controllers
 {
     [ApiController]
     [Route("api/user/account")]
-    public class AccountController : ControllerBase
+    public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
         private readonly IAccountPasswordService _accountPasswordService;
@@ -46,8 +44,15 @@ namespace Disco.ApiServices.Controllers
         }
 
         [HttpPost("log-in")]
-        public async Task<IActionResult> LogInAsync([FromBody] LoginDto dto)
+        public async Task<IActionResult> LogIn([FromBody] LoginDto dto)
         {
+            var validator = await LogInValidator
+                .Create(_accountService)
+                .ValidateAsync(dto);
+
+            if (!validator.IsValid)
+                return BadRequest(validator.Errors);
+
             var user = await _accountService.GetByEmailAsync(dto.Email);
 
             var passwordResponse = await _accountPasswordService.VerifyPasswordAsync(user, dto.Password);
@@ -63,6 +68,7 @@ namespace Disco.ApiServices.Controllers
 
             var responseDto = _mapper.Map<UserResponseDto>(user);
             responseDto.AccessToken = accessToken;
+            responseDto.AccessTokenExpirce = _tokenService.GetTokenExpirce();
 
             return Ok(responseDto);
         }
@@ -123,12 +129,12 @@ namespace Disco.ApiServices.Controllers
                 return Ok(userResponseDto);
             }
 
-            user = new Domain.Models.Models.User
+            user = new Domain.Models.User
             {
                 UserName = userInfo.Name,
                 DateOfRegister = DateTime.UtcNow,
                 Email = userInfo.Email,
-                Account = new Domain.Models.Models.Account
+                Account = new Domain.Models.Account
                 {
                     User = user,
                     Photo = userInfo.Picture.Data.Url,
@@ -195,12 +201,12 @@ namespace Disco.ApiServices.Controllers
                 return Ok(userResponseDto);
             }
 
-            user = new Domain.Models.Models.User
+            user = new Domain.Models.User
             {
                 UserName = dto.UserName,
                 DateOfRegister = DateTime.UtcNow,
                 Email = dto.Email,
-                Account = new Domain.Models.Models.Account
+                Account = new Domain.Models.Account
                 {
                     User = user,
                     Photo = dto.Photo,
@@ -262,12 +268,12 @@ namespace Disco.ApiServices.Controllers
                 return Ok(userResponseDto);
             }
 
-            user = new Domain.Models.Models.User
+            user = new Domain.Models.User
             {
                 UserName = dto.Name,
                 DateOfRegister = DateTime.UtcNow,
                 Email = dto.Email,
-                Account = new Domain.Models.Models.Account
+                Account = new Domain.Models.Account
                 {
                     User = user,
                     Followers = new List<UserFollower>(),
@@ -330,7 +336,7 @@ namespace Disco.ApiServices.Controllers
             
             user.Email = dto.Email;
             user.UserName = dto.UserName;
-            user.Account = new Domain.Models.Models.Account();
+            user.Account = new Domain.Models.Account();
             user.Account.User = user;
             user.Account.Id = user.Id;
             user.Account.Followers = new List<UserFollower>();

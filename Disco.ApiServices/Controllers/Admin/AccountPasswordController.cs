@@ -1,5 +1,5 @@
 ﻿using Disco.Business.Constants;
-using Disco.Business.Interfaces.Dtos.Account;
+using Disco.Business.Dtos.Account;
 using Disco.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Disco.Business.Interfaces.Interfaces;
 
 namespace Disco.ApiServices.Controllers.Admin
 {
@@ -39,7 +38,7 @@ namespace Disco.ApiServices.Controllers.Admin
 
             var passwordResetToken = await _accountPasswordService.GetPasswordConfirmationTokenAsync(user);
 
-            _emailService.EmailConfirmation(new Business.Interfaces.Dtos.EmailNotifications.EmailConfirmationDto
+            _emailService.EmailConfirmation(new Business.Dtos.EmailNotifications.EmailConfirmationDto
             {
                 ToEmail = user.Email,
                 IsHtmlTemplate = true,
