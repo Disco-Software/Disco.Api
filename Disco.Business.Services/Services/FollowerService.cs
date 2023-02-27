@@ -29,10 +29,8 @@ namespace Disco.Business.Services.Services
         public async Task<FollowerResponseDto> CreateAsync(User user, User following, CreateFollowerDto dto)
         {
             var userFollower = _mapper.Map<UserFollower>(user);
-            userFollower.FollowerAccount = user.Account;
             userFollower.FollowingAccount = following.Account;
             userFollower.FollowingAccountId = following.AccountId;
-            userFollower.FollowerAccountId = user.Account.Id;
 
             if (user.Account.Following.All(f => f.FollowerAccountId != dto.FollowerAccountId))
             {
@@ -49,9 +47,6 @@ namespace Disco.Business.Services.Services
             await _followerRepository.AddAsync(userFollower);
 
             var userFollowerResponseDto = _mapper.Map<FollowerResponseDto>(userFollower);
-            userFollowerResponseDto.IsFollowing = userFollower.IsFollowing;
-            userFollowerResponseDto.FollowingAccount = userFollower.FollowingAccount;
-            userFollowerResponseDto.FollowerAccount = userFollower.FollowerAccount;
             
             return userFollowerResponseDto;
         }
@@ -66,18 +61,9 @@ namespace Disco.Business.Services.Services
             await _followerRepository.Remove(userFollower);
         }
 
-        public async Task<List<FollowerResponseDto>> GetAllAsync(GetAllFollowersDto dto)
+        public async Task<List<UserFollower>> GetFollowingAsync(int accountId)
         {
-            var followers = await _followerRepository.GetAllAsync(dto.UserId, dto.PageNumber, dto.PageSize);
-
-            var followersDto = _mapper.Map<List<FollowerResponseDto>>(followers);
-
-            return followersDto;
-        }
-
-        public async Task<List<UserFollower>> GetFollowingAsync(int userId)
-        {
-            var followings = await _followerRepository.GetFollowingAsync(userId);
+            var followings = await _followerRepository.GetFollowingAsync(accountId);
 
             foreach (var following in followings.ToList())
             {
@@ -106,9 +92,9 @@ namespace Disco.Business.Services.Services
             return followerDto;
         }
 
-        public async Task<List<UserFollower>> GetFollowersAsync(int userId)
+        public async Task<List<UserFollower>> GetFollowersAsync(int accountId)
         {
-            var followers = await _followerRepository.GetFollowersAsync(userId);
+            var followers = await _followerRepository.GetFollowersAsync(accountId);
 
             foreach (var follower in followers.ToList())
             {
@@ -120,6 +106,50 @@ namespace Disco.Business.Services.Services
             }
 
             return followers;
+        }
+
+        public async Task<List<UserFollower>> GetFollowingAsync(int userId, int pageNumber, int pageSize)
+        {
+            var followings = await _followerRepository.GetFollowingAsync(userId, pageNumber, pageSize);
+
+            var sortedFollowings = followings.OrderBy(following => following.FollowingAccount.User.UserName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            foreach (var following in sortedFollowings.ToList())
+            {
+                if (sortedFollowings.Where(f => f.FollowingAccountId == following.FollowingAccountId).Count() > 1)
+                {
+                    followings.Remove(following);
+                    continue;
+                }
+            }
+
+
+            return sortedFollowings;
+        }
+
+        public async Task<List<UserFollower>> GetFollowersAsync(int accountId, int pageNumber, int pageSize)
+        {
+            var followers = await _followerRepository.GetFollowersAsync(accountId, pageNumber, pageSize);
+
+            var sortedFollowers = followers
+                .OrderBy(follower => follower.FollowerAccount.User.UserName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            foreach (var follower in sortedFollowers.ToList())
+            {
+                if (sortedFollowers.Where(f => f.FollowerAccountId == follower.FollowerAccountId).Count() > 1)
+                {
+                    followers.Remove(follower);
+                    continue;
+                }
+            }
+
+            return sortedFollowers;
         }
     }
 }

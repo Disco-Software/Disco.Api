@@ -45,12 +45,20 @@ namespace Disco.ApiServices.Controllers
             return Ok(follower);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] GetAllFollowersDto dto)
+        [HttpGet("followers")]
+        public async Task<IActionResult> GetAllFollowersAsync([FromQuery] GetAllFollowersDto dto)
         {
-            var followers = await _followerService.GetAllAsync(dto);
+            var followers = await _followerService.GetFollowersAsync(dto.UserId, dto.PageNumber, dto.PageSize);
 
             return Ok(followers);
+        }
+
+        [HttpGet("following")]
+        public async Task<IActionResult> GetFollowingAsync([FromQuery] GetAllFollowersDto dto)
+        {
+            var following = await _followerService.GetFollowingAsync(dto.UserId, dto.PageNumber, dto.PageSize);
+
+            return Ok(following);
         }
 
         [HttpDelete("{followerId:int}")]

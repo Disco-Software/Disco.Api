@@ -10,8 +10,9 @@ namespace Disco.Domain.Interfaces
         Task AddAsync(UserFollower userFollower);
         Task<UserFollower> GetAsync(int id);
         Task Remove(UserFollower userFollower);
-        Task<IEnumerable<UserFollower>> GetAllAsync(int id, int pageNumber, int pageSize);
         Task<List<UserFollower>> GetFollowingAsync(int userId);
+        Task<List<UserFollower>> GetFollowingAsync(int userId, int pageNumber, int pageSize);
         Task<List<UserFollower>> GetFollowersAsync(int userId);
+        Task<List<UserFollower>> GetFollowersAsync(int userId, int pageNumber, int pageSize);
     }
 }

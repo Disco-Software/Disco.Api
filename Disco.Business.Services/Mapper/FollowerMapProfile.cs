@@ -15,10 +15,12 @@ namespace Disco.Business.Services.Mappers
         {
             CreateMap<CreateFollowerDto, UserFollower>()
                 .ForMember(u => u.Id, o => o.Ignore());
+            
             CreateMap<UserFollower, FollowerResponseDto>()
-                .ForMember(source => source.FollowingAccount, opt => opt.Ignore())
-                .ForMember(source => source.FollowerAccount, opt => opt.Ignore())
-                .ForMember(source => source.IsFollowing, opt => opt.Ignore());
+                .ForMember(source => source.FollowingAccount, opt => opt.MapFrom(userFollower => userFollower.FollowingAccount))
+                .ForMember(source => source.FollowerAccount, opt => opt.MapFrom(userFollower => userFollower.FollowerAccount))
+                .ForMember(source => source.IsFollowing, opt => opt.MapFrom(userFollower => userFollower.IsFollowing));
+            
             CreateMap<IEnumerable<UserFollower>, IEnumerable<FollowerResponseDto>>();
         }
     }

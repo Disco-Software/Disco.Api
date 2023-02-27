@@ -27,8 +27,8 @@ namespace Disco.Business.Services.Mappers
                 .ForMember(source => source.Email, e => e.Ignore());
             CreateMap<GoogleLogInDto, User>();
             CreateMap<User, UserFollower>()
-                .ForMember(f => f.FollowerAccount, opt => opt.Ignore())
-                .ForMember(f => f.FollowerAccountId, opt => opt.Ignore())
+                .ForMember(f => f.FollowerAccount, opt => opt.MapFrom(user => user))
+                .ForMember(f => f.FollowerAccountId, opt => opt.MapFrom(user => user.Id))
                 .ForMember(f => f.IsFollowing, opt => opt.Ignore())
                 .ForMember(f => f.FollowingAccountId, opt => opt.Ignore())
                 .ForMember(f => f.FollowingAccount, opt => opt.Ignore())
