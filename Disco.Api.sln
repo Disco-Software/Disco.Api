@@ -9,19 +9,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.ApiServices", "Disco.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Api", "Disco.Api\Disco.Api.csproj", "{7D6C4498-0C9B-4014-93C4-D987F2342655}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Domain.Models", "Disco.Domain.Models\Disco.Domain.Models.csproj", "{44969E68-4F0B-41D4-B004-920974EAF55F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Domain.Models", "Disco.Domain.Models\Disco.Domain.Models.csproj", "{44969E68-4F0B-41D4-B004-920974EAF55F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Domain.Data", "Disco.Domain.Data\Disco.Domain.Data.csproj", "{412B60EE-0A83-463A-80E1-737FD9481565}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Domain.Data", "Disco.Domain.Data\Disco.Domain.Data.csproj", "{412B60EE-0A83-463A-80E1-737FD9481565}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Domain.Interfaces", "Disco.Domain.Interfaces\Disco.Domain.Interfaces.csproj", "{25356723-1AD9-4122-939E-A4FDA0E726E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Domain.Interfaces", "Disco.Domain.Interfaces\Disco.Domain.Interfaces.csproj", "{25356723-1AD9-4122-939E-A4FDA0E726E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Domain.Repositories", "Disco.Domain.Repositories\Disco.Domain.Repositories.csproj", "{DC38096B-5FDD-4F87-92F4-8892C2C57019}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Domain.Repositories", "Disco.Domain.Repositories\Disco.Domain.Repositories.csproj", "{DC38096B-5FDD-4F87-92F4-8892C2C57019}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Business.Interfaces", "Disco.Business.Interfaces\Disco.Business.Interfaces.csproj", "{94AC8F53-6B9B-4976-8CE8-AE876B93C59B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Business.Interfaces", "Disco.Business.Interfaces\Disco.Business.Interfaces.csproj", "{94AC8F53-6B9B-4976-8CE8-AE876B93C59B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Business.Services", "Disco.Business.Services\Disco.Business.Services.csproj", "{CB763AAB-4CEC-484D-93CE-BC8C6CE5A2DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Business.Services", "Disco.Business.Services\Disco.Business.Services.csproj", "{CB763AAB-4CEC-484D-93CE-BC8C6CE5A2DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Business.Utils", "Disco.Business.Utils\Disco.Business.Utils.csproj", "{36C14269-A1E6-4D1B-88CA-8B664FEF8749}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Business.Utils", "Disco.Business.Utils\Disco.Business.Utils.csproj", "{36C14269-A1E6-4D1B-88CA-8B664FEF8749}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Integrations.Clients", "Disco.Business.Integrations\Disco.Integrations.Clients.csproj", "{285242F9-1BBC-445C-A875-42E474D1A996}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Integrations.Interfaces", "Disco.Integrations.Interfaces\Disco.Integrations.Interfaces.csproj", "{98124E6C-FEDD-475A-B97F-0F7C4942D589}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +73,14 @@ Global
 		{36C14269-A1E6-4D1B-88CA-8B664FEF8749}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36C14269-A1E6-4D1B-88CA-8B664FEF8749}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36C14269-A1E6-4D1B-88CA-8B664FEF8749}.Release|Any CPU.Build.0 = Release|Any CPU
+		{285242F9-1BBC-445C-A875-42E474D1A996}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{285242F9-1BBC-445C-A875-42E474D1A996}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{285242F9-1BBC-445C-A875-42E474D1A996}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{285242F9-1BBC-445C-A875-42E474D1A996}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98124E6C-FEDD-475A-B97F-0F7C4942D589}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98124E6C-FEDD-475A-B97F-0F7C4942D589}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98124E6C-FEDD-475A-B97F-0F7C4942D589}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98124E6C-FEDD-475A-B97F-0F7C4942D589}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
