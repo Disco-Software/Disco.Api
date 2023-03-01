@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 
@@ -23,7 +24,9 @@ namespace Disco.Tests.Services
         {
             var user = new User
             {
+                Id = 1,
                 UserName = "vasya_pupkin",
+                RoleName = "Admin",
                 Email = "vasya_pupkin@gmail.com",
                 Account = new Account()
                 {
@@ -33,10 +36,10 @@ namespace Disco.Tests.Services
 
             var authenticationOptions = new AuthenticationOptions()
             {
-                Issuer = "test",
-                Audience = "test",
+                Issuer = "disco-api",
+                Audience = "http://localhost/Disco.Api",
                 ExpiresAfterMitutes = 20,
-                SigningKey = "YmxhYmxhYmxh",
+                SigningKey = "c3RhcyBrb3JjaGV2c2t5aQ==",
             };
 
             authenticationOptions.SigningKeyBytes
@@ -48,8 +51,8 @@ namespace Disco.Tests.Services
             mockedOptions.Setup(options => options.Value)
                 .Returns(authenticationOptions);
 
-            var mockedTokenService = new Mock<ITokenService>();
-            mockedTokenService.Setup(x => x.GenerateAccessToken(user))
+            var mockedTokenHandler = new Mock<JwtSecurityTokenHandler>();
+            mockedTokenHandler.Setup(tokenHandler => tokenHandler.WriteToken(It.IsAny<JwtSecurityToken>()))
                 .Returns("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjkiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsIm5iZiI6MTY3NDYzODc2MCwiZXhwIjoxNjc0NzEwNzYwLCJpc3MiOiJkaXNjby1hcGkiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0L0Rpc2NvLkFwaSJ9.9KeP-LSVFJ9UB6hNeJpNV1zHqWee_hm6dAmBHTm7LRY");
 
             var service = new TokenService(mockedOptions.Object);

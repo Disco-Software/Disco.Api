@@ -20,29 +20,29 @@ namespace Disco.Tests.Services
         [TestMethod]
         public async Task CreateAsync_ReturnsSuccessResponse()
         {
-            var mapperConfig = new MapperConfiguration(ms =>
+            var mapperConfig = new MapperConfiguration(options =>
             {
-                ms.AddProfile(new AccountMapProfile());
-                ms.AddProfile(new FollowerMapProfile());
+                options.AddProfile(new AccountMapProfile());
+                options.AddProfile(new GlobalSearchMapProfile());
+                options.AddProfile(new PostMapProfile());
+                options.AddProfile(new StoryMapProfile());
+                options.AddProfile(new RoleMapProfile());
+                options.AddProfile(new FollowerMapProfile());
+                options.AddProfile(new MessageMapProfile());
+                options.AddProfile(new CommentMapProfile());
+                options.AddProfile(new GroupMapProfile());
             });
 
             IMapper mapper = mapperConfig.CreateMapper();
 
-            var mockedFollowerRepo = new Mock<IFollowerRepository>();
-
-            _ = mockedFollowerRepo
-                .Setup(obj => obj.AddAsync(It.IsAny<UserFollower>()))
-                .Returns(Task.FromResult(150));
-
-            var service = new FollowerService(mapper, mockedFollowerRepo.Object);
-
             var following = new User
             {
                 Id = 1,
+                UserName = "Stas",
+                Email = "s.d.korchevskyi@gmail.com",
                 Account = new Account
                 {
                     Id = 1,
-                    Followers = new List<UserFollower>(),
                     Following = new List<UserFollower>()
                 },
             };
@@ -50,6 +50,8 @@ namespace Disco.Tests.Services
             var follower = new User
             {
                 Id = 2,
+                UserName = "vasya_pupkin",
+                Email = "vasya_pupkin@gmail.com",
                 Account = new Account
                 {
                     Id = 2,
@@ -62,6 +64,13 @@ namespace Disco.Tests.Services
                 FollowerAccountId = follower.AccountId,
                 IntalationId = "fjkldjasdf;fjdaskljf;"
             };
+
+            var mockedFollowerRepo = new Mock<IFollowerRepository>();
+            mockedFollowerRepo
+                .Setup(obj => obj.AddAsync(It.IsAny<UserFollower>()))
+                .Returns(Task.FromResult(150));
+
+            var service = new FollowerService(mapper, mockedFollowerRepo.Object);
 
             var response = await service.CreateAsync(follower, following, dto);
 

@@ -114,7 +114,8 @@ namespace Disco.Business.Services.Services
 
         public async Task<User> GetByLogInProviderAsync(string loginProvider, string providerKey)
         {
-            var user = await _userManager.FindByLoginAsync(loginProvider, providerKey) ?? null;
+            var user = await _userManager.FindByLoginAsync(loginProvider, providerKey) 
+                ?? null;
             
             user.Account = await _accountRepository.GetAsync(user.AccountId);
             user.RoleName = _userRepository.GetUserRole(user);

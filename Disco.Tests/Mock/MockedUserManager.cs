@@ -1,4 +1,5 @@
 ﻿using Disco.Domain.Models;
+using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Moq;
@@ -18,7 +19,17 @@ namespace Disco.Tests.Mock
             var mockedUserManager = new Mock<UserManager<TUser>>(store.Object, null, null, null, null, null, null, null, null);
             mockedUserManager.Object.UserValidators.Add(new UserValidator<TUser>());
             mockedUserManager.Object.PasswordValidators.Add(new PasswordValidator<TUser>());
-            mockedUserManager.Object.PasswordHasher = new PasswordHasher<TUser>();
+            
+            
+            var mockedPasswordHasher = new Mock<IPasswordHasher<TUser>>();
+            mockedPasswordHasher.Setup(passwordHasher => passwordHasher.VerifyHashedPassword(It.IsAny<TUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(PasswordVerificationResult.Success);
+            mockedPasswordHasher.Setup(passwordHasher => passwordHasher.VerifyHashedPassword(It.IsAny<TUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(PasswordVerificationResult.Failed);
+            mockedPasswordHasher.Setup(passwordHasher => passwordHasher.VerifyHashedPassword(It.IsAny<TUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(PasswordVerificationResult.SuccessRehashNeeded);
+
+            mockedUserManager.Object.PasswordHasher = mockedPasswordHasher.Object;
 
             mockedUserManager.Setup(x => x.DeleteAsync(It.IsAny<TUser>())).ReturnsAsync(IdentityResult.Success);
             mockedUserManager.Setup(x => x.CreateAsync(It.IsAny<TUser>())).ReturnsAsync(IdentityResult.Success).Callback<TUser>((x) => ls.Add(x));

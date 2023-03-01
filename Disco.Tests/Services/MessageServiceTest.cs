@@ -36,6 +36,7 @@ namespace Disco.Tests.Services
             var group = new Group
             {
                 Name = Guid.NewGuid().ToString(),
+                Messages = new List<Message>(),
                 Id = 1,
             };
 
