@@ -1,5 +1,5 @@
 ﻿using Disco.Business.Constants;
-using Disco.Business.Interfaces.Dtos.AudD;
+using Disco.Integrations.Interfaces.Dtos.AudD;
 using Disco.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Integrations.Interfaces.Interfaces;
 
 namespace Disco.ApiServices.Controllers
 {
@@ -16,17 +17,17 @@ namespace Disco.ApiServices.Controllers
     [Authorize(AuthenticationSchemes = AuthSchema.UserToken)]
     public class AudDController : ControllerBase
     {
-        private readonly IAudDService _audDService;
+        private readonly IAudDClient _audDClient;
 
-        public AudDController(IAudDService audDService)
+        public AudDController(IAudDClient audDClient)
         {
-            _audDService = audDService;
+            _audDClient = audDClient;
         }
 
         [HttpPost("recognize")]
         public async Task<IActionResult> RecognizeAsync([FromForm] AudDRequestDto dto)
         {
-            var result = await _audDService.RecognizeAsync(dto);
+            var result = await _audDClient.CheckAuthorAsync(dto);
             
             if(result == null)
             {
