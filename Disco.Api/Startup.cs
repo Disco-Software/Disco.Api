@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using Disco.Domain.Data.Extentions;
 using Disco.Business.Services.Extentions;
 using Disco.Domain.Repositories.Extentions;
+using Disco.Integrations.Clients.Extentions;
 
 namespace Disco.Api
 {
@@ -47,34 +48,6 @@ namespace Disco.Api
             var connectionStrings = Configuration.GetSection("ConnectionStrings")
                 .Get<ConnectionStrings>();
 
-            //services.AddSwaggerGen(options =>
-            //{
-            //    options.SwaggerDoc("v1", new OpenApiInfo { });
-            //    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            //    {
-            //        In = ParameterLocation.Header,
-            //        Description = "Please enter a valid token",
-            //        Name = "Authorization",
-            //        Type = SecuritySchemeType.Http,
-            //        BearerFormat = "JWT",
-            //        Scheme = "Bearer"
-            //    });
-
-            //    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
-            //    {
-            //        {
-            //            new OpenApiSecurityScheme
-            //            {
-            //                Reference = new OpenApiReference
-            //                {
-            //                    Type = ReferenceType.SecurityScheme,
-            //                    Id = "Bearer"
-            //                }
-            //            },
-            //            new string[]{}
-            //        }
-            //    });
-            //});
             services.AddApiDbContext(connectionStrings.ProdactionConnection);
             services.AddUserIdentity();
             services.AddAuthorization();
@@ -124,6 +97,7 @@ namespace Disco.Api
 
             services.AddRepositories();
             services.AddService();
+            services.AddIntegrations();
 
             services.AddOptions<PushNotificationOptions>()
                 .Configure(Configuration.GetSection("NotificationHub").Bind)

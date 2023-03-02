@@ -14,6 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Disco.Business.Integrations\Disco.Integrations.Clients.csproj" />
       <ProjectReference Include="..\Disco.Business.Services\Disco.Business.Services.csproj" />
     </ItemGroup>
 

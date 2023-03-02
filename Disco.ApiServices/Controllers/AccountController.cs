@@ -18,6 +18,7 @@ using System.Diagnostics;
 using Microsoft.Extensions.Hosting;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
+using Disco.Integrations.Interfaces.Interfaces;
 
 namespace Disco.ApiServices.Controllers
 {
@@ -28,20 +29,20 @@ namespace Disco.ApiServices.Controllers
         private readonly IAccountService _accountService;
         private readonly IAccountPasswordService _accountPasswordService;
         private readonly ITokenService _tokenService;
-        private readonly IFacebookAuthService _facebookAuthService;
+        private readonly IFacebookClient _facebookClient;
         private readonly IMapper _mapper;
 
         public AccountController(
             IAccountService accountService,
             IAccountPasswordService accountPasswordService,
             ITokenService tokenService,
-            IFacebookAuthService facebookAuthService,
+            IFacebookClient facebookClient,
             IMapper mapper)
         {
             _accountService = accountService;
             _accountPasswordService = accountPasswordService;
             _tokenService = tokenService;
-            _facebookAuthService = facebookAuthService;
+            _facebookClient = facebookClient;
             _mapper = mapper;
         }
 
@@ -79,7 +80,7 @@ namespace Disco.ApiServices.Controllers
                 return BadRequest(validator.Errors);
             }
 
-            var userInfo = await _facebookAuthService.GetUserInfo(dto.AccessToken);
+            var userInfo = await _facebookClient.GetInfoAsync(dto.AccessToken);
             userInfo.Name = userInfo.Name.Replace(" ", "_");
 
             var user = await _accountService.GetByLogInProviderAsync(LogInProvider.Facebook, userInfo.Id);
