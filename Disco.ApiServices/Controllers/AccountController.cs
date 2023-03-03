@@ -3,7 +3,6 @@ using Disco.Business.Interfaces.Validators;
 using Disco.Business.Constants;
 using Disco.Business.Interfaces.Dtos.Apple;
 using Disco.Business.Interfaces.Dtos.Account;
-using Disco.Business.Interfaces.Dtos.Facebook;
 using Disco.Business.Interfaces.Dtos.Google;
 using Disco.Business.Interfaces;
 using Disco.Domain.Models;
@@ -19,6 +18,7 @@ using Microsoft.Extensions.Hosting;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
 using Disco.Integrations.Interfaces.Interfaces;
+using Disco.Integrations.Interfaces.Dtos.Facebook;
 
 namespace Disco.ApiServices.Controllers
 {

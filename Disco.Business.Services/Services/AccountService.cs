@@ -5,7 +5,6 @@ using Disco.Business.Interfaces;
 using Disco.Business.Interfaces.Dtos.Apple;
 using Disco.Business.Interfaces.Dtos.Account;
 using Disco.Business.Interfaces.Dtos.EmailNotifications;
-using Disco.Business.Interfaces.Dtos.Facebook;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using System;

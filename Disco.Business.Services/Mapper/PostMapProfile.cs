@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Disco.Business.Interfaces.Dtos.AudD;
 using Disco.Business.Interfaces.Dtos.Images;
 using Disco.Business.Interfaces.Dtos.Posts;
 using Disco.Business.Interfaces.Dtos.Songs;
 using Disco.Business.Interfaces.Dtos.Videos;
 using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
+using Disco.Integrations.Interfaces.Dtos.AudD;
 using System;
 using System.Collections.Generic;
 using System.Text;
