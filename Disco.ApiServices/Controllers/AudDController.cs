@@ -1,5 +1,4 @@
 ﻿using Disco.Business.Constants;
-using Disco.Integrations.Interfaces.Dtos.AudD;
 using Disco.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Disco.Business.Interfaces.Interfaces;
-using Disco.Integrations.Interfaces.Interfaces;
+using Disco.Integration.Interfaces.Interfaces;
+using Disco.Integration.Interfaces.Dtos.AudD;
 
 namespace Disco.ApiServices.Controllers
 {

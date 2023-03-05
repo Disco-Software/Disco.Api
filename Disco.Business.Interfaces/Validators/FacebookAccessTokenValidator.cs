@@ -1,4 +1,4 @@
-﻿using Disco.Integrations.Interfaces.Dtos.Facebook;
+﻿using Disco.Integration.Interfaces.Dtos.Facebook;
 using FluentValidation;
 
 namespace Disco.Business.Interfaces.Validators

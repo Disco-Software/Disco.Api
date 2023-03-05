@@ -1,4 +1,5 @@
 using System;
+using Disco.Integration.Interfaces;
 using System.Reflection;
 using Azure.Core.Extensions;
 using Azure.Storage.Blobs;
@@ -29,7 +30,7 @@ using System.Threading.Tasks;
 using Disco.Domain.Data.Extentions;
 using Disco.Business.Services.Extentions;
 using Disco.Domain.Repositories.Extentions;
-using Disco.Integrations.Clients.Extentions;
+using Disco.Integration.Clients.Extentions;
 
 namespace Disco.Api
 {

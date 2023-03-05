@@ -23,9 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Business.Services", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Business.Utils", "Disco.Business.Utils\Disco.Business.Utils.csproj", "{36C14269-A1E6-4D1B-88CA-8B664FEF8749}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Integrations.Clients", "Disco.Integrations.Clients\Disco.Integrations.Clients.csproj", "{285242F9-1BBC-445C-A875-42E474D1A996}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Integration.Clients", "Disco.Integration.Clients\Disco.Integration.Clients.csproj", "{285242F9-1BBC-445C-A875-42E474D1A996}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Integrations.Interfaces", "Disco.Integrations.Interfaces\Disco.Integrations.Interfaces.csproj", "{98124E6C-FEDD-475A-B97F-0F7C4942D589}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Integration.Interfaces", "Disco.Integration.Interfaces\Disco.Integration.Interfaces.csproj", "{98124E6C-FEDD-475A-B97F-0F7C4942D589}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

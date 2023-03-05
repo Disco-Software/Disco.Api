@@ -17,8 +17,8 @@ using System.Diagnostics;
 using Microsoft.Extensions.Hosting;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
-using Disco.Integrations.Interfaces.Interfaces;
-using Disco.Integrations.Interfaces.Dtos.Facebook;
+using Disco.Integration.Interfaces.Dtos.Facebook;
+using Disco.Integration.Interfaces.Interfaces;
 
 namespace Disco.ApiServices.Controllers
 {

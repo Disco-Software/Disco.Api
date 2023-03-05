@@ -4,7 +4,7 @@ using Disco.Business.Interfaces.Dtos.Friends;
 using Disco.Business.Interfaces.Dtos.Google;
 using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
-using Disco.Integrations.Interfaces.Dtos.Facebook;
+using Disco.Integration.Interfaces.Dtos.Facebook;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -5,7 +5,7 @@ using Disco.Business.Interfaces.Dtos.Songs;
 using Disco.Business.Interfaces.Dtos.Videos;
 using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
-using Disco.Integrations.Interfaces.Dtos.AudD;
+using Disco.Integration.Interfaces.Dtos.AudD;
 using System;
 using System.Collections.Generic;
 using System.Text;
