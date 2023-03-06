@@ -13,8 +13,8 @@ namespace Disco.Integration.Clients.Extentions
     {
         public static void AddIntegrations(this IServiceCollection services)
         {
-            services.AddHttpClient<IAudDClient, AudDClient>();
-            services.AddHttpClient<IFacebookClient, FacebookClient>();
+            services.AddSingleton<IAudDClient, AudDClient>();
+            services.AddSingleton<IFacebookClient, FacebookClient>();
         }
     }
 }
