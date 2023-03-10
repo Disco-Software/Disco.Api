@@ -14,6 +14,7 @@ namespace Disco.Api.AppSetup
                 options.AddDefaultPolicy(policyBuilder =>
                 {
                     policyBuilder.WithOrigins(
+                        "http://79.159.94.191:4200",
                         "http://localhost:4200")
                     .AllowAnyHeader()
                     .AllowAnyMethod();

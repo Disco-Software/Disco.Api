@@ -42,23 +42,17 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task<List<UserFollower>> GetFollowingAsync(int accountId)
         {
-            return await _ctx.UserFollowers
-                .Include(f => f.FollowingAccount)
-                .ThenInclude(a => a.User)
-                .Include(f => f.FollowingAccount)
-                .ThenInclude(a => a.AccountStatus)
-                .Include(f => f.FollowerAccount)
-                .ThenInclude(a => a.User)
-                .Include(f => f.FollowerAccount)
-                .ThenInclude(a => a.AccountStatus)
-                .Where(u => u.FollowerAccountId == accountId)
-                .OrderBy(f => f.FollowingAccount.User.UserName)
+            var followers = await _ctx.Accounts
+                .SelectMany(account => account.Followers)
+                .Include(follower => follower.FollowerAccount)
                 .ToListAsync();
+
+            return followers;
         }
 
         public async Task<List<UserFollower>> GetFollowingAsync(int accountId, int pageNumber, int pageSize)
         {
-            return await _ctx.UserFollowers
+            var following = await _ctx.UserFollowers
                 .Include(f => f.FollowingAccount)
                 .ThenInclude(a => a.User)
                 .Include(f => f.FollowingAccount)
@@ -72,21 +66,16 @@ namespace Disco.Domain.Repositories.Repositories
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+
+            return following;
         }
 
 
         public async Task<List<UserFollower>> GetFollowersAsync(int accountId)
         {
-            var followers = await _ctx.UserFollowers
-                .Include(f => f.FollowerAccount)
-                .ThenInclude(a => a.User)
-                .Include(f => f.FollowerAccount.AccountStatus)
-                .Include(f => f.FollowingAccount.AccountStatus)
-                .Include(f => f.FollowingAccount)
-                .ThenInclude(a => a.User)
-                .Where(f => f.FollowingAccountId == accountId)
-                .OrderBy(f => f.FollowerAccount.User.UserName)
-                .AsNoTracking()
+            var followers = await _ctx.Accounts
+                .SelectMany(account => account.Followers)
+                .Include(follower => follower.FollowerAccount)
                 .ToListAsync();
 
             return followers;

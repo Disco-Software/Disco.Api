@@ -17,13 +17,16 @@ namespace Disco.Business.Services.Services
     {
         private readonly IMapper _mapper;
         private readonly IFollowerRepository _followerRepository;
+        private readonly IAccountRepository _accountRepository;
 
         public FollowerService(
             IMapper mapper,
-            IFollowerRepository friendRepository)
+            IFollowerRepository friendRepository,
+            IAccountRepository accountRepository)
         {
             _followerRepository = friendRepository;
             _mapper = mapper;
+            _accountRepository = accountRepository;
         }
 
         public async Task<FollowerResponseDto> CreateAsync(User user, User following, CreateFollowerDto dto)

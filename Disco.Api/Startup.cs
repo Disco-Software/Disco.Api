@@ -31,6 +31,8 @@ using Disco.Domain.Data.Extentions;
 using Disco.Business.Services.Extentions;
 using Disco.Domain.Repositories.Extentions;
 using Disco.Integration.Clients.Extentions;
+using Stripe;
+using Disco.Integration.Interfaces.Options;
 
 namespace Disco.Api
 {
@@ -112,6 +114,9 @@ namespace Disco.Api
             services.AddOptions<AudDOptions>()
                 .Configure(Configuration.GetSection("AudDOptions").Bind)
                 .ValidateDataAnnotations();
+            services.AddOptions<StripeOptions>()
+                .Configure(Configuration.GetSection("Stripe").Bind)
+                .ValidateDataAnnotations();
 
             services.AddAutoMapper();
 
@@ -125,10 +130,12 @@ namespace Disco.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        [Obsolete]
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
             var serviceProvider = serviceScopeFactory.CreateScope().ServiceProvider;
+            StripeConfiguration.SetApiKey(Configuration.GetSection("Stripe")["PrivateKey"]);
 
             if (env.IsDevelopment())
             {

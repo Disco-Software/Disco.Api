@@ -42,7 +42,7 @@ namespace Disco.Business.Services.Services
         {
             var role = await _roleManager.FindByNameAsync(name);
 
-            await _roleManager.DeleteAsync(role);
+            await _roleManager.DeleteAsync(role ?? throw new Exception());
         }
 
         public async Task<List<Role>> GetAllRoles(GetAllRolesDto dto)

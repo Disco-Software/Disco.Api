@@ -70,7 +70,7 @@ namespace Disco.Tests.Services
                 .Setup(obj => obj.AddAsync(It.IsAny<UserFollower>()))
                 .Returns(Task.FromResult(150));
 
-            var service = new FollowerService(mapper, mockedFollowerRepo.Object);
+            var service = new FollowerService(mapper, mockedFollowerRepo.Object, null);
 
             var response = await service.CreateAsync(follower, following, dto);
 
@@ -126,7 +126,8 @@ namespace Disco.Tests.Services
             mockedFollowerRepository.Setup(f => f.Remove(It.IsAny<UserFollower>()))
                 .Returns(It.IsAny<Task>());
 
-            var service = new FollowerService(mapper, mockedFollowerRepository.Object);
+
+            var service = new FollowerService(mapper, mockedFollowerRepository.Object, null);
 
             var response = service.DeleteAsync(2);
 

@@ -81,7 +81,7 @@ namespace Disco.Business.Services.Services
 
         public async Task<User> GetByIdAsync(int id)
         {
-            var user = await _userManager.FindByIdAsync(id.ToString()) ?? 
+            var user = await _userManager.FindByIdAsync(id.ToString()) ??
                 throw new UserNotFoundException($"User with this id -> {id}, not found");
 
             user.Account = await _accountRepository.GetAsync(user.AccountId);
@@ -91,7 +91,7 @@ namespace Disco.Business.Services.Services
 
             return user;
         }
-
+      
         public async Task CreateAsync(User user)
         {
            user.NormalizedEmail = _userManager.NormalizeEmail(user.Email);

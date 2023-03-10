@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Disco.Business.Interfaces.Options
+namespace Disco.Integration.Interfaces.Options
 {
     public class AudDOptions
     {
