@@ -18,17 +18,20 @@ namespace Disco.Business.Services.Services
 {
     public class GroupService : IGroupService
     {
+        private readonly UserManager<User> _userManager;
         private readonly IGroupRepository _groupRepository;
         private readonly IAccountGroupRepository _accountGroupRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
 
         public GroupService(
+            UserManager<User> userManager,
             IGroupRepository groupRepository,
             IAccountGroupRepository accountGroupRepository,
             IAccountRepository accountRepository,
             IMapper mapper)
         {
+            _userManager = userManager;
             _groupRepository = groupRepository;
             _accountGroupRepository = accountGroupRepository;
             _accountRepository = accountRepository;
@@ -67,14 +70,6 @@ namespace Disco.Business.Services.Services
         public async Task<IEnumerable<Group>> GetAllAsync(int id, int pageNumber, int pageSize)
         {
             var groups = await _groupRepository.GetAllAsync(id, pageNumber, pageSize);
-
-            foreach (var group in groups)
-            {
-                foreach (var accountGroup in group.AccountGroups)
-                {
-                    accountGroup.Account = await _accountRepository.GetAsync(accountGroup.AccountId);
-                }
-            }
 
             return groups;
         }
