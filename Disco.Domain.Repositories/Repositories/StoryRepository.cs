@@ -16,77 +16,72 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task AddAsync(Story story)
         {
-            await _ctx.Stories.AddAsync(story);
+            await _context.Stories.AddAsync(story);
            
-            await _ctx.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<Story>> GetAllAsync(int accountId, int pageNumber, int pageSize)
         {
             var storyList = new List<Story>();
 
-            var profile = await _ctx.Accounts
-                .Include(u => u.User)
-                .Include(u => u.Stories)
-                .ThenInclude(s => s.StoryImages)
-                .Include(u => u.Stories)
-                .ThenInclude(s => s.StoryVideos)
-                .Include(f => f.Followers)
-                .ThenInclude(p => p.FollowerAccount)
-                .ThenInclude(s => s.Stories)
-                .ThenInclude(si => si.StoryImages)
-                .Include(f => f.Followers)
-                .ThenInclude(p => p.FollowerAccount)
-                .ThenInclude(p => p.Stories)
-                .ThenInclude(s => s.StoryVideos)
-                .Include(f => f.Followers)
-                .ThenInclude(p => p.FollowingAccount)
-                .Include(f => f.Followers)
-                .ThenInclude(p => p.FollowerAccount)
-                .ThenInclude(s => s.Stories)
-                .ThenInclude(s => s.StoryImages)
-                .Include(f => f.Followers)
-                .ThenInclude(f => f.FollowerAccount)
-                .ThenInclude(f => f.Stories)
-                .ThenInclude(f => f.StoryVideos)
-                .Where(u => u.Id == accountId)
-                .FirstOrDefaultAsync();
-            
-            storyList.AddRange(profile.Stories);
+            var account = await _context.Accounts.FirstOrDefaultAsync();
 
-            foreach (var friend in profile.Followers)
+            await _context.Entry(account)
+                .Collection(account => account.Stories)
+                .LoadAsync();
+
+            await _context.Entry(account)
+                .Collection(account => account.Following)
+                .LoadAsync();
+
+            await _context.Entry(account)
+                .Reference(account => account.User)
+                .LoadAsync();
+
+            storyList.AddRange(account.Stories);
+
+            foreach (var following in account.Following)
             {
-                friend.FollowerAccount = await _ctx.Accounts
-                    .Include(p => p.Stories)
-                    .ThenInclude(i => i.StoryImages)
-                    .Include(p => p.Stories)
-                    .ThenInclude(s => s.StoryVideos)
-                    .Include(u => u.User)
-                    .Where(f => f.Id == friend.FollowerAccountId)
-                    .FirstOrDefaultAsync();
-                storyList.AddRange(friend.FollowerAccount.Stories);
+                await _context.Entry(following)
+                    .Reference(following => following.FollowingAccount)
+                    .LoadAsync();
+
+                await _context.Entry(following.FollowingAccount)
+                    .Reference(following => following.User)
+                    .LoadAsync();
+
+                await _context.Entry(following.FollowingAccount)
+                    .Collection(account => account.Stories)
+                    .LoadAsync();
+
+                storyList.AddRange(following.FollowingAccount.Stories);
             }
 
-           return storyList.OrderByDescending(d => d.DateOfCreation)
+            var stories = storyList
+                .Where(story => story.DateOfCreation >= DateTime.UtcNow.AddHours(-12))
+                .OrderByDescending(story => story.DateOfCreation)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
+
+            return stories;
         }
 
         public override async Task Remove(int id)
         {
-            var story = await _ctx.Stories
+            var story = await _context.Stories
                 .Include(i => i.StoryImages)
                 .Include(v => v.StoryVideos)
                 .Where(s => s.Id == id)
                 .FirstOrDefaultAsync();
             story.Account.Stories.Remove(story);
-            _ctx.Stories.Remove(story);
+            _context.Stories.Remove(story);
         }
 
         public override Task<Story> GetAsync(int id)
         {
-            var story = _ctx.Stories
+            var story = _context.Stories
                 .Include(i => i.StoryImages)
                 .Include(v => v.StoryVideos)
                 .Where(i => i.Id == id)

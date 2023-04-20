@@ -12,5 +12,6 @@ namespace Disco.Domain.Interfaces
         Task<Post> GetAsync(int id);
         Task<List<Post>> GetPostsByDescriptionAsync(string search);
         Task<List<Post>> GetUserPostsAsync(int userId);
+        Task<List<Post>> GetAllPostsAsync(DateTime from, DateTime to);
     }
 }

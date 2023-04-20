@@ -19,21 +19,21 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task CreateAsync(Message message, CancellationToken cancellationToken = default)
         {
-           await _ctx.Messages.AddAsync(message, cancellationToken);
+           await _context.Messages.AddAsync(message, cancellationToken);
 
-            await _ctx.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task DeleteAsync(Message message, CancellationToken cancellationToken = default)
         {
-            _ctx.Messages.Remove(message);
+            _context.Messages.Remove(message);
 
-            await _ctx.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<List<Message>> GetAllAsync(int groupId, int pageNumber, int pageSize)
         {
-            return await _ctx.Messages
+            return await _context.Messages
                 .Where(m => m.GroupId == groupId)
                 .OrderBy(m => m.Id)
                 .Skip((pageNumber - 1) * pageSize)
@@ -43,7 +43,7 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task<Message> GetByIdAsync(int id)
         {
-            return await _ctx.Messages
+            return await _context.Messages
                 .Include(m => m.Group)
                 .Where(m => m.Id == id)
                 .FirstOrDefaultAsync();
@@ -51,9 +51,9 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task UpdateAsync(Message message, CancellationToken cancellationToken = default)
         {
-            _ctx.Messages.Update(message);
+            _context.Messages.Update(message);
 
-            await _ctx.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -88,5 +88,17 @@ namespace Disco.Domain.Repositories.Repositories
                 .OrderBy(u => u.DateOfRegister)
                 .ToListAsync();
         }
+
+        public async Task<List<User>> GetAllUsersAsync()
+        {
+            return await _ctx.Users.ToListAsync();
+        }
+        public async Task<List<User>> GetAllUsersAsync(DateTime from, DateTime to)
+        {
+            return await _ctx.Users
+                .Where(user => user.DateOfRegister <= to || user.DateOfRegister >= from)
+                .OrderBy(user => user.DateOfRegister)
+                .ToListAsync();
+        }
     }
 }

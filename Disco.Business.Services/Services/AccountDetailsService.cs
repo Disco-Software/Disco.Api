@@ -59,6 +59,10 @@ namespace Disco.Business.Services.Services
 
             foreach (var account in accounts.ToList())
             {
+                var userAccount = account;
+
+                userAccount = await _accountRepository.GetAccountAsync(account.Id);
+
                 if (accounts.Where(a => a.Id == account.Id).ToList().Count > 1)
                 {
                     accounts.Remove(account);

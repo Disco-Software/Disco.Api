@@ -22,15 +22,15 @@ namespace Disco.Domain.Repositories.Repositories
             if(user == null)
                 throw new ArgumentNullException("user is null");
             
-            await _ctx.Posts.AddAsync(post);
+            await _context.Posts.AddAsync(post);
             user.Account.Posts.Add(post);
             
-            await _ctx.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public override async Task Remove(int id)
         {
-            var post = await _ctx.Posts
+            var post = await _context.Posts
                 .Include(p => p.Account)
                 .Include(v => v.PostVideos)
                 .Include(s => s.PostSongs)
@@ -40,16 +40,16 @@ namespace Disco.Domain.Repositories.Repositories
 
             post.Account.Posts.Remove(post);
 
-            _ctx.Remove(post);
+            _context.Remove(post);
 
-            await _ctx.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         //public async Task<List<Post>> GetUserPostsAsync(int userId, int pageSize, int pageNumber)
 
         public override Task<Post> GetAsync(int id)
         {
-           return _ctx.Posts
+           return _context.Posts
                 .Include(p => p.Likes)
                 .Include(i => i.PostImages)
                 .Include(s => s.PostSongs)
@@ -62,7 +62,7 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task<List<Post>> GetPostsByDescriptionAsync(string search)
         {
-            return await _ctx.Posts
+            return await _context.Posts
                 .Include(p => p.PostImages)
                 .Include(p => p.PostVideos)
                 .Include(p => p.PostSongs)
@@ -72,18 +72,22 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task<List<Post>> GetUserPostsAsync(int accountId)
         {
-            return await _ctx.Accounts
-                .SelectMany(account => account.Posts)
-                .Include(post => post.PostImages)
-                .Include(post => post.PostSongs)
-                .Include(post => post.PostVideos)
+            var account = await _context.Accounts
+                .Include(account => account.Posts)
+                .ThenInclude(post => post.PostImages)
+                .Include(account => account.Posts)
+                .ThenInclude(post => post.PostSongs)
+                .Include(account => account.Posts)
+                .ThenInclude(post => post.PostVideos)
                 .Where(account => account.Id == accountId)
-                .ToListAsync();
+                .FirstOrDefaultAsync();
+
+            return account!.Posts;
         }
 
         public async Task<List<Post>> GetFollowerPostsAsync(int accountId)
         {
-            return await _ctx.Accounts
+            return await _context.Accounts
                 .SelectMany(a => a.Posts)
                 .Include(p => p.Likes)
                 .Include(p => p.PostImages)
@@ -99,7 +103,7 @@ namespace Disco.Domain.Repositories.Repositories
 
             foreach (var following in followings)
             {
-                var account = await _ctx.Accounts
+                var account = await _context.Accounts
                     .Include(a => a.Posts)
                     .ThenInclude(p => p.PostImages)
                     .Include(a => a.Posts)
@@ -123,6 +127,14 @@ namespace Disco.Domain.Repositories.Repositories
         public Task<List<Post>> GetAllUserPosts(int userId, int pageSize, int pageNumber)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<List<Post>> GetAllPostsAsync(DateTime from, DateTime to)
+        {
+            return await _context.Posts
+                .Where(post => post.DateOfCreation >= from && post.DateOfCreation <= to)
+                .OrderByDescending(post => post.DateOfCreation)
+                .ToListAsync();
         }
     }
 }

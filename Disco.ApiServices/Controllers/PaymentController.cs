@@ -25,7 +25,6 @@ namespace Disco.ApiServices.Controllers
         [HttpPost]
         public ActionResult Create(PaymentIntentCreateRequest request)
         {
-            StripeOptions stripe = new StripeOptions();
             var paymentIntentService = new PaymentIntentService();
 
             var paymentIntent = paymentIntentService.Create(new PaymentIntentCreateOptions

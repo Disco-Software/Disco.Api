@@ -3,12 +3,13 @@ using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Options;
 using System.Linq;
 using System.Reflection;
 
 namespace Disco.Domain.EF
 {
-    public class ApiDbContext : IdentityDbContext<User,Role,int>
+    public class ApiDbContext : IdentityDbContext<User,Role,int>, IDesignTimeDbContextFactory<ApiDbContext>
     {
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Status> AccountStatuses { get; set; }
@@ -33,7 +34,7 @@ namespace Disco.Domain.EF
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=tcp:disco-dev-sql-srv.database.windows.net,1433;Initial Catalog=disco-prod-sql-db;Persist Security Info=False;User ID=disco-dev-sa;Password=StasZeus2021!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            optionsBuilder.UseSqlServer("Server=tcp:disco-dev-sql-srv.database.windows.net,1433;Initial Catalog=disco-dev-sql-db;Persist Security Info=False;User ID=disco-dev-sa;Password=StasZeus2021!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             base.OnConfiguring(optionsBuilder);
         }
 
@@ -82,9 +83,10 @@ namespace Disco.Domain.EF
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Account>()
-                .HasOne(s => s.AccountStatus)
+                .HasOne(account => account.AccountStatus)
                 .WithOne(a => a.Account)
-                .HasForeignKey<AccountStatus>(f => f.AccountId);
+                .HasForeignKey<AccountStatus>(accountStatus => accountStatus.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Account>()
                 .HasMany(a => a.AccountGroups)
@@ -123,6 +125,16 @@ namespace Disco.Domain.EF
                 .HasForeignKey(g => g.GroupId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+        }
+
+        public ApiDbContext CreateDbContext(string[] args)
+        {
+            DbContextOptionsBuilder<ApiDbContext> optionsBuilder = new DbContextOptionsBuilder<ApiDbContext>();
+
+            var options = optionsBuilder
+                .UseSqlServer("Server=tcp:disco-dev-sql-srv.database.windows.net,1433;Initial Catalog=disco-dev-sql-db;Persist Security Info=False;User ID=disco-dev-sa;Password=StasZeus2021!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;").Options;
+
+            return new ApiDbContext(options);
         }
     }
 }

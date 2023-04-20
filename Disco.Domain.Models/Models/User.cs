@@ -6,14 +6,14 @@ namespace Disco.Domain.Models.Models
 {
     public class User : IdentityUser<int>
     {
-        public string RoleName { get; set; }
-        public string RefreshToken { get; set; }
+        public string? RoleName { get; set; } = string.Empty;
+        public string? RefreshToken { get; set; } = string.Empty;
         [Column(TypeName = "date")]
         public DateTime RefreshTokenExpiress { get; set; }
         [Column(TypeName = "date")]
         public DateTime DateOfRegister { get; set; }
         public int AccountId { get; set; }
-        public Account Account { get; set; }
+        public Account? Account { get; set; }
 
     }
 }

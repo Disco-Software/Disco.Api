@@ -153,5 +153,12 @@ namespace Disco.Business.Services.Services
         {
             await _userManager.DeleteAsync(user);
         }
+
+        public async Task<Account> GetByAccountIdAsync(int accountId)
+        {
+            var account = await _accountRepository.GetAccountAsync(accountId);
+
+            return account;
+        }
     }
 }

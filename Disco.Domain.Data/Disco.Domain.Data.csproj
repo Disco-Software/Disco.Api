@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Disco.Domain.Models\Disco.Domain.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

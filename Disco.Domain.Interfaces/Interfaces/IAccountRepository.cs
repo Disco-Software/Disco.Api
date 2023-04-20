@@ -9,6 +9,7 @@ namespace Disco.Domain.Interfaces
     public interface IAccountRepository
     {
         Task<Account> GetAsync(int id);
+        Task<Account> GetAccountAsync(int accountId);
         Task<Account> Update(Account newItem);
         Task<List<Account>> FindAccountsByUserNameAsync(string search);
         Task RemoveAccountAsync(int accountId);

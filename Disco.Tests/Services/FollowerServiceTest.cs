@@ -61,7 +61,7 @@ namespace Disco.Tests.Services
 
             var dto = new CreateFollowerDto
             {
-                FollowerAccountId = follower.AccountId,
+                FollowingAccountId = follower.AccountId,
                 IntalationId = "fjkldjasdf;fjdaskljf;"
             };
 

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Disco.Business.Services.Mapper;
 using Disco.Business.Services.Mappers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,6 +20,7 @@ namespace Disco.Business.Services.Extentions
                 options.AddProfile(new MessageMapProfile());
                 options.AddProfile(new CommentMapProfile());
                 options.AddProfile(new GroupMapProfile());
+                options.AddProfile(new StatisticsMapProfile());
             }).CreateMapper());
         }
     }

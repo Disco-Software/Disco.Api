@@ -22,13 +22,13 @@ namespace Disco.Domain.Repositories.Repositories
 
         public override async Task Remove(int id)
         {
-            var comment = await _ctx.Comments
+            var comment = await _context.Comments
                 .Where(s => s.Id == id)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
-            _ctx.Comments.Remove(comment);
+            _context.Comments.Remove(comment);
 
-            await _ctx.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -6,7 +6,9 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Disco.Domain.Migrations
+#nullable disable
+
+namespace Disco.Domain.Data.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
     partial class ApiDbContextModelSnapshot : ModelSnapshot
@@ -15,18 +17,21 @@ namespace Disco.Domain.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.9")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            modelBuilder.Entity("Disco.Domain.Models.Account", b =>
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Disco.Domain.Models.Models.Account", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Cread")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Photo")
@@ -43,12 +48,13 @@ namespace Disco.Domain.Migrations
                     b.ToTable("Accounts");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.AccountGroup", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.AccountGroup", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
@@ -65,12 +71,13 @@ namespace Disco.Domain.Migrations
                     b.ToTable("AccountGroups");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.AccountStatus", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.AccountStatus", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
@@ -79,6 +86,7 @@ namespace Disco.Domain.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("LastStatus")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NextStatusId")
@@ -95,17 +103,19 @@ namespace Disco.Domain.Migrations
                     b.ToTable("AccountStatus");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Comment", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
                     b.Property<string>("CommentDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PostId")
@@ -120,7 +130,7 @@ namespace Disco.Domain.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Connection", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Connection", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -132,6 +142,7 @@ namespace Disco.Domain.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserAgent")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -141,14 +152,16 @@ namespace Disco.Domain.Migrations
                     b.ToTable("Connections");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Group", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Group", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -156,12 +169,13 @@ namespace Disco.Domain.Migrations
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Like", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Like", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
@@ -178,12 +192,13 @@ namespace Disco.Domain.Migrations
                     b.ToTable("Likes");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Message", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Message", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
@@ -192,6 +207,7 @@ namespace Disco.Domain.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("GroupId")
@@ -206,12 +222,13 @@ namespace Disco.Domain.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Post", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Post", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
@@ -220,6 +237,7 @@ namespace Disco.Domain.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -229,17 +247,19 @@ namespace Disco.Domain.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.PostImage", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.PostImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
                     b.Property<string>("Source")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -249,26 +269,31 @@ namespace Disco.Domain.Migrations
                     b.ToTable("PostImages");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.PostSong", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.PostSong", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ExecutorName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
                     b.Property<string>("Source")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -278,17 +303,19 @@ namespace Disco.Domain.Migrations
                     b.ToTable("PostSongs");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.PostVideo", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.PostVideo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
                     b.Property<string>("VideoSource")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -298,12 +325,13 @@ namespace Disco.Domain.Migrations
                     b.ToTable("PostVideos");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Role", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -324,20 +352,22 @@ namespace Disco.Domain.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Status", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Status", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("FollowersCount")
                         .HasColumnType("int");
 
                     b.Property<string>("LastStatus")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NextStatusId")
@@ -351,12 +381,13 @@ namespace Disco.Domain.Migrations
                     b.ToTable("Status");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Story", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Story", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
@@ -371,17 +402,19 @@ namespace Disco.Domain.Migrations
                     b.ToTable("Stories");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.StoryImage", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.StoryImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("DateOfCreation")
                         .HasColumnType("date");
 
                     b.Property<string>("Source")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StoryId")
@@ -394,17 +427,19 @@ namespace Disco.Domain.Migrations
                     b.ToTable("StoryImages");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.StoryVideo", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.StoryVideo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("DateOfCreation")
                         .HasColumnType("date");
 
                     b.Property<string>("Source")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StoryId")
@@ -417,12 +452,13 @@ namespace Disco.Domain.Migrations
                     b.ToTable("StoryVideos");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.User", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -496,15 +532,16 @@ namespace Disco.Domain.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.UserFollower", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.UserFollower", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("FollowerAccountId")
                         .HasColumnType("int");
@@ -528,8 +565,9 @@ namespace Disco.Domain.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -544,15 +582,16 @@ namespace Disco.Domain.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -567,7 +606,7 @@ namespace Disco.Domain.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
@@ -588,7 +627,7 @@ namespace Disco.Domain.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
@@ -603,7 +642,7 @@ namespace Disco.Domain.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -622,29 +661,29 @@ namespace Disco.Domain.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Account", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Account", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.User", "User")
+                    b.HasOne("Disco.Domain.Models.Models.User", "User")
                         .WithOne("Account")
-                        .HasForeignKey("Disco.Domain.Models.Account", "UserId")
+                        .HasForeignKey("Disco.Domain.Models.Models.Account", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.AccountGroup", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.AccountGroup", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Account", "Account")
+                    b.HasOne("Disco.Domain.Models.Models.Account", "Account")
                         .WithMany("AccountGroups")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Disco.Domain.Models.Group", "Group")
+                    b.HasOne("Disco.Domain.Models.Models.Group", "Group")
                         .WithMany("AccountGroups")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -655,26 +694,26 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Group");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.AccountStatus", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.AccountStatus", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Account", "Account")
+                    b.HasOne("Disco.Domain.Models.Models.Account", "Account")
                         .WithOne("AccountStatus")
-                        .HasForeignKey("Disco.Domain.Models.AccountStatus", "AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("Disco.Domain.Models.Models.AccountStatus", "AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Comment", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Comment", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Account", "Account")
+                    b.HasOne("Disco.Domain.Models.Models.Account", "Account")
                         .WithMany("Comments")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Disco.Domain.Models.Post", "Post")
+                    b.HasOne("Disco.Domain.Models.Models.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -685,22 +724,22 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Connection", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Connection", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Account", null)
+                    b.HasOne("Disco.Domain.Models.Models.Account", null)
                         .WithMany("Connections")
                         .HasForeignKey("AccountId");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Like", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Like", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Account", "Account")
+                    b.HasOne("Disco.Domain.Models.Models.Account", "Account")
                         .WithMany("Likes")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Disco.Domain.Models.Post", "Post")
+                    b.HasOne("Disco.Domain.Models.Models.Post", "Post")
                         .WithMany("Likes")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -711,15 +750,15 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Message", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Message", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Account", "Account")
+                    b.HasOne("Disco.Domain.Models.Models.Account", "Account")
                         .WithMany("Messages")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Disco.Domain.Models.Group", "Group")
+                    b.HasOne("Disco.Domain.Models.Models.Group", "Group")
                         .WithMany("Messages")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -730,9 +769,9 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Group");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Post", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Post", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Account", "Account")
+                    b.HasOne("Disco.Domain.Models.Models.Account", "Account")
                         .WithMany("Posts")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -741,9 +780,9 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.PostImage", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.PostImage", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Post", "Post")
+                    b.HasOne("Disco.Domain.Models.Models.Post", "Post")
                         .WithMany("PostImages")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -752,9 +791,9 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.PostSong", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.PostSong", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Post", "Post")
+                    b.HasOne("Disco.Domain.Models.Models.Post", "Post")
                         .WithMany("PostSongs")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -763,9 +802,9 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.PostVideo", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.PostVideo", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Post", "Post")
+                    b.HasOne("Disco.Domain.Models.Models.Post", "Post")
                         .WithMany("PostVideos")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -774,9 +813,9 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Story", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Story", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Account", "Account")
+                    b.HasOne("Disco.Domain.Models.Models.Account", "Account")
                         .WithMany("Stories")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -785,9 +824,9 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.StoryImage", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.StoryImage", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Story", "Story")
+                    b.HasOne("Disco.Domain.Models.Models.Story", "Story")
                         .WithMany("StoryImages")
                         .HasForeignKey("StoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -796,9 +835,9 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Story");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.StoryVideo", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.StoryVideo", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Story", "Story")
+                    b.HasOne("Disco.Domain.Models.Models.Story", "Story")
                         .WithMany("StoryVideos")
                         .HasForeignKey("StoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -807,15 +846,15 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Story");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.UserFollower", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.UserFollower", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Account", "FollowerAccount")
+                    b.HasOne("Disco.Domain.Models.Models.Account", "FollowerAccount")
                         .WithMany("Following")
                         .HasForeignKey("FollowerAccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Disco.Domain.Models.Account", "FollowingAccount")
+                    b.HasOne("Disco.Domain.Models.Models.Account", "FollowingAccount")
                         .WithMany("Followers")
                         .HasForeignKey("FollowingAccountId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -828,7 +867,7 @@ namespace Disco.Domain.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Role", null)
+                    b.HasOne("Disco.Domain.Models.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -837,7 +876,7 @@ namespace Disco.Domain.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.User", null)
+                    b.HasOne("Disco.Domain.Models.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -846,7 +885,7 @@ namespace Disco.Domain.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.User", null)
+                    b.HasOne("Disco.Domain.Models.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -855,13 +894,13 @@ namespace Disco.Domain.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.Role", null)
+                    b.HasOne("Disco.Domain.Models.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Disco.Domain.Models.User", null)
+                    b.HasOne("Disco.Domain.Models.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -870,18 +909,19 @@ namespace Disco.Domain.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.HasOne("Disco.Domain.Models.User", null)
+                    b.HasOne("Disco.Domain.Models.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Account", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Account", b =>
                 {
                     b.Navigation("AccountGroups");
 
-                    b.Navigation("AccountStatus");
+                    b.Navigation("AccountStatus")
+                        .IsRequired();
 
                     b.Navigation("Comments");
 
@@ -900,14 +940,14 @@ namespace Disco.Domain.Migrations
                     b.Navigation("Stories");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Group", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Group", b =>
                 {
                     b.Navigation("AccountGroups");
 
                     b.Navigation("Messages");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Post", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Post", b =>
                 {
                     b.Navigation("Comments");
 
@@ -920,14 +960,14 @@ namespace Disco.Domain.Migrations
                     b.Navigation("PostVideos");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Story", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.Story", b =>
                 {
                     b.Navigation("StoryImages");
 
                     b.Navigation("StoryVideos");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.User", b =>
+            modelBuilder.Entity("Disco.Domain.Models.Models.User", b =>
                 {
                     b.Navigation("Account");
                 });

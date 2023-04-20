@@ -5,6 +5,7 @@ using Disco.Domain.Interfaces;
 using Disco.Domain.Interfaces.Interfaces;
 using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
+using Disco.Tests.Mock;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -23,8 +24,11 @@ namespace Disco.Tests.Services
         [TestMethod]
         public async Task CreateAsync_ReturnsSuccessResponse()
         {
+            var mockedUserManager = MockedUserManager.MockUserManager<User>(new List<User>());
+
             var accounts = new List<Account>
             {
+
                 new Account
                 {
                     User = new User
@@ -79,7 +83,7 @@ namespace Disco.Tests.Services
                 options.AddProfile(new GroupMapProfile());
             }).CreateMapper();
 
-            var groupService = new GroupService(mockedRepository.Object, mockedAccountGroupRepository.Object, mockedAccountRepository.Object, mapper);
+            var groupService = new GroupService(mockedUserManager.Object, mockedRepository.Object, mockedAccountGroupRepository.Object, mockedAccountRepository.Object, mapper);
             var response = await groupService.CreateAsync();
 
             Assert.IsNotNull(response);

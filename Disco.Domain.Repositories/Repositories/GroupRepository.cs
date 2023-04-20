@@ -21,39 +21,54 @@ namespace Disco.Domain.Repositories
 
         public async Task CreateAsync(Group group, CancellationToken cancellationToken = default)
         {
-            await _ctx.Groups.AddAsync(group);
+            await _context.Groups.AddAsync(group);
 
-            await _ctx.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Group group, CancellationToken cancellationToken = default)
         {
-            _ctx.Remove(group);
+            _context.Remove(group);
 
-            await _ctx.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<List<Group>> GetAllAsync(int id, int pageNumber, int pageSize)
         {
-            return await _ctx.Groups
+            var groups = await _context.Groups
                 .Include(group => group.AccountGroups)
-                .Where(g => g.Id == id)
-                .OrderByDescending(g => g.Id)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
                 .ToListAsync();
+
+            foreach (var group in groups)
+            {
+                if(group.AccountGroups.Where(accountGroups => accountGroups.AccountId == id).FirstOrDefault() != null)
+                {
+                    foreach (var accountGroup in group.AccountGroups)
+                    {
+                        await _context.Entry(accountGroup)
+                            .Reference(accountGroup => accountGroup.Account)
+                            .LoadAsync();
+                        
+                        await _context.Entry(accountGroup.Account)
+                            .Reference(account => account.User)
+                            .LoadAsync();
+                    }
+                }
+            }
+
+            return groups;
         }
 
         public async Task UpdateAsync(Group group, CancellationToken cancellationToken = default)
         {
-            _ctx.Groups.Update(group);
+            _context.Groups.Update(group);
 
-            await _ctx.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<Group> GetAsync(int id)
         {
-            return await _ctx.Groups
+            return await _context.Groups
                 .Include(g => g.AccountGroups)
                 .Include(g => g.Messages)
                 .Where(g => g.Id == id)
@@ -62,7 +77,7 @@ namespace Disco.Domain.Repositories
 
         public async Task LoadAccountsAsync(List<AccountGroup> accountGroup)
         {
-           await _ctx.Entry(accountGroup)
+           await _context.Entry(accountGroup)
                 .Collection(c => c)
                 .LoadAsync();
         }

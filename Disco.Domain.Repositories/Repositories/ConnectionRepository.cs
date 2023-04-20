@@ -18,30 +18,30 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task CreateAsync(Connection connection)
         {
-            await _ctx.Connections.AddAsync(connection);
+            await _context.Connections.AddAsync(connection);
 
-            await _ctx.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Connection connection)
         {
-            _ctx.Connections.Remove(connection);
+            _context.Connections.Remove(connection);
 
-            await _ctx.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public override Task<Connection> GetAsync(string id)
         {
-            return _ctx.Connections
+            return _context.Connections
                 .Where(c => c.Id.Equals(id))
                 .FirstOrDefaultAsync();
         }
 
         public async Task<Connection> UpdateAsync(Connection connection)
         {
-            _ctx.Connections.Update(connection);
+            _context.Connections.Update(connection);
 
-            await _ctx.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return connection;
         }

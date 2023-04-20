@@ -51,7 +51,7 @@ namespace Disco.Api
             var connectionStrings = Configuration.GetSection("ConnectionStrings")
                 .Get<ConnectionStrings>();
 
-            services.AddApiDbContext(connectionStrings.ProdactionConnection);
+            services.AddApiDbContext(connectionStrings.DevelopmentConnection);
             services.AddUserIdentity();
             services.AddAuthorization();
 
@@ -135,7 +135,7 @@ namespace Disco.Api
         {
             var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
             var serviceProvider = serviceScopeFactory.CreateScope().ServiceProvider;
-            StripeConfiguration.SetApiKey(Configuration.GetSection("Stripe")["PrivateKey"]);
+            StripeConfiguration.SetApiKey(Configuration.GetSection("StripeOptions")["PrivateKey"]);
 
             if (env.IsDevelopment())
             {

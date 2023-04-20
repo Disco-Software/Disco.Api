@@ -16,13 +16,16 @@ namespace Disco.Business.Interfaces.Validators
     {
         private CreateFollowerValidator(IAccountService accountService, ClaimsPrincipal claimsPrincipal)
         {
-            RuleFor(r => r.FollowerAccountId)
+            RuleFor(r => r.FollowingAccountId)
                 .MustAsync(async (id, token) =>
                 {
                     var account = await accountService.GetAsync(claimsPrincipal);
                     return account.Id == id;
                 })
                 .WithMessage("You can't subscribe to your self");
+
+            RuleFor(r => r.IntalationId)
+                .Null();
         }
     }
 }

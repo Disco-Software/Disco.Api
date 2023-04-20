@@ -15,5 +15,7 @@ namespace Disco.Domain.Interfaces
         Task<List<User>> GetUsersByPeriotAsync(DateTime date);
 
         Task<List<User>> GetUsersByPeriotIntAsync(int days);
+        Task<List<User>> GetAllUsersAsync();
+        Task<List<User>> GetAllUsersAsync(DateTime from, DateTime to);
     }
 }

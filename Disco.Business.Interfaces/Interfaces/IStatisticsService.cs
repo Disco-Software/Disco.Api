@@ -1,4 +1,5 @@
 ﻿using Disco.Business.Interfaces.Dtos.Statistics;
+using Disco.Business.Interfaces.Enums;
 using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using System;
@@ -10,8 +11,6 @@ namespace Disco.Business.Interfaces.Interfaces
 {
     public interface IStatisticsService
     {
-        Task<List<User>> GetRegistredUsersAsync(DateTime date);
-
-        Task<List<User>> GetRegistredUsersDayAsync(int days);
+        Task<StatisticsDto> GetAllStatisticsAsync(DateTime from, DateTime to, StatisticsFor statistics);
     }
 }

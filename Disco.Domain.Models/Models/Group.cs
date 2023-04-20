@@ -9,7 +9,7 @@ namespace Disco.Domain.Models.Models
     public class Group : BaseModel<int>
     {
         public string Name { get; set; } = Guid.NewGuid().ToString();
-        public List<Message> Messages { get; set; }
-        public List<AccountGroup> AccountGroups { get; set; }
+        public List<Message> Messages { get; set; } = new List<Message>();
+        public List<AccountGroup> AccountGroups { get; set; } = new List<AccountGroup> { };
     }
 }

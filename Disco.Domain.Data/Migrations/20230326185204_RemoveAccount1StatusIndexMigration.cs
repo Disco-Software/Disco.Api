@@ -1,33 +1,38 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Disco.Domain.Migrations
+#nullable disable
+
+namespace Disco.Domain.Data.Migrations
 {
-    public partial class Message1Migration : Migration
+    /// <inheritdoc />
+    public partial class RemoveAccount1StatusIndexMigration : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Messages_Accounts_AccountId",
-                table: "Messages");
+                name: "FK_AccountStatus_Accounts_AccountId",
+                table: "AccountStatus");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Messages_Accounts_AccountId",
-                table: "Messages",
+                name: "FK_AccountStatus_Accounts_AccountId",
+                table: "AccountStatus",
                 column: "AccountId",
                 principalTable: "Accounts",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Messages_Accounts_AccountId",
-                table: "Messages");
+                name: "FK_AccountStatus_Accounts_AccountId",
+                table: "AccountStatus");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Messages_Accounts_AccountId",
-                table: "Messages",
+                name: "FK_AccountStatus_Accounts_AccountId",
+                table: "AccountStatus",
                 column: "AccountId",
                 principalTable: "Accounts",
                 principalColumn: "Id",

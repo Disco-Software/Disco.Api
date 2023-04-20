@@ -35,7 +35,7 @@ namespace Disco.Business.Services.Services
             userFollower.FollowingAccount = following.Account;
             userFollower.FollowingAccountId = following.AccountId;
 
-            if (user.Account.Following.All(f => f.FollowerAccountId != dto.FollowerAccountId))
+            if (user.Account.Following.All(f => f.FollowerAccountId != dto.FollowingAccountId))
             {
                 user.Account.Following.Add(userFollower);
             }

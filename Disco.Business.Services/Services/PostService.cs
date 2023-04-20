@@ -49,13 +49,6 @@ namespace Disco.Business.Services.Services
         {
             var posts = await _postRepository.GetUserPostsAsync(user.Account.Id);
 
-            foreach (var follower in user.Account.Followers.AsEnumerable().ToList())
-            {
-                var followerPosts = await _postRepository.GetUserPostsAsync(follower.FollowerAccountId);
-
-                posts.AddRange(followerPosts);
-            }
-
             foreach (var following in user.Account.Following.AsEnumerable().ToList())
             {
                 var followingPosts = await _postRepository.GetUserPostsAsync(following.FollowingAccountId);

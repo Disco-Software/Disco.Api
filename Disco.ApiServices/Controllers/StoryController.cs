@@ -84,14 +84,6 @@ namespace Disco.ApiServices.Controllers
 
             var stories = await _storyService.GetAllStoryAsync(user, dto);
             
-            foreach (var story in stories)
-            {
-                if(story.DateOfCreation.AddHours(12) >= DateTime.UtcNow)
-                {
-                   await _storyService.DeleteStoryAsync(story.Id);
-                }
-            }
-
             return stories;
         }
 

@@ -8,6 +8,9 @@ using System.Linq;
 using Disco.Business.Interfaces.Validators;
 using Disco.Business.Interfaces.Dtos.Friends;
 using Disco.Business.Interfaces.Interfaces;
+using System.Collections.Generic;
+using Disco.Domain.Models.Models;
+using System;
 
 namespace Disco.ApiServices.Controllers
 {
@@ -30,7 +33,7 @@ namespace Disco.ApiServices.Controllers
         public async Task<IActionResult> Create([FromBody] CreateFollowerDto dto)
         {
             var user = await _accountService.GetAsync(HttpContext.User);
-            var following = await _accountService.GetByIdAsync(dto.FollowerAccountId);
+            var following = await _accountService.GetByIdAsync(dto.FollowingAccountId);
 
             var followerDto = await _followerService.CreateAsync(user, following, dto);
 
@@ -59,6 +62,30 @@ namespace Disco.ApiServices.Controllers
             var following = await _followerService.GetFollowingAsync(dto.UserId, dto.PageNumber, dto.PageSize);
 
             return Ok(following);
+        }
+
+        [HttpGet("recomend")]
+        public async Task<IActionResult> GetRecomendedAsync()
+        {
+            var user = await _accountService.GetAsync(HttpContext.User);
+            var recomended = new List<Account>();
+
+            foreach(var followings in user.Account.Following)
+            {
+                followings.FollowingAccount = await _accountService.GetByAccountIdAsync(followings.FollowingAccountId);
+
+                foreach (var following in followings.FollowingAccount.Following)
+                {
+                    if(following.FollowingAccount.Following.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    recomended.Add(following.FollowingAccount);
+                }
+            }
+
+            return Ok(recomended);
         }
 
         [HttpDelete("{followerId:int}")]

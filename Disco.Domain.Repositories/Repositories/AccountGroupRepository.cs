@@ -19,21 +19,21 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task CreateAsync(AccountGroup accountGroup)
         {
-            await _ctx.AccountGroups.AddAsync(accountGroup);
+            await _context.AccountGroups.AddAsync(accountGroup);
 
-            await _ctx.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(AccountGroup accountGroup)
         {
-            _ctx.AccountGroups.Remove(accountGroup);
+            _context.AccountGroups.Remove(accountGroup);
 
-            await _ctx.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<AccountGroup>> GetAllAsync(int id)
         {
-            return await _ctx.AccountGroups
+            return await _context.AccountGroups
                 .Include(ag => ag.Group)
                 .Include(ag => ag.Account)
                 .Where(a => a.Id == id)
