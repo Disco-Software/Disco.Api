@@ -3,6 +3,8 @@ using Disco.Business.Interfaces.Dtos.Images;
 using Disco.Business.Interfaces.Dtos.Posts;
 using Disco.Business.Interfaces.Dtos.Songs;
 using Disco.Business.Interfaces.Dtos.Videos;
+using Disco.Domain.Events.Dto;
+using Disco.Domain.Events.Events;
 using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using Disco.Integration.Interfaces.Dtos.AudD;
@@ -56,7 +58,17 @@ namespace Disco.Business.Services.Mappers
             CreateMap<PostSong, AudDRequestDto>()
                 .ForMember(p => p.@return, o => o.Ignore())
                 .ForMember(p => p.api_token, o => o.Ignore())
-                .ForMember(p => p.file, o => o.Ignore());    
+                .ForMember(p => p.file, o => o.Ignore());
+
+            CreateMap<Post, PostCreatedEvent>();
+            CreateMap<Account, AccountDto>();
+            CreateMap<PostImage, PostImageDto>();
+            CreateMap<PostVideo, PostVideoDto>();
+            CreateMap<PostSong, PostSongDto>();
+            CreateMap<Like, LikeDto>();
+            CreateMap<UserFollower, UserFollowerDto>();
+            CreateMap<User, UserDto>();
+
         }
     }
 }

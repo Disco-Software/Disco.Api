@@ -13,10 +13,10 @@ namespace Disco.Api.AppSetup
             {
                 options.AddDefaultPolicy(policyBuilder =>
                 {
-                    policyBuilder
-                    .AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
+                    policyBuilder.AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .SetIsOriginAllowed(origin => true)
+                        .AllowCredentials();
                 });
             });
         }

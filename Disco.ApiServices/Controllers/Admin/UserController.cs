@@ -81,6 +81,16 @@ namespace Disco.ApiServices.Controllers.Admin
             return Ok("User was removed");
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Account>>> GetAllAsync(
+            [FromQuery] int pageNumber,
+            [FromQuery] int pageSize)
+        {
+            var accounts = await _accountDetailsService.GetAllAsync(pageNumber, pageSize);
+
+            return Ok(accounts);
+        }
+
         [HttpGet("periot")]
         public async Task<ActionResult<List<User>>> GetAccountsByPeriotAsync(int periot)
         {

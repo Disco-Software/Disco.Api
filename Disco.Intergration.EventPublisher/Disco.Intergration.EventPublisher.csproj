@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.14.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Disco.Business.Interfaces\Disco.Business.Interfaces.csproj" />
+    <ProjectReference Include="..\Disco.Domain.Events\Disco.Domain.Events.csproj" />
+    <ProjectReference Include="..\Disco.Integration.Interfaces\Disco.Integration.Interfaces.csproj" />
+  </ItemGroup>
+
+</Project>

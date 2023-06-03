@@ -12,4 +12,8 @@
     <PackageReference Include="Stripe.net" Version="41.9.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Disco.Domain.Events\Disco.Domain.Events.csproj" />
+  </ItemGroup>
+
 </Project>

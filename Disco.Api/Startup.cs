@@ -33,6 +33,7 @@ using Disco.Domain.Repositories.Extentions;
 using Disco.Integration.Clients.Extentions;
 using Stripe;
 using Disco.Integration.Interfaces.Options;
+using Disco.Intergration.EventPublisher.Extentions;
 
 namespace Disco.Api
 {
@@ -55,7 +56,7 @@ namespace Disco.Api
             services.AddUserIdentity();
             services.AddAuthorization();
 
-            services.ConfigureCorsPolicy();
+            //services.ConfigureCorsPolicy();
 
             services.AddAzureServices(Configuration);
             services.AddSignalR(options =>
@@ -101,6 +102,7 @@ namespace Disco.Api
             services.AddRepositories();
             services.AddService();
             services.AddIntegrations();
+            services.AddServiceBus(Configuration);
 
             services.AddOptions<PushNotificationOptions>()
                 .Configure(Configuration.GetSection("NotificationHub").Bind)
@@ -117,6 +119,9 @@ namespace Disco.Api
             services.AddOptions<StripeOptions>()
                 .Configure(Configuration.GetSection("Stripe").Bind)
                 .ValidateDataAnnotations();
+            //services.AddOptions<ConnectionStrings>()
+            //    .Configure(Configuration.GetSection("ConnectionStrings").Bind)
+            //    .ValidateDataAnnotations();
 
             services.AddAutoMapper();
 
@@ -156,14 +161,27 @@ namespace Disco.Api
 
             ILogger logger = loggerFactory.CreateLogger("ClientErrorLogger");
 
-            app.UseCors();
+            app.UseCors(x =>
+            {
+                x.AllowAnyMethod()
+                 .AllowAnyHeader()
+                 .SetIsOriginAllowed(origin => true)
+                 .AllowCredentials();
+            });
 
             app.UseRouting();
             app.ApplicationServices.CreateScope();
+
+            app.Use(async (context, next) =>
+            {
+                await next();
+            });
+
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseWebSockets();
+
 
             app.UseEndpoints(endpoints =>
             {

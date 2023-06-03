@@ -10,5 +10,6 @@ namespace Disco.Business.Interfaces.Options
         public string ProdactionConnection { get; set; }
         public string BlobStorage { get; set; }
         public string AzureNotificationHubConnection { get; set; }
+        public string AzureServiceBusConnection { get; set; }
     }
 }

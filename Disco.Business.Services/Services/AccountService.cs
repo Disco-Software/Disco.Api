@@ -66,6 +66,7 @@ namespace Disco.Business.Services.Services
 
         public async Task<User> GetAsync(ClaimsPrincipal claimsPrincipal)
         {
+            
             var user = await _userManager.GetUserAsync(claimsPrincipal) ??
                 throw new UserNotFoundException("User not found");
 

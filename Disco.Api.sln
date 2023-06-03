@@ -27,6 +27,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Integration.Clients",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Integration.Interfaces", "Disco.Integration.Interfaces\Disco.Integration.Interfaces.csproj", "{98124E6C-FEDD-475A-B97F-0F7C4942D589}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Domain.Events", "Disco.Domain.Events\Disco.Domain.Events.csproj", "{58DE0F44-2718-48B9-AE47-F42BC115E4F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Intergration.EventPublisher", "Disco.Intergration.EventPublisher\Disco.Intergration.EventPublisher.csproj", "{19ECE8BF-C4A1-4238-8583-D3B9808BAF0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +85,14 @@ Global
 		{98124E6C-FEDD-475A-B97F-0F7C4942D589}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98124E6C-FEDD-475A-B97F-0F7C4942D589}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98124E6C-FEDD-475A-B97F-0F7C4942D589}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58DE0F44-2718-48B9-AE47-F42BC115E4F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58DE0F44-2718-48B9-AE47-F42BC115E4F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58DE0F44-2718-48B9-AE47-F42BC115E4F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58DE0F44-2718-48B9-AE47-F42BC115E4F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19ECE8BF-C4A1-4238-8583-D3B9808BAF0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19ECE8BF-C4A1-4238-8583-D3B9808BAF0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19ECE8BF-C4A1-4238-8583-D3B9808BAF0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19ECE8BF-C4A1-4238-8583-D3B9808BAF0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

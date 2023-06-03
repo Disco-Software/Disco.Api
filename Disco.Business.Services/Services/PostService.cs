@@ -9,18 +9,24 @@ using Disco.Domain.Interfaces;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Business.Interfaces.Dtos.Posts;
 using Disco.Domain.Models.Models;
+using Disco.Domain.Events.Events;
+using Disco.Integration.Interfaces.Interfaces;
 
 namespace Disco.Business.Services.Services
 {
     public class PostService : IPostService
     {
+
         private readonly IPostRepository _postRepository;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IMapper _mapper;
         public PostService(
             IMapper mapper,
+            IEventPublisher eventPublisher,
             IPostRepository postRepository)
         {
             _postRepository = postRepository;
+            _eventPublisher = eventPublisher;   
             _mapper = mapper;
         }
 
@@ -30,6 +36,11 @@ namespace Disco.Business.Services.Services
             post.Account.Posts.Add(post);
 
             await _postRepository.AddAsync(post);
+
+            //TODO Create PostCreatedEvent using AutoMapper and publish event using IEventPublisher Interface
+            var postEvent = _mapper.Map<PostCreatedEvent>(post);
+
+            await _eventPublisher.PublishAsync(postEvent);
         }
 
         public async Task DeletePostAsync(int postId)

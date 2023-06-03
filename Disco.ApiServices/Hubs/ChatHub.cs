@@ -49,7 +49,8 @@ namespace Disco.ApiServices.Hubs
             var connnection = new Connection()
             {
                 IsConnected = true,
-                Id = Context.ConnectionId
+                Id = Context.ConnectionId,
+                UserAgent = Context.GetHttpContext().Request.Headers.UserAgent,
             };
 
             await _connectionService.CreateAsync(connnection, user.Account);

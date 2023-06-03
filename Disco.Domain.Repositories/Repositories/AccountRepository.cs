@@ -84,5 +84,27 @@ namespace Disco.Domain.Repositories.Repositories
                 .Select(u => u.Account)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Account>> GetAllAsync(int pageNumber, int pageSize)
+        {
+            var accounts = await _context.Accounts.ToListAsync();
+
+            foreach (var account in accounts)
+            {
+                await _context.Entry(account)
+                    .Reference(userAccount => userAccount.User)
+                    .LoadAsync();
+
+                await _context.Entry(account)
+                    .Collection(userAccount => userAccount.Followers)
+                    .LoadAsync();
+                
+                await _context.Entry(account)
+                    .Collection(userAccount => userAccount.Following)
+                    .LoadAsync();
+            }
+
+            return accounts;
+        }
     }
 }

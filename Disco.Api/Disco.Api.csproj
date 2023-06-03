@@ -29,6 +29,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Disco.ApiServices\Disco.ApiServices.csproj" />
+		<ProjectReference Include="..\Disco.Intergration.EventPublisher\Disco.Intergration.EventPublisher.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
