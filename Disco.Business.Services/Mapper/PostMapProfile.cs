@@ -61,12 +61,16 @@ namespace Disco.Business.Services.Mappers
                 .ForMember(p => p.file, o => o.Ignore());
 
             CreateMap<Post, PostCreatedEvent>();
-            CreateMap<Account, AccountDto>();
+            CreateMap<Account, AccountDto>()
+                .ForMember(accountDto => accountDto.UserDto, options => options.MapFrom(account => account.User))
+                .ForMember(accountDto => accountDto.UserFollowingDtos, options => options.MapFrom(account => account.Following))
+                .ForMember(accountDto => accountDto.UserFollowerDtos, options => options.MapFrom(account => account.Followers));
             CreateMap<PostImage, PostImageDto>();
             CreateMap<PostVideo, PostVideoDto>();
             CreateMap<PostSong, PostSongDto>();
             CreateMap<Like, LikeDto>();
-            CreateMap<UserFollower, UserFollowerDto>();
+            CreateMap<UserFollower, UserFollowerDto>()
+                .ForMember(userFollowingDto => userFollowingDto.AccountId, options => options.MapFrom(userFollower => userFollower.FollowingAccountId));
             CreateMap<User, UserDto>();
 
         }

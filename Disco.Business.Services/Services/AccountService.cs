@@ -27,17 +27,20 @@ namespace Disco.Business.Services.Services
         private readonly IUserRepository _userRepository;
         private readonly IAccountStatusRepository _accountStatusRepository;
         private readonly IAccountRepository _accountRepository;
+        private readonly IFollowerRepository _followerRepository;
 
         public AccountService(
             UserManager<User> userManager,
             IUserRepository userRepository,
             IAccountRepository accountRepository,
-            IAccountStatusRepository accountStatusRepository)
+            IAccountStatusRepository accountStatusRepository,
+            IFollowerRepository followerRepository)
         {
             _userManager = userManager;
             _userRepository = userRepository;
             _accountRepository = accountRepository;
             _accountStatusRepository = accountStatusRepository;
+            _followerRepository = followerRepository;
         }
 
 
@@ -50,6 +53,8 @@ namespace Disco.Business.Services.Services
             user.RoleName = _userRepository.GetUserRole(user);
             user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Following.Count);
             user.Account.Connections = await _accountRepository.GetAllAccountConnectionsAsync(user.Account.Id);
+            user.Account.Followers = await _followerRepository.GetFollowersAsync(user.Account.Id);
+            user.Account.Following = await _followerRepository.GetFollowingAsync(user.Account.Id);
 
             return user;
         }
@@ -76,6 +81,8 @@ namespace Disco.Business.Services.Services
             user.Account.AccountStatus.Account = user.Account;
             user.Account.AccountStatus.AccountId = user.AccountId;
             user.Account.Connections = await _accountRepository.GetAllAccountConnectionsAsync(user.Account.Id);
+            user.Account.Followers = await _followerRepository.GetFollowersAsync(user.Account.Id);
+            user.Account.Following = await _followerRepository.GetFollowingAsync(user.Account.Id);
 
             return user;
         }

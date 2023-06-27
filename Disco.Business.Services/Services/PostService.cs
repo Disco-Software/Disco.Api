@@ -37,7 +37,6 @@ namespace Disco.Business.Services.Services
 
             await _postRepository.AddAsync(post);
 
-            //TODO Create PostCreatedEvent using AutoMapper and publish event using IEventPublisher Interface
             var postEvent = _mapper.Map<PostCreatedEvent>(post);
 
             await _eventPublisher.PublishAsync(postEvent);
