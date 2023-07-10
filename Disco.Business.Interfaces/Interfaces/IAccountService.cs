@@ -18,7 +18,7 @@ namespace Disco.Business.Interfaces.Interfaces
         Task<User> GetByNameAsync(string name);
         Task<User> GetByLogInProviderAsync(string loginProvider, string providerKey);
         Task<Account> GetByAccountIdAsync(int accountId);
-        Task<IEnumerable<User>> GetAccountsByPeriotAsync(int periot);
+        Task<IEnumerable<User>> GetUsersByPeriotAsync(int periot);
         Task<bool> IsInRoleAsync(User user, string roleName);
         Task RemoveAsync(User user);
     }

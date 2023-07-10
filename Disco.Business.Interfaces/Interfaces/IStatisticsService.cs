@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace Disco.Business.Interfaces.Interfaces
 {
-    public interface IStatisticsService
+    public interface IAnalyticService
     {
-        Task<StatisticsDto> GetAllStatisticsAsync(DateTime from, DateTime to, StatisticsFor statistics);
+        Task<AnalyticDto> GetAllStatisticsAsync(DateTime from, DateTime to, AnalyticFor statistics);
     }
 }

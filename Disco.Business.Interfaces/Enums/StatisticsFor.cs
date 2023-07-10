@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Disco.Business.Interfaces.Enums
 {
-    public enum StatisticsFor
+    public enum AnalyticFor
     {
         Day = 1,
         Week = 2,

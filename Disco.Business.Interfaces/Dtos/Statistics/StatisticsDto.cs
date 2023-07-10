@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Disco.Business.Interfaces.Dtos.Statistics
 {
-    public class StatisticsDto
+    public class AnalyticDto
     {
         public int UsersCount { get; set; }
         public int NewUsersCount { get; set; }

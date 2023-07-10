@@ -13,7 +13,7 @@ namespace Disco.Business.Services.Mapper
     {
         public StatisticsMapProfile()
         {
-            CreateMap<List<User>, StatisticsDto>()
+            CreateMap<List<User>, AnalyticDto>()
                 .ForMember(users => users.Users, options => options.MapFrom(users => users))
                 .ForMember(users => users.UsersCount, options => options.MapFrom(users => users.Count))
                 .ForMember(users => users.NewUsersCount, options => options.Ignore())

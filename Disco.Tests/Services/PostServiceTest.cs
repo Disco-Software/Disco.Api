@@ -38,7 +38,7 @@ namespace Disco.Tests.Services
                 .Returns(Task.CompletedTask)
                 .Callback<Post>((x) => list.Add(x));
 
-            var postService = new PostService(mapper, mockedPostRepository.Object);
+            var postService = new PostService(mapper, null,mockedPostRepository.Object);
             var response = postService.CreatePostAsync(post);
             
             Assert.IsNotNull(response);
@@ -68,7 +68,7 @@ namespace Disco.Tests.Services
                 .Returns(Task.CompletedTask)
                 .Callback<int>((x) => list.Remove(list.FirstOrDefault(l => l.Id == x)));
 
-            var postService = new PostService(mapper, mockedPostRepository.Object);
+            var postService = new PostService(mapper, null, mockedPostRepository.Object);
             var response = postService.DeletePostAsync(8);
 
             Assert.IsNotNull(response);

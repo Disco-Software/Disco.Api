@@ -13,7 +13,7 @@ using Disco.Business.Interfaces.Enums;
 
 namespace Disco.Business.Services.Services
 {
-    public class StatisticsService : IStatisticsService
+    public class StatisticsService : IAnalyticService
     {
         private readonly IUserRepository _userRepository;
         private readonly IPostRepository _postRepository;
@@ -29,7 +29,7 @@ namespace Disco.Business.Services.Services
             _mapper = mapper;
         }
 
-        public async Task<StatisticsDto> GetAllStatisticsAsync(DateTime from, DateTime to, StatisticsFor statistics)
+        public async Task<AnalyticDto> GetAllStatisticsAsync(DateTime from, DateTime to, AnalyticFor statistics)
         {
             var users = await _userRepository.GetAllUsersAsync();
             var posts = new List<Post>();
@@ -37,7 +37,7 @@ namespace Disco.Business.Services.Services
 
             switch (statistics)
             {
-                case StatisticsFor.Day:
+                case AnalyticFor.Day:
                     {
                         from = DateTime.UtcNow.AddDays(-1);
                         to = DateTime.UtcNow;
@@ -46,7 +46,7 @@ namespace Disco.Business.Services.Services
                         newUsers = await _userRepository.GetAllUsersAsync(from, to);
                     }
                     break;
-                case StatisticsFor.Week:
+                case AnalyticFor.Week:
                     {
                         from = DateTime.UtcNow.AddDays(-7);
                         to = DateTime.UtcNow;
@@ -55,7 +55,7 @@ namespace Disco.Business.Services.Services
                         newUsers = await _userRepository.GetAllUsersAsync(from, to);
                     }
                     break;
-                case StatisticsFor.Month:
+                case AnalyticFor.Month:
                     {
                         var days = DateTime.DaysInMonth(from.Year, from.Month);
                         from = DateTime.UtcNow.AddDays(-days);
@@ -65,7 +65,7 @@ namespace Disco.Business.Services.Services
                         newUsers = await _userRepository.GetAllUsersAsync(from, to);
                     }
                     break;
-                case StatisticsFor.Year:
+                case AnalyticFor.Year:
                     {
                         from = DateTime.UtcNow.AddYears(-1);
                         to = DateTime.UtcNow;
@@ -86,7 +86,7 @@ namespace Disco.Business.Services.Services
                     break;
             }
 
-            var statisticsDto = _mapper.Map<StatisticsDto>(users);
+            var statisticsDto = _mapper.Map<AnalyticDto>(users);
             statisticsDto.Posts = posts;
             statisticsDto.RegisteredUsers = newUsers;
             statisticsDto.PostsCount = posts.Count;

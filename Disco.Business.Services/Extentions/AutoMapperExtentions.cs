@@ -21,6 +21,7 @@ namespace Disco.Business.Services.Extentions
                 options.AddProfile(new CommentMapProfile());
                 options.AddProfile(new GroupMapProfile());
                 options.AddProfile(new StatisticsMapProfile());
+                options.AddProfile(new ErrorMapProfile());
             }).CreateMapper());
         }
     }

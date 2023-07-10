@@ -34,6 +34,7 @@ using Disco.Integration.Clients.Extentions;
 using Stripe;
 using Disco.Integration.Interfaces.Options;
 using Disco.Intergration.EventPublisher.Extentions;
+using Disco.ApiServices.Filters;
 
 namespace Disco.Api
 {
@@ -98,7 +99,7 @@ namespace Disco.Api
 
             //services.ConfigureRepositories();
             //services.ConfigureServices();
-
+            services.AddMediatR(config => config.RegisterServicesFromAssemblies(Assembly.GetAssembly(typeof(CorsPolicyExtentions))));
             services.AddRepositories();
             services.AddService();
             services.AddIntegrations();
@@ -124,6 +125,11 @@ namespace Disco.Api
             //    .ValidateDataAnnotations();
 
             services.AddAutoMapper();
+
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(GlobalExceptionFilter));
+            });
 
             services.AddControllers()
             .AddControllersAsServices()
