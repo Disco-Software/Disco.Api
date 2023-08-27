@@ -4,6 +4,7 @@ using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -26,6 +27,9 @@ namespace Disco.Business.Services.Services
 
         public async Task<Message> CreateAsync(string textMessage, Account account, Group group)
         {
+            if (textMessage.IsNullOrEmpty() && string.IsNullOrWhiteSpace(textMessage))
+                throw new NullReferenceException(nameof(textMessage));
+
             var message = _mapper.Map<Message>(textMessage);
             message.Account = account;
             message.AccountId = account.Id;

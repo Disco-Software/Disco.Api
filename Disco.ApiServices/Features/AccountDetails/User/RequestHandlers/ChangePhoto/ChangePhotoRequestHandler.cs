@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountDetails.User.RequestHandlers.ChangePhoto
 {
-    internal class ChangePhotoRequestHandler : IRequestHandler<ChangePhotoRequest, Domain.Models.Models.User>
+    public class ChangePhotoRequestHandler : IRequestHandler<ChangePhotoRequest, Domain.Models.Models.User>
     {
         private readonly IAccountService _accountService;
         private readonly IAccountDetailsService _accountDetailsService;

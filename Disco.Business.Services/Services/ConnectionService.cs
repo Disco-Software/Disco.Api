@@ -1,4 +1,5 @@
-﻿using Disco.Business.Interfaces;
+﻿using Disco.Business.Exceptions;
+using Disco.Business.Interfaces;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
@@ -23,6 +24,9 @@ namespace Disco.Business.Services.Services
         public async Task CreateAsync(Connection connection, Account account)
         {
             account.Connections.Add(connection);
+
+            if (connection == null)
+                throw new NullReferenceException();
 
             await _connectionRepository.CreateAsync(connection);
         }

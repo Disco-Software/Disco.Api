@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Follower.RequestHandlers.GetRecomended
 {
-    internal class GetRecomendedRequestHandler : IRequestHandler<GetRecomendedRequest, List<Domain.Models.Models.Account>>
+    public class GetRecomendedRequestHandler : IRequestHandler<GetRecomendedRequest, List<Domain.Models.Models.Account>>
     {
         private readonly IAccountService _accountService;
         private readonly IFollowerService _followerService;

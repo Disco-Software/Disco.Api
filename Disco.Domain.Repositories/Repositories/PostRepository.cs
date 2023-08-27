@@ -70,19 +70,18 @@ namespace Disco.Domain.Repositories.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<Post>> GetUserPostsAsync(int accountId)
+        public async Task<List<Post>> GetUserPostsAsync(int accountId, int pageNumber, int pageSize)
         {
-            var account = await _context.Accounts
-                .Include(account => account.Posts)
-                .ThenInclude(post => post.PostImages)
-                .Include(account => account.Posts)
-                .ThenInclude(post => post.PostSongs)
-                .Include(account => account.Posts)
-                .ThenInclude(post => post.PostVideos)
-                .Where(account => account.Id == accountId)
-                .FirstOrDefaultAsync();
-
-            return account!.Posts;
+            return await _context.Posts
+                .Include(account => account.Account)
+                .Include(post => post.PostImages)
+                .Include(post => post.PostSongs)
+                .Include(post => post.PostVideos)
+                .Where(post => post.AccountId == accountId)
+                .OrderByDescending(post => post.DateOfCreation)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
         }
 
         public async Task<List<Post>> GetFollowerPostsAsync(int accountId)
@@ -135,6 +134,93 @@ namespace Disco.Domain.Repositories.Repositories
                 .Where(post => post.DateOfCreation >= from && post.DateOfCreation <= to)
                 .OrderByDescending(post => post.DateOfCreation)
                 .ToListAsync();
+        }
+
+        public async Task<List<Post>> GetUserPostsAsync(int accountId)
+        {
+            return await _context.Posts
+                .Include(account => account.Account)
+                .Include(post => post.PostImages)
+                .Include(post => post.PostSongs)
+                .Include(post => post.PostVideos)
+                .Where(post => post.AccountId == accountId)
+                .OrderByDescending(post => post.DateOfCreation)
+                .ToListAsync();
+        }
+
+        public List<int> GetPostsCountFromMonth(DateTime date)
+        {
+            var postsInDay = new List<int>();
+
+            var year = date.Year;
+            var month = date.Month;
+            var day = date.Day;
+
+            foreach (var posts in _context.Posts)
+            {
+                var postsCount = _context.Posts
+                    .Where(post => post.DateOfCreation.Value.Year == year)
+                    .Where(post => post.DateOfCreation.Value.Month == month)
+                    .Where(post => post.DateOfCreation.Value.Day == day)
+                    .OrderBy(post => post.DateOfCreation.Value.Hour)
+                    .OrderBy(post => post.DateOfCreation.Value.Minute)
+                    .OrderBy(post => post.DateOfCreation.Value.Second)
+                    .Count();
+
+                postsInDay.Add(postsCount);
+            }
+
+            return postsInDay;
+        }
+
+        public List<int> GetPostsCountFromDay(DateTime date)
+        {
+            var postsInHours = new List<int>();
+
+            var year = date.Year;
+            var month = date.Month;
+            var day = date.Day;
+
+            foreach (var posts in _context.Posts)
+            {
+                var postsCount = _context.Posts
+                    .Where(post => post.DateOfCreation.Value.Year == year)
+                    .Where(post => post.DateOfCreation.Value.Month == month)
+                    .Where(post => post.DateOfCreation.Value.Day == day)
+                    .OrderBy(post => post.DateOfCreation.Value.Hour)
+                    .OrderBy(post => post.DateOfCreation.Value.Minute)
+                    .OrderBy(post => post.DateOfCreation.Value.Second)
+                    .Count();
+
+                postsInHours.Add(postsCount);
+            }
+
+            return postsInHours;
+        }
+
+        public List<int> GetPostsCountFromYear(DateTime date)
+        {
+            var postsInHours = new List<int>();
+
+            var year = date.Year;
+            var month = date.Month;
+            var day = date.Day;
+
+            foreach (var posts in _context.Posts)
+            {
+                var postsCount = _context.Posts
+                    .Where(post => post.DateOfCreation.Value.Year == year)
+                    .Where(post => post.DateOfCreation.Value.Month == month)
+                    .Where(post => post.DateOfCreation.Value.Day == day)
+                    .OrderBy(post => post.DateOfCreation.Value.Hour)
+                    .OrderBy(post => post.DateOfCreation.Value.Minute)
+                    .OrderBy(post => post.DateOfCreation.Value.Second)
+                    .Count();
+
+                postsInHours.Add(postsCount);
+            }
+
+            return postsInHours;
         }
     }
 }

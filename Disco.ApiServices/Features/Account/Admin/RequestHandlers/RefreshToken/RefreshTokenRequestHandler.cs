@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Account.Admin.RequestHandlers.RefreshToken
 {
-    internal class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, UserResponseDto>
+    public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, UserResponseDto>
     {
         private readonly IAccountService _accountService;
         private readonly ITokenService _tokenService;

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsByPeriot
 {
-    internal class GetAccountsByPeriotRequestHandler : IRequestHandler<GetAccountsByPeriotRequest, List<Domain.Models.Models.User>>
+    public class GetAccountsByPeriotRequestHandler : IRequestHandler<GetAccountsByPeriotRequest, List<Domain.Models.Models.User>>
     {
         private readonly IAccountService _accountService;
 

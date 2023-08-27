@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Follower.RequestHandlers.GetFollowing
 {
-    internal class GetFollowingRequestHandler : IRequestHandler<GetFollowingRequest, List<UserFollower>>
+    public class GetFollowingRequestHandler : IRequestHandler<GetFollowingRequest, List<UserFollower>>
     {
         private readonly IFollowerService _followerService;
 

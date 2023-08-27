@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Group.RequestHandlers.GetAll
 {
-    internal class GetAllRequestHandler : IRequestHandler<GetAllRequest, IEnumerable<Domain.Models.Models.Group>>
+    public class GetAllRequestHandler : IRequestHandler<GetAllRequest, IEnumerable<Domain.Models.Models.Group>>
     {
         private readonly IAccountService _accountService;
         private readonly IGroupService _groupService;

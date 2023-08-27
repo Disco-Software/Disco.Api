@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAllAccounts
 {
-    internal class GetAllAccountsRequestHandler : IRequestHandler<GetAllAccountsRequest, IEnumerable<Domain.Models.Models.Account>>
+    public class GetAllAccountsRequestHandler : IRequestHandler<GetAllAccountsRequest, IEnumerable<Domain.Models.Models.Account>>
     {
         private readonly IAccountDetailsService _accountDetailsService;
 

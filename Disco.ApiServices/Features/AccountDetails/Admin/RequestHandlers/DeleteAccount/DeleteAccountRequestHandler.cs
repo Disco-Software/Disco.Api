@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.DeleteAccount
 {
-    internal class DeleteAccountRequestHandler : IRequestHandler<DeleteAccountRequest>
+    public class DeleteAccountRequestHandler : IRequestHandler<DeleteAccountRequest>
     {
         private readonly IAccountService _accountService;
         private readonly IAccountDetailsService _accountDetailsService;

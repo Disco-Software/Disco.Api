@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Follower.RequestHandlers.DeleteFollower
 {
-    internal class DeleteFollowerRequestHandler : IRequestHandler<DeleteFollowerRequest>
+    public class DeleteFollowerRequestHandler : IRequestHandler<DeleteFollowerRequest>
     {
         private readonly IFollowerService _followerService;
 

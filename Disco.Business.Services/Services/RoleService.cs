@@ -42,6 +42,9 @@ namespace Disco.Business.Services.Services
         {
             var role = await _roleManager.FindByNameAsync(name);
 
+            if (string.IsNullOrEmpty(role?.Name))
+                throw new NullReferenceException();
+
             await _roleManager.DeleteAsync(role ?? throw new Exception());
         }
 

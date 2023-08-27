@@ -52,9 +52,11 @@ namespace Disco.Business.Services.Services
             return postImage;
         }
 
-        public async Task RemoveImage(int id)
+        public async Task RemoveImageAsync(int id)
         {
-           await _imageRepository.Remove(id);
+            var postImage = await _imageRepository.GetAsync(id);
+
+           await _imageRepository.RemoveAsync(postImage);
         }
     }
 }

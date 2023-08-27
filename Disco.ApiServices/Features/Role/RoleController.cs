@@ -1,9 +1,12 @@
-﻿using Disco.Business.Constants;
+﻿using Disco.ApiServices.Features.Role.RequestHandlers.CreateRole;
+using Disco.ApiServices.Features.Role.RequestHandlers.GetRoles;
+using Disco.Business.Constants;
 using Disco.Business.Interfaces;
 using Disco.Business.Interfaces.Dtos.Roles;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -15,24 +18,23 @@ namespace Disco.ApiServices.Features.Role
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;
+        private readonly IMediator _mediator;
 
-        public RoleController(IRoleService roleService)
+        public RoleController(
+            IRoleService roleService,
+            IMediator mediator)
         {
+            _mediator = mediator;
             _roleService = roleService;
         }
 
-        [HttpPost("create"), AllowAnonymous]
-        public async Task<IActionResult> Create([FromBody] CreateRoleDto dto)
-        {
-            var role = await _roleService.CreateRoleAsync(dto);
+        [HttpPost("create")]
+        public async Task<ActionResult<Domain.Models.Models.Role>> Create([FromBody] CreateRoleDto dto) =>
+            await _mediator.Send(new CreateRoleRequest(dto));
 
-            return Ok(role);
-        }
 
         [HttpGet]
-        public async Task<ActionResult<List<Domain.Models.Models.Role>>> GetAllRoles([FromQuery] GetAllRolesDto dto)
-        {
-            return await _roleService.GetAllRoles(new GetAllRolesDto { PageNumber = 1, PageSize = 10 });
-        }
+        public async Task<ActionResult<List<Domain.Models.Models.Role>>> GetAllRoles([FromQuery] GetAllRolesDto dto) =>
+            await _mediator.Send(new GetRolesRequest(dto));
     }
 }

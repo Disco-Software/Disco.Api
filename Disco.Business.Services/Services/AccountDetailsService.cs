@@ -75,7 +75,9 @@ namespace Disco.Business.Services.Services
 
         public async Task RemoveAsync(Account account)
         {
-           await _accountRepository.RemoveAccountAsync(account.Id);
+            await _accountRepository.GetAsync(account.Id);
+
+            await _accountRepository.RemoveAccountAsync(account);
         }
 
         public async Task<UserDetailsResponseDto> GetUserDatailsAsync(User user)

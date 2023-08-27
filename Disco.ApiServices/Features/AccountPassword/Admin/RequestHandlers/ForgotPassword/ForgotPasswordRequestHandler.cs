@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.ForgotPassword
 {
-    internal class ForgotPasswordRequestHandler : IRequestHandler<ForgotPasswordRequest, string>
+    public class ForgotPasswordRequestHandler : IRequestHandler<ForgotPasswordRequest, string>
     {
         private readonly IAccountService _accountService;
         private readonly IAccountPasswordService _accountPasswordService;

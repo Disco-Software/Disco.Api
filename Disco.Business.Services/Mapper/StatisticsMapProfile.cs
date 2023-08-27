@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Disco.Business.Interfaces.Dtos.Statistics;
+using Disco.Business.Interfaces.Dtos.Analytic;
 using Disco.Domain.Models.Models;
 using System;
 using System.Collections.Generic;
@@ -13,13 +13,12 @@ namespace Disco.Business.Services.Mapper
     {
         public StatisticsMapProfile()
         {
-            CreateMap<List<User>, AnalyticDto>()
-                .ForMember(users => users.Users, options => options.MapFrom(users => users))
-                .ForMember(users => users.UsersCount, options => options.MapFrom(users => users.Count))
-                .ForMember(users => users.NewUsersCount, options => options.Ignore())
-                .ForMember(users => users.RegisteredUsers, options => options.Ignore())
-                .ForMember(users => users.PostsCount, options => options.Ignore())
-                .ForMember(users => users.Posts, options => options.Ignore());
+            //CreateMap<List<User>, AnalyticDto>()
+            //    .ForMember(users => users.Users, options => options.MapFrom(users => users))
+            //    .ForMember(users => users.UsersCount, options => options.MapFrom(users => users.Count))
+            //    .ForMember(users => users.NewUsersCount, options => options.Ignore())
+            //    .ForMember(users => users.PostsCount, options => options.Ignore())
+            //    .ForMember(users => users.AggregatedPosts, options => options.Ignore());
 
         }
     }

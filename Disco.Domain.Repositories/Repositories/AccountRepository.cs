@@ -54,14 +54,9 @@ namespace Disco.Domain.Repositories.Repositories
             return account;
         }
 
-        public async Task RemoveAccountAsync(int accountId)
+        public async Task RemoveAccountAsync(Account account)
         {
-            var account = _context.Accounts
-                .Include(u => u.User)
-                .Where(a => a.Id == accountId)
-                .FirstOrDefaultAsync();
-
-            _context.Remove(account);
+            _context.Accounts.Remove(account);
 
             await _context.SaveChangesAsync();
         }

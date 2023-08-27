@@ -11,7 +11,11 @@ namespace Disco.Domain.Interfaces
         Task Remove(int id);
         Task<Post> GetAsync(int id);
         Task<List<Post>> GetPostsByDescriptionAsync(string search);
-        Task<List<Post>> GetUserPostsAsync(int userId);
+        Task<List<Post>> GetUserPostsAsync(int accountId, int pageNumber, int pageSize);
+        List<int> GetPostsCountFromDay(DateTime date); 
+        List<int> GetPostsCountFromMonth(DateTime date); 
+        List<int> GetPostsCountFromYear(DateTime date); 
+        Task<List<Post>> GetUserPostsAsync(int accountId);
         Task<List<Post>> GetAllPostsAsync(DateTime from, DateTime to);
     }
 }

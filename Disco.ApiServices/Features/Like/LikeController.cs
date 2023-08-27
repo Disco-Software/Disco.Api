@@ -1,9 +1,13 @@
 ﻿using Disco.ApiServices.Controllers;
+using Disco.ApiServices.Features.Like.RequestHandlers.CreateLike;
+using Disco.ApiServices.Features.Like.RequestHandlers.RemoveLike;
 using Disco.Business.Constants;
 using Disco.Business.Interfaces;
 using Disco.Business.Interfaces.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,63 +18,19 @@ namespace Disco.ApiServices.Features.Like
     [Route("api/user/likes")]
     public class LikeController : UserController
     {
-        private readonly IAccountService _accountService;
-        private readonly ILikeService _likeService;
-        private readonly IPostService _postService;
-        private readonly IPushNotificationService _pushNotificationService;
+        private readonly IMediator _mediator;
 
-        public LikeController(
-            IAccountService accountService,
-            ILikeService likeService,
-            IPostService postService,
-            IPushNotificationService pushNotificationService)
+        public LikeController(IMediator mediator)
         {
-            _accountService = accountService;
-            _likeService = likeService;
-            _postService = postService;
-            _pushNotificationService = pushNotificationService;
+            _mediator = mediator;
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateLikeAsync([FromQuery] int postId)
-        {
-            var user = await _accountService.GetAsync(User);
-            var post = await _postService.GetPostAsync(postId);
-
-            if (user == null)
-            {
-                return BadRequest();
-            }
-
-            var likes = await _likeService.AddLikeAsync(user, post);
-
-            //await 0_pushNotificationService.SendNotificationAsync(new Business.Dtos.PushNotifications.LikeNotificationDto
-            //{
-            //    Title = $"{user.UserName} liked ",
-            //    Body = $"{user.UserName} liked your post",
-            //    Id = Guid.NewGuid().ToString(),
-            //    Tags = $"user-{post.Account.User.Id}",
-            //    LikesCount = likes.Count,
-            //    NotificationType = NotificationTypes.LikeNotification
-            //});
-
-            return Ok(likes.Count);
-        }
+        public async Task<ActionResult<int>> CreateLikeAsync([FromQuery] int postId) =>
+            await _mediator.Send(new CreateLikeRequest(postId));
 
         [HttpDelete("remove")]
-        public async Task<IActionResult> RemoveLikeAsync([FromQuery] int postId)
-        {
-            var user = await _accountService.GetAsync(User);
-            var post = await _postService.GetPostAsync(postId);
-
-            if (user == null)
-            {
-                return BadRequest();
-            }
-
-            var likes = await _likeService.RemoveLikeAsync(user, post);
-
-            return Ok(likes.Count);
-        }
+        public async Task<ActionResult<int>> RemoveLikeAsync([FromQuery] int postId) =>
+            await _mediator.Send(new RemoveLikeRequest(postId));
     }
 }

@@ -74,12 +74,5 @@ namespace Disco.Domain.Repositories
                 .Where(g => g.Id == id)
                 .FirstOrDefaultAsync();
         }
-
-        public async Task LoadAccountsAsync(List<AccountGroup> accountGroup)
-        {
-           await _context.Entry(accountGroup)
-                .Collection(c => c)
-                .LoadAsync();
-        }
     }
 }

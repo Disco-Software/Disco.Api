@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.CreateAccount
 {
-    internal class CreateAccountRequestHandler : IRequestHandler<CreateAccountRequest, UserResponseDto>
+    public class CreateAccountRequestHandler : IRequestHandler<CreateAccountRequest, UserResponseDto>
     {
         private readonly IAccountService _accountService;
         private readonly ITokenService _tokenService;

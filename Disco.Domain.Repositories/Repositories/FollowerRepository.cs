@@ -100,7 +100,7 @@ namespace Disco.Domain.Repositories.Repositories
                 .FirstOrDefaultAsync() ?? throw new NullReferenceException();
 
             await _context.Entry(account)
-                .Collection(account => account.Followers)
+                .Collection(x => x.Following)
                 .LoadAsync();
 
             await _context.Entry(account)

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Group.RequestHandlers.DeleteGroup
 {
-    internal class DeleteGroupRequestHandler : IRequestHandler<DeleteGroupRequest>
+    public class DeleteGroupRequestHandler : IRequestHandler<DeleteGroupRequest>
     {
         private readonly IAccountService _accountService;
         private readonly IGroupService _groupService;

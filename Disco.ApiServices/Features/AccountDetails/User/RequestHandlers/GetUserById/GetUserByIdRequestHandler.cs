@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountDetails.User.RequestHandlers.GetUserById
 {
-    internal class GetUserByIdRequestHandler : IRequestHandler<GetUserByIdRequest, UserDetailsResponseDto>
+    public class GetUserByIdRequestHandler : IRequestHandler<GetUserByIdRequest, UserDetailsResponseDto>
     {
         private readonly IAccountService _accountService;
         private readonly IAccountDetailsService _accountDetailsService;

@@ -22,14 +22,9 @@ namespace Disco.Domain.Repositories.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task Remove(Like like,int id)
+        public async Task Remove(Like like)
         {
-            var post = await _context.Posts
-                .Where(p => p.Id == id)
-                .FirstOrDefaultAsync();
-
             _context.Likes.Remove(like);
-            post.Likes.Remove(like);
 
             await _context.SaveChangesAsync();
         }

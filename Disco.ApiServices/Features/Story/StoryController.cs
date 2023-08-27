@@ -1,89 +1,41 @@
-﻿using Disco.Business.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using AuthorizeAttribute = Microsoft.AspNetCore.Authorization.AuthorizeAttribute;
-using Disco.Business.Constants;
-using System.Threading.Tasks;
-using Disco.Domain.Models;
-using System.Collections.Generic;
-using AutoMapper;
-using System;
+﻿using Disco.ApiServices.Controllers;
+using Disco.ApiServices.Features.Story.RequestHandlers.CreateStory;
+using Disco.ApiServices.Features.Story.RequestHandlers.DeleteStory;
+using Disco.ApiServices.Features.Story.RequestHandlers.GetStories;
+using Disco.ApiServices.Features.Story.RequestHandlers.GetStory;
 using Disco.Business.Interfaces.Dtos.Stories;
-using Disco.Business.Interfaces.Interfaces;
-using Disco.Domain.Models.Models;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Story
 {
     [Route("api/user/story")]
-    public class StoryController : ControllerBase
+    public class StoryController : UserController
     {
-        private readonly IStoryService _storyService;
-        private readonly IStoryImageService _storyImageService;
-        private readonly IStoryVideoService _storyVideoService;
-        private readonly IAccountService _accountService;
-        private readonly IMapper _mapper;
-        public StoryController(
-            IStoryService storyService,
-            IStoryImageService storyImageService,
-            IStoryVideoService storyVideoService,
-            IAccountService accountService,
-            IMapper mapper)
+        private readonly IMediator _mediator;
+
+        public StoryController(IMediator mediator)
         {
-            _storyService = storyService;
-            _storyImageService = storyImageService;
-            _storyVideoService = storyVideoService;
-            _accountService = accountService;
-            _mapper = mapper;
+            _mediator = mediator;
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create([FromForm] CreateStoryDto dto)
-        {
-            var user = await _accountService.GetAsync(HttpContext.User);
-
-            var story = _mapper.Map<Domain.Models.Models.Story>(dto);
-
-            if (dto.StoryImages != null)
-                foreach (var image in dto.StoryImages)
-                {
-                    var storyImage = await _storyImageService.CreateStoryImageAsync(
-                        new Business.Interfaces.Dtos.StoryImages.CreateStoryImageDto { StoryImageFile = image });
-                    story.StoryImages.Add(storyImage);
-                }
-
-            if (dto.StoryVideos != null)
-                foreach (var video in dto.StoryVideos)
-                {
-                    var storyImage = await _storyVideoService.CreateStoryVideoAsync(
-                        new Business.Interfaces.Dtos.StoryVideos.CreateStoryVideoDto { VideoFile = video });
-                    story.StoryVideos.Add(storyImage);
-                }
-
-            await _storyService.CreateStoryAsync(story);
-
-            return Ok(story);
-        }
+        public async Task<ActionResult<Domain.Models.Models.Story>> CreateAsync([FromForm] CreateStoryDto dto) =>
+            await _mediator.Send(new CreateStoryRequest(dto));
 
         [HttpDelete("{id:int}")]
-        public async Task Delete([FromRoute] int id)
-        {
-            await _storyService.DeleteStoryAsync(id);
-        }
+        public async Task<ActionResult<string>> DeleteAsync([FromRoute] int id) =>
+            await _mediator.Send(new DeleteStoryRequest(id));
 
         [HttpGet("get/{id:int}")]
-        public async Task<ActionResult<Domain.Models.Models.Story>> GetStory([FromRoute] int id)
-        {
-            return await _storyService.GetStoryAsync(id);
-        }
+        public async Task<ActionResult<Domain.Models.Models.Story>> GetAsync([FromRoute] int id) =>
+            await _mediator.Send(new GetStoryRequest(id));
 
         [HttpGet("all")]
-        public async Task<ActionResult<List<Domain.Models.Models.Story>>> GetStoriesAsync([FromQuery] GetAllStoriesDto dto)
-        {
-            var user = await _accountService.GetAsync(HttpContext.User);
-
-            var stories = await _storyService.GetAllStoryAsync(user, dto);
-
-            return stories;
-        }
+        public async Task<ActionResult<List<Domain.Models.Models.Story>>> GetStoriesAsync([FromQuery] GetAllStoriesDto dto) =>
+            await _mediator.Send(new GetStoriesRequest(dto));
 
     }
 }

@@ -49,10 +49,7 @@ namespace Disco.Business.Services.Services
 
         public async Task<List<Post>> GetAllUserPosts(User user,GetAllPostsDto dto)
         {
-            return await Task.FromResult(_postRepository.GetUserPostsAsync(user.Id)
-                .Result
-                .OrderByDescending(post => post.DateOfCreation)
-                .ToList());
+            return await _postRepository.GetUserPostsAsync(user.AccountId, dto.PageNumber, dto.PageSize);
         }
 
         public async Task<List<Post>> GetAllPostsAsync(User user, int pageNumber, int pageSize)
@@ -61,7 +58,7 @@ namespace Disco.Business.Services.Services
 
             foreach (var following in user.Account.Following.AsEnumerable().ToList())
             {
-                var followingPosts = await _postRepository.GetUserPostsAsync(following.FollowingAccountId);
+                var followingPosts = await _postRepository.GetUserPostsAsync(following.FollowingAccountId, pageNumber, pageSize);
 
                 posts.AddRange(followingPosts);
             }
@@ -75,7 +72,7 @@ namespace Disco.Business.Services.Services
         }
         public async Task<List<Post>> GetAllPostsAsync(User user)
         {
-            var posts = await _postRepository.GetUserPostsAsync(user.Id);
+            var posts = await _postRepository.GetUserPostsAsync(user.AccountId);
 
             foreach (var follower in user.Account.Followers)
             {

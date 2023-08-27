@@ -81,6 +81,9 @@ namespace Disco.Business.Services.Services
 
         public async Task<Group> UpdateAsync(Group group)
         {
+            if (group == null)
+                throw new NullReferenceException();
+
             await _groupRepository.UpdateAsync(group);
 
             return group;

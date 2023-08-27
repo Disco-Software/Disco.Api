@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountDetails.User.RequestHandlers.GetCurrentUser
 {
-    internal class GetCurrentUserRequestHandler : IRequestHandler<GetCurrentUserRequest, UserDetailsResponseDto>
+    public class GetCurrentUserRequestHandler : IRequestHandler<GetCurrentUserRequest, UserDetailsResponseDto>
     {
         private readonly IAccountService _accountService;
         private readonly IAccountDetailsService _accountDetailsService;

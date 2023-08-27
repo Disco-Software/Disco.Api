@@ -15,12 +15,24 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Account.Admin.RequestHandlers.LogIn
 {
-    internal class LogInRequestHandler : IRequestHandler<LogInRequest, UserResponseDto>
+    public class LogInRequestHandler : IRequestHandler<LogInRequest, UserResponseDto>
     {
         private readonly IAccountService _accountService;
         private readonly IAccountPasswordService _accountPasswordService;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
+
+        public LogInRequestHandler(
+            IAccountService accountService,
+            IAccountPasswordService accountPasswordService,
+            ITokenService tokenService,
+            IMapper mapper)
+        {
+            _accountService = accountService;
+            _accountPasswordService = accountPasswordService;
+            _tokenService = tokenService;
+            _mapper = mapper;
+        }
 
         public async Task<UserResponseDto> Handle(LogInRequest request, CancellationToken cancellationToken)
         {

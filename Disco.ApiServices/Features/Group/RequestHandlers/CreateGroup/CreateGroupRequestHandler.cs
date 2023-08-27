@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Group.RequestHandlers.CreateGroup
 {
-    internal class CreateGroupRequestHandler : IRequestHandler<CreateGroupRequest, Domain.Models.Models.Group>
+    public class CreateGroupRequestHandler : IRequestHandler<CreateGroupRequest, Domain.Models.Models.Group>
     {
         private readonly IAccountService _accountService;
         private readonly IGroupService _groupService;

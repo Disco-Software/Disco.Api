@@ -1,4 +1,4 @@
-﻿using Disco.Business.Interfaces.Dtos.Statistics;
+﻿using Disco.Business.Interfaces.Dtos.Analytic;
 using Disco.Business.Interfaces.Enums;
 using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
@@ -11,6 +11,6 @@ namespace Disco.Business.Interfaces.Interfaces
 {
     public interface IAnalyticService
     {
-        Task<AnalyticDto> GetAllStatisticsAsync(DateTime from, DateTime to, AnalyticFor statistics);
+        Task<AnalyticDto> GetAnalyticAsync(DateTime from, DateTime to, AnalyticFor statistics);
     }
 }

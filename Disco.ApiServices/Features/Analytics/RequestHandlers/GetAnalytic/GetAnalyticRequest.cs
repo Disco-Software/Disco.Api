@@ -1,4 +1,4 @@
-﻿using Disco.Business.Interfaces.Dtos.Statistics;
+﻿using Disco.Business.Interfaces.Dtos.Analytic;
 using MediatR;
 using System;
 using System.Collections.Generic;

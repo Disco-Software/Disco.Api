@@ -8,6 +8,6 @@ namespace Disco.Business.Interfaces.Interfaces
     public interface IImageService
     {
         Task<PostImage> CreatePostImage(CreateImageDto model);
-        Task RemoveImage(int id);
+        Task RemoveImageAsync(int id);
     }
 }

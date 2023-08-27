@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.GlobalSearch.RequestHandlers.Search
 {
-    internal class SearchRequestHandler : IRequestHandler<SearchRequest, GlobalSearchResponseDto>
+    public class SearchRequestHandler : IRequestHandler<SearchRequest, GlobalSearchResponseDto>
     {
         private readonly IAccountDetailsService _accountDetailsService;
         private readonly IPostService _postService;

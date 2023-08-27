@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Follower.RequestHandlers.CreateFollower
 {
-    internal class CreateFollowerRequestHandler : IRequestHandler<CreateFollowerRequest, FollowerResponseDto>
+    public class CreateFollowerRequestHandler : IRequestHandler<CreateFollowerRequest, FollowerResponseDto>
     {
         private readonly IAccountService _accountService;
         private readonly IFollowerService _followerService;

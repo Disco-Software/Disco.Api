@@ -15,7 +15,7 @@ namespace Disco.Business.Services.Mappers
         {
             CreateMap<Account, AccountGroup>()
                 .ForMember(ag => ag.Id, options => options.Ignore())
-                .ForMember(ag => ag.Group, options => options.Ignore())
+                .ForMember(ag => ag.Group, options => options.MapFrom(x => new Group()))
                 .ForMember(ag => ag.Account, options => options.MapFrom(a => a))
                 .ForMember(ag => ag.AccountId, options => options.MapFrom(a => a.Id))
                 .ForMember(ag => ag.GroupId, options => options.Ignore());

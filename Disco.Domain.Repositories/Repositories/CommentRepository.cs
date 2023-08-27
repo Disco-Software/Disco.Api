@@ -1,4 +1,5 @@
 ﻿using Disco.Domain.EF;
+using Disco.Domain.Interfaces.Interfaces;
 using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using Disco.Domain.Repositories.Repositories.Base;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories.Repositories
 {
-    public class CommentRepository : BaseRepository<Comment,int>
+    public class CommentRepository : BaseRepository<Comment,int>, ICommentRepository
     {
         public CommentRepository(ApiDbContext ctx) : base(ctx) { }
 
@@ -20,12 +21,8 @@ namespace Disco.Domain.Repositories.Repositories
             await base.AddAsync(item);
         }
 
-        public override async Task Remove(int id)
+        public async Task Remove(Comment comment)
         {
-            var comment = await _context.Comments
-                .Where(s => s.Id == id)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
             _context.Comments.Remove(comment);
 
             await _context.SaveChangesAsync();

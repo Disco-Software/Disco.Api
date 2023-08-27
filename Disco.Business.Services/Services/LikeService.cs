@@ -28,10 +28,8 @@ namespace Disco.Business.Services.Services
         {
             var like = await _likeRepository.GetAsync(post.Id);
 
-            if (like != null)
-            {
-                return null;
-            }
+            if (post.Likes.Where(x => x.Id == like.Id).FirstOrDefault() != null)
+                throw new ArgumentException();
 
             like = _mapper.Map<Like>(post);
             like.Post = post;
@@ -58,9 +56,11 @@ namespace Disco.Business.Services.Services
             var like = await _likeRepository.GetAsync(post.Id);
 
             if (like == null)
-                throw new System.Exception("Error");
+                throw new NullReferenceException();
 
-            await _likeRepository.Remove(like, post.Id);
+            post.Likes.Remove(like);
+
+            await _likeRepository.Remove(like);
 
             return post.Likes;
         }

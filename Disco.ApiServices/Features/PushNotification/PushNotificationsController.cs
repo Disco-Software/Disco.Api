@@ -1,6 +1,11 @@
-﻿using Disco.Business.Constants;
+﻿using Disco.ApiServices.Controllers;
+using Disco.ApiServices.Features.PushNotification.RequestHandlers.CreateInstallation;
+using Disco.ApiServices.Features.PushNotification.RequestHandlers.RemoveInstallation;
+using Disco.ApiServices.Features.PushNotification.RequestHandlers.SubmitNotification;
+using Disco.Business.Constants;
 using Disco.Business.Interfaces.Dtos.PushNotifications;
 using Disco.Business.Interfaces.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,52 +16,25 @@ using System.Threading.Tasks;
 namespace Disco.ApiServices.Features.PushNotification
 {
     [Route("api/admin/notification")]
-    public class PushNotificationsController : ControllerBase
+    public class PushNotificationsController : AdminController
     {
-        private readonly IPushNotificationService _pushNotificationService;
+        private readonly IMediator _mediator;
 
-        public PushNotificationsController(IPushNotificationService pushNotificationService)
+        public PushNotificationsController(IMediator mediator)
         {
-            _pushNotificationService = pushNotificationService;
+            _mediator = mediator;
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateInstallationAsync([FromBody] DeviceInstallationDto dto)
-        {
-            var response = await _pushNotificationService.CreateOrUpdateInstallationAsync(dto, HttpContext.RequestAborted);
-
-            if (!response)
-            {
-                return BadRequest($"Submit status: {response}");
-            }
-
-            return Ok($"Submit status: {response}");
-        }
+        public async Task<ActionResult<string>> CreateInstallationAsync([FromBody] DeviceInstallationDto dto) =>
+            await _mediator.Send(new CreateInstallationRequest(dto));
 
         [HttpDelete("installations/{installationId}")]
-        public async Task<IActionResult> RemoveInstallationAsync([FromQuery] string installationId)
-        {
-            var response = await _pushNotificationService.DeleteInstallationByIdAsync(installationId);
-
-            if (!response)
-            {
-                return BadRequest($"Installation remove status: {response}");
-            }
-
-            return Ok($"Installation remove status: {response}");
-        }
+        public async Task<ActionResult<string>> RemoveInstallationAsync([FromQuery] string installationId) =>
+            await _mediator.Send(new RemoveInstallationRequest(installationId));
 
         [HttpPost("submit")]
-        public async Task<IActionResult> SubmitNotificationAsync([FromBody] PushNotificationBaseDto dto)
-        {
-            var response = await _pushNotificationService.RequestNotificationAsync(dto, HttpContext.RequestAborted);
-
-            if (!response)
-            {
-                return BadRequest($"Submit status: {response}");
-            }
-
-            return Ok($"Submit status: {response}");
-        }
+        public async Task<ActionResult<string>> SubmitNotificationAsync([FromBody] PushNotificationBaseDto dto) =>
+            await _mediator.Send(new SubmitNotificationRequest(dto));
     }
 }

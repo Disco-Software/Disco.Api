@@ -14,7 +14,7 @@ namespace Disco.Business.Interfaces.Validators
 {
     public class CreateFollowerValidator : AbstractValidator<CreateFollowerDto>
     {
-        private CreateFollowerValidator(IAccountService accountService, ClaimsPrincipal claimsPrincipal)
+        public CreateFollowerValidator(IAccountService accountService, ClaimsPrincipal claimsPrincipal)
         {
             RuleFor(r => r.FollowingAccountId)
                 .MustAsync(async (id, token) =>

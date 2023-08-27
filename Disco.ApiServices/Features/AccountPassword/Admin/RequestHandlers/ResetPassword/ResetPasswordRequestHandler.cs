@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.ResetPassword
 {
-    internal class ResetPasswordRequestHandler : IRequestHandler<ResetPasswordRequest, string>
+    public class ResetPasswordRequestHandler : IRequestHandler<ResetPasswordRequest, string>
     {
         private readonly IAccountService _accountService;
         private readonly IAccountPasswordService _accountPasswordService;

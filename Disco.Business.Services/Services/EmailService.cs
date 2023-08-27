@@ -19,7 +19,7 @@ namespace Disco.Business.Services.Services
         public void EmailConfirmation(EmailConfirmationDto model)
         {
             MailMessage mailMessage = new MailMessage();
-            mailMessage.From = new MailAddress(_emailOptions.Value.Mail, "Disco");
+            mailMessage.From = new MailAddress(_emailOptions.Value.Mail, _emailOptions.Value.Name);
             mailMessage.To.Add(model.ToEmail);
             mailMessage.Subject = model.MessageHeader;
             mailMessage.Body = model.MessageBody;
