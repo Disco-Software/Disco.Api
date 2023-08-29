@@ -564,14 +564,14 @@ namespace Disco.Test.Business.Like.Services
                 }
             });
             
-            _likeRepository.Setup(mock => mock.Remove(It.IsAny<Like>(), It.IsAny<int>())).Verifiable();
+            _likeRepository.Setup(mock => mock.Remove(It.IsAny<Like>()));
 
             // Act
             var result = await _testClass.RemoveLikeAsync(user, post);
 
             // Assert
             _likeRepository.Verify(mock => mock.GetAsync(It.IsAny<int>()));
-            _likeRepository.Verify(mock => mock.Remove(It.IsAny<Like>(), It.IsAny<int>()));
+            _likeRepository.Verify(mock => mock.Remove(It.IsAny<Like>()));
         }
 
         [Test]

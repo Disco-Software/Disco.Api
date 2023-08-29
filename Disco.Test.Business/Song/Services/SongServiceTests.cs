@@ -235,13 +235,13 @@ namespace Disco.Test.Business.Song.Services
             // Arrange
             var songId = 2082310262;
 
-            _songRepository.Setup(mock => mock.Remove(It.IsAny<int>())).Verifiable();
+            _songRepository.Setup(mock => mock.RemoveAsync(It.IsAny<PostSong>())).Verifiable();
 
             // Act
-            await _testClass.Remove(songId);
+            await _testClass.RemoveAsync(songId);
 
             // Assert
-            _songRepository.Verify(mock => mock.Remove(It.IsAny<int>()));
+            _songRepository.Verify(mock => mock.RemoveAsync(It.IsAny<PostSong>()));
         }
 
         private Mock<BlobServiceClient> GetBlobServiceClientMock()

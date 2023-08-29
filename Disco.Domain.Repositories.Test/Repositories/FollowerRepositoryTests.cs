@@ -724,7 +724,7 @@ namespace Disco.Domain.Repositories.Test
         {
             var dbContextOptionsBuilder = new DbContextOptionsBuilder<ApiDbContext>();
 
-            dbContextOptionsBuilder.UseInMemoryDatabase<ApiDbContext>("TestDb");
+            dbContextOptionsBuilder.UseInMemoryDatabase<ApiDbContext>(Guid.NewGuid().ToString());
 
             return dbContextOptionsBuilder.Options;
         }

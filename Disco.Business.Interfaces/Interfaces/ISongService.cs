@@ -8,6 +8,6 @@ namespace Disco.Business.Interfaces.Interfaces
     public interface ISongService
     {
         public Task<PostSong> CreatePostSongAsync(CreateSongDto model);
-        public Task Remove(int songId);
+        public Task RemoveAsync(int songId);
     }
 }

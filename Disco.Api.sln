@@ -37,9 +37,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Domain.Models.Test", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{652E2490-D533-42EB-BC41-210AB015ACC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Domain.Repositories.Test", "Disco.Domain.Repositories.Test\Disco.Domain.Repositories.Test.csproj", "{72C923F5-3169-4E18-B56B-96EB37A9DE63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Domain.Repositories.Test", "Disco.Domain.Repositories.Test\Disco.Domain.Repositories.Test.csproj", "{72C923F5-3169-4E18-B56B-96EB37A9DE63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disco.Domain.Publishers.Test", "Disco.Domain.Publishers.Test\Disco.Domain.Publishers.Test.csproj", "{185A74A5-B6DE-4B06-9BFA-E9903585B8ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Domain.Publishers.Test", "Disco.Domain.Publishers.Test\Disco.Domain.Publishers.Test.csproj", "{185A74A5-B6DE-4B06-9BFA-E9903585B8ED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Disco.Integration.Clients.Tests", "Disco.Integration.Clients.Tests\Disco.Integration.Clients.Tests.csproj", "{ED6CDB8C-490B-4209-B8B9-32FF48FCA078}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,6 +121,10 @@ Global
 		{185A74A5-B6DE-4B06-9BFA-E9903585B8ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{185A74A5-B6DE-4B06-9BFA-E9903585B8ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{185A74A5-B6DE-4B06-9BFA-E9903585B8ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED6CDB8C-490B-4209-B8B9-32FF48FCA078}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED6CDB8C-490B-4209-B8B9-32FF48FCA078}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED6CDB8C-490B-4209-B8B9-32FF48FCA078}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED6CDB8C-490B-4209-B8B9-32FF48FCA078}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -129,6 +135,7 @@ Global
 		{7B82D83F-DD4E-4EB8-B53E-45C5E988572B} = {652E2490-D533-42EB-BC41-210AB015ACC6}
 		{72C923F5-3169-4E18-B56B-96EB37A9DE63} = {652E2490-D533-42EB-BC41-210AB015ACC6}
 		{185A74A5-B6DE-4B06-9BFA-E9903585B8ED} = {652E2490-D533-42EB-BC41-210AB015ACC6}
+		{ED6CDB8C-490B-4209-B8B9-32FF48FCA078} = {652E2490-D533-42EB-BC41-210AB015ACC6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {945BAE7D-185F-418B-8EE7-4CE52AF7CAA0}

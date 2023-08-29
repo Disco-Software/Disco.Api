@@ -96,7 +96,7 @@ namespace Disco.Domain.Repositories.Repositories
         public async Task<List<User>> GetAllUsersAsync(DateTime from, DateTime to)
         {
             return await _ctx.Users
-                .Where(user => user.DateOfRegister <= to && user.DateOfRegister >= from)
+                .Where(user => user.DateOfRegister <= to && user.DateOfRegister > from)
                 .OrderBy(user => user.DateOfRegister)
                 .ToListAsync();
         }

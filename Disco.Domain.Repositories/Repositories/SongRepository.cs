@@ -18,17 +18,20 @@ namespace Disco.Domain.Repositories.Repositories
             await _context.PostSongs.AddAsync(song);
         }
 
-        public override async Task Remove(int id)
+        public async Task RemoveAsync(PostSong song)
         {
-            var song = await _context.PostSongs
-                .Include(p => p.Post)
-                .Where(s => s.Id == id)
-                .FirstOrDefaultAsync();
-
-            song.Post.PostSongs.Remove(song);
             _context.PostSongs.Remove(song);
 
             await _context.SaveChangesAsync();
+        }
+
+        public override async Task<PostSong> GetAsync(int id)
+        {
+            return await _context.PostSongs
+                .Include(p => p.Post)
+                .Where(s => s.Id == id)
+                .FirstOrDefaultAsync() ?? throw new NullReferenceException();
+
         }
     }
 }

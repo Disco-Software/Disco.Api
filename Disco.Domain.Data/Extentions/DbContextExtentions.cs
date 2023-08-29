@@ -9,7 +9,7 @@ namespace Disco.Domain.Data.Extentions
     {
         public static void AddApiDbContext(this IServiceCollection serviceDescriptors, string connectionString)
         {
-            serviceDescriptors.AddDbContext<ApiDbContext>();
+            serviceDescriptors.AddDbContext<ApiDbContext>(opt => opt.UseSqlServer(connectionString));
         }
     }
 }

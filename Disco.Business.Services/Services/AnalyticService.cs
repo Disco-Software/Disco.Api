@@ -48,29 +48,29 @@ namespace Disco.Business.Services.Services
             {
                 case AnalyticFor.Day:
                     {
-                        periodAnalytics = await GetPeriodAnalyticsAsync(from, to, 24);
+                        periodAnalytics = await GetPeriodAnalyticsAsync(from, to, x => x.AddHours(1));
                     }
                     break;
                 case AnalyticFor.Week:
                     {
-                        periodAnalytics = await GetPeriodAnalyticsAsync(from, to, 7);
+                        periodAnalytics = await GetPeriodAnalyticsAsync(from, to, x => x.AddDays(1));
                     }
                     break;
                 case AnalyticFor.Month:
                     {
                         var periods = (to - from).TotalDays;
 
-                        periodAnalytics = await GetPeriodAnalyticsAsync(from, to, Convert.ToInt32(periods));
+                        periodAnalytics = await GetPeriodAnalyticsAsync(from, to, x => x.AddDays(1));
                     }
                     break;
                 case AnalyticFor.Year:
                     {
-                        periodAnalytics = await GetPeriodAnalyticsAsync(from, to, 12);
+                        periodAnalytics = await GetPeriodAnalyticsAsync(from, to, x => x.AddMonths(1));
                     }
                     break;
                 default:
                     {
-                        periodAnalytics = await GetPeriodAnalyticsAsync(from, to, 24);
+                        periodAnalytics = await GetPeriodAnalyticsAsync(from, to, x => x.AddHours(1));
                     }
                     break;
             }
@@ -82,27 +82,28 @@ namespace Disco.Business.Services.Services
             return result;
         }
 
-        private async Task<(List<int>, List<int>, List<int>)> GetPeriodAnalyticsAsync(DateTime from, DateTime to, int periodCount)
+        private async Task<(List<int>, List<int>, List<int>)> GetPeriodAnalyticsAsync(DateTime from, DateTime to, Func<DateTime, DateTime> addStep)
         {
             var users = new List<int>();
             var newUsers = new List<int>();
             var posts = new List<int>();
 
             var difference = to - from;
-            var step = difference / periodCount;
             var stepFrom = from;
 
-            for (int i = 0; i < periodCount; i++)
+            while (stepFrom < to)
             {
-                var stepUsers = await _userRepository.GetAllUsersAsync(DateTime.MinValue, stepFrom + step);
-                var stepNewUsers = await _userRepository.GetAllUsersAsync(stepFrom, stepFrom + step);
-                var stepPosts = await _postRepository.GetAllPostsAsync(stepFrom, stepFrom + step);
+                var nextStep = addStep(stepFrom);
+
+                var stepUsers = await _userRepository.GetAllUsersAsync(DateTime.MinValue, nextStep);
+                var stepNewUsers = await _userRepository.GetAllUsersAsync(stepFrom, nextStep);
+                var stepPosts = await _postRepository.GetAllPostsAsync(stepFrom, nextStep);
 
                 users.Add(stepUsers.Count);
                 posts.Add(stepPosts.Count);
                 newUsers.Add(stepNewUsers.Count);
 
-                stepFrom += step;
+                stepFrom = nextStep;
             }
 
             return (users, newUsers, posts);

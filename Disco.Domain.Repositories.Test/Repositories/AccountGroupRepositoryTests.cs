@@ -7,7 +7,6 @@ namespace Disco.Test.Domain.Repositories.Test
     using Disco.Domain.EF;
     using Disco.Domain.Models.Models;
     using Disco.Domain.Repositories.Repositories;
-    using Disco.Domain.Repositories.Test.Fakes;
     using FluentAssertions;
     using Microsoft.EntityFrameworkCore;
     using Moq;
@@ -236,7 +235,7 @@ namespace Disco.Test.Domain.Repositories.Test
         {
             var dbContextOptionsBuilder = new DbContextOptionsBuilder<ApiDbContext>();
 
-            dbContextOptionsBuilder.UseInMemoryDatabase<ApiDbContext>("TestDb");
+            dbContextOptionsBuilder.UseInMemoryDatabase<ApiDbContext>(Guid.NewGuid().ToString());
 
              return dbContextOptionsBuilder.Options;
         }
