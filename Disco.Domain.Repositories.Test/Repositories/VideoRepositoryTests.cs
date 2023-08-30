@@ -111,7 +111,7 @@ namespace Disco.Domain.Repositories.Test
             var id = 183723130;
 
             // Act
-            await _testClass.Remove(id);
+            await _testClass.RemoveAsync(id);
 
             // Assert
             Assert.Fail("Create or modify test");

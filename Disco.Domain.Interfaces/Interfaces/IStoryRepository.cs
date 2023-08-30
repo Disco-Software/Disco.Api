@@ -9,7 +9,7 @@ namespace Disco.Domain.Interfaces
     {
         Task AddAsync(Story story);
         Task<List<Story>> GetAllAsync(int profileId, int pageNumber, int pageSize);
-        Task Remove(int id);
+        Task RemoveAsync(int id);
         Task<Story> GetAsync(int id);
     }
 }

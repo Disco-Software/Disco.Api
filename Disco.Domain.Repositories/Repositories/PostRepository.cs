@@ -28,7 +28,7 @@ namespace Disco.Domain.Repositories.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public override async Task Remove(int id)
+        public override async Task RemoveAsync(int id)
         {
             var post = await _context.Posts
                 .Include(p => p.Account)

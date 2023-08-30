@@ -271,7 +271,7 @@ namespace Disco.Domain.Repositories.Test
             await _ctx.SaveChangesAsync();
 
             // Act
-            await _testClass.Remove(id);
+            await _testClass.RemoveAsync(id);
 
             // Assert
             var result = await _ctx.Posts.FirstOrDefaultAsync(x => x.Id == 1);
@@ -1253,17 +1253,19 @@ namespace Disco.Domain.Repositories.Test
             },
             };
 
+            user.Account.Posts.AddRange(posts);
+
             var userFollower = new UserFollower
             {
                 FollowingAccountId = 1470459918,
                 FollowingAccount = following,
                 FollowerAccountId = 1549178263,
-                FollowerAccount = follower,
+                FollowerAccount = user.Account,
                 IsFollowing = true
             };
 
             following.Followers.Add(userFollower);
-            follower.Following.Add(userFollower);
+            user.Account.Following.Add(userFollower);
 
             user.Account.Posts.AddRange(posts);
 
@@ -1274,7 +1276,7 @@ namespace Disco.Domain.Repositories.Test
             await _ctx.SaveChangesAsync();
 
             // Act
-            var result = await _testClass.GetFollowingPostsAsync(follower.Following);
+            var result = await _testClass.GetFollowingPostsAsync(user.Account.Following);
 
             // Assert
             result.Should().NotBeNull();

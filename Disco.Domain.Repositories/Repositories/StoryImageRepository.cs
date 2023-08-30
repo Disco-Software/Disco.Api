@@ -18,15 +18,8 @@ namespace Disco.Domain.Repositories.Repositories
             await _context.StoryImages.AddAsync(item);
         }
 
-        public override async Task Remove(int id)
+        public async Task RemoveAsync(StoryImage storyImage)
         {
-           var storyImage = await _context.StoryImages
-                .Include(s => s.Story)
-                .Where(i => i.Id == id)
-                .FirstOrDefaultAsync();
-            
-            storyImage.Story.StoryImages.Remove(storyImage);
-
             _context.StoryImages.Remove(storyImage);
 
             await _context.SaveChangesAsync();

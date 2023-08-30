@@ -163,13 +163,13 @@ namespace Disco.Test.Business.Video.Services
             // Arrange
             var id = 1309872206;
 
-            _videoRepository.Setup(mock => mock.Remove(It.IsAny<int>())).Verifiable();
+            _videoRepository.Setup(mock => mock.RemoveAsync(It.IsAny<int>())).Verifiable();
 
             // Act
             await _testClass.RemoveVideoAsync(id);
 
             // Assert
-            _videoRepository.Verify(mock => mock.Remove(It.IsAny<int>()));
+            _videoRepository.Verify(mock => mock.RemoveAsync(It.IsAny<int>()));
         }
 
         private Mock<BlobServiceClient> GetBlobServiceClientMock()

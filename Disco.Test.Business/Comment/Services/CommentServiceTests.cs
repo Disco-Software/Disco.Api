@@ -231,7 +231,7 @@ namespace Disco.Test.Business.Comment.Services
             await _testClass.RemoveCommentAsync(comment);
 
             // Assert
-            _commentRepository.Verify(x => x.Remove(It.IsAny<int>()));
+            _commentRepository.Verify(x => x.RemoveAsync(It.IsAny<int>()));
         }
 
         [Test]

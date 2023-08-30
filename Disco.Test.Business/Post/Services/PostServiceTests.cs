@@ -117,13 +117,13 @@ namespace Disco.Test.Business.Post.Services
             // Arrange
             var postId = 6734744;
 
-            _postRepository.Setup(mock => mock.Remove(It.IsAny<int>())).Verifiable();
+            _postRepository.Setup(mock => mock.RemoveAsync(It.IsAny<int>())).Verifiable();
 
             // Act
             await _testClass.DeletePostAsync(postId);
 
             // Assert
-            _postRepository.Verify(mock => mock.Remove(It.IsAny<int>()));
+            _postRepository.Verify(mock => mock.RemoveAsync(It.IsAny<int>()));
         }
 
         [Test]

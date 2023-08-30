@@ -99,13 +99,13 @@ namespace Disco.Test.Business.Story.Services
             // Arrange
             var id = 1667047888;
 
-            _storyRepository.Setup(mock => mock.Remove(It.IsAny<int>())).Verifiable();
+            _storyRepository.Setup(mock => mock.RemoveAsync(It.IsAny<int>())).Verifiable();
 
             // Act
             await _testClass.DeleteStoryAsync(id);
 
             // Assert
-            _storyRepository.Verify(mock => mock.Remove(It.IsAny<int>()));
+            _storyRepository.Verify(mock => mock.RemoveAsync(It.IsAny<int>()));
         }
 
         [Test]

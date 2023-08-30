@@ -168,13 +168,13 @@ namespace Disco.Test.Business.StoryVideo.Services
             // Arrange
             var id = 549160325;
 
-            _storyVideoRepository.Setup(mock => mock.Remove(It.IsAny<int>())).Verifiable();
+            _storyVideoRepository.Setup(mock => mock.RemoveAsync(It.IsAny<int>())).Verifiable();
 
             // Act
             await _testClass.Remove(id);
 
             // Assert
-            _storyVideoRepository.Verify(mock => mock.Remove(It.IsAny<int>()));
+            _storyVideoRepository.Verify(mock => mock.RemoveAsync(It.IsAny<int>()));
 
             Assert.Fail("Create or modify test");
         }

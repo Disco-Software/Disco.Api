@@ -68,7 +68,7 @@ namespace Disco.Domain.Repositories.Repositories
             return stories;
         }
 
-        public override async Task Remove(int id)
+        public override async Task RemoveAsync(int id)
         {
             var story = await _context.Stories
                 .Include(i => i.StoryImages)

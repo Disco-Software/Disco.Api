@@ -7,6 +7,6 @@ namespace Disco.Domain.Interfaces
     public interface IVideoRepository
     {
         Task AddAsync(PostVideo postVideo);
-        Task Remove(int id);
+        Task RemoveAsync(int id);
     }
 }
