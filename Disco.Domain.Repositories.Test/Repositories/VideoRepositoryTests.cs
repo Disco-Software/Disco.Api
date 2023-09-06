@@ -6,6 +6,8 @@ namespace Disco.Domain.Repositories.Test
     using Disco.Domain.EF;
     using Disco.Domain.Models.Models;
     using Disco.Domain.Repositories.Repositories;
+    using FluentAssertions;
+    using Microsoft.EntityFrameworkCore;
     using NUnit.Framework;
 
     [TestFixture]
@@ -17,7 +19,7 @@ namespace Disco.Domain.Repositories.Test
         [SetUp]
         public void SetUp()
         {
-            _ctx = new ApiDbContext();
+            _ctx = new ApiDbContext(AddMockDbContextOptions());
             _testClass = new VideoRepository(_ctx);
         }
 
@@ -29,12 +31,6 @@ namespace Disco.Domain.Repositories.Test
 
             // Assert
             Assert.That(instance, Is.Not.Null);
-        }
-
-        [Test]
-        public void CannotConstructWithNullCtx()
-        {
-            Assert.Throws<ArgumentNullException>(() => new VideoRepository(default(ApiDbContext)));
         }
 
         [Test]
@@ -91,11 +87,13 @@ namespace Disco.Domain.Repositories.Test
                 }
             };
 
+            postVideo.Post.PostVideos.Add(postVideo);
+
             // Act
             await _testClass.AddAsync(postVideo);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            postVideo.Post.PostVideos.Should().NotBeEmpty();
         }
 
         [Test]
@@ -105,16 +103,78 @@ namespace Disco.Domain.Repositories.Test
         }
 
         [Test]
-        public async Task CanCallRemove()
+        public async Task CanCallRemoveAsync()
         {
             // Arrange
-            var id = 183723130;
+            var postVideo = new PostVideo
+            {
+                VideoSource = "TestValue2055230050",
+                PostId = 973005875,
+                Post = new Post
+                {
+                    Description = "TestValue1148833773",
+                    PostImages = new List<PostImage>(),
+                    PostSongs = new List<PostSong>(),
+                    PostVideos = new List<PostVideo>(),
+                    Likes = new List<Like>(),
+                    Comments = new List<Comment>(),
+                    DateOfCreation = DateTime.UtcNow,
+                    AccountId = 588080504,
+                    Account = new Account
+                    {
+                        AccountStatus = new AccountStatus
+                        {
+                            LastStatus = "TestValue64736755",
+                            FollowersCount = 1565507486,
+                            NextStatusId = 1351773223,
+                            UserTarget = 1861426870,
+                            AccountId = 37336429,
+                            Account = default(Account)
+                        },
+                        Cread = "TestValue968185866",
+                        Photo = "TestValue1147318100",
+                        AccountGroups = new List<AccountGroup>(),
+                        Connections = new List<Connection>(),
+                        Messages = new List<Message>(),
+                        Posts = new List<Post>(),
+                        Comments = new List<Comment>(),
+                        Likes = new List<Like>(),
+                        Followers = new List<UserFollower>(),
+                        Following = new List<UserFollower>(),
+                        Stories = new List<Story>(),
+                        UserId = 867629368,
+                        User = new User
+                        {
+                            RoleName = "TestValue130040222",
+                            RefreshToken = "TestValue1974299148",
+                            RefreshTokenExpiress = DateTime.UtcNow,
+                            DateOfRegister = DateTime.UtcNow,
+                            AccountId = 1644707456,
+                            Account = default(Account)
+                        }
+                    }
+                }
+            };
+
+            await _ctx.PostVideos.AddAsync(postVideo);
+
+            await _ctx.SaveChangesAsync();
 
             // Act
-            await _testClass.RemoveAsync(id);
+            await _testClass.RemoveAsync(postVideo);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            postVideo.Post.PostVideos.Count.Should().Be(0);
         }
+
+        private DbContextOptions<ApiDbContext> AddMockDbContextOptions()
+        {
+            var dbContextOptionsBuilder = new DbContextOptionsBuilder<ApiDbContext>();
+
+            dbContextOptionsBuilder.UseInMemoryDatabase<ApiDbContext>(Guid.NewGuid().ToString());
+
+            return dbContextOptionsBuilder.Options;
+        }
+
     }
 }

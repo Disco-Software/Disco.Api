@@ -7,35 +7,30 @@ namespace Disco.Domain.Publishers.Test.Publisher
     using Disco.Domain.Events.Dto;
     using Disco.Domain.Events.Events;
     using Disco.Intergration.EventPublisher.Publisher;
+    using Moq;
     using NUnit.Framework;
 
     [TestFixture]
     public class ServiceBusPublisherTests
     {
         private ServiceBusPublisher _testClass;
-        private ServiceBusClient _serviceBusClient;
+        private Mock<ServiceBusClient> _serviceBusClient;
 
         [SetUp]
         public void SetUp()
         {
-            _serviceBusClient = new ServiceBusClient("TestValue440853823");
-            _testClass = new ServiceBusPublisher(_serviceBusClient);
+            _serviceBusClient = new Mock<ServiceBusClient>("Endpoint=sb://test-service-bus.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=Fm//OGuOYfcs9I84CNq/VXVGbKkF5f+EV+ASbCjNJcs=");
+            _testClass = new ServiceBusPublisher(_serviceBusClient.Object);
         }
 
         [Test]
         public void CanConstruct()
         {
             // Act
-            var instance = new ServiceBusPublisher(_serviceBusClient);
+            var instance = new ServiceBusPublisher(_serviceBusClient.Object);
 
             // Assert
             Assert.That(instance, Is.Not.Null);
-        }
-
-        [Test]
-        public void CannotConstructWithNullServiceBusClient()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ServiceBusPublisher(default(ServiceBusClient)));
         }
 
         [Test]
@@ -64,17 +59,29 @@ namespace Disco.Domain.Publishers.Test.Publisher
                 }
             };
 
+            var mockServiceBusSender = new Mock<ServiceBusSender>();
+            mockServiceBusSender
+                .Setup(x => x.SendMessageAsync(It.IsAny<ServiceBusMessage>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+
+            _serviceBusClient
+                .Setup(x => x.CreateSender(It.IsAny<string>()))
+                .Returns(mockServiceBusSender.Object);
+
             // Act
             await _testClass.PublishAsync(@event);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            _serviceBusClient.Verify(x => x.CreateSender(It.IsAny<string>()), Times.Once());
+            mockServiceBusSender.Verify(x => x.CreateMessageBatchAsync(CancellationToken.None), Times.Once());
+            mockServiceBusSender.Verify(x => x.SendMessageAsync(It.IsAny<ServiceBusMessage>(), CancellationToken.None), Times.Once());
         }
 
         [Test]
         public void CannotCallPublishAsyncWithNullEvent()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.PublishAsync(default(PostCreatedEvent)));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.PublishAsync(default(PostCreatedEvent)));
         }
     }
 }

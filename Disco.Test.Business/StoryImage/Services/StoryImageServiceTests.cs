@@ -176,13 +176,13 @@ namespace Disco.Test.Business.StoryImage.Services
             // Arrange
             var id = 986936215;
 
-            _storyImageRepository.Setup(mock => mock.RemoveAsync(It.IsAny<int>())).Verifiable();
+            _storyImageRepository.Setup(mock => mock.RemoveAsync(It.IsAny<StoryImage>())).Verifiable();
 
             // Act
             await _testClass.RemoveStoryImageAsync(id);
 
             // Assert
-            _storyImageRepository.Verify(mock => mock.RemoveAsync(It.IsAny<int>()));
+            _storyImageRepository.Verify(mock => mock.RemoveAsync(It.IsAny<StoryImage>()));
 
             Assert.Fail("Create or modify test");
         }

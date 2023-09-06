@@ -68,25 +68,20 @@ namespace Disco.Domain.Repositories.Repositories
             return stories;
         }
 
-        public override async Task RemoveAsync(int id)
+        public async Task RemoveAsync(Story story)
         {
-            var story = await _context.Stories
+            _context.Stories.Remove(story);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public override async Task<Story> GetAsync(int id)
+        {
+            return await _context.Stories
                 .Include(i => i.StoryImages)
                 .Include(v => v.StoryVideos)
                 .Where(s => s.Id == id)
-                .FirstOrDefaultAsync();
-            story.Account.Stories.Remove(story);
-            _context.Stories.Remove(story);
-        }
-
-        public override Task<Story> GetAsync(int id)
-        {
-            var story = _context.Stories
-                .Include(i => i.StoryImages)
-                .Include(v => v.StoryVideos)
-                .Where(i => i.Id == id)
-                .FirstOrDefaultAsync();
-            return story;
+                .FirstOrDefaultAsync() ?? throw new NullReferenceException();
         }
     }
 }

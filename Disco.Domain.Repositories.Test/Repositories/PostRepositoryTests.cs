@@ -271,7 +271,7 @@ namespace Disco.Domain.Repositories.Test
             await _ctx.SaveChangesAsync();
 
             // Act
-            await _testClass.RemoveAsync(id);
+            await _testClass.RemoveAsync(post);
 
             // Assert
             var result = await _ctx.Posts.FirstOrDefaultAsync(x => x.Id == 1);
@@ -1040,40 +1040,8 @@ namespace Disco.Domain.Repositories.Test
                 Likes = new List<Like>(),
                 Comments = new List<Comment>(),
                 DateOfCreation = DateTime.UtcNow,
-                AccountId = 1683034790,
-                Account = new Account
-                {
-                    AccountStatus = new AccountStatus
-                    {
-                        LastStatus = "TestValue386148693",
-                        FollowersCount = 908481471,
-                        NextStatusId = 1973523993,
-                        UserTarget = 1316951236,
-                        AccountId = 1651577016,
-                        Account = default(Account)
-                    },
-                    Cread = "TestValue35370157",
-                    Photo = "TestValue1611689684",
-                    AccountGroups = new List<AccountGroup>(),
-                    Connections = new List<Connection>(),
-                    Messages = new List<Message>(),
-                    Posts = new List<Post>(),
-                    Comments = new List<Comment>(),
-                    Likes = new List<Like>(),
-                    Followers = new List<UserFollower>(),
-                    Following = new List<UserFollower>(),
-                    Stories = new List<Story>(),
-                    UserId = 1471906360,
-                    User = new User
-                    {
-                        RoleName = "TestValue124597323",
-                        RefreshToken = "TestValue2032603341",
-                        RefreshTokenExpiress = DateTime.UtcNow,
-                        DateOfRegister = DateTime.UtcNow,
-                        AccountId = 2089271798,
-                        Account = default(Account)
-                    }
-                }
+                AccountId = follower.Id,
+                Account = follower
             },
                 new Post
             {
@@ -1084,40 +1052,8 @@ namespace Disco.Domain.Repositories.Test
                 Likes = new List<Like>(),
                 Comments = new List<Comment>(),
                 DateOfCreation = DateTime.UtcNow,
-                AccountId = 1683034790,
-                Account = new Account
-                {
-                    AccountStatus = new AccountStatus
-                    {
-                        LastStatus = "TestValue386148693",
-                        FollowersCount = 908481471,
-                        NextStatusId = 1973523993,
-                        UserTarget = 1316951236,
-                        AccountId = 1651577016,
-                        Account = default(Account)
-                    },
-                    Cread = "TestValue35370157",
-                    Photo = "TestValue1611689684",
-                    AccountGroups = new List<AccountGroup>(),
-                    Connections = new List<Connection>(),
-                    Messages = new List<Message>(),
-                    Posts = new List<Post>(),
-                    Comments = new List<Comment>(),
-                    Likes = new List<Like>(),
-                    Followers = new List<UserFollower>(),
-                    Following = new List<UserFollower>(),
-                    Stories = new List<Story>(),
-                    UserId = 1471906360,
-                    User = new User
-                    {
-                        RoleName = "TestValue124597323",
-                        RefreshToken = "TestValue2032603341",
-                        RefreshTokenExpiress = DateTime.UtcNow,
-                        DateOfRegister = DateTime.UtcNow,
-                        AccountId = 2089271798,
-                        Account = default(Account)
-                    }
-                }
+                AccountId = following.Id,
+                Account = following
             },
                 new Post
             {
@@ -1128,40 +1064,8 @@ namespace Disco.Domain.Repositories.Test
                 Likes = new List<Like>(),
                 Comments = new List<Comment>(),
                 DateOfCreation = DateTime.UtcNow,
-                AccountId = 1683034790,
-                Account = new Account
-                {
-                    AccountStatus = new AccountStatus
-                    {
-                        LastStatus = "TestValue386148693",
-                        FollowersCount = 908481471,
-                        NextStatusId = 1973523993,
-                        UserTarget = 1316951236,
-                        AccountId = 1651577016,
-                        Account = default(Account)
-                    },
-                    Cread = "TestValue35370157",
-                    Photo = "TestValue1611689684",
-                    AccountGroups = new List<AccountGroup>(),
-                    Connections = new List<Connection>(),
-                    Messages = new List<Message>(),
-                    Posts = new List<Post>(),
-                    Comments = new List<Comment>(),
-                    Likes = new List<Like>(),
-                    Followers = new List<UserFollower>(),
-                    Following = new List<UserFollower>(),
-                    Stories = new List<Story>(),
-                    UserId = 1471906360,
-                    User = new User
-                    {
-                        RoleName = "TestValue124597323",
-                        RefreshToken = "TestValue2032603341",
-                        RefreshTokenExpiress = DateTime.UtcNow,
-                        DateOfRegister = DateTime.UtcNow,
-                        AccountId = 2089271798,
-                        Account = default(Account)
-                    }
-                }
+                AccountId = following.Id,
+                Account = following,
             },
                 new Post
             {
@@ -1172,40 +1076,8 @@ namespace Disco.Domain.Repositories.Test
                 Likes = new List<Like>(),
                 Comments = new List<Comment>(),
                 DateOfCreation = DateTime.UtcNow,
-                AccountId = 1683034790,
-                Account = new Account
-                {
-                    AccountStatus = new AccountStatus
-                    {
-                        LastStatus = "TestValue386148693",
-                        FollowersCount = 908481471,
-                        NextStatusId = 1973523993,
-                        UserTarget = 1316951236,
-                        AccountId = 1651577016,
-                        Account = default(Account)
-                    },
-                    Cread = "TestValue35370157",
-                    Photo = "TestValue1611689684",
-                    AccountGroups = new List<AccountGroup>(),
-                    Connections = new List<Connection>(),
-                    Messages = new List<Message>(),
-                    Posts = new List<Post>(),
-                    Comments = new List<Comment>(),
-                    Likes = new List<Like>(),
-                    Followers = new List<UserFollower>(),
-                    Following = new List<UserFollower>(),
-                    Stories = new List<Story>(),
-                    UserId = 1471906360,
-                    User = new User
-                    {
-                        RoleName = "TestValue124597323",
-                        RefreshToken = "TestValue2032603341",
-                        RefreshTokenExpiress = DateTime.UtcNow,
-                        DateOfRegister = DateTime.UtcNow,
-                        AccountId = 2089271798,
-                        Account = default(Account)
-                    }
-                }
+                AccountId = following.Id,
+                Account = following
             },
                 new Post
             {
@@ -1216,44 +1088,10 @@ namespace Disco.Domain.Repositories.Test
                 Likes = new List<Like>(),
                 Comments = new List<Comment>(),
                 DateOfCreation = DateTime.UtcNow,
-                AccountId = 1683034790,
-                Account = new Account
-                {
-                    AccountStatus = new AccountStatus
-                    {
-                        LastStatus = "TestValue386148693",
-                        FollowersCount = 908481471,
-                        NextStatusId = 1973523993,
-                        UserTarget = 1316951236,
-                        AccountId = 1651577016,
-                        Account = default(Account)
-                    },
-                    Cread = "TestValue35370157",
-                    Photo = "TestValue1611689684",
-                    AccountGroups = new List<AccountGroup>(),
-                    Connections = new List<Connection>(),
-                    Messages = new List<Message>(),
-                    Posts = new List<Post>(),
-                    Comments = new List<Comment>(),
-                    Likes = new List<Like>(),
-                    Followers = new List<UserFollower>(),
-                    Following = new List<UserFollower>(),
-                    Stories = new List<Story>(),
-                    UserId = 1471906360,
-                    User = new User
-                    {
-                        RoleName = "TestValue124597323",
-                        RefreshToken = "TestValue2032603341",
-                        RefreshTokenExpiress = DateTime.UtcNow,
-                        DateOfRegister = DateTime.UtcNow,
-                        AccountId = 2089271798,
-                        Account = default(Account)
-                    }
-                }
+                AccountId = following.Id,
+                Account = following,
             },
             };
-
-            user.Account.Posts.AddRange(posts);
 
             var userFollower = new UserFollower
             {
@@ -1265,22 +1103,25 @@ namespace Disco.Domain.Repositories.Test
             };
 
             following.Followers.Add(userFollower);
-            user.Account.Following.Add(userFollower);
+            follower.Following.Add(userFollower);
 
-            user.Account.Posts.AddRange(posts);
+            var followingPosts = posts.Where(x => x.AccountId != follower.Id)
+                .ToList();
 
-            await _ctx.Users.AddAsync(user);
+            following.Posts.AddRange(followingPosts);
+
+            await _ctx.Users.AddAsync(follower.User);
             await _ctx.Posts.AddRangeAsync(posts);
             await _ctx.UserFollowers.AddAsync(userFollower);
 
             await _ctx.SaveChangesAsync();
 
             // Act
-            var result = await _testClass.GetFollowingPostsAsync(user.Account.Following);
+            var result = await _testClass.GetFollowingPostsAsync(follower.Following);
 
             // Assert
             result.Should().NotBeNull();
-            result.Count.Should().Be(5);
+            result.Count.Should().Be(4);
         }
 
         [Test]
@@ -1295,41 +1136,257 @@ namespace Disco.Domain.Repositories.Test
             // Arrange
             var followings = new List<UserFollower>();
 
-            // Act
+            //Act
             var result = await _testClass.GetFollowingPostsAsync(followings);
 
-            // Assert
-            Assert.That(result.Capacity, Is.EqualTo(followings.Capacity));
-            Assert.That(result.Count, Is.EqualTo(followings.Count));
+            //Assert
+            result.Should().BeEmpty();
         }
 
         [Test]
         public async Task CanCallGetAllUserPosts()
         {
-            // Arrange
-            var userId = 2008012014;
-            var pageSize = 1982045539;
-            var pageNumber = 154957396;
+            //Arrange
+            var user = new User
+            {
+                RoleName = "TestValue545742261",
+                RefreshToken = "TestValue1232542744",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow,
+                AccountId = 2107285279,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue63181154",
+                        FollowersCount = 409844600,
+                        NextStatusId = 2087341380,
+                        UserTarget = 210612439,
+                        AccountId = 34695246,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue1355455838",
+                    Photo = "TestValue392531704",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 1508052407,
+                    User = new User
+                    {
+                        UserName = "vasya",
+                        Email = "vays@gmail.com",
+                        RoleName = "Admin",
+                    }
+                }
+            };
+            var posts = new List<Post>
+            {
+                new Post
+            {
+                Description = "TestValue1510413234",
+                PostImages = new List<PostImage>(),
+                PostSongs = new List<PostSong>(),
+                PostVideos = new List<PostVideo>(),
+                Likes = new List<Like>(),
+                Comments = new List<Comment>(),
+                DateOfCreation = DateTime.UtcNow.AddDays(-1),
+                AccountId = 1683034790,
+                Account = user.Account
+            },
+                new Post
+            {
+                Description = "TestValue1510413234",
+                PostImages = new List<PostImage>(),
+                PostSongs = new List<PostSong>(),
+                PostVideos = new List<PostVideo>(),
+                Likes = new List<Like>(),
+                Comments = new List<Comment>(),
+                DateOfCreation = DateTime.UtcNow.AddDays(-2),
+                AccountId = 1683034790,
+                Account = user.Account,
+            },
+                new Post
+            {
+                Description = "TestValue1510413234",
+                PostImages = new List<PostImage>(),
+                PostSongs = new List<PostSong>(),
+                PostVideos = new List<PostVideo>(),
+                Likes = new List<Like>(),
+                Comments = new List<Comment>(),
+                DateOfCreation = DateTime.UtcNow,
+                AccountId = 1683034790,
+                Account =  user.Account,
+            },
+                new Post
+            {
+                Description = "TestValue1510413234",
+                PostImages = new List<PostImage>(),
+                PostSongs = new List<PostSong>(),
+                PostVideos = new List<PostVideo>(),
+                Likes = new List<Like>(),
+                Comments = new List<Comment>(),
+                DateOfCreation = DateTime.UtcNow.AddDays(-4),
+                AccountId = 1683034790,
+                Account = user.Account
+            },
+                new Post
+            {
+                Description = "TestValue1510413234",
+                PostImages = new List<PostImage>(),
+                PostSongs = new List<PostSong>(),
+                PostVideos = new List<PostVideo>(),
+                Likes = new List<Like>(),
+                Comments = new List<Comment>(),
+                DateOfCreation = DateTime.UtcNow.AddDays(-5),
+                AccountId = 1683034790,
+                Account = user.Account
+            },
+            };
+
+            await _ctx.Users.AddAsync(user);
+            await _ctx.Posts.AddRangeAsync(posts);
+
+            user.Account.Posts.AddRange(posts);
+
+            await _ctx.SaveChangesAsync();
 
             // Act
-            var result = await _testClass.GetAllUserPosts(userId, pageSize, pageNumber);
+            var result = await _testClass.GetAllUserPosts(1, 1, 5);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            result.Should().NotBeEmpty();
+            result.Count.Should().Be(1);
+            result[0].Should().NotBeNull();
         }
 
         [Test]
         public async Task CanCallGetAllPostsAsync()
         {
             // Arrange
-            var @from = DateTime.UtcNow;
+            var @from = DateTime.UtcNow.AddDays(-5);
             var to = DateTime.UtcNow;
+
+            var user = new User
+            {
+                RoleName = "TestValue545742261",
+                RefreshToken = "TestValue1232542744",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow,
+                AccountId = 2107285279,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue63181154",
+                        FollowersCount = 409844600,
+                        NextStatusId = 2087341380,
+                        UserTarget = 210612439,
+                        AccountId = 34695246,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue1355455838",
+                    Photo = "TestValue392531704",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 1508052407,
+                    User = new User
+                    {
+                        UserName = "vasya",
+                        Email = "vays@gmail.com",
+                        RoleName = "Admin",
+                    }
+                }
+            };
+            var posts = new List<Post>
+            {
+                new Post
+            {
+                Description = "TestValue1510413234",
+                PostImages = new List<PostImage>(),
+                PostSongs = new List<PostSong>(),
+                PostVideos = new List<PostVideo>(),
+                Likes = new List<Like>(),
+                Comments = new List<Comment>(),
+                DateOfCreation = DateTime.UtcNow.AddDays(-1),
+                AccountId = 1683034790,
+                Account = user.Account
+            },
+                new Post
+            {
+                Description = "TestValue1510413234",
+                PostImages = new List<PostImage>(),
+                PostSongs = new List<PostSong>(),
+                PostVideos = new List<PostVideo>(),
+                Likes = new List<Like>(),
+                Comments = new List<Comment>(),
+                DateOfCreation = DateTime.UtcNow.AddDays(-2),
+                AccountId = 1683034790,
+                Account = user.Account,
+            },
+                new Post
+            {
+                Description = "TestValue1510413234",
+                PostImages = new List<PostImage>(),
+                PostSongs = new List<PostSong>(),
+                PostVideos = new List<PostVideo>(),
+                Likes = new List<Like>(),
+                Comments = new List<Comment>(),
+                DateOfCreation = DateTime.UtcNow,
+                AccountId = 1683034790,
+                Account =  user.Account,
+            },
+                new Post
+            {
+                Description = "TestValue1510413234",
+                PostImages = new List<PostImage>(),
+                PostSongs = new List<PostSong>(),
+                PostVideos = new List<PostVideo>(),
+                Likes = new List<Like>(),
+                Comments = new List<Comment>(),
+                DateOfCreation = DateTime.UtcNow.AddDays(-4),
+                AccountId = 1683034790,
+                Account = user.Account
+            },
+                new Post
+            {
+                Description = "TestValue1510413234",
+                PostImages = new List<PostImage>(),
+                PostSongs = new List<PostSong>(),
+                PostVideos = new List<PostVideo>(),
+                Likes = new List<Like>(),
+                Comments = new List<Comment>(),
+                DateOfCreation = DateTime.UtcNow.AddDays(-5),
+                AccountId = 1683034790,
+                Account = user.Account
+            },
+            };
+
+            await _ctx.Users.AddAsync(user);
+            await _ctx.Posts.AddRangeAsync(posts);
+
+            await _ctx.SaveChangesAsync();
 
             // Act
             var result = await _testClass.GetAllPostsAsync(from, to);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            result.Should().NotBeEmpty();
+            result.Count.Should().Be(4);
+            result[0].Should().NotBeNull();
+            result[1].Should().NotBeNull();
         }
 
         private DbContextOptions<ApiDbContext> AddMockDbContextOptions()

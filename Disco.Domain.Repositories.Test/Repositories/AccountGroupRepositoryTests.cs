@@ -1,4 +1,4 @@
-namespace Disco.Test.Domain.Repositories.Test
+namespace Disco.Domain.Repositories.Test
 {
     using System;
     using System.Collections.Generic;

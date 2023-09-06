@@ -68,7 +68,11 @@ namespace Disco.Business.Services.Services
 
         public async Task RemoveStoryImageAsync(int id)
         {
-           await _storyImageRepository.RemoveAsync(id);
+            var storyImage = await _storyImageRepository.GetAsync(id);
+
+            storyImage.Story.StoryImages.Remove(storyImage);
+
+           await _storyImageRepository.RemoveAsync(storyImage);
         }
     }
 }

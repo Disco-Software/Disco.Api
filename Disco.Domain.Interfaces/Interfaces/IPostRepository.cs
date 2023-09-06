@@ -8,7 +8,7 @@ namespace Disco.Domain.Interfaces
     public interface IPostRepository
     {
         Task AddAsync(Post post);
-        Task RemoveAsync(int id);
+        Task RemoveAsync(Post post);
         Task<Post> GetAsync(int id);
         Task<List<Post>> GetPostsByDescriptionAsync(string search);
         Task<List<Post>> GetUserPostsAsync(int accountId, int pageNumber, int pageSize);

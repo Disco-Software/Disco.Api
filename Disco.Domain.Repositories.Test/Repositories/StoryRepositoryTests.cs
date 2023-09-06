@@ -279,14 +279,180 @@ namespace Disco.Domain.Repositories.Test
         [Test]
         public async Task CanCallRemove()
         {
-            // Arrange
-            var id = 1388860481;
+            // Arrange            
+            var list = new List<Story>
+            {
+                new Story
+                {
+                    StoryImages = new List<StoryImage>(),
+                    StoryVideos = new List<StoryVideo>(),
+                    DateOfCreation = DateTime.UtcNow,
+                    AccountId = 1,
+                    Account = new Account
+                    {
+                        AccountStatus = new AccountStatus
+                        {
+                            LastStatus = "TestValue254295221",
+                            FollowersCount = 728145564,
+                            NextStatusId = 888929598,
+                            UserTarget = 1341380959,
+                            AccountId = 476838644,
+                            Account = default(Account)
+                        },
+                        Cread = "TestValue1643157843",
+                        Photo = "TestValue332985052",
+                        AccountGroups = new List<AccountGroup>(),
+                        Connections = new List<Connection>(),
+                        Messages = new List<Message>(),
+                        Posts = new List<Post>(),
+                        Comments = new List<Comment>(),
+                        Likes = new List<Like>(),
+                        Followers = new List<UserFollower>(),
+                        Following = new List<UserFollower>(),
+                        Stories = new List<Story>(),
+                        UserId = 1956396971,
+                        User = new User
+                        {
+                            RoleName = "TestValue1038343007",
+                            RefreshToken = "TestValue1576332096",
+                            RefreshTokenExpiress = DateTime.UtcNow,
+                            DateOfRegister = DateTime.UtcNow,
+                            AccountId = 1562917880,
+                            Account = default(Account)
+                        }
+                    }
+                },
+                new Story
+                {
+                    StoryImages = new List<StoryImage>(),
+                    StoryVideos = new List<StoryVideo>(),
+                    DateOfCreation = DateTime.UtcNow,
+                    AccountId = 1,
+                    Account = new Account
+                    {
+                        AccountStatus = new AccountStatus
+                        {
+                            LastStatus = "TestValue254295221",
+                            FollowersCount = 728145564,
+                            NextStatusId = 888929598,
+                            UserTarget = 1341380959,
+                            AccountId = 476838644,
+                            Account = default(Account)
+                        },
+                        Cread = "TestValue1643157843",
+                        Photo = "TestValue332985052",
+                        AccountGroups = new List<AccountGroup>(),
+                        Connections = new List<Connection>(),
+                        Messages = new List<Message>(),
+                        Posts = new List<Post>(),
+                        Comments = new List<Comment>(),
+                        Likes = new List<Like>(),
+                        Followers = new List<UserFollower>(),
+                        Following = new List<UserFollower>(),
+                        Stories = new List<Story>(),
+                        UserId = 1956396971,
+                        User = new User
+                        {
+                            RoleName = "TestValue1038343007",
+                            RefreshToken = "TestValue1576332096",
+                            RefreshTokenExpiress = DateTime.UtcNow,
+                            DateOfRegister = DateTime.UtcNow,
+                            AccountId = 1562917880,
+                            Account = default(Account)
+                        }
+                    }
+                },
+                new Story
+                {
+                    StoryImages = new List<StoryImage>(),
+                    StoryVideos = new List<StoryVideo>(),
+                    DateOfCreation = DateTime.UtcNow,
+                    AccountId = 1,
+                    Account = new Account
+                    {
+                        AccountStatus = new AccountStatus
+                        {
+                            LastStatus = "TestValue254295221",
+                            FollowersCount = 728145564,
+                            NextStatusId = 888929598,
+                            UserTarget = 1341380959,
+                            AccountId = 476838644,
+                            Account = default(Account)
+                        },
+                        Cread = "TestValue1643157843",
+                        Photo = "TestValue332985052",
+                        AccountGroups = new List<AccountGroup>(),
+                        Connections = new List<Connection>(),
+                        Messages = new List<Message>(),
+                        Posts = new List<Post>(),
+                        Comments = new List<Comment>(),
+                        Likes = new List<Like>(),
+                        Followers = new List<UserFollower>(),
+                        Following = new List<UserFollower>(),
+                        Stories = new List<Story>(),
+                        UserId = 1956396971,
+                        User = new User
+                        {
+                            RoleName = "TestValue1038343007",
+                            RefreshToken = "TestValue1576332096",
+                            RefreshTokenExpiress = DateTime.UtcNow,
+                            DateOfRegister = DateTime.UtcNow,
+                            AccountId = 1562917880,
+                            Account = default(Account)
+                        }
+                    }
+                },
+                new Story
+            {
+                StoryImages = new List<StoryImage>(),
+                StoryVideos = new List<StoryVideo>(),
+                DateOfCreation = DateTime.UtcNow,
+                AccountId = 1,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue254295221",
+                        FollowersCount = 728145564,
+                        NextStatusId = 888929598,
+                        UserTarget = 1341380959,
+                        AccountId = 476838644,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue1643157843",
+                    Photo = "TestValue332985052",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 1956396971,
+                    User = new User
+                    {
+                        RoleName = "TestValue1038343007",
+                        RefreshToken = "TestValue1576332096",
+                        RefreshTokenExpiress = DateTime.UtcNow,
+                        DateOfRegister = DateTime.UtcNow,
+                        AccountId = 1562917880,
+                        Account = default(Account)
+                    }
+                }
+            }
+            };
+
+            await _ctx.Stories.AddRangeAsync(list);
+
+            await _ctx.SaveChangesAsync();
 
             // Act
-            await _testClass.RemoveAsync(id);
+            await _testClass.RemoveAsync(list.First());
 
             // Assert
-            Assert.Fail("Create or modify test");
+            list.Count.Should().Be(4);
         }
 
         [Test]

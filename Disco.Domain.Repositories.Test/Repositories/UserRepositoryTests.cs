@@ -1,4 +1,4 @@
-namespace Disco.Test.Domain.Repositories.Test
+namespace Disco.Domain.Repositories.Test
 {
     using System;
     using System.Collections.Generic;
@@ -6,6 +6,8 @@ namespace Disco.Test.Domain.Repositories.Test
     using Disco.Domain.EF;
     using Disco.Domain.Models.Models;
     using Disco.Domain.Repositories.Repositories;
+    using FluentAssertions;
+    using Microsoft.EntityFrameworkCore;
     using NUnit.Framework;
 
     [TestFixture]
@@ -17,7 +19,7 @@ namespace Disco.Test.Domain.Repositories.Test
         [SetUp]
         public void SetUp()
         {
-            _ctx = new ApiDbContext();
+            _ctx = new ApiDbContext(AddMockDbContextOptions());
             _testClass = new UserRepository(_ctx);
         }
 
@@ -32,37 +34,102 @@ namespace Disco.Test.Domain.Repositories.Test
         }
 
         [Test]
-        public void CannotConstructWithNullCtx()
-        {
-            Assert.Throws<ArgumentNullException>(() => new UserRepository(default(ApiDbContext)));
-        }
-
-        [Test]
         public async Task CanCallGetUserByRefreshTokenAsync()
         {
             // Arrange
             var refreshToken = "TestValue1356262726";
+            var user = new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow,
+                AccountId = 1201594692,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 550344057,
+                    User = default(User)
+                }
+            };
+
+            user.RefreshToken = "TestValue1356262726";
+
+            await _ctx.Users.AddAsync(user);
+
+            await _ctx.SaveChangesAsync();
 
             // Act
             var result = await _testClass.GetUserByRefreshTokenAsync(refreshToken);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("   ")]
-        public void CannotCallGetUserByRefreshTokenAsyncWithInvalidRefreshToken(string value)
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetUserByRefreshTokenAsync(value));
+            result.RefreshToken.Should().NotBeNull();
+            result.RefreshToken.Should().NotBeEmpty();
         }
 
         [Test]
         public async Task GetUserByRefreshTokenAsyncPerformsMapping()
         {
             // Arrange
-            var refreshToken = "TestValue1930471122";
+            var refreshToken = "TestValue1356262726";
+            var user = new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow,
+                AccountId = 1201594692,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 550344057,
+                    User = default(User)
+                }
+            };
+
+            user.RefreshToken = "TestValue1356262726";
+
+            await _ctx.Users.AddAsync(user);
+
+            await _ctx.SaveChangesAsync();
 
             // Act
             var result = await _testClass.GetUserByRefreshTokenAsync(refreshToken);
@@ -109,11 +176,15 @@ namespace Disco.Test.Domain.Repositories.Test
                 }
             };
 
+            await _ctx.Users.AddAsync(user);
+
+            await _ctx.SaveChangesAsync();
+
             // Act
             await _testClass.GetUserAccountAsync(user);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            user.Account.Should().NotBeNull();
         }
 
         [Test]
@@ -123,9 +194,11 @@ namespace Disco.Test.Domain.Repositories.Test
         }
 
         [Test]
-        public void CanCallGetUserRole()
+        public async Task CanCallGetUserRole()
         {
             // Arrange
+            var roleName = "TestValue2085771049";
+
             var user = new User
             {
                 RoleName = "TestValue2085771049",
@@ -159,18 +232,30 @@ namespace Disco.Test.Domain.Repositories.Test
                     User = default(User)
                 }
             };
+            var role = new Role
+            {
+                Name = roleName,
+                NormalizedName = roleName.Normalize(),
+            };
+
+            await _ctx.Users.AddAsync(user);
+            await _ctx.Roles.AddAsync(role);
+            await _ctx.UserRoles.AddAsync(new Microsoft.AspNetCore.Identity.IdentityUserRole<int> { RoleId = role.Id, UserId = user.Id });
+
+            await _ctx.SaveChangesAsync();
 
             // Act
             var result = _testClass.GetUserRole(user);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(roleName);
         }
 
         [Test]
         public void CannotCallGetUserRoleWithNullUser()
         {
-            Assert.Throws<ArgumentNullException>(() => _testClass.GetUserRole(default(User)));
+            Assert.Throws<InvalidOperationException>(() => _testClass.GetUserRole(default(User)));
         }
 
         [Test]
@@ -212,44 +297,52 @@ namespace Disco.Test.Domain.Repositories.Test
             };
             var refreshToken = "TestValue1861133920";
 
+            await _ctx.Users.AddAsync(user);
+
+            await _ctx.SaveChangesAsync();
+
             // Act
             await _testClass.SaveRefreshTokenAsync(user, refreshToken);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            user.RefreshToken.Should().Be(refreshToken);
         }
 
         [Test]
         public void CannotCallSaveRefreshTokenAsyncWithNullUser()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SaveRefreshTokenAsync(default(User), "TestValue1292479566"));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.SaveRefreshTokenAsync(default(User), "TestValue1292479566"));
         }
 
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("   ")]
-        public void CannotCallSaveRefreshTokenAsyncWithInvalidRefreshToken(string value)
+        [Test]
+        public async Task CanCallGetAllUsers()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SaveRefreshTokenAsync(new User
+            // Arrange
+            var pageNumber = 1;
+            var pageSize = 5;
+
+            var list = new List<User>()
             {
-                RoleName = "TestValue2110400538",
-                RefreshToken = "TestValue1534088161",
+                new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
                 RefreshTokenExpiress = DateTime.UtcNow,
                 DateOfRegister = DateTime.UtcNow,
-                AccountId = 1800790882,
+                AccountId = 1201594692,
                 Account = new Account
                 {
                     AccountStatus = new AccountStatus
                     {
-                        LastStatus = "TestValue843220504",
-                        FollowersCount = 1929948460,
-                        NextStatusId = 1255446006,
-                        UserTarget = 390061619,
-                        AccountId = 588436371,
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
                         Account = default(Account)
                     },
-                    Cread = "TestValue689142448",
-                    Photo = "TestValue1582997244",
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
                     AccountGroups = new List<AccountGroup>(),
                     Connections = new List<Connection>(),
                     Messages = new List<Message>(),
@@ -259,74 +352,536 @@ namespace Disco.Test.Domain.Repositories.Test
                     Followers = new List<UserFollower>(),
                     Following = new List<UserFollower>(),
                     Stories = new List<Story>(),
-                    UserId = 922716200,
+                    UserId = 550344057,
                     User = default(User)
                 }
-            }, value));
-        }
+            },
+                new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow,
+                AccountId = 1201594692,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 550344057,
+                    User = default(User)
+                },
+            },
+                new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow,
+                AccountId = 1201594692,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 550344057,
+                    User = default(User)
+                }
+            },
+                new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow,
+                AccountId = 1201594692,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 550344057,
+                    User = default(User)
+                }
+            },
+                new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow,
+                AccountId = 1201594692,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 550344057,
+                    User = default(User)
+                }
+            }
+            };
 
-        [Test]
-        public async Task CanCallGetAllUsers()
-        {
-            // Arrange
-            var pageNumber = 1634261163;
-            var pageSize = 972441582;
+            await _ctx.Users.AddRangeAsync(list);
+
+            await _ctx.SaveChangesAsync();
 
             // Act
             var result = await _testClass.GetAllUsers(pageNumber, pageSize);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public async Task CanCallGetUsersByPeriotAsync()
-        {
-            // Arrange
-            var date = DateTime.UtcNow;
-
-            // Act
-            var result = await _testClass.GetUsersByPeriotAsync(date);
-
-            // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public async Task CanCallGetUsersByPeriotIntAsync()
-        {
-            // Arrange
-            var days = 2055963536;
-
-            // Act
-            var result = await _testClass.GetUsersByPeriotIntAsync(days);
-
-            // Assert
-            Assert.Fail("Create or modify test");
+            result.Should().NotBeEmpty();
+            result.Count.Should().Be(5);
         }
 
         [Test]
         public async Task CanCallGetAllUsersAsyncWithNoParameters()
         {
+            //Arrange
+            var list = new List<User>()
+            {
+                new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow,
+                AccountId = 1201594692,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 550344057,
+                    User = default(User)
+                }
+            },
+                new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow,
+                AccountId = 1201594692,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 550344057,
+                    User = default(User)
+                },
+            },
+                new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow,
+                AccountId = 1201594692,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 550344057,
+                    User = default(User)
+                }
+            },
+                new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow,
+                AccountId = 1201594692,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 550344057,
+                    User = default(User)
+                }
+            },
+                new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow,
+                AccountId = 1201594692,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 550344057,
+                    User = default(User)
+                }
+            }
+            };
+
+            await _ctx.Users.AddRangeAsync(list);
+
+            await _ctx.SaveChangesAsync();
+
             // Act
             var result = await _testClass.GetAllUsersAsync();
 
             // Assert
-            Assert.Fail("Create or modify test");
+            result.Should().NotBeEmpty();
+            result.Count.Should().Be(5);
         }
 
         [Test]
         public async Task CanCallGetAllUsersAsyncWithFromAndTo()
         {
             // Arrange
-            var @from = DateTime.UtcNow;
+            var @from = DateTime.UtcNow.AddDays(-5);
             var to = DateTime.UtcNow;
+
+            var list = new List<User>()
+            {
+                new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow.AddDays(-1),
+                AccountId = 1201594692,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 550344057,
+                    User = default(User)
+                }
+            },
+                new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow.AddDays(-1),
+                AccountId = 1201594692,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 550344057,
+                    User = default(User)
+                },
+            },
+                new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow.AddDays(-3),
+                AccountId = 1201594692,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 550344057,
+                    User = default(User)
+                }
+            },
+                new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow.AddDays(-3),
+                AccountId = 1201594692,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 550344057,
+                    User = default(User)
+                }
+            },
+                new User
+            {
+                RoleName = "TestValue1309478103",
+                RefreshToken = "TestValue387805277",
+                RefreshTokenExpiress = DateTime.UtcNow,
+                DateOfRegister = DateTime.UtcNow.AddDays(-1),
+                AccountId = 1201594692,
+                Account = new Account
+                {
+                    AccountStatus = new AccountStatus
+                    {
+                        LastStatus = "TestValue642307175",
+                        FollowersCount = 1336680708,
+                        NextStatusId = 94061513,
+                        UserTarget = 176425444,
+                        AccountId = 369265535,
+                        Account = default(Account)
+                    },
+                    Cread = "TestValue2049430939",
+                    Photo = "TestValue1120119782",
+                    AccountGroups = new List<AccountGroup>(),
+                    Connections = new List<Connection>(),
+                    Messages = new List<Message>(),
+                    Posts = new List<Post>(),
+                    Comments = new List<Comment>(),
+                    Likes = new List<Like>(),
+                    Followers = new List<UserFollower>(),
+                    Following = new List<UserFollower>(),
+                    Stories = new List<Story>(),
+                    UserId = 550344057,
+                    User = default(User)
+                }
+            }
+            };
+
+            await _ctx.Users.AddRangeAsync(list);
+
+            await _ctx.SaveChangesAsync();
 
             // Act
             var result = await _testClass.GetAllUsersAsync(from, to);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            result.Should().NotBeEmpty();
+            result.Count.Should().Be(5);
+        }
+
+        private DbContextOptions<ApiDbContext> AddMockDbContextOptions()
+        {
+            var dbContextOptionsBuilder = new DbContextOptionsBuilder<ApiDbContext>();
+
+            dbContextOptionsBuilder.UseInMemoryDatabase<ApiDbContext>(Guid.NewGuid().ToString());
+
+            return dbContextOptionsBuilder.Options;
         }
     }
 }

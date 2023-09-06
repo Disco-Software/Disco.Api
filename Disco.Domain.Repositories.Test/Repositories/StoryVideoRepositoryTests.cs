@@ -154,7 +154,7 @@ namespace Disco.Domain.Repositories.Test
             await _ctx.SaveChangesAsync();
 
             // Act
-            await _testClass.RemoveAsync(storyVideo.Id);
+            await _testClass.RemoveAsync(storyVideo);
 
             // Assert
             var result = await _testClass.GetAsync(storyVideo.Id);

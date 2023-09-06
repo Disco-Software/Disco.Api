@@ -230,7 +230,7 @@ namespace Disco.Domain.Repositories.Test
             await _ctx.SaveChangesAsync();
 
             // Act
-            await _testClass.RemoveAsync(item.Id);
+            await _testClass.RemoveAsync(item);
 
             // Assert
             var comment = await _testClass.GetAsync(item.Id);

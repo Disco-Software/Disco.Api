@@ -28,18 +28,8 @@ namespace Disco.Domain.Repositories.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public override async Task RemoveAsync(int id)
+        public override async Task RemoveAsync(Post post)
         {
-            var post = await _context.Posts
-                .Include(p => p.Account)
-                .Include(v => v.PostVideos)
-                .Include(s => s.PostSongs)
-                .Include(i => i.PostImages)
-                .Where(p => p.Id == id)
-                .FirstOrDefaultAsync();
-
-            post.Account.Posts.Remove(post);
-
             _context.Remove(post);
 
             await _context.SaveChangesAsync();
@@ -112,8 +102,7 @@ namespace Disco.Domain.Repositories.Repositories
                     .Include(p => p.Posts)
                     .ThenInclude(l => l.Likes)
                     .Include(p => p.Posts)
-                    .ThenInclude(p => p.Account)
-                    .ThenInclude(a => a.User)
+                    .Include(x => x.User)
                     .Where(a => a.Id == following.FollowingAccountId)
                     .FirstOrDefaultAsync();
 
@@ -123,9 +112,14 @@ namespace Disco.Domain.Repositories.Repositories
             return posts;
         }
 
-        public Task<List<Post>> GetAllUserPosts(int userId, int pageSize, int pageNumber)
+        public async Task<List<Post>> GetAllUserPosts(int userId, int pageSize, int pageNumber)
         {
-            throw new NotImplementedException();
+            return await _context.Posts
+                .Include(x => x.Account)
+                .Where(x => x.Account.UserId == userId)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
         }
 
         public async Task<List<Post>> GetAllPostsAsync(DateTime from, DateTime to)

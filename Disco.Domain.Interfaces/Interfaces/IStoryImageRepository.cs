@@ -8,5 +8,6 @@ namespace Disco.Domain.Interfaces
     {
         Task AddAsync(StoryImage storyImage);
         Task RemoveAsync(StoryImage storyImage);
+        Task<StoryImage> GetAsync(int id);
     }
 }

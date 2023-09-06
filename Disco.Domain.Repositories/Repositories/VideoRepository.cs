@@ -18,15 +18,9 @@ namespace Disco.Domain.Repositories.Repositories
             await _context.PostVideos.AddAsync(postVideo);
         }
 
-        public override async Task RemoveAsync(int id)
-        {
-            var video = await _context.PostVideos
-                .Include(p => p.Post)
-                .Where(s => s.Id == id)
-                .FirstOrDefaultAsync();
-            
-            video.Post.PostVideos.Remove(video);
-            _context.PostVideos.Remove(video);
+        public override async Task RemoveAsync(PostVideo postVideo)
+        {            
+            _context.PostVideos.Remove(postVideo);
 
             await _context.SaveChangesAsync();
         }

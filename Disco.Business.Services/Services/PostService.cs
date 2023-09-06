@@ -44,7 +44,9 @@ namespace Disco.Business.Services.Services
 
         public async Task DeletePostAsync(int postId)
         {
-            await _postRepository.RemoveAsync(postId);
+            var post = await _postRepository.GetAsync(postId);
+
+            await _postRepository.RemoveAsync(post);
         }
 
         public async Task<List<Post>> GetAllUserPosts(User user,GetAllPostsDto dto)

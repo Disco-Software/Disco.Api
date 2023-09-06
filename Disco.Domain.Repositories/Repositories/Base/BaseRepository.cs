@@ -40,10 +40,8 @@ namespace Disco.Domain.Repositories.Repositories.Base
                 return await _context.Set<T>().ToListAsync();
         }
 
-        public virtual async Task RemoveAsync(TKey id)
-        {
-            var item = await _context.Set<T>().Where(t => t.Id.Equals(id)).FirstOrDefaultAsync();
-            
+        public virtual async Task RemoveAsync(T item)
+        {            
             _context.Remove(item);
 
             await _context.SaveChangesAsync();
@@ -51,10 +49,11 @@ namespace Disco.Domain.Repositories.Repositories.Base
 
         public virtual async Task<T> Update(T newItem)
         {
-            var item = await _context.Set<T>().Where(t => t.Id.Equals(newItem.Id)).FirstOrDefaultAsync();
             _context.Set<T>().Update(newItem);
+            
             await _context.SaveChangesAsync();
-            return item;
+            
+            return newItem;
         }
     }
 }

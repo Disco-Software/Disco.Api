@@ -57,7 +57,11 @@ namespace Disco.Business.Services.Services
 
         public async Task RemoveVideoAsync(int id)
         {
-            await _videoRepository.RemoveAsync(id);
+            var video = await _videoRepository.GetAsync(id);
+
+            video.Post.PostVideos.Remove(video);
+
+            await _videoRepository.RemoveAsync(video);
         }
     }
 }
