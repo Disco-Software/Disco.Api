@@ -9,6 +9,7 @@ namespace Disco.Test.Business.Song.Services
     using Disco.Business.Interfaces.Dtos.Songs;
     using Disco.Business.Services.Mappers;
     using Disco.Business.Services.Services;
+    using Disco.Domain.Events.Dto;
     using Disco.Domain.Interfaces;
     using Disco.Domain.Models.Models;
     using Microsoft.AspNetCore.Http;
@@ -233,15 +234,45 @@ namespace Disco.Test.Business.Song.Services
         public async Task CanCallRemove()
         {
             // Arrange
-            var songId = 2082310262;
+            var content = "Hello World from a Fake File";
+            var fileName = "test.pdf";
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(content);
+            writer.Flush();
+            stream.Position = 0;
+
+            var imageContent = "Hello World from a Fake File";
+            var imageFileName = "test.pdf";
+            var imageStream = new MemoryStream();
+            var imageWriter = new StreamWriter(stream);
+            writer.Write(content);
+            writer.Flush();
+            stream.Position = 0;
+
+            var file = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
+            var image = new FormFile(imageStream, 0, imageStream.Length, "id_image_from_form", imageFileName);
+
+            var dto = new Disco.Business.Interfaces.Dtos.Songs.CreateSongDto();
+            dto.Name = Guid.NewGuid().ToString();
+            dto.ExecutorName = Guid.NewGuid().ToString();
+            dto.Song = file;
+            dto.Image = image;
+            dto.Post = new Post();
 
             _songRepository.Setup(mock => mock.RemoveAsync(It.IsAny<PostSong>())).Verifiable();
 
+            var song = await _testClass.CreatePostSongAsync(dto);
+
+            _songRepository.Setup(x => x.GetAsync(It.IsAny<int>()))
+                .ReturnsAsync(song);
+
             // Act
-            await _testClass.RemoveAsync(songId);
+            await _testClass.RemoveAsync(song.Id);
 
             // Assert
             _songRepository.Verify(mock => mock.RemoveAsync(It.IsAny<PostSong>()));
+            _songRepository.Verify(mock => mock.GetAsync(It.IsAny<int>()));
         }
 
         private Mock<BlobServiceClient> GetBlobServiceClientMock()

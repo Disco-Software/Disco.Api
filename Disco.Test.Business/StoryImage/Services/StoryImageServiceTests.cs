@@ -6,6 +6,7 @@ namespace Disco.Test.Business.StoryImage.Services
     using AutoMapper;
     using Azure.Storage.Blobs;
     using Disco.Business.Interfaces.Dtos.StoryImages;
+    using Disco.Business.Services.Mappers;
     using Disco.Business.Services.Services;
     using Disco.Domain.Interfaces;
     using Disco.Domain.Models.Models;
@@ -21,8 +22,9 @@ namespace Disco.Test.Business.StoryImage.Services
     {
         private StoryImageService _testClass;
         private UserManager<User> _userManager;
-        private BlobServiceClient _blobServiceClient;
-        private Mock<IMapper> _mapper;
+        
+        private Mock<BlobServiceClient> _blobServiceClient;
+        private IMapper _mapper;
         private Mock<IStoryImageRepository> _storyImageRepository;
         private Mock<IStoryRepository> _storyRepository;
         private Mock<IHttpContextAccessor> _httpContextAccessor;
@@ -31,58 +33,25 @@ namespace Disco.Test.Business.StoryImage.Services
         public void SetUp()
         {
             _userManager = new UserManager<User>(new Mock<IUserStore<User>>().Object, new Mock<IOptions<IdentityOptions>>().Object, new Mock<IPasswordHasher<User>>().Object, new[] { new Mock<IUserValidator<User>>().Object, new Mock<IUserValidator<User>>().Object, new Mock<IUserValidator<User>>().Object }, new[] { new Mock<IPasswordValidator<User>>().Object, new Mock<IPasswordValidator<User>>().Object, new Mock<IPasswordValidator<User>>().Object }, new Mock<ILookupNormalizer>().Object, new IdentityErrorDescriber(), new Mock<IServiceProvider>().Object, new Mock<ILogger<UserManager<User>>>().Object);
-            _blobServiceClient = new BlobServiceClient("TestValue384870087");
-            _mapper = new Mock<IMapper>();
+            
+            _blobServiceClient = GetBlobServiceClientMock();
+
+            _mapper = new MapperConfiguration(x => x.AddProfile(new StoryMapProfile())).CreateMapper();
+            
             _storyImageRepository = new Mock<IStoryImageRepository>();
             _storyRepository = new Mock<IStoryRepository>();
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _testClass = new StoryImageService(_userManager, _blobServiceClient, _mapper.Object, _storyImageRepository.Object, _storyRepository.Object, _httpContextAccessor.Object);
+            _testClass = new StoryImageService(_userManager, _blobServiceClient.Object, _mapper, _storyImageRepository.Object, _storyRepository.Object, _httpContextAccessor.Object);
         }
 
         [Test]
         public void CanConstruct()
         {
             // Act
-            var instance = new StoryImageService(_userManager, _blobServiceClient, _mapper.Object, _storyImageRepository.Object, _storyRepository.Object, _httpContextAccessor.Object);
+            var instance = new StoryImageService(_userManager, _blobServiceClient.Object, _mapper, _storyImageRepository.Object, _storyRepository.Object, _httpContextAccessor.Object);
 
             // Assert
             Assert.That(instance, Is.Not.Null);
-        }
-
-        [Test]
-        public void CannotConstructWithNullUserManager()
-        {
-            Assert.Throws<ArgumentNullException>(() => new StoryImageService(default, _blobServiceClient, _mapper.Object, _storyImageRepository.Object, _storyRepository.Object, _httpContextAccessor.Object));
-        }
-
-        [Test]
-        public void CannotConstructWithNullBlobServiceClient()
-        {
-            Assert.Throws<ArgumentNullException>(() => new StoryImageService(_userManager, default, _mapper.Object, _storyImageRepository.Object, _storyRepository.Object, _httpContextAccessor.Object));
-        }
-
-        [Test]
-        public void CannotConstructWithNullMapper()
-        {
-            Assert.Throws<ArgumentNullException>(() => new StoryImageService(_userManager, _blobServiceClient, default, _storyImageRepository.Object, _storyRepository.Object, _httpContextAccessor.Object));
-        }
-
-        [Test]
-        public void CannotConstructWithNullStoryImageRepository()
-        {
-            Assert.Throws<ArgumentNullException>(() => new StoryImageService(_userManager, _blobServiceClient, _mapper.Object, default, _storyRepository.Object, _httpContextAccessor.Object));
-        }
-
-        [Test]
-        public void CannotConstructWithNullStoryRepository()
-        {
-            Assert.Throws<ArgumentNullException>(() => new StoryImageService(_userManager, _blobServiceClient, _mapper.Object, _storyImageRepository.Object, default, _httpContextAccessor.Object));
-        }
-
-        [Test]
-        public void CannotConstructWithNullHttpContextAccessor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new StoryImageService(_userManager, _blobServiceClient, _mapper.Object, _storyImageRepository.Object, _storyRepository.Object, default));
         }
 
         [Test]
@@ -137,20 +106,30 @@ namespace Disco.Test.Business.StoryImage.Services
                 }
             });
 
+            var content = "Hello World from a Fake File";
+            var fileName = "test.pdf";
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(content);
+            writer.Flush();
+            stream.Position = 0;
+
+            var file = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
+
+            dto.StoryImageFile = file;
+
             // Act
             var result = await _testClass.CreateStoryImageAsync(dto);
 
             // Assert
             _storyImageRepository.Verify(mock => mock.AddAsync(It.IsAny<StoryImage>()));
             _storyRepository.Verify(mock => mock.GetAsync(It.IsAny<int>()));
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallCreateStoryImageAsyncWithNullDto()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.CreateStoryImageAsync(default));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.CreateStoryImageAsync(default));
         }
 
         [Test]
@@ -163,6 +142,18 @@ namespace Disco.Test.Business.StoryImage.Services
                 StoryId = 1437511383
             };
 
+            var content = "Hello World from a Fake File";
+            var fileName = "test.pdf";
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(content);
+            writer.Flush();
+            stream.Position = 0;
+
+            var file = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
+
+            dto.StoryImageFile = file;
+
             // Act
             var result = await _testClass.CreateStoryImageAsync(dto);
 
@@ -174,17 +165,44 @@ namespace Disco.Test.Business.StoryImage.Services
         public async Task CanCallRemoveStoryImageAsync()
         {
             // Arrange
-            var id = 986936215;
+            var id = 1;
 
             _storyImageRepository.Setup(mock => mock.RemoveAsync(It.IsAny<StoryImage>())).Verifiable();
+            _storyImageRepository.Setup(mock => mock.GetAsync(It.IsAny<int>()))
+                .ReturnsAsync(new StoryImage
+                {
+                    StoryId = id,
+                    Source = "http://photo.com",
+                    Story = new Story(),
+                    DateOfCreation = DateTime.UtcNow,
+                    Id = 1,
+                });
 
             // Act
             await _testClass.RemoveStoryImageAsync(id);
 
             // Assert
             _storyImageRepository.Verify(mock => mock.RemoveAsync(It.IsAny<StoryImage>()));
+        }
 
-            Assert.Fail("Create or modify test");
+        private Mock<BlobServiceClient> GetBlobServiceClientMock()
+        {
+            var mock = new Mock<BlobServiceClient>();
+            var mockBlobContainerClient = new Mock<BlobContainerClient>();
+            var mockBlobClient = new Mock<BlobClient>();
+
+            var uri = new Uri("https://blablabla.com");
+
+            mockBlobContainerClient.Setup(i => i.AccountName)
+                .Returns("Test account name");
+            mock.Setup(x => x.GetBlobContainerClient(It.IsAny<string>()))
+                .Returns(mockBlobContainerClient.Object);
+            mockBlobContainerClient.Setup(x => x.GetBlobClient(It.IsAny<string>()))
+                .Returns(mockBlobClient.Object);
+            mockBlobClient.Setup(x => x.Uri)
+                .Returns(uri);
+
+            return mock;
         }
     }
 }

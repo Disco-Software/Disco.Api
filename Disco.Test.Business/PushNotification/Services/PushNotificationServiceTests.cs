@@ -109,5 +109,16 @@ namespace Disco.Test.Business.PushNotification.Services
         {
             Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.RequestNotificationAsync(default, CancellationToken.None));
         }
+
+        private Mock<INotificationHubClient> AddAzureNotificationHubClientMock()
+        {
+            var mockNotificationHubClient = new Mock<INotificationHubClient>();
+            mockNotificationHubClient.Setup(x => x.CreateOrUpdateInstallation(It.IsAny<Installation>()))
+                .Verifiable();
+            mockNotificationHubClient.Setup(x => x.DeleteInstallation(It.IsAny<string>()))
+                .Verifiable();
+
+            return mockNotificationHubClient;
+        }
     }
 }
