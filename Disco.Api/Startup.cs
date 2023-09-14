@@ -35,6 +35,7 @@ using Stripe;
 using Disco.Integration.Interfaces.Options;
 using Disco.Intergration.EventPublisher.Extentions;
 using Disco.ApiServices.Filters;
+using MailKit.Net.Smtp;
 
 namespace Disco.Api
 {
@@ -104,6 +105,8 @@ namespace Disco.Api
             services.AddService();
             services.AddIntegrations();
             services.AddServiceBus(Configuration);
+
+            services.AddTransient<ISmtpClient, SmtpClient>();
 
             services.AddOptions<PushNotificationOptions>()
                 .Configure(Configuration.GetSection("NotificationHub").Bind)

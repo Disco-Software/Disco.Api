@@ -41,7 +41,7 @@ namespace Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.Forgo
 
             var passwordResetToken = await _accountPasswordService.GetPasswordConfirmationTokenAsync(user);
 
-            _emailService.EmailConfirmation(new Business.Interfaces.Dtos.EmailNotifications.EmailConfirmationDto
+            await _emailService.EmailConfirmationAsync(new Business.Interfaces.Dtos.EmailNotifications.EmailConfirmationDto
             {
                 ToEmail = user.Email,
                 IsHtmlTemplate = true,
