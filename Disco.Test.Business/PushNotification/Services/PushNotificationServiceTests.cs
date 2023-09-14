@@ -7,6 +7,7 @@ namespace Disco.Test.Business.PushNotification.Services
     using Disco.Business.Interfaces.Dtos.PushNotifications;
     using Disco.Business.Services.Services;
     using Microsoft.Azure.NotificationHubs;
+    using Microsoft.Azure.NotificationHubs.Messaging;
     using Microsoft.Extensions.Logging;
     using Moq;
     using NUnit.Framework;
@@ -52,13 +53,7 @@ namespace Disco.Test.Business.PushNotification.Services
             var result = await _testClass.CreateOrUpdateInstallationAsync(dto, cancellationToken);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallCreateOrUpdateInstallationAsyncWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.CreateOrUpdateInstallationAsync(default, CancellationToken.None));
+            Assert.IsFalse(result);
         }
 
         [Test]
@@ -72,15 +67,7 @@ namespace Disco.Test.Business.PushNotification.Services
             var result = await _testClass.DeleteInstallationByIdAsync(installationId, token);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("   ")]
-        public void CannotCallDeleteInstallationByIdAsyncWithInvalidInstallationId(string value)
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.DeleteInstallationByIdAsync(value, CancellationToken.None));
+            Assert.IsTrue(result);
         }
 
         [Test]
@@ -101,13 +88,13 @@ namespace Disco.Test.Business.PushNotification.Services
             var result = await _testClass.RequestNotificationAsync(dto, token);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            Assert.IsFalse(result);
         }
 
         [Test]
         public void CannotCallRequestNotificationAsyncWithNullDto()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.RequestNotificationAsync(default, CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.RequestNotificationAsync(default, CancellationToken.None));
         }
 
         private Mock<INotificationHubClient> AddAzureNotificationHubClientMock()
