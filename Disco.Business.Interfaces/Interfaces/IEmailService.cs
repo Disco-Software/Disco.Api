@@ -4,6 +4,6 @@ namespace Disco.Business.Interfaces.Interfaces
 {
     public interface IEmailService
     {
-         void EmailConfirmation(EmailConfirmationDto model);
+         Task EmailConfirmationAsync(EmailConfirmationDto model);
     }
 }

@@ -4,6 +4,7 @@ namespace Disco.Test.Business.Email.Services
     using Disco.Business.Interfaces.Dtos.EmailNotifications;
     using Disco.Business.Interfaces.Options;
     using Disco.Business.Services.Services;
+    using MailKit.Net.Smtp;
     using Microsoft.Extensions.Options;
     using Moq;
     using NUnit.Framework;
@@ -12,20 +13,24 @@ namespace Disco.Test.Business.Email.Services
     public class EmailServiceTests
     {
         private EmailService _testClass;
+        
         private Mock<IOptions<EmailOptions>> _emailOptions;
+        private Mock<ISmtpClient> _smtpClient;
 
         [SetUp]
         public void SetUp()
         {
             _emailOptions = new Mock<IOptions<EmailOptions>>();
-            _testClass = new EmailService(_emailOptions.Object);
+            _smtpClient = new Mock<ISmtpClient>();
+
+            _testClass = new EmailService(_emailOptions.Object, _smtpClient.Object);
         }
 
         [Test]
         public void CanConstruct()
         {
             // Act
-            var instance = new EmailService(_emailOptions.Object);
+            var instance = new EmailService(_emailOptions.Object, _smtpClient.Object);
 
             // Assert
             Assert.That(instance, Is.Not.Null);
@@ -55,16 +60,17 @@ namespace Disco.Test.Business.Email.Services
                 });
 
             // Act
-            _testClass.EmailConfirmation(model);
+            _testClass.EmailConfirmationAsync(model);
 
             // Assert
             _emailOptions.VerifyAll();
+            _smtpClient.VerifyAll();
         }
 
         [Test]
         public void CannotCallEmailConfirmationWithNullModel()
         {
-            Assert.Throws<NullReferenceException>(() => _testClass.EmailConfirmation(default));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.EmailConfirmationAsync(default));
         }
     }
 }

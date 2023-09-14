@@ -87,7 +87,7 @@ namespace Disco.Test.ApiServices.Features.AccountPassword.User.RequestHandlers.F
             // Assert
             await _accountService.Received().GetByEmailAsync(Arg.Any<string>());
             await _accountPasswordService.Received().GetPasswordConfirmationTokenAsync(Arg.Any<User>());
-            _emailService.Received().EmailConfirmation(Arg.Any<EmailConfirmationDto>());
+            await _emailService.Received().EmailConfirmationAsync(Arg.Any<EmailConfirmationDto>());
         }
 
         [Test]
