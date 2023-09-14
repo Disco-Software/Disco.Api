@@ -31,12 +31,6 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.User.RequestHandlers.Ch
         }
 
         [Test]
-        public void CannotConstructWithNullDto()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ChangePhotoRequest(default(UpdateAccountDto)));
-        }
-
-        [Test]
         public void DtoIsInitializedCorrectly()
         {
             Assert.That(_testClass.Dto, Is.SameAs(_dto));

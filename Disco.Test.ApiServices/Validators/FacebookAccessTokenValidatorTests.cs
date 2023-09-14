@@ -32,7 +32,7 @@ namespace Disco.Test.ApiServices.Validators
             var result = FacebookAccessTokenValidator.Create();
 
             // Assert
-            Assert.Fail("Create or modify test");
+            Assert.That(result, Is.Not.Null);
         }
     }
 }

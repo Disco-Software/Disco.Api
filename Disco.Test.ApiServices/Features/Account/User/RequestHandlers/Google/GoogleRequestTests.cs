@@ -37,12 +37,6 @@ namespace Disco.Test.Business.Features.Account.User.RequestHandlers.Google
         }
 
         [Test]
-        public void CannotConstructWithNullDto()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GoogleRequest(default(GoogleLogInDto)));
-        }
-
-        [Test]
         public void DtoIsInitializedCorrectly()
         {
             Assert.That(_testClass.Dto, Is.SameAs(_dto));

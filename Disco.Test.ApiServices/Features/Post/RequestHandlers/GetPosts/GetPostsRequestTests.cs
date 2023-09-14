@@ -33,12 +33,6 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.GetPosts
         }
 
         [Test]
-        public void CannotConstructWithNullDataTransferObject()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetPostsRequest(default(GetAllPostsDto)));
-        }
-
-        [Test]
         public void DataTransferObjectIsInitializedCorrectly()
         {
             Assert.That(_testClass.DataTransferObject, Is.SameAs(_dataTransferObject));

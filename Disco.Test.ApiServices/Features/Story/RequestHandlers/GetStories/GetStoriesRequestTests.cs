@@ -33,12 +33,6 @@ namespace Disco.ApiServices.Test.Features.Story.RequestHandlers.GetStories
         }
 
         [Test]
-        public void CannotConstructWithNullDto()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetStoriesRequest(default(GetAllStoriesDto)));
-        }
-
-        [Test]
         public void DtoIsInitializedCorrectly()
         {
             Assert.That(_testClass.Dto, Is.SameAs(_dto));

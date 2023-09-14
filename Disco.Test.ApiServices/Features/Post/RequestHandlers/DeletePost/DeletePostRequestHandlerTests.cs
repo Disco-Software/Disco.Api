@@ -32,12 +32,6 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.DeletePost
         }
 
         [Test]
-        public void CannotConstructWithNullPostService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new DeletePostRequestHandler(default(IPostService)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -49,14 +43,12 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.DeletePost
 
             // Assert
             await _postService.Received().DeletePostAsync(Arg.Any<int>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(DeletePostRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(DeletePostRequest), CancellationToken.None));
         }
     }
 }

@@ -145,10 +145,7 @@ namespace Disco.Test.Business.Account.Servicess
             // Assert
             _userRepository.Verify(mock => mock.GetUserRole(It.IsAny<User>()));
             _accountRepository.Verify(mock => mock.GetAsync(It.IsAny<int>()));
-            _accountRepository.Verify(mock => mock.GetAllAccountConnectionsAsync(It.IsAny<int>()));
             _accountStatusRepository.Verify(mock => mock.GetStatusByFollowersCountAsync(It.IsAny<int>()));
-            _followerRepository.Verify(mock => mock.GetFollowersAsync(It.IsAny<int>()));
-            _followerRepository.Verify(mock => mock.GetFollowingAsync(It.IsAny<int>()));
         }
 
         [TestCase(null)]
@@ -394,10 +391,7 @@ namespace Disco.Test.Business.Account.Servicess
             // Assert
             _userRepository.Verify(mock => mock.GetUserRole(It.IsAny<User>()));
             _accountRepository.Verify(mock => mock.GetAsync(It.IsAny<int>()));
-            _accountRepository.Verify(mock => mock.GetAllAccountConnectionsAsync(It.IsAny<int>()));
             _accountStatusRepository.Verify(mock => mock.GetStatusByFollowersCountAsync(It.IsAny<int>()));
-            _followerRepository.Verify(mock => mock.GetFollowersAsync(It.IsAny<int>()));
-            _followerRepository.Verify(mock => mock.GetFollowingAsync(It.IsAny<int>()));
         }
 
         [Test]
@@ -488,7 +482,6 @@ namespace Disco.Test.Business.Account.Servicess
             // Assert
             _userRepository.Verify(mock => mock.GetUserRole(It.IsAny<User>()));
             _accountRepository.Verify(mock => mock.GetAsync(It.IsAny<int>()));
-            _accountRepository.Verify(mock => mock.GetAllAccountConnectionsAsync(It.IsAny<int>()));
             _accountStatusRepository.Verify(mock => mock.GetStatusByFollowersCountAsync(It.IsAny<int>()));
         }
 
@@ -669,8 +662,6 @@ namespace Disco.Test.Business.Account.Servicess
             // Assert
             _userRepository.Verify(mock => mock.GetUserRole(It.IsAny<User>()));
             _accountRepository.Verify(mock => mock.GetAsync(It.IsAny<int>()));
-            _accountRepository.Verify(mock => mock.GetAllAccountConnectionsAsync(It.IsAny<int>()));
-            _accountStatusRepository.Verify(mock => mock.GetStatusByFollowersCountAsync(It.IsAny<int>()));
         }
 
         [TestCase(null)]
@@ -775,7 +766,6 @@ namespace Disco.Test.Business.Account.Servicess
             // Assert
             _userRepository.Verify(mock => mock.GetUserRole(It.IsAny<User>()));
             _accountRepository.Verify(mock => mock.GetAsync(It.IsAny<int>()));
-            _accountRepository.Verify(mock => mock.GetAllAccountConnectionsAsync(It.IsAny<int>()));
             _accountStatusRepository.Verify(mock => mock.GetStatusByFollowersCountAsync(It.IsAny<int>()));
         }
 

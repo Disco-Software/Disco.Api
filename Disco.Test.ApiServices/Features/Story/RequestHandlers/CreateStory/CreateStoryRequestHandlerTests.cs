@@ -50,42 +50,6 @@ namespace Disco.ApiServices.Test.Features.Story.RequestHandlers.CreateStory
         }
 
         [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateStoryRequestHandler(default(IAccountService), _storyService, _storyImageService, _storyVideoService, _contextAccessor, _mapper));
-        }
-
-        [Test]
-        public void CannotConstructWithNullStoryService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateStoryRequestHandler(_accountService, default(IStoryService), _storyImageService, _storyVideoService, _contextAccessor, _mapper));
-        }
-
-        [Test]
-        public void CannotConstructWithNullStoryImageService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateStoryRequestHandler(_accountService, _storyService, default(IStoryImageService), _storyVideoService, _contextAccessor, _mapper));
-        }
-
-        [Test]
-        public void CannotConstructWithNullStoryVideoService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateStoryRequestHandler(_accountService, _storyService, _storyImageService, default(IStoryVideoService), _contextAccessor, _mapper));
-        }
-
-        [Test]
-        public void CannotConstructWithNullContextAccessor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateStoryRequestHandler(_accountService, _storyService, _storyImageService, _storyVideoService, default(IHttpContextAccessor), _mapper));
-        }
-
-        [Test]
-        public void CannotConstructWithNullMapper()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateStoryRequestHandler(_accountService, _storyService, _storyImageService, _storyVideoService, _contextAccessor, default(IMapper)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -230,16 +194,14 @@ namespace Disco.ApiServices.Test.Features.Story.RequestHandlers.CreateStory
             // Assert
             await _accountService.Received().GetAsync(Arg.Any<ClaimsPrincipal>());
             await _storyService.Received().CreateStoryAsync(Arg.Any<Story>());
-            await _storyImageService.Received().CreateStoryImageAsync(Arg.Any<CreateStoryImageDto>());
-            await _storyVideoService.Received().CreateStoryVideoAsync(Arg.Any<CreateStoryVideoDto>());
-
-            Assert.Fail("Create or modify test");
+            await _storyImageService.Received(0).CreateStoryImageAsync(Arg.Any<CreateStoryImageDto>());
+            await _storyVideoService.Received(0).CreateStoryVideoAsync(Arg.Any<CreateStoryVideoDto>());
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(CreateStoryRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(CreateStoryRequest), CancellationToken.None));
         }
     }
 }

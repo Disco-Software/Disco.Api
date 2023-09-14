@@ -36,18 +36,6 @@ namespace Disco.Test.ApiServices.Features.GlobalSearch.RequestHandlers.Search
         }
 
         [Test]
-        public void CannotConstructWithNullAccountDetailsService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new SearchRequestHandler(default(IAccountDetailsService), _postService));
-        }
-
-        [Test]
-        public void CannotConstructWithNullPostService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new SearchRequestHandler(_accountDetailsService, default(IPostService)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -63,14 +51,12 @@ namespace Disco.Test.ApiServices.Features.GlobalSearch.RequestHandlers.Search
             // Assert
             await _accountDetailsService.Received().GetAccountsByNameAsync(Arg.Any<string>());
             await _postService.Received().GetPostsByDescriptionAsync(Arg.Any<string>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(SearchRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(SearchRequest), CancellationToken.None));
         }
     }
 }

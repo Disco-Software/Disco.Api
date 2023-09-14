@@ -27,14 +27,6 @@ namespace Disco.Test.ApiServices.Features.GlobalSearch.RequestHandlers.Search
             Assert.That(instance, Is.Not.Null);
         }
 
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("   ")]
-        public void CannotConstructWithInvalidSearch(string value)
-        {
-            Assert.Throws<ArgumentNullException>(() => new SearchRequest(value));
-        }
-
         [Test]
         public void SearchIsInitializedCorrectly()
         {

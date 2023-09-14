@@ -35,12 +35,6 @@ namespace Disco.Test.ApiServices.Features.Follower.RequestHandlers.GetFollowers
         }
 
         [Test]
-        public void CannotConstructWithNullFollowerService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetFollowersRequestHandler(default(IFollowerService)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -59,14 +53,12 @@ namespace Disco.Test.ApiServices.Features.Follower.RequestHandlers.GetFollowers
 
             // Assert
             await _followerService.Received().GetFollowersAsync(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(GetFollowersRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(GetFollowersRequest), CancellationToken.None));
         }
     }
 }

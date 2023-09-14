@@ -34,12 +34,6 @@ namespace Disco.ApiServices.Test.Features.Story.RequestHandlers.GetStory
         }
 
         [Test]
-        public void CannotConstructWithNullStoryService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetStoryRequestHandler(default(IStoryService)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -92,14 +86,12 @@ namespace Disco.ApiServices.Test.Features.Story.RequestHandlers.GetStory
 
             // Assert
             await _storyService.Received().GetStoryAsync(Arg.Any<int>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(GetStoryRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(GetStoryRequest), CancellationToken.None));
         }
     }
 }

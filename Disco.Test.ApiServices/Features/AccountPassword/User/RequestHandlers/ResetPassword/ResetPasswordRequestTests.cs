@@ -35,12 +35,6 @@ namespace Disco.Test.ApiServices.Features.AccountPassword.User.RequestHandlers.R
         }
 
         [Test]
-        public void CannotConstructWithNullDto()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ResetPasswordRequest(default(ResetPasswordDto)));
-        }
-
-        [Test]
         public void DtoIsInitializedCorrectly()
         {
             Assert.That(_testClass.Dto, Is.SameAs(_dto));

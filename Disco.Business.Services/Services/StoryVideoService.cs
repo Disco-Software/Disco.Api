@@ -40,7 +40,6 @@ namespace Disco.Business.Services.Services
 
         public async Task<StoryVideo> CreateStoryVideoAsync(CreateStoryVideoDto model)
         {
-            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
             var story = await _storyRepository.GetAsync(model.StoryId);
 
             var unequeName = Guid.NewGuid().ToString() + "_" + model.VideoFile.FileName.Replace(' ', '_');

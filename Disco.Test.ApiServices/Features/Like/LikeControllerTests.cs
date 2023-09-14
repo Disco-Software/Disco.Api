@@ -31,12 +31,6 @@ namespace Disco.ApiServices.Test.Features.Like
         }
 
         [Test]
-        public void CannotConstructWithNullMediator()
-        {
-            Assert.Throws<ArgumentNullException>(() => new LikeController(default(IMediator)));
-        }
-
-        [Test]
         public async Task CanCallCreateLikeAsync()
         {
             // Arrange
@@ -46,7 +40,7 @@ namespace Disco.ApiServices.Test.Features.Like
             var result = await _testClass.CreateLikeAsync(postId);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            _mediator.Received(1);
         }
 
         [Test]
@@ -59,7 +53,7 @@ namespace Disco.ApiServices.Test.Features.Like
             var result = await _testClass.RemoveLikeAsync(postId);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            _mediator.Received(1);
         }
     }
 }

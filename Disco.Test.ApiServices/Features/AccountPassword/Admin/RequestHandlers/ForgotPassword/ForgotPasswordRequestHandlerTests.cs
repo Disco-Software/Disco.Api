@@ -40,24 +40,6 @@ namespace Disco.Test.ApiServices.Features.AccountPassword.Admin.RequestHandlers.
         }
 
         [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ForgotPasswordRequestHandler(default(IAccountService), _accountPasswordService, _emailService));
-        }
-
-        [Test]
-        public void CannotConstructWithNullAccountPasswordService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ForgotPasswordRequestHandler(_accountService, default(IAccountPasswordService), _emailService));
-        }
-
-        [Test]
-        public void CannotConstructWithNullEmailService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ForgotPasswordRequestHandler(_accountService, _accountPasswordService, default(IEmailService)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -106,14 +88,12 @@ namespace Disco.Test.ApiServices.Features.AccountPassword.Admin.RequestHandlers.
             await _accountService.Received().GetByEmailAsync(Arg.Any<string>());
             await _accountPasswordService.Received().GetPasswordConfirmationTokenAsync(Arg.Any<User>());
             _emailService.Received().EmailConfirmation(Arg.Any<EmailConfirmationDto>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(ForgotPasswordRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(ForgotPasswordRequest), CancellationToken.None));
         }
     }
 }

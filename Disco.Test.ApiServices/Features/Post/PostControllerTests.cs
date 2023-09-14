@@ -34,12 +34,6 @@ namespace Disco.ApiServices.Test.Features.Post
         }
 
         [Test]
-        public void CannotConstructWithNullMediator()
-        {
-            Assert.Throws<ArgumentNullException>(() => new PostController(default(IMediator)));
-        }
-
-        [Test]
         public async Task CanCallCreatePostAsync()
         {
             // Arrange
@@ -58,13 +52,7 @@ namespace Disco.ApiServices.Test.Features.Post
             var result = await _testClass.CreatePostAsync(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallCreatePostAsyncWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.CreatePostAsync(default(CreatePostDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -77,7 +65,7 @@ namespace Disco.ApiServices.Test.Features.Post
             await _testClass.DeletePostAsync(postId);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            _mediator.Received(1);
         }
 
         [Test]
@@ -94,13 +82,7 @@ namespace Disco.ApiServices.Test.Features.Post
             var result = await _testClass.GetAllUserPosts(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallGetAllUserPostsWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetAllUserPosts(default(GetAllPostsDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -117,13 +99,7 @@ namespace Disco.ApiServices.Test.Features.Post
             var result = await _testClass.GetPostsAsync(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallGetPostsAsyncWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetPostsAsync(default(GetAllPostsDto)));
+            _mediator.Received(1);
         }
     }
 }

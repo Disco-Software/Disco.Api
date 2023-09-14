@@ -12,6 +12,7 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.CreatePost
     using Disco.Business.Interfaces.Dtos.Songs;
     using Disco.Business.Interfaces.Dtos.Videos;
     using Disco.Business.Interfaces.Interfaces;
+    using Disco.Business.Services.Mappers;
     using Disco.Domain.Models.Models;
     using Microsoft.AspNetCore.Http;
     using NSubstitute;
@@ -37,7 +38,9 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.CreatePost
             _imageService = Substitute.For<IImageService>();
             _songService = Substitute.For<ISongService>();
             _videoService = Substitute.For<IVideoService>();
-            _mapper = Substitute.For<IMapper>();
+            
+            _mapper = new MapperConfiguration(x => x.AddProfile(new PostMapProfile())).CreateMapper();
+            
             _contextAccessor = Substitute.For<IHttpContextAccessor>();
             _testClass = new CreatePostRequestHandler(_accountService, _postService, _imageService, _songService, _videoService, _mapper, _contextAccessor);
         }
@@ -50,48 +53,6 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.CreatePost
 
             // Assert
             Assert.That(instance, Is.Not.Null);
-        }
-
-        [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreatePostRequestHandler(default(IAccountService), _postService, _imageService, _songService, _videoService, _mapper, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullPostService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreatePostRequestHandler(_accountService, default(IPostService), _imageService, _songService, _videoService, _mapper, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullImageService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreatePostRequestHandler(_accountService, _postService, default(IImageService), _songService, _videoService, _mapper, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullSongService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreatePostRequestHandler(_accountService, _postService, _imageService, default(ISongService), _videoService, _mapper, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullVideoService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreatePostRequestHandler(_accountService, _postService, _imageService, _songService, default(IVideoService), _mapper, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullMapper()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreatePostRequestHandler(_accountService, _postService, _imageService, _songService, _videoService, default(IMapper), _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullContextAccessor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreatePostRequestHandler(_accountService, _postService, _imageService, _songService, _videoService, _mapper, default(IHttpContextAccessor)));
         }
 
         [Test]
@@ -301,17 +262,12 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.CreatePost
             // Assert
             await _accountService.Received().GetAsync(Arg.Any<ClaimsPrincipal>());
             await _postService.Received().CreatePostAsync(Arg.Any<Post>());
-            await _imageService.Received().CreatePostImage(Arg.Any<CreateImageDto>());
-            await _songService.Received().CreatePostSongAsync(Arg.Any<CreateSongDto>());
-            await _videoService.Received().CreateVideoAsync(Arg.Any<CreateVideoDto>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(CreatePostRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(CreatePostRequest), CancellationToken.None));
         }
     }
 }

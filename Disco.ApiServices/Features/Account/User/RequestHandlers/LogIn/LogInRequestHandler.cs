@@ -2,6 +2,7 @@
 using Disco.Business.Exceptions;
 using Disco.Business.Interfaces.Dtos.Account;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Utils.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Identity.Client;
@@ -40,7 +41,7 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.LogIn
             var passwordResponse = await _accountPasswordService.VerifyPasswordAsync(user, request.Dto.Password);
             if (passwordResponse == PasswordVerificationResult.Failed)
             {
-                throw new ResourceNotFoundException(new Dictionary<string, string>
+                throw new InvalidPasswordException(new Dictionary<string, string>
                 {
                     {"password", "Password is not valid"}
                 });

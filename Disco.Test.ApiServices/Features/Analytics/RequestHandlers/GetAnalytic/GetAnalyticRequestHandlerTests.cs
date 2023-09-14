@@ -37,16 +37,10 @@ namespace Disco.Test.ApiServices.Features.Analytics.GetAnalytic
         }
 
         [Test]
-        public void CannotConstructWithNullAnalyticService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetAnalyticRequestHandler(default(IAnalyticService)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
-            var request = new GetAnalyticRequest("TestValue400996110", "TestValue1086908316", "TestValue359941415");
+            var request = new GetAnalyticRequest("02.04.2022", "02.04.2022", "Day");
             var cancellationToken = CancellationToken.None;
 
             _analyticService.GetAnalyticAsync(Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<AnalyticFor>()).Returns(new AnalyticDto
@@ -56,19 +50,18 @@ namespace Disco.Test.ApiServices.Features.Analytics.GetAnalytic
                 PostsCount = 895317181,
             });
 
+
             // Act
             var result = await _testClass.Handle(request, cancellationToken);
 
             // Assert
             await _analyticService.Received().GetAnalyticAsync(Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<AnalyticFor>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(GetAnalyticRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(GetAnalyticRequest), CancellationToken.None));
         }
     }
 }

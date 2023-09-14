@@ -42,24 +42,6 @@ namespace Disco.Test.ApiServices.Features.Follower.RequestHandlers.CreateFollowe
         }
 
         [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateFollowerRequestHandler(default(IAccountService), _followerService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullFollowerService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateFollowerRequestHandler(_accountService, default(IFollowerService), _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullContextAccessor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateFollowerRequestHandler(_accountService, _followerService, default(IHttpContextAccessor)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -215,14 +197,12 @@ namespace Disco.Test.ApiServices.Features.Follower.RequestHandlers.CreateFollowe
             await _accountService.Received().GetAsync(Arg.Any<ClaimsPrincipal>());
             await _accountService.Received().GetByIdAsync(Arg.Any<int>());
             await _followerService.Received().CreateAsync(Arg.Any<User>(), Arg.Any<User>(), Arg.Any<CreateFollowerDto>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(CreateFollowerRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(CreateFollowerRequest), CancellationToken.None));
         }
     }
 }

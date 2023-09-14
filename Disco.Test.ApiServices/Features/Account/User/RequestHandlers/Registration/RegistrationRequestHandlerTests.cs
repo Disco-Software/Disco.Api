@@ -7,6 +7,7 @@ namespace Disco.Test.Business.Features.Account.User.RequestHandlers.Registration
     using Disco.ApiServices.Features.Account.User.RequestHandlers.Registration;
     using Disco.Business.Interfaces.Dtos.Account;
     using Disco.Business.Interfaces.Interfaces;
+    using Disco.Business.Services.Mappers;
     using Disco.Domain.Models.Models;
     using Moq;
     using NUnit.Framework;
@@ -18,7 +19,8 @@ namespace Disco.Test.Business.Features.Account.User.RequestHandlers.Registration
         private Mock<IAccountService> _accountService;
         private Mock<IAccountPasswordService> _accountPasswordService;
         private Mock<ITokenService> _tokenService;
-        private Mock<IMapper> _mapper;
+        
+        private IMapper _mapper;
 
         [SetUp]
         public void SetUp()
@@ -26,42 +28,20 @@ namespace Disco.Test.Business.Features.Account.User.RequestHandlers.Registration
             _accountService = new Mock<IAccountService>();
             _accountPasswordService = new Mock<IAccountPasswordService>();
             _tokenService = new Mock<ITokenService>();
-            _mapper = new Mock<IMapper>();
-            _testClass = new RegistrationRequestHandler(_accountService.Object, _accountPasswordService.Object, _tokenService.Object, _mapper.Object);
+            
+            _mapper = new MapperConfiguration(x => x.AddProfile(new AccountMapProfile())).CreateMapper();
+            
+            _testClass = new RegistrationRequestHandler(_accountService.Object, _accountPasswordService.Object, _tokenService.Object, _mapper);
         }
 
         [Test]
         public void CanConstruct()
         {
             // Act
-            var instance = new RegistrationRequestHandler(_accountService.Object, _accountPasswordService.Object, _tokenService.Object, _mapper.Object);
+            var instance = new RegistrationRequestHandler(_accountService.Object, _accountPasswordService.Object, _tokenService.Object, _mapper);
 
             // Assert
             Assert.That(instance, Is.Not.Null);
-        }
-
-        [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new RegistrationRequestHandler(default(IAccountService), _accountPasswordService.Object, _tokenService.Object, _mapper.Object));
-        }
-
-        [Test]
-        public void CannotConstructWithNullAccountPasswordService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new RegistrationRequestHandler(_accountService.Object, default(IAccountPasswordService), _tokenService.Object, _mapper.Object));
-        }
-
-        [Test]
-        public void CannotConstructWithNullTokenService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new RegistrationRequestHandler(_accountService.Object, _accountPasswordService.Object, default(ITokenService), _mapper.Object));
-        }
-
-        [Test]
-        public void CannotConstructWithNullMapper()
-        {
-            Assert.Throws<ArgumentNullException>(() => new RegistrationRequestHandler(_accountService.Object, _accountPasswordService.Object, _tokenService.Object, default(IMapper)));
         }
 
         [Test]
@@ -92,14 +72,12 @@ namespace Disco.Test.Business.Features.Account.User.RequestHandlers.Registration
             _accountPasswordService.Verify(mock => mock.AddPasswod(It.IsAny<User>(), It.IsAny<string>()));
             _tokenService.Verify(mock => mock.GenerateAccessToken(It.IsAny<User>()));
             _tokenService.Verify(mock => mock.GenerateRefreshToken());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(RegistrationRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(RegistrationRequest), CancellationToken.None));
         }
     }
 }

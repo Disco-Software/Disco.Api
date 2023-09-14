@@ -161,14 +161,66 @@ namespace Disco.Test.Business.Video.Services
         public async Task CanCallRemoveVideoAsync()
         {
             // Arrange
-            var id = 1309872206;
+            var id = 1;
+            var postVideo = new PostVideo
+            {
+                VideoSource = "TestValue2055230050",
+                PostId = 973005875,
+                Post = new Post
+                {
+                    Description = "TestValue1148833773",
+                    PostImages = new List<PostImage>(),
+                    PostSongs = new List<PostSong>(),
+                    PostVideos = new List<PostVideo>(),
+                    Likes = new List<Like>(),
+                    Comments = new List<Comment>(),
+                    DateOfCreation = DateTime.UtcNow,
+                    AccountId = 588080504,
+                    Account = new Account
+                    {
+                        AccountStatus = new AccountStatus
+                        {
+                            LastStatus = "TestValue64736755",
+                            FollowersCount = 1565507486,
+                            NextStatusId = 1351773223,
+                            UserTarget = 1861426870,
+                            AccountId = 37336429,
+                            Account = default(Account)
+                        },
+                        Cread = "TestValue968185866",
+                        Photo = "TestValue1147318100",
+                        AccountGroups = new List<AccountGroup>(),
+                        Connections = new List<Connection>(),
+                        Messages = new List<Message>(),
+                        Posts = new List<Post>(),
+                        Comments = new List<Comment>(),
+                        Likes = new List<Like>(),
+                        Followers = new List<UserFollower>(),
+                        Following = new List<UserFollower>(),
+                        Stories = new List<Story>(),
+                        UserId = 867629368,
+                        User = new User
+                        {
+                            RoleName = "TestValue130040222",
+                            RefreshToken = "TestValue1974299148",
+                            RefreshTokenExpiress = DateTime.UtcNow,
+                            DateOfRegister = DateTime.UtcNow,
+                            AccountId = 1644707456,
+                            Account = default(Account)
+                        }
+                    }
+                }
+            };
+
 
             _videoRepository.Setup(mock => mock.RemoveAsync(It.IsAny<PostVideo>())).Verifiable();
+            _videoRepository.Setup(mock => mock.GetAsync(It.IsAny<int>())).ReturnsAsync(postVideo);
 
             // Act
             await _testClass.RemoveVideoAsync(id);
 
             // Assert
+            _videoRepository.Verify(mock => mock.GetAsync(It.IsAny<int>()));
             _videoRepository.Verify(mock => mock.RemoveAsync(It.IsAny<PostVideo>()));
         }
 

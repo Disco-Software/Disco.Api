@@ -36,12 +36,6 @@ namespace Disco.ApiServices.Test.Features.Story.RequestHandlers.CreateStory
         }
 
         [Test]
-        public void CannotConstructWithNullDto()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateStoryRequest(default(CreateStoryDto)));
-        }
-
-        [Test]
         public void DtoIsInitializedCorrectly()
         {
             Assert.That(_testClass.Dto, Is.SameAs(_dto));

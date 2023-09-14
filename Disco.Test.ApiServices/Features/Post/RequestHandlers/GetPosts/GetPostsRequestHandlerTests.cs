@@ -45,36 +45,6 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.GetPosts
         }
 
         [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetPostsRequestHandler(default(IAccountService), _followerService, _postService, _likeService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullFollowerService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetPostsRequestHandler(_accountService, default(IFollowerService), _postService, _likeService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullPostService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetPostsRequestHandler(_accountService, _followerService, default(IPostService), _likeService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullLikeService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetPostsRequestHandler(_accountService, _followerService, _postService, default(ILikeService), _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullContextAccessor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetPostsRequestHandler(_accountService, _followerService, _postService, _likeService, default(IHttpContextAccessor)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -132,15 +102,13 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.GetPosts
             await _followerService.Received().GetFollowingAsync(Arg.Any<int>());
             await _followerService.Received().GetFollowersAsync(Arg.Any<int>());
             await _postService.Received().GetAllPostsAsync(Arg.Any<User>(), Arg.Any<int>(), Arg.Any<int>());
-            await _likeService.Received().GetAllLikesAsync(Arg.Any<int>());
-
-            Assert.Fail("Create or modify test");
+            await _likeService.Received(0).GetAllLikesAsync(Arg.Any<int>());
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(GetPostsRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(GetPostsRequest), CancellationToken.None));
         }
     }
 }

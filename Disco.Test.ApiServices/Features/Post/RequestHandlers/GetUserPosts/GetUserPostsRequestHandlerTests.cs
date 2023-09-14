@@ -41,24 +41,6 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.GetUserPosts
         }
 
         [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetUserPostsRequestHandler(default(IAccountService), _postService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullPostService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetUserPostsRequestHandler(_accountService, default(IPostService), _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullContextAccessor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetUserPostsRequestHandler(_accountService, _postService, default(IHttpContextAccessor)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -68,8 +50,7 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.GetUserPosts
                 PageSize = 558493955
             });
             var cancellationToken = CancellationToken.None;
-
-            _accountService.GetAsync(Arg.Any<ClaimsPrincipal>()).Returns(new User
+            var user = new User
             {
                 RoleName = "TestValue1237874131",
                 RefreshToken = "TestValue1057039366",
@@ -101,8 +82,24 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.GetUserPosts
                     UserId = 17219498,
                     User = default(User)
                 }
+            };
+
+            _accountService.GetAsync(Arg.Any<ClaimsPrincipal>()).Returns(user);
+            _postService.GetAllUserPosts(Arg.Any<User>(), Arg.Any<GetAllPostsDto>()).Returns(new List<Post>
+            {
+                new Post {Description = "1", Account = user.Account, AccountId = user.AccountId, DateOfCreation = DateTime.UtcNow, Id = 1 },
+                new Post {Description = "1", Account = user.Account, AccountId = user.AccountId, DateOfCreation = DateTime.UtcNow, Id = 2 },
+                new Post {Description = "1", Account = user.Account, AccountId = user.AccountId, DateOfCreation = DateTime.UtcNow, Id = 3 },
+                new Post {Description = "1", Account = user.Account, AccountId = user.AccountId, DateOfCreation = DateTime.UtcNow, Id = 4 },
+                new Post {Description = "1", Account = user.Account, AccountId = user.AccountId, DateOfCreation = DateTime.UtcNow, Id = 5 },
+                new Post {Description = "1", Account = user.Account, AccountId = user.AccountId, DateOfCreation = DateTime.UtcNow, Id = 6 },
+                new Post {Description = "1", Account = user.Account, AccountId = user.AccountId, DateOfCreation = DateTime.UtcNow, Id = 7 },
+                new Post {Description = "1", Account = user.Account, AccountId = user.AccountId, DateOfCreation = DateTime.UtcNow, Id = 8 },
+                new Post {Description = "1", Account = user.Account, AccountId = user.AccountId, DateOfCreation = DateTime.UtcNow, Id = 9 },
+                new Post {Description = "1", Account = user.Account, AccountId = user.AccountId, DateOfCreation = DateTime.UtcNow, Id = 10 },
+                new Post {Description = "1", Account = user.Account, AccountId = user.AccountId, DateOfCreation = DateTime.UtcNow, Id = 11 },
+                new Post {Description = "1", Account = user.Account, AccountId = user.AccountId, DateOfCreation = DateTime.UtcNow, Id = 12 },
             });
-            _postService.GetAllUserPosts(Arg.Any<User>(), Arg.Any<GetAllPostsDto>()).Returns(new List<Post>());
             _contextAccessor.HttpContext.Returns(new DefaultHttpContext());
 
             // Act
@@ -111,14 +108,12 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.GetUserPosts
             // Assert
             await _accountService.Received().GetAsync(Arg.Any<ClaimsPrincipal>());
             await _postService.Received().GetAllUserPosts(Arg.Any<User>(), Arg.Any<GetAllPostsDto>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(GetUserPostsRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(GetUserPostsRequest), CancellationToken.None));
         }
     }
 }

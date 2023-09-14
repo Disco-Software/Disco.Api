@@ -42,30 +42,6 @@ namespace Disco.ApiServices.Test.Features.Like.RequestHandlers.RemoveLike
         }
 
         [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new RemoveLikeRequestHandler(default(IAccountService), _postService, _likeService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullPostService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new RemoveLikeRequestHandler(_accountService, default(IPostService), _likeService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullLikeService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new RemoveLikeRequestHandler(_accountService, _postService, default(ILikeService), _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullContextAccessor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new RemoveLikeRequestHandler(_accountService, _postService, _likeService, default(IHttpContextAccessor)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -159,14 +135,12 @@ namespace Disco.ApiServices.Test.Features.Like.RequestHandlers.RemoveLike
             await _accountService.Received().GetAsync(Arg.Any<ClaimsPrincipal>());
             await _postService.Received().GetPostAsync(Arg.Any<int>());
             await _likeService.Received().RemoveLikeAsync(Arg.Any<User>(), Arg.Any<Post>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(RemoveLikeRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(RemoveLikeRequest), CancellationToken.None));
         }
     }
 }

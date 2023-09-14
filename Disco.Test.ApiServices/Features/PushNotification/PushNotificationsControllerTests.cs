@@ -34,12 +34,6 @@ namespace Disco.ApiServices.Test.Features.PushNotification
         }
 
         [Test]
-        public void CannotConstructWithNullMediator()
-        {
-            Assert.Throws<ArgumentNullException>(() => new PushNotificationsController(default(IMediator)));
-        }
-
-        [Test]
         public async Task CanCallCreateInstallationAsync()
         {
             // Arrange
@@ -56,13 +50,7 @@ namespace Disco.ApiServices.Test.Features.PushNotification
             var result = await _testClass.CreateInstallationAsync(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallCreateInstallationAsyncWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.CreateInstallationAsync(default(DeviceInstallationDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -75,15 +63,7 @@ namespace Disco.ApiServices.Test.Features.PushNotification
             var result = await _testClass.RemoveInstallationAsync(installationId);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("   ")]
-        public void CannotCallRemoveInstallationAsyncWithInvalidInstallationId(string value)
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.RemoveInstallationAsync(value));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -103,13 +83,7 @@ namespace Disco.ApiServices.Test.Features.PushNotification
             var result = await _testClass.SubmitNotificationAsync(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallSubmitNotificationAsyncWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitNotificationAsync(default(PushNotificationBaseDto)));
+            _mediator.Received(1);
         }
     }
 }

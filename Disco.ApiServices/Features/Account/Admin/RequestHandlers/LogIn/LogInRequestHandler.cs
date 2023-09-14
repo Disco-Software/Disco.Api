@@ -3,6 +3,7 @@ using Disco.Business.Constants;
 using Disco.Business.Interfaces.Dtos.Account;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Business.Services.Services;
+using Disco.Business.Utils.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Identity.Client;
@@ -41,13 +42,19 @@ namespace Disco.ApiServices.Features.Account.Admin.RequestHandlers.LogIn
             var passwordValidator = await _accountPasswordService.VerifyPasswordAsync(user, request.Dto.Password);
             if (passwordValidator == PasswordVerificationResult.Failed)
             {
-                throw new Exception();
+                throw new InvalidPasswordException(new Dictionary<string, string>
+                {
+                    {"password", "Password is invalid"}
+                });
             }
 
             var roleResult = await _accountService.IsInRoleAsync(user, UserRole.Admin);
             if (roleResult == false)
             {
-                throw new Exception();
+                throw new InvalidRoleException(new Dictionary<string, string>
+                {
+                    {"role", "You don't have a rules to login to admin panel"}
+                });
             }
 
             var accessToken = _tokenService.GenerateAccessToken(user);

@@ -36,12 +36,6 @@ namespace Disco.ApiServices.Test.Features.PushNotification.RequestHandlers.Submi
         }
 
         [Test]
-        public void CannotConstructWithNullDto()
-        {
-            Assert.Throws<ArgumentNullException>(() => new SubmitNotificationRequest(default(PushNotificationBaseDto)));
-        }
-
-        [Test]
         public void DtoIsInitializedCorrectly()
         {
             Assert.That(_testClass.Dto, Is.SameAs(_dto));

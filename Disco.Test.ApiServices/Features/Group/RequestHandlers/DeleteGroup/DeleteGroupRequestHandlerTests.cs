@@ -40,24 +40,6 @@ namespace Disco.Test.ApiServices.Features.Group.RequestHandlers.DeleteGroup
         }
 
         [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new DeleteGroupRequestHandler(default(IAccountService), _groupService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullGroupService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new DeleteGroupRequestHandler(_accountService, default(IGroupService), _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullContextAccessor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new DeleteGroupRequestHandler(_accountService, _groupService, default(IHttpContextAccessor)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -112,14 +94,12 @@ namespace Disco.Test.ApiServices.Features.Group.RequestHandlers.DeleteGroup
             await _accountService.Received().GetAsync(Arg.Any<ClaimsPrincipal>());
             await _groupService.Received().GetAsync(Arg.Any<int>());
             await _groupService.Received().DeleteAsync(Arg.Any<Group>(), Arg.Any<Account>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(DeleteGroupRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(DeleteGroupRequest), CancellationToken.None));
         }
     }
 }

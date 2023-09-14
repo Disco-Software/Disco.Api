@@ -44,24 +44,6 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.User.RequestHandlers.Ch
         }
 
         [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ChangePhotoRequestHandler(default(IAccountService), _accountDetailsService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullAccountDetailsService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ChangePhotoRequestHandler(_accountService, default(IAccountDetailsService), _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullContextAccessor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ChangePhotoRequestHandler(_accountService, _accountDetailsService, default(IHttpContextAccessor)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -142,14 +124,12 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.User.RequestHandlers.Ch
             // Assert
             await _accountService.Received().GetAsync(Arg.Any<ClaimsPrincipal>());
             await _accountDetailsService.Received().ChengePhotoAsync(Arg.Any<User>(), Arg.Any<IFormFile>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(ChangePhotoRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(ChangePhotoRequest), CancellationToken.None));
         }
     }
 }

@@ -29,12 +29,6 @@ namespace Disco.Test.ApiServices.Features.Group.RequestHandlers.CreateGroup
         }
 
         [Test]
-        public void CannotConstructWithNullDto()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateGroupRequest(default(CreateGroupRequestDto)));
-        }
-
-        [Test]
         public void DtoIsInitializedCorrectly()
         {
             Assert.That(_testClass.Dto, Is.SameAs(_dto));

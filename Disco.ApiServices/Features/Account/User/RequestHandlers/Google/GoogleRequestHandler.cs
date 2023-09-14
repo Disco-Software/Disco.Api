@@ -79,13 +79,11 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Google
                 Email = request.Dto.Email,
                 Account = new Domain.Models.Models.Account
                 {
-                    User = user,
                     Photo = request.Dto.Photo,
                     Followers = new List<UserFollower>(),
                     Following = new List<UserFollower>(),
                     Posts = new List<Domain.Models.Models.Post>(),
                     Stories = new List<Domain.Models.Models.Story>(),
-                    UserId = user.Id
                 }
             };
 
@@ -93,6 +91,8 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Google
 
             var userAccessToken = _tokenService.GenerateAccessToken(user);
             var userRefreshToken = _tokenService.GenerateRefreshToken();
+
+            await _accountService.SaveRefreshTokenAsync(user, userRefreshToken);
 
             var userRegisterResponseDto = _mapper.Map<UserResponseDto>(user);
             userRegisterResponseDto.RefreshToken = userRefreshToken;

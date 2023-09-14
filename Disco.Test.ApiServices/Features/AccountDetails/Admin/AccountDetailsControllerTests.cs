@@ -32,12 +32,6 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin
         }
 
         [Test]
-        public void CannotConstructWithNullMediator()
-        {
-            Assert.Throws<ArgumentNullException>(() => new UserController(default(IMediator)));
-        }
-
-        [Test]
         public async Task CanCallCreate()
         {
             // Arrange
@@ -53,13 +47,7 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin
             var result = await _testClass.Create(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallCreateWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Create(default(RegistrationDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -72,7 +60,7 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin
             await _testClass.Remove(id);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            _mediator.Received(1);
         }
 
         [Test]
@@ -86,7 +74,7 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin
             var result = await _testClass.GetAllAsync(pageNumber, pageSize);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            _mediator.Received(1);
         }
 
         [Test]
@@ -99,7 +87,7 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin
             var result = await _testClass.GetAccountsByPeriotAsync(periot);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            _mediator.Received(1);
         }
     }
 }

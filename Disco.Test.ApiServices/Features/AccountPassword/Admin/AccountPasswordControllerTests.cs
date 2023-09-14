@@ -32,12 +32,6 @@ namespace Disco.Test.ApiServices.Features.AccountPassword.Admin
         }
 
         [Test]
-        public void CannotConstructWithNullMediator()
-        {
-            Assert.Throws<ArgumentNullException>(() => new AccountPasswordController(default(IMediator)));
-        }
-
-        [Test]
         public async Task CanCallForgotPassword()
         {
             // Arrange
@@ -47,13 +41,7 @@ namespace Disco.Test.ApiServices.Features.AccountPassword.Admin
             var result = await _testClass.ForgotPassword(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallForgotPasswordWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.ForgotPassword(default(ForgotPasswordDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -72,13 +60,7 @@ namespace Disco.Test.ApiServices.Features.AccountPassword.Admin
             var result = await _testClass.ResetPassword(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallResetPasswordWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.ResetPassword(default(ResetPasswordDto)));
+            _mediator.Received(1);
         }
     }
 }

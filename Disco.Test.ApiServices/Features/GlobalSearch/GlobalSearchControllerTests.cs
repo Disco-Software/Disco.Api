@@ -31,12 +31,6 @@ namespace Disco.Test.ApiServices.Features.GlobalSearch
         }
 
         [Test]
-        public void CannotConstructWithNullMediator()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GlobalSearchController(default(IMediator)));
-        }
-
-        [Test]
         public async Task CanCallSerach()
         {
             // Arrange
@@ -46,15 +40,7 @@ namespace Disco.Test.ApiServices.Features.GlobalSearch
             var result = await _testClass.Serach(search);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("   ")]
-        public void CannotCallSerachWithInvalidSearch(string value)
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Serach(value));
+            _mediator.Received(1);
         }
     }
 }

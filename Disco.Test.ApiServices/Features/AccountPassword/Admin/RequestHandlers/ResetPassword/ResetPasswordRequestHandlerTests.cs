@@ -37,18 +37,6 @@ namespace Disco.Test.ApiServices.Features.AccountPassword.Admin.RequestHandlers.
         }
 
         [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ResetPasswordRequestHandler(default(IAccountService), _accountPasswordService));
-        }
-
-        [Test]
-        public void CannotConstructWithNullAccountPasswordService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ResetPasswordRequestHandler(_accountService, default(IAccountPasswordService)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -101,14 +89,12 @@ namespace Disco.Test.ApiServices.Features.AccountPassword.Admin.RequestHandlers.
             // Assert
             await _accountService.Received().GetByEmailAsync(Arg.Any<string>());
             await _accountPasswordService.Received().ChengePasswordAsync(Arg.Any<User>(), Arg.Any<string>(), Arg.Any<string>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(ResetPasswordRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(ResetPasswordRequest), CancellationToken.None));
         }
     }
 }

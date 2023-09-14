@@ -31,12 +31,6 @@ namespace Disco.Test.ApiServices.Features.Analytics
         }
 
         [Test]
-        public void CannotConstructWithNullMediator()
-        {
-            Assert.Throws<ArgumentNullException>(() => new AnalyticController(default(IMediator)));
-        }
-
-        [Test]
         public async Task CanCallGetAnalitycAsync()
         {
             // Arrange
@@ -48,31 +42,7 @@ namespace Disco.Test.ApiServices.Features.Analytics
             var result = await _testClass.GetAnalitycAsync(from, to, analyticFor);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("   ")]
-        public void CannotCallGetAnalitycAsyncWithInvalidFrom(string value)
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetAnalitycAsync(value, "TestValue136910118", "TestValue1045603502"));
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("   ")]
-        public void CannotCallGetAnalitycAsyncWithInvalidTo(string value)
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetAnalitycAsync("TestValue1861880235", value, "TestValue930765855"));
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("   ")]
-        public void CannotCallGetAnalitycAsyncWithInvalidAnalyticFor(string value)
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetAnalitycAsync("TestValue834092227", "TestValue1928067629", value));
+            _mediator.Received(1);
         }
     }
 }

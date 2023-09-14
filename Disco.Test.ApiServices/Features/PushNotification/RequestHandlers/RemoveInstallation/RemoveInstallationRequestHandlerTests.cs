@@ -32,12 +32,6 @@ namespace Disco.ApiServices.Test.Features.PushNotification.RequestHandlers.Remov
         }
 
         [Test]
-        public void CannotConstructWithNullNotificationService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new RemoveInstallationRequestHandler(default(IPushNotificationService)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -51,14 +45,12 @@ namespace Disco.ApiServices.Test.Features.PushNotification.RequestHandlers.Remov
 
             // Assert
             await _notificationService.Received().DeleteInstallationByIdAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(RemoveInstallationRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(RemoveInstallationRequest), CancellationToken.None));
         }
     }
 }

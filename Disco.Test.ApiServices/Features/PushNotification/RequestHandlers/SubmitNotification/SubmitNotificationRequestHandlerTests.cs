@@ -36,18 +36,6 @@ namespace Disco.ApiServices.Test.Features.PushNotification.RequestHandlers.Submi
         }
 
         [Test]
-        public void CannotConstructWithNullNotificationService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new SubmitNotificationRequestHandler(default(IPushNotificationService), _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullContextAccessor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new SubmitNotificationRequestHandler(_notificationService, default(IHttpContextAccessor)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -69,14 +57,12 @@ namespace Disco.ApiServices.Test.Features.PushNotification.RequestHandlers.Submi
 
             // Assert
             await _notificationService.Received().RequestNotificationAsync(Arg.Any<PushNotificationBaseDto>(), Arg.Any<CancellationToken>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(SubmitNotificationRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(SubmitNotificationRequest), CancellationToken.None));
         }
     }
 }

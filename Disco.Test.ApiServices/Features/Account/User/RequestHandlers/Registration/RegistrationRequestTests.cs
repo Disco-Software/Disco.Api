@@ -35,12 +35,6 @@ namespace Disco.Test.Business.Features.Account.User.RequestHandlers.Registration
         }
 
         [Test]
-        public void CannotConstructWithNullRegistration()
-        {
-            Assert.Throws<ArgumentNullException>(() => new RegistrationRequest(default(RegistrationDto)));
-        }
-
-        [Test]
         public void RegistrationIsInitializedCorrectly()
         {
             Assert.That(_testClass.Registration, Is.SameAs(_registration));

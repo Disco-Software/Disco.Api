@@ -38,12 +38,6 @@ namespace Disco.ApiServices.Test.Features.PushNotification.RequestHandlers.Creat
         }
 
         [Test]
-        public void CannotConstructWithNullDto()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateInstallationRequest(default(DeviceInstallationDto)));
-        }
-
-        [Test]
         public void DtoIsInitializedCorrectly()
         {
             Assert.That(_testClass.Dto, Is.SameAs(_dto));

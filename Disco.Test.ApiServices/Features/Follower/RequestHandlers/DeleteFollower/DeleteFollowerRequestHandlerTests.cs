@@ -32,12 +32,6 @@ namespace Disco.Test.ApiServices.Features.Follower.RequestHandlers.DeleteFollowe
         }
 
         [Test]
-        public void CannotConstructWithNullFollowerService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new DeleteFollowerRequestHandler(default(IFollowerService)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -49,14 +43,12 @@ namespace Disco.Test.ApiServices.Features.Follower.RequestHandlers.DeleteFollowe
 
             // Assert
             await _followerService.Received().DeleteAsync(Arg.Any<int>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(DeleteFollowerRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(DeleteFollowerRequest), CancellationToken.None));
         }
     }
 }

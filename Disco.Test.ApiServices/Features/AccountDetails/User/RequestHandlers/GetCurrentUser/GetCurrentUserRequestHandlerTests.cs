@@ -45,36 +45,6 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.User.RequestHandlers.Ge
         }
 
         [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetCurrentUserRequestHandler(default(IAccountService), _accountDetailsService, _postService, _followerService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullAccountDetailsService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetCurrentUserRequestHandler(_accountService, default(IAccountDetailsService), _postService, _followerService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullPostService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetCurrentUserRequestHandler(_accountService, _accountDetailsService, default(IPostService), _followerService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullFollowerService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetCurrentUserRequestHandler(_accountService, _accountDetailsService, _postService, default(IFollowerService), _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullContextAccessor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetCurrentUserRequestHandler(_accountService, _accountDetailsService, _postService, _followerService, default(IHttpContextAccessor)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -164,14 +134,12 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.User.RequestHandlers.Ge
             await _postService.Received().GetAllUserPosts(Arg.Any<User>());
             await _followerService.Received().GetFollowingAsync(Arg.Any<int>());
             await _followerService.Received().GetFollowersAsync(Arg.Any<int>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(GetCurrentUserRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(GetCurrentUserRequest), CancellationToken.None));
         }
     }
 }

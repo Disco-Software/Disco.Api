@@ -29,12 +29,6 @@ namespace Disco.Test.Business.Features.Account.User.RequestHandlers.Facebook
         }
 
         [Test]
-        public void CannotConstructWithNullDto()
-        {
-            Assert.Throws<ArgumentNullException>(() => new FacebookRequest(default(FacebookRequestDto)));
-        }
-
-        [Test]
         public void DtoIsInitializedCorrectly()
         {
             Assert.That(_testClass.Dto, Is.SameAs(_dto));

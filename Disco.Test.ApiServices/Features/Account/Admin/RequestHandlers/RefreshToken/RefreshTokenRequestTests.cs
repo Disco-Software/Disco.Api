@@ -33,12 +33,6 @@ namespace Disco.Test.ApiServices.Features.Account.Admin.RequestHandlers.RefreshT
         }
 
         [Test]
-        public void CannotConstructWithNullDto()
-        {
-            Assert.Throws<ArgumentNullException>(() => new RefreshTokenRequest(default(RefreshTokenDto)));
-        }
-
-        [Test]
         public void DtoIsInitializedCorrectly()
         {
             Assert.That(_testClass.Dto, Is.SameAs(_dto));

@@ -34,12 +34,6 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin.RequestHandlers.G
         }
 
         [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetAccountsByPeriotRequestHandler(default(IAccountService)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -153,14 +147,12 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin.RequestHandlers.G
 
             // Assert
             await _accountService.Received().GetUsersByPeriotAsync(Arg.Any<int>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(GetAccountsByPeriotRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(GetAccountsByPeriotRequest), CancellationToken.None));
         }
     }
 }

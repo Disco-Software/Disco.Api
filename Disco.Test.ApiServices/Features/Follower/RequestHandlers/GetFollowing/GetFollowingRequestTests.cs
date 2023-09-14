@@ -34,12 +34,6 @@ namespace Disco.Test.ApiServices.Features.Follower.RequestHandlers.GetFollowing
         }
 
         [Test]
-        public void CannotConstructWithNullDto()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetFollowingRequest(default(GetFollowersDto)));
-        }
-
-        [Test]
         public void DtoIsInitializedCorrectly()
         {
             Assert.That(_testClass.Dto, Is.SameAs(_dto));

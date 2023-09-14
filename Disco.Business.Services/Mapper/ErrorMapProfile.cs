@@ -18,6 +18,10 @@ namespace Disco.Business.Services.Mapper
                 .ForMember(x => x.ErrorMessages, options => options.MapFrom(ex => ex.Errors.Select(kv => new ErrorMessage { Name = kv.Key, Message = kv.Value }).ToList()));
             CreateMap<InvalidPostDataException, ErrorDto>()
                 .ForMember(x => x.ErrorMessages, options => options.MapFrom(ex => ex.Errors.Select(kv => new ErrorMessage { Name = kv.Key, Message = kv.Value }).ToList()));
+            CreateMap<InvalidPasswordException, ErrorDto>()
+                .ForMember(x => x.ErrorMessages, options => options.MapFrom(ex => ex.Errors.Select(kv => new ErrorMessage { Name = kv.Key, Message = kv.Value }).ToList()));
+            CreateMap<InvalidRoleException, ErrorDto>()
+                .ForMember(x => x.ErrorMessages, options => options.MapFrom(ex => ex.Errors.Select(kv => new ErrorMessage { Name = kv.Key, Message = kv.Value }).ToList()));
         }
     }
 }

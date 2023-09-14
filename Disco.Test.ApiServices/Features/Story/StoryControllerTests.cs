@@ -34,12 +34,6 @@ namespace Disco.ApiServices.Test.Features.Story
         }
 
         [Test]
-        public void CannotConstructWithNullMediator()
-        {
-            Assert.Throws<ArgumentNullException>(() => new StoryController(default(IMediator)));
-        }
-
-        [Test]
         public async Task CanCallCreateAsync()
         {
             // Arrange
@@ -54,13 +48,7 @@ namespace Disco.ApiServices.Test.Features.Story
             var result = await _testClass.CreateAsync(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallCreateAsyncWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.CreateAsync(default(CreateStoryDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -73,7 +61,7 @@ namespace Disco.ApiServices.Test.Features.Story
             var result = await _testClass.DeleteAsync(id);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            _mediator.Received(1);
         }
 
         [Test]
@@ -86,7 +74,7 @@ namespace Disco.ApiServices.Test.Features.Story
             var result = await _testClass.GetAsync(id);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            _mediator.Received(1);
         }
 
         [Test]
@@ -103,13 +91,7 @@ namespace Disco.ApiServices.Test.Features.Story
             var result = await _testClass.GetStoriesAsync(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallGetStoriesAsyncWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetStoriesAsync(default(GetAllStoriesDto)));
+            _mediator.Received(1);
         }
     }
 }

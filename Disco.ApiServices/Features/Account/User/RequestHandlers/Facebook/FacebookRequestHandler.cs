@@ -58,7 +58,6 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Facebook
                 return userRsponseDto;
             }
 
-
             user = await _accountService.GetByEmailAsync(userInfo.Email);
             if (user != null)
             {

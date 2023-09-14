@@ -16,14 +16,14 @@ namespace Disco.Business.Services.Services
             _emailOptions = emailOptions;
         }
 
-        public void EmailConfirmation(EmailConfirmationDto model)
+        public void EmailConfirmation(EmailConfirmationDto dto)
         {
             MailMessage mailMessage = new MailMessage();
             mailMessage.From = new MailAddress(_emailOptions.Value.Mail, _emailOptions.Value.Name);
-            mailMessage.To.Add(model.ToEmail);
-            mailMessage.Subject = model.MessageHeader;
-            mailMessage.Body = model.MessageBody;
-            mailMessage.IsBodyHtml = model.IsHtmlTemplate;
+            mailMessage.To.Add(dto.ToEmail);
+            mailMessage.Subject = dto.MessageHeader;
+            mailMessage.Body = dto.MessageBody;
+            mailMessage.IsBodyHtml = dto.IsHtmlTemplate;
 
             using var smtpClient = new SmtpClient("smtp.gmail.com")
             {

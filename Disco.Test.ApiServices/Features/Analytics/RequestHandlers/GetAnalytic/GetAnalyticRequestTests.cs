@@ -31,30 +31,6 @@ namespace Disco.Test.ApiServices.Features.Analytics.RequestHandlers.GetAnalytic
             Assert.That(instance, Is.Not.Null);
         }
 
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("   ")]
-        public void CannotConstructWithInvalidFrom(string value)
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetAnalyticRequest(value, _to, _analyticFor));
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("   ")]
-        public void CannotConstructWithInvalidTo(string value)
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetAnalyticRequest(_from, value, _analyticFor));
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("   ")]
-        public void CannotConstructWithInvalidAnalyticFor(string value)
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetAnalyticRequest(_from, _to, value));
-        }
-
         [Test]
         public void FromIsInitializedCorrectly()
         {

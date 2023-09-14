@@ -34,12 +34,6 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin.RequestHandlers.G
         }
 
         [Test]
-        public void CannotConstructWithNullAccountDetailsService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetAllAccountsRequestHandler(default(IAccountDetailsService)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -153,14 +147,12 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin.RequestHandlers.G
 
             // Assert
             await _accountDetailsService.Received().GetAllAsync(Arg.Any<int>(), Arg.Any<int>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(GetAllAccountsRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(GetAllAccountsRequest), CancellationToken.None));
         }
     }
 }

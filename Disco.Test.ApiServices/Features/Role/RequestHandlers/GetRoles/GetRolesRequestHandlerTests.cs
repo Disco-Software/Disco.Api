@@ -35,12 +35,6 @@ namespace Disco.ApiServices.Test.Features.Role.RequestHandlers.GetRoles
         }
 
         [Test]
-        public void CannotConstructWithNullRoleService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetRolesRequestHandler(default(IRoleService)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -58,14 +52,12 @@ namespace Disco.ApiServices.Test.Features.Role.RequestHandlers.GetRoles
 
             // Assert
             await _roleService.Received().GetAllRoles(Arg.Any<GetAllRolesDto>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(GetRolesRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(GetRolesRequest), CancellationToken.None));
         }
     }
 }

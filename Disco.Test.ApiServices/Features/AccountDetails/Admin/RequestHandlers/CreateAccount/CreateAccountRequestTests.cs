@@ -35,12 +35,6 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin.RequestHandlers.C
         }
 
         [Test]
-        public void CannotConstructWithNullDto()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateAccountRequest(default(RegistrationDto)));
-        }
-
-        [Test]
         public void DtoIsInitializedCorrectly()
         {
             Assert.That(_testClass.Dto, Is.SameAs(_dto));

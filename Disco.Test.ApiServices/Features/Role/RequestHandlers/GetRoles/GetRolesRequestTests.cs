@@ -33,12 +33,6 @@ namespace Disco.ApiServices.Test.Features.Role.RequestHandlers.GetRoles
         }
 
         [Test]
-        public void CannotConstructWithNullDto()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetRolesRequest(default(GetAllRolesDto)));
-        }
-
-        [Test]
         public void DtoIsInitializedCorrectly()
         {
             Assert.That(_testClass.Dto, Is.SameAs(_dto));

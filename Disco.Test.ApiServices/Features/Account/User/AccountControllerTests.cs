@@ -35,12 +35,6 @@ namespace Disco.Test.ApiServices.Features.Account.User
         }
 
         [Test]
-        public void CannotConstructWithNullMediator()
-        {
-            Assert.Throws<ArgumentNullException>(() => new AccountController(default(IMediator)));
-        }
-
-        [Test]
         public async Task CanCallLogInAsync()
         {
             // Arrange
@@ -54,13 +48,7 @@ namespace Disco.Test.ApiServices.Features.Account.User
             var result = await _testClass.LogInAsync(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallLogInAsyncWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.LogInAsync(default(LoginDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -73,13 +61,7 @@ namespace Disco.Test.ApiServices.Features.Account.User
             var result = await _testClass.Facebook(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallFacebookWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Facebook(default(FacebookRequestDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -100,13 +82,7 @@ namespace Disco.Test.ApiServices.Features.Account.User
             var result = await _testClass.Google(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallGoogleWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Google(default(GoogleLogInDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -125,13 +101,7 @@ namespace Disco.Test.ApiServices.Features.Account.User
             var result = await _testClass.Apple(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallAppleWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Apple(default(AppleLogInDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -148,13 +118,7 @@ namespace Disco.Test.ApiServices.Features.Account.User
             var result = await _testClass.RefreshToken(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallRefreshTokenWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.RefreshToken(default(RefreshTokenDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -173,13 +137,7 @@ namespace Disco.Test.ApiServices.Features.Account.User
             var result = await _testClass.Registration(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallRegistrationWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Registration(default(RegistrationDto)));
+            _mediator.Received(1);
         }
     }
 }

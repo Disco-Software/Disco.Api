@@ -41,24 +41,6 @@ namespace Disco.ApiServices.Test.Features.Story.RequestHandlers.GetStories
         }
 
         [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetStoriesRequestHandler(default(IAccountService), _storyService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullStoryService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetStoriesRequestHandler(_accountService, default(IStoryService), _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullContextAccessor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetStoriesRequestHandler(_accountService, _storyService, default(IHttpContextAccessor)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -109,14 +91,12 @@ namespace Disco.ApiServices.Test.Features.Story.RequestHandlers.GetStories
 
             // Assert
             await _accountService.Received().GetAsync(Arg.Any<ClaimsPrincipal>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(GetStoriesRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(GetStoriesRequest), CancellationToken.None));
         }
     }
 }

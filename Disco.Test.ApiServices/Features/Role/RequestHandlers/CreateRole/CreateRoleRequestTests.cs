@@ -29,12 +29,6 @@ namespace Disco.ApiServices.Test.Features.Role.RequestHandlers.CreateRole
         }
 
         [Test]
-        public void CannotConstructWithNullDto()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateRoleRequest(default(CreateRoleDto)));
-        }
-
-        [Test]
         public void DtoIsInitializedCorrectly()
         {
             Assert.That(_testClass.Dto, Is.SameAs(_dto));

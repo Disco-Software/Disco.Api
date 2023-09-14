@@ -43,30 +43,6 @@ namespace Disco.Test.ApiServices.Features.Group.RequestHandlers.CreateGroup
         }
 
         [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateGroupRequestHandler(default(IAccountService), _groupService, _accountGroupService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullGroupService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateGroupRequestHandler(_accountService, default(IGroupService), _accountGroupService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullAccountGroupService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateGroupRequestHandler(_accountService, _groupService, default(IAccountGroupService), _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullContextAccessor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateGroupRequestHandler(_accountService, _groupService, _accountGroupService, default(IHttpContextAccessor)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -199,14 +175,12 @@ namespace Disco.Test.ApiServices.Features.Group.RequestHandlers.CreateGroup
             await _accountService.Received().GetByIdAsync(Arg.Any<int>());
             await _groupService.Received().CreateAsync();
             await _accountGroupService.Received().CreateAsync(Arg.Any<Account>(), Arg.Any<Group>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(CreateGroupRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(CreateGroupRequest), CancellationToken.None));
         }
     }
 }

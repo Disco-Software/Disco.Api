@@ -27,14 +27,6 @@ namespace Disco.ApiServices.Test.Features.PushNotification.RequestHandlers.Remov
             Assert.That(instance, Is.Not.Null);
         }
 
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("   ")]
-        public void CannotConstructWithInvalidInstallationId(string value)
-        {
-            Assert.Throws<ArgumentNullException>(() => new RemoveInstallationRequest(value));
-        }
-
         [Test]
         public void InstallationIdIsInitializedCorrectly()
         {

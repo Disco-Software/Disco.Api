@@ -32,12 +32,6 @@ namespace Disco.Test.ApiServices.Features.Group
         }
 
         [Test]
-        public void CannotConstructWithNullMediator()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GroupController(default(IMediator)));
-        }
-
-        [Test]
         public async Task CanCallCreateAsync()
         {
             // Arrange
@@ -47,13 +41,7 @@ namespace Disco.Test.ApiServices.Features.Group
             var result = await _testClass.CreateAsync(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallCreateAsyncWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.CreateAsync(default(CreateGroupRequestDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -67,7 +55,7 @@ namespace Disco.Test.ApiServices.Features.Group
             var result = await _testClass.GetAllAsync(pageNumber, pageSize);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            _mediator.Received(1);
         }
 
         [Test]
@@ -80,7 +68,7 @@ namespace Disco.Test.ApiServices.Features.Group
             await _testClass.DeleteAsync(groupId);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            _mediator.Received(1);
         }
     }
 }

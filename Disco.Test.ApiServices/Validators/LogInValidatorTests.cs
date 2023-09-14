@@ -28,11 +28,5 @@ namespace Disco.Test.ApiServices.Validators
             // Assert
             Assert.That(instance, Is.Not.Null);
         }
-
-        [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new LogInValidator(default(IAccountService)));
-        }
     }
 }

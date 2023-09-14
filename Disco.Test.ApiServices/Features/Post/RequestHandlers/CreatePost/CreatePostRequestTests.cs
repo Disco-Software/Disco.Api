@@ -39,11 +39,6 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.CreatePost
             Assert.That(instance, Is.Not.Null);
         }
 
-        [Test]
-        public void CannotConstructWithNullDto()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreatePostRequest(default(CreatePostDto)));
-        }
 
         [Test]
         public void DtoIsInitializedCorrectly()

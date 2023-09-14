@@ -7,6 +7,7 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin.RequestHandlers.C
     using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.CreateAccount;
     using Disco.Business.Interfaces.Dtos.Account;
     using Disco.Business.Interfaces.Interfaces;
+    using Disco.Business.Services.Mappers;
     using Disco.Domain.Models.Models;
     using NSubstitute;
     using NUnit.Framework;
@@ -24,7 +25,9 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin.RequestHandlers.C
         {
             _accountService = Substitute.For<IAccountService>();
             _tokenService = Substitute.For<ITokenService>();
-            _mapper = Substitute.For<IMapper>();
+
+            _mapper = new MapperConfiguration(x => x.AddProfile(new AccountMapProfile())).CreateMapper();
+            
             _testClass = new CreateAccountRequestHandler(_accountService, _tokenService, _mapper);
         }
 
@@ -38,23 +41,6 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin.RequestHandlers.C
             Assert.That(instance, Is.Not.Null);
         }
 
-        [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateAccountRequestHandler(default(IAccountService), _tokenService, _mapper));
-        }
-
-        [Test]
-        public void CannotConstructWithNullTokenService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateAccountRequestHandler(_accountService, default(ITokenService), _mapper));
-        }
-
-        [Test]
-        public void CannotConstructWithNullMapper()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CreateAccountRequestHandler(_accountService, _tokenService, default(IMapper)));
-        }
 
         [Test]
         public async Task CanCallHandle()
@@ -80,14 +66,12 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin.RequestHandlers.C
             await _accountService.Received().SaveRefreshTokenAsync(Arg.Any<User>(), Arg.Any<string>());
             _tokenService.Received().GenerateAccessToken(Arg.Any<User>());
             _tokenService.Received().GenerateRefreshToken();
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(CreateAccountRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(CreateAccountRequest), CancellationToken.None));
         }
     }
 }

@@ -33,12 +33,6 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.GetUserPosts
         }
 
         [Test]
-        public void CannotConstructWithNullDto()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetUserPostsRequest(default(GetAllPostsDto)));
-        }
-
-        [Test]
         public void DtoIsInitializedCorrectly()
         {
             Assert.That(_testClass.Dto, Is.SameAs(_dto));

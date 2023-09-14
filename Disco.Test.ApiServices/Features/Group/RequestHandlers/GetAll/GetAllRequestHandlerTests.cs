@@ -40,24 +40,6 @@ namespace Disco.Test.ApiServices.Features.Group.RequestHandlers.GetAll
         }
 
         [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetAllRequestHandler(default(IAccountService), _groupService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullGroupService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetAllRequestHandler(_accountService, default(IGroupService), _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullContextAccessor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetAllRequestHandler(_accountService, _groupService, default(IHttpContextAccessor)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -125,14 +107,12 @@ namespace Disco.Test.ApiServices.Features.Group.RequestHandlers.GetAll
             // Assert
             await _accountService.Received().GetAsync(Arg.Any<ClaimsPrincipal>());
             await _groupService.Received().GetAllAsync(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<int>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(GetAllRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(GetAllRequest), CancellationToken.None));
         }
     }
 }

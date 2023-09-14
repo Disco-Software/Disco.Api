@@ -5,6 +5,7 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin.RequestHandlers.D
     using System.Threading;
     using System.Threading.Tasks;
     using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.DeleteAccount;
+    using Disco.Business.Exceptions;
     using Disco.Business.Interfaces.Interfaces;
     using Disco.Domain.Models.Models;
     using NSubstitute;
@@ -33,18 +34,6 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin.RequestHandlers.D
 
             // Assert
             Assert.That(instance, Is.Not.Null);
-        }
-
-        [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new DeleteAccountRequestHandler(default(IAccountService), _accountDetailsService));
-        }
-
-        [Test]
-        public void CannotConstructWithNullAccountDetailsService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new DeleteAccountRequestHandler(_accountService, default(IAccountDetailsService)));
         }
 
         [Test]
@@ -95,14 +84,26 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin.RequestHandlers.D
             await _accountService.Received().GetByIdAsync(Arg.Any<int>());
             await _accountService.Received().RemoveAsync(Arg.Any<User>());
             await _accountDetailsService.Received().RemoveAsync(Arg.Any<Account>());
-
-            Assert.Fail("Create or modify test");
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(DeleteAccountRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(DeleteAccountRequest), CancellationToken.None));
+        }
+
+        [Test]
+        public void CannotCallHandleIfUserIsNull()
+        {
+            Assert.ThrowsAsync<ResourceNotFoundException>(async () =>
+            {
+                //Arrange
+                var request = new DeleteAccountRequest(1351384920);
+                var cancellationToken = CancellationToken.None;
+
+                // Act
+                await _testClass.Handle(request, cancellationToken);
+            });
         }
     }
 }

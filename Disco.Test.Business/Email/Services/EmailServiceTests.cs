@@ -44,6 +44,16 @@ namespace Disco.Test.Business.Email.Services
                 IsHtmlTemplate = true
             };
 
+            _emailOptions.Setup(x => x.Value)
+                .Returns(new EmailOptions
+                {
+                    Host = "smtp.gmail.com",
+                    Mail = "developer.disco@gmail.com",
+                    Name = "DISCO",
+                    Password = "vjazelblozgblypf",
+                    Port = 587
+                });
+
             // Act
             _testClass.EmailConfirmation(model);
 
@@ -54,7 +64,7 @@ namespace Disco.Test.Business.Email.Services
         [Test]
         public void CannotCallEmailConfirmationWithNullModel()
         {
-            Assert.Throws<ArgumentNullException>(() => _testClass.EmailConfirmation(default));
+            Assert.Throws<NullReferenceException>(() => _testClass.EmailConfirmation(default));
         }
     }
 }

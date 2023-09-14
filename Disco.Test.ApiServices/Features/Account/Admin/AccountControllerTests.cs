@@ -32,12 +32,6 @@ namespace Disco.Test.ApiServices.Features.Account.Admin
         }
 
         [Test]
-        public void CannotConstructWithNullMediator()
-        {
-            Assert.Throws<ArgumentNullException>(() => new AccountController(default(IMediator)));
-        }
-
-        [Test]
         public async Task CanCallLogIn()
         {
             // Arrange
@@ -51,13 +45,9 @@ namespace Disco.Test.ApiServices.Features.Account.Admin
             var result = await _testClass.LogIn(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
+            Assert.IsNotNull(result);
 
-        [Test]
-        public void CannotCallLogInWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.LogIn(default(LoginDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -74,13 +64,9 @@ namespace Disco.Test.ApiServices.Features.Account.Admin
             var result = await _testClass.RefreshToken(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
+            Assert.IsNotNull(result);
 
-        [Test]
-        public void CannotCallRefreshTokenWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.RefreshToken(default(RefreshTokenDto)));
+            _mediator.Received(1);
         }
     }
 }

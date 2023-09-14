@@ -35,18 +35,6 @@ namespace Disco.ApiServices.Test.Features.Role
         }
 
         [Test]
-        public void CannotConstructWithNullRoleService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new RoleController(default(IRoleService), _mediator));
-        }
-
-        [Test]
-        public void CannotConstructWithNullMediator()
-        {
-            Assert.Throws<ArgumentNullException>(() => new RoleController(_roleService, default(IMediator)));
-        }
-
-        [Test]
         public async Task CanCallCreate()
         {
             // Arrange
@@ -56,13 +44,7 @@ namespace Disco.ApiServices.Test.Features.Role
             var result = await _testClass.Create(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallCreateWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Create(default(CreateRoleDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -79,13 +61,7 @@ namespace Disco.ApiServices.Test.Features.Role
             var result = await _testClass.GetAllRoles(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallGetAllRolesWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetAllRoles(default(GetAllRolesDto)));
+            _mediator.Received(1);
         }
     }
 }

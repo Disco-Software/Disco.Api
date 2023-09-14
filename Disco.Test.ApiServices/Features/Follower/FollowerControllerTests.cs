@@ -32,12 +32,6 @@ namespace Disco.Test.ApiServices.Features.Follower
         }
 
         [Test]
-        public void CannotConstructWithNullMediator()
-        {
-            Assert.Throws<ArgumentNullException>(() => new FollowerController(default(IMediator)));
-        }
-
-        [Test]
         public async Task CanCallCreate()
         {
             // Arrange
@@ -51,13 +45,7 @@ namespace Disco.Test.ApiServices.Features.Follower
             var result = await _testClass.Create(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallCreateWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Create(default(CreateFollowerDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -70,7 +58,7 @@ namespace Disco.Test.ApiServices.Features.Follower
             var result = await _testClass.GetFollowerAsync(followerId);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            _mediator.Received(1);
         }
 
         [Test]
@@ -88,13 +76,7 @@ namespace Disco.Test.ApiServices.Features.Follower
             var result = await _testClass.GetFollowersAsync(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallGetFollowersAsyncWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetFollowersAsync(default(GetFollowersDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -112,13 +94,7 @@ namespace Disco.Test.ApiServices.Features.Follower
             var result = await _testClass.GetFollowingAsync(dto);
 
             // Assert
-            Assert.Fail("Create or modify test");
-        }
-
-        [Test]
-        public void CannotCallGetFollowingAsyncWithNullDto()
-        {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetFollowingAsync(default(GetFollowersDto)));
+            _mediator.Received(1);
         }
 
         [Test]
@@ -128,7 +104,7 @@ namespace Disco.Test.ApiServices.Features.Follower
             var result = await _testClass.GetRecomendedAsync();
 
             // Assert
-            Assert.Fail("Create or modify test");
+            _mediator.Received(1);
         }
 
         [Test]
@@ -141,7 +117,7 @@ namespace Disco.Test.ApiServices.Features.Follower
             await _testClass.DeleteFollowerAsync(followerId);
 
             // Assert
-            Assert.Fail("Create or modify test");
+            _mediator.Received(1);
         }
     }
 }

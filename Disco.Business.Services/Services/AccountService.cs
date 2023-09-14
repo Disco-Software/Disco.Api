@@ -55,9 +55,6 @@ namespace Disco.Business.Services.Services
             user.Account = await _accountRepository.GetAsync(user.AccountId);
             user.RoleName = _userRepository.GetUserRole(user);
             user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Following.Count);
-            user.Account.Connections = await _accountRepository.GetAllAccountConnectionsAsync(user.Account.Id);
-            user.Account.Followers = await _followerRepository.GetFollowersAsync(user.Account.Id);
-            user.Account.Following = await _followerRepository.GetFollowingAsync(user.Account.Id);
 
             return user;
         }
@@ -86,9 +83,6 @@ namespace Disco.Business.Services.Services
             user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
             user.Account.AccountStatus.Account = user.Account;
             user.Account.AccountStatus.AccountId = user.AccountId;
-            user.Account.Connections = await _accountRepository.GetAllAccountConnectionsAsync(user.Account.Id);
-            user.Account.Followers = await _followerRepository.GetFollowersAsync(user.Account.Id);
-            user.Account.Following = await _followerRepository.GetFollowingAsync(user.Account.Id);
 
             return user;
         }
@@ -100,10 +94,10 @@ namespace Disco.Business.Services.Services
                 {
                     { "email", "Email not found" }
                 });
+            
             user.Account = await _accountRepository.GetAsync(user.AccountId);
             user.RoleName = _userRepository.GetUserRole(user);
             user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
-            user.Account.Connections = await _accountRepository.GetAllAccountConnectionsAsync(user.Account.Id);
 
             return user;
         }
@@ -140,7 +134,6 @@ namespace Disco.Business.Services.Services
             user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
             user.Account.AccountStatus.Account = user.Account;
             user.Account.AccountStatus.AccountId = user.AccountId;
-            user.Account.Connections = await _accountRepository.GetAllAccountConnectionsAsync(user.Account.Id);
 
             return user;
         }
@@ -156,7 +149,6 @@ namespace Disco.Business.Services.Services
             user.Account = await _accountRepository.GetAsync(user.AccountId);
             user.RoleName = _userRepository.GetUserRole(user);
             user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Followers.Count);
-            user.Account.Connections = await _accountRepository.GetAllAccountConnectionsAsync(user.Account.Id);
 
             return user;
         }

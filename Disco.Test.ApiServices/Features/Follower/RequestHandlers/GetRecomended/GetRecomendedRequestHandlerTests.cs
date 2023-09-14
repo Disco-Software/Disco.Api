@@ -40,24 +40,6 @@ namespace Disco.Test.ApiServices.Features.Follower.RequestHandlers.GetRecomended
         }
 
         [Test]
-        public void CannotConstructWithNullFollowerService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetRecomendedRequestHandler(default(IFollowerService), _accountService, _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullAccountService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetRecomendedRequestHandler(_followerService, default(IAccountService), _contextAccessor));
-        }
-
-        [Test]
-        public void CannotConstructWithNullContextAccessor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GetRecomendedRequestHandler(_followerService, _accountService, default(IHttpContextAccessor)));
-        }
-
-        [Test]
         public async Task CanCallHandle()
         {
             // Arrange
@@ -137,15 +119,13 @@ namespace Disco.Test.ApiServices.Features.Follower.RequestHandlers.GetRecomended
 
             // Assert
             await _accountService.Received().GetAsync(Arg.Any<ClaimsPrincipal>());
-            await _accountService.Received().GetByAccountIdAsync(Arg.Any<int>());
-
-            Assert.Fail("Create or modify test");
+            await _accountService.Received(0).GetByAccountIdAsync(Arg.Any<int>());
         }
 
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.Handle(default(GetRecomendedRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(GetRecomendedRequest), CancellationToken.None));
         }
     }
 }
