@@ -4,6 +4,7 @@ namespace Disco.Test.ApiServices.Features.Account.Admin
     using System.Threading.Tasks;
     using Disco.ApiServices.Features.Account.Admin;
     using Disco.Business.Interfaces.Dtos.Account;
+    using Disco.Business.Interfaces.Dtos.Account.Admin.LogIn;
     using MediatR;
     using NSubstitute;
     using NUnit.Framework;
@@ -35,11 +36,7 @@ namespace Disco.Test.ApiServices.Features.Account.Admin
         public async Task CanCallLogIn()
         {
             // Arrange
-            var dto = new LoginDto
-            {
-                Email = "TestValue956838770",
-                Password = "TestValue804636134"
-            };
+            var dto = new LogInRequestDto("TestValue956838770", "TestValue804636134");
 
             // Act
             var result = await _testClass.LogIn(dto);

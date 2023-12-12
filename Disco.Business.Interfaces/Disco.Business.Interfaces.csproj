@@ -17,4 +17,8 @@
     <ProjectReference Include="..\Disco.Integration.Interfaces\Disco.Integration.Interfaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dtos\Account\User\" />
+  </ItemGroup>
+
 </Project>
