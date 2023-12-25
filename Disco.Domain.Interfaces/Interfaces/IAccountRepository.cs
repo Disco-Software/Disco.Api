@@ -15,5 +15,6 @@ namespace Disco.Domain.Interfaces
         Task RemoveAccountAsync(Account account);
         Task<List<Connection>> GetAllAccountConnectionsAsync(int userId);
         Task<IEnumerable<Account>> GetAllAsync(int pageNumber, int pageSize);
+        Task<IEnumerable<Account>> SearchAsync(string search, int pageNumber, int pageSize);
     }
 }
