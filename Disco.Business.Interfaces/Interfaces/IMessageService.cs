@@ -1,9 +1,4 @@
-﻿using Disco.Domain.Models;
-using Disco.Domain.Models.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Disco.Domain.Models.Models;
 
 namespace Disco.Business.Interfaces.Interfaces
 {
@@ -11,6 +6,7 @@ namespace Disco.Business.Interfaces.Interfaces
     {
         Task<Message> CreateAsync(string message, Account account, Group group);
         Task DeleteAsync(Message message);
+        IEnumerable<Message> GetGroupMessages(int id, int pageNumber, int pageSize);
         Task<List<Message>> GetAllAsync(int groupId, int pageNumber, int pageSize);
         Task<Message> GetByIdAsync(int id);
         Task UpdateAsync(Message message);

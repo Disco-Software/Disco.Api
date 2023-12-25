@@ -12,7 +12,6 @@ namespace Disco.Business.Services.Mappers
     {
         public RoleMapProfile()
         {
-            CreateMap<CreateRoleDto, Role>();
         }
     }
 }

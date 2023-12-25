@@ -1,38 +1,33 @@
-﻿using Disco.Business.Constants;
-using Disco.Business.Interfaces;
-using Disco.Business.Interfaces.Dtos.Account;
-using Disco.Domain.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using Disco.ApiServices.Controllers;
+using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.CreateAccount;
+using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.DeleteAccount;
+using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsByPeriot;
+using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAllAccounts;
+using Disco.Business.Interfaces.Dtos.Account.User.Register;
+using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.CreateAccount;
+using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAccountsByPeriot;
+using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAllAccounts;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Disco.Business.Interfaces.Validators;
-using AutoMapper;
-using Disco.Business.Interfaces.Interfaces;
-using Disco.Domain.Models.Models;
-using MediatR;
-using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.CreateAccount;
-using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.DeleteAccount;
-using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAllAccounts;
-using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsByPeriot;
 
 namespace Disco.ApiServices.Features.AccountDetails.Admin
 {
 
-    [Route("api/admin/users")]
-    public class UserController : ControllerBase
+    [Route("api/admin/account")]
+    public class AccountDetailsController : AdminController
     {
         private readonly IMediator _mediator;
 
-        public UserController(
+        public AccountDetailsController(
             IMediator mediator)
         {
             _mediator = mediator;
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult<UserResponseDto>> Create([FromBody] RegistrationDto dto) =>
+        public async Task<ActionResult<CreateAccountResponseDto>> Create([FromBody] CreateAccountRequestDto dto) =>
             await _mediator.Send(new CreateAccountRequest(dto));
 
         [HttpDelete("{id:int}")]
@@ -40,13 +35,13 @@ namespace Disco.ApiServices.Features.AccountDetails.Admin
             await _mediator.Send(new DeleteAccountRequest(id));
 
         [HttpGet]
-        public async Task<IEnumerable<Domain.Models.Models.Account>> GetAllAsync(
+        public async Task<IEnumerable<GetAllAccountsResponseDto>> GetAllAsync(
             [FromQuery] int pageNumber,
             [FromQuery] int pageSize) =>
             await _mediator.Send(new GetAllAccountsRequest(pageNumber, pageSize));
 
         [HttpGet("periot")]
-        public async Task<ActionResult<List<Domain.Models.Models.User>>> GetAccountsByPeriotAsync(int periot) =>
+        public async Task<ActionResult<List<GetAccountsByPeriotResponseDto>>> GetAccountsByPeriotAsync(int periot) =>
             await _mediator.Send(new GetAccountsByPeriotRequest(periot));
     }
 }

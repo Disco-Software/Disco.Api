@@ -1,20 +1,15 @@
-﻿using Disco.Business.Interfaces.Dtos.Posts;
+﻿using Disco.Business.Interfaces.Dtos.Posts.User.CreatePost;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Post.RequestHandlers.CreatePost
 {
-    public class CreatePostRequest : IRequest<Domain.Models.Models.Post>
+    public class CreatePostRequest : IRequest<CreatePostResponseDto>
     {
-        public CreatePostRequest(CreatePostDto dto)
+        public CreatePostRequest(CreatePostRequestDto dto)
         {
             Dto = dto;
         }
 
-        public CreatePostDto Dto { get; }
+        public CreatePostRequestDto Dto { get; }
     }
 }

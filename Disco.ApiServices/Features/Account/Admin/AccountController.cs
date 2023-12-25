@@ -1,19 +1,13 @@
-﻿using Disco.Business.Interfaces;
-using Disco.Business.Interfaces.Dtos.Account;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Disco.Domain.Models;
-using Disco.Business.Interfaces.Validators;
-using Disco.Business.Constants;
-using AutoMapper;
-using System;
-using Disco.Business.Interfaces.Interfaces;
-using Disco.ApiServices.Controllers;
-using Microsoft.AspNetCore.Authorization;
-using MediatR;
+﻿using Disco.ApiServices.Controllers;
 using Disco.ApiServices.Features.Account.Admin.RequestHandlers.LogIn;
 using Disco.ApiServices.Features.Account.Admin.RequestHandlers.RefreshToken;
+using Disco.Business.Interfaces.Dtos.Account;
+using Disco.Business.Interfaces.Dtos.Account.Admin.LogIn;
+using Disco.Business.Interfaces.Dtos.Account.Admin.RefreshToken;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Account.Admin
 {
@@ -31,11 +25,11 @@ namespace Disco.ApiServices.Features.Account.Admin
         }
 
         [HttpPost("log-in")]
-        public async Task<ActionResult<UserResponseDto>> LogIn([FromBody] LoginDto dto) =>
+        public async Task<ActionResult<LogInResponseDto>> LogIn([FromBody] LogInRequestDto dto) =>
             await _mediator.Send(new LogInRequest(dto));
 
         [HttpPut("refresh")]
-        public async Task<ActionResult<UserResponseDto>> RefreshToken([FromBody] RefreshTokenDto dto) =>
+        public async Task<ActionResult<RefreshTokenResponseDto>> RefreshToken([FromBody] RefreshTokenRequestDto dto) =>
             await _mediator.Send(new RefreshTokenRequest(dto));
     }
 }

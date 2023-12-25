@@ -45,7 +45,7 @@ namespace Disco.Domain.Repositories.Repositories
             return account;
         }
 
-        public override async Task<Account> Update(Account newItem)
+        public override async Task<Account> UpdateAsync(Account newItem)
         {
             var account = _context.Accounts.Update(newItem).Entity;
             

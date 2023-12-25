@@ -11,21 +11,21 @@ namespace Disco.Test.ApiServices.Features.AccountDetails.Admin
     [TestFixture]
     public class UserControllerTests
     {
-        private UserController _testClass;
+        private AccountDetailsController _testClass;
         private IMediator _mediator;
 
         [SetUp]
         public void SetUp()
         {
             _mediator = Substitute.For<IMediator>();
-            _testClass = new UserController(_mediator);
+            _testClass = new AccountDetailsController(_mediator);
         }
 
         [Test]
         public void CanConstruct()
         {
             // Act
-            var instance = new UserController(_mediator);
+            var instance = new AccountDetailsController(_mediator);
 
             // Assert
             Assert.That(instance, Is.Not.Null);

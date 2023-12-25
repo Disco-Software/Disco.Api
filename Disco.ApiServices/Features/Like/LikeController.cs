@@ -1,16 +1,9 @@
 ﻿using Disco.ApiServices.Controllers;
 using Disco.ApiServices.Features.Like.RequestHandlers.CreateLike;
 using Disco.ApiServices.Features.Like.RequestHandlers.RemoveLike;
-using Disco.Business.Constants;
-using Disco.Business.Interfaces;
-using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Interfaces.Dtos.Like.User.CreateLike;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Like
@@ -26,11 +19,11 @@ namespace Disco.ApiServices.Features.Like
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult<int>> CreateLikeAsync([FromQuery] int postId) =>
+        public async Task<ActionResult<CreateLikeResponseDto>> CreateLikeAsync([FromQuery] int postId) =>
             await _mediator.Send(new CreateLikeRequest(postId));
 
         [HttpDelete("remove")]
-        public async Task<ActionResult<int>> RemoveLikeAsync([FromQuery] int postId) =>
+        public async Task RemoveLikeAsync([FromQuery] int postId) =>
             await _mediator.Send(new RemoveLikeRequest(postId));
     }
 }

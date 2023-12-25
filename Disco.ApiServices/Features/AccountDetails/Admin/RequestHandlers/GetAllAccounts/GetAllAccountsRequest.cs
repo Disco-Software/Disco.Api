@@ -1,14 +1,10 @@
-﻿using Disco.Domain.Models.Models;
+﻿using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAllAccounts;
 using MediatR;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAllAccounts
 {
-    public class GetAllAccountsRequest : IRequest<IEnumerable<Domain.Models.Models.Account>>
+    public class GetAllAccountsRequest : IRequest<IEnumerable<GetAllAccountsResponseDto>>
     {
         public GetAllAccountsRequest(int pageNumber, int pageSize)
         {

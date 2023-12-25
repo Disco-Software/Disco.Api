@@ -3,7 +3,9 @@ using Disco.ApiServices.Features.Story.RequestHandlers.CreateStory;
 using Disco.ApiServices.Features.Story.RequestHandlers.DeleteStory;
 using Disco.ApiServices.Features.Story.RequestHandlers.GetStories;
 using Disco.ApiServices.Features.Story.RequestHandlers.GetStory;
-using Disco.Business.Interfaces.Dtos.Stories;
+using Disco.Business.Interfaces.Dtos.Stories.User.CreateStory;
+using Disco.Business.Interfaces.Dtos.Stories.User.GetAllStories;
+using Disco.Business.Interfaces.Dtos.Stories.User.GetStory;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -22,7 +24,7 @@ namespace Disco.ApiServices.Features.Story
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult<Domain.Models.Models.Story>> CreateAsync([FromForm] CreateStoryDto dto) =>
+        public async Task<ActionResult<CreateStoryResponseDto>> CreateAsync([FromForm] CreateStoryRequestDto dto) =>
             await _mediator.Send(new CreateStoryRequest(dto));
 
         [HttpDelete("{id:int}")]
@@ -30,11 +32,11 @@ namespace Disco.ApiServices.Features.Story
             await _mediator.Send(new DeleteStoryRequest(id));
 
         [HttpGet("get/{id:int}")]
-        public async Task<ActionResult<Domain.Models.Models.Story>> GetAsync([FromRoute] int id) =>
+        public async Task<ActionResult<GetStoryResponseDto>> GetAsync([FromRoute] int id) =>
             await _mediator.Send(new GetStoryRequest(id));
 
         [HttpGet("all")]
-        public async Task<ActionResult<List<Domain.Models.Models.Story>>> GetStoriesAsync([FromQuery] GetAllStoriesDto dto) =>
+        public async Task<IEnumerable<GetAllStoriesResponseDto>> GetStoriesAsync([FromQuery] GetAllStoriesRequestDto dto) =>
             await _mediator.Send(new GetStoriesRequest(dto));
 
     }

@@ -48,7 +48,7 @@ namespace Disco.Business.Services.Services
 
             user.Account.Photo = blobClient.Uri.AbsoluteUri ?? user.Account.Photo;
 
-            await _accountRepository.Update(user.Account);
+            await _accountRepository.UpdateAsync(user.Account);
 
             return user;
         }
@@ -80,14 +80,12 @@ namespace Disco.Business.Services.Services
             await _accountRepository.RemoveAccountAsync(account);
         }
 
-        public async Task<UserDetailsResponseDto> GetUserDatailsAsync(User user)
+        public async Task<User> GetUserDatailsAsync(User user)
         {
+            user.Account = await _accountRepository.GetAccountAsync(user.Id);
             user.Account.AccountStatus = await _accountStatusRepository.GetStatusByFollowersCountAsync(user.Account.Following.Count);
 
-            UserDetailsResponseDto userDetailsResponseDto = new UserDetailsResponseDto();
-            userDetailsResponseDto.User = user;
-
-            return userDetailsResponseDto;
+            return user;
         }
 
         public async Task<IEnumerable<Account>> GetAllAsync(int pageNumber, int pageSize)

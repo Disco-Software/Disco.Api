@@ -2,7 +2,7 @@ namespace Disco.Test.ApiServices.Features.AccountPassword.User.RequestHandlers.R
 {
     using System;
     using Disco.ApiServices.Features.AccountPassword.User.RequestHandlers.ResetPassword;
-    using Disco.Business.Interfaces.Dtos.Account;
+    using Disco.Business.Interfaces.Dtos.AccountPassword.Admin.ResetPassword;
     using NUnit.Framework;
 
     [TestFixture]

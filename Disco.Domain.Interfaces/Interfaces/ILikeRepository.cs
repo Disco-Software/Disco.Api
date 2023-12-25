@@ -1,16 +1,10 @@
-﻿using Disco.Domain.Models;
-using Disco.Domain.Models.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Disco.Domain.Models.Models;
 
 namespace Disco.Domain.Interfaces
 {
-    public interface ILikeRepository
+    public interface ILikeRepository : IRepository<Like, int>
     {
-        Task AddAsync(Like item);
-        Task Remove(Like like);
-        Task<Like> GetAsync(int postId);
-        Task<List<Like>> GetAll(int postId, int pageNumber, int pageSize);
-        Task<List<Like>> GetAll(int postId);
+        Task<List<Like>> GetAllAsync(int postId, int pageNumber, int pageSize);
+        Task<Like> GetAsync(int accountId, int postId);
     }
 }

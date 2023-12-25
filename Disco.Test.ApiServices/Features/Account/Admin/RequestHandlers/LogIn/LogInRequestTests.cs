@@ -3,22 +3,20 @@ namespace Disco.Test.ApiServices.Features.Account.Admin.RequestHandlers.LogIn
     using System;
     using Disco.ApiServices.Features.Account.Admin.RequestHandlers.LogIn;
     using Disco.Business.Interfaces.Dtos.Account;
+    using Disco.Business.Interfaces.Dtos.Account.Admin.LogIn;
     using NUnit.Framework;
 
     [TestFixture]
     public class LogInRequestTests
     {
         private LogInRequest _testClass;
-        private LoginDto _dto;
+        private LogInRequestDto _dto;
 
         [SetUp]
         public void SetUp()
         {
-            _dto = new LoginDto
-            {
-                Email = "TestValue465385208",
-                Password = "TestValue1182258186"
-            };
+            _dto = new LogInRequestDto("TestValue465385208", "TestValue1182258186");
+         
             _testClass = new LogInRequest(_dto);
         }
 

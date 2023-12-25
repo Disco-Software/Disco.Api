@@ -15,28 +15,7 @@ namespace Disco.Domain.Repositories.Repositories
     {
         public LikeRepository(ApiDbContext ctx) : base(ctx) { }
 
-        public override async Task AddAsync(Like item)
-        {            
-            await _context.Likes.AddAsync(item);
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task Remove(Like like)
-        {
-            _context.Likes.Remove(like);
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<List<Like>> GetAll(int postId)
-        {
-            return await _context.Likes
-                .Include(p => p.Post)
-                .Where(l => l.PostId == postId)
-                .ToListAsync();
-        }
-        public async Task<List<Like>> GetAll(int postId, int pageNumber, int pageSize)
+        public async Task<List<Like>> GetAllAsync(int postId, int pageNumber, int pageSize)
         {
             return await _context.Likes
                 .Include(p => p.Post)
@@ -47,12 +26,13 @@ namespace Disco.Domain.Repositories.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Like> GetAsync(int postId)
+        public async Task<Like> GetAsync(int accountId, int postId)
         {
             return await _context.Likes
                 .Include(p => p.Post)
-                .Where(l => l.Post.Id == postId)
-                .FirstOrDefaultAsync();
+                .Where(x => x.PostId == postId)
+                .Where(l => l.AccountId == accountId)
+                .FirstOrDefaultAsync() ?? throw new NullReferenceException();
         }
     }
 }

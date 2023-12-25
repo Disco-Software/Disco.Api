@@ -8,7 +8,7 @@ namespace Disco.Domain.Interfaces
     public interface IStoryRepository
     {
         Task AddAsync(Story story);
-        Task<List<Story>> GetAllAsync(int profileId, int pageNumber, int pageSize);
+        Task<IEnumerable<Story>> GetAllAsync(int accountId, int pageNumber, int pageSize);
         Task RemoveAsync(Story story);
         Task<Story> GetAsync(int id);
     }

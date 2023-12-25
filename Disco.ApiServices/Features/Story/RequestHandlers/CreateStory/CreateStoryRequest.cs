@@ -1,4 +1,5 @@
 ﻿using Disco.Business.Interfaces.Dtos.Stories;
+using Disco.Business.Interfaces.Dtos.Stories.User.CreateStory;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Story.RequestHandlers.CreateStory
 {
-    public class CreateStoryRequest : IRequest<Domain.Models.Models.Story>
+    public class CreateStoryRequest : IRequest<CreateStoryResponseDto>
     {
-        public CreateStoryRequest(CreateStoryDto dto)
+        public CreateStoryRequest(CreateStoryRequestDto dto)
         {
             Dto = dto;
         }
 
-        public CreateStoryDto Dto { get; }
+        public CreateStoryRequestDto Dto { get; }
     }
 }

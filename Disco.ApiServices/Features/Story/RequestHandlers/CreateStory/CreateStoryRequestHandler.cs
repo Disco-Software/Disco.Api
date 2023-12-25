@@ -1,17 +1,16 @@
 ﻿using AutoMapper;
+using Disco.Business.Interfaces.Dtos.Stories.User.CreateStory;
+using Disco.Business.Interfaces.Dtos.StoryImages.User.CreateStoryImage;
+using Disco.Business.Interfaces.Dtos.StoryVideos.User.CreateStoryVideo;
 using Disco.Business.Interfaces.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Story.RequestHandlers.CreateStory
 {
-    public class CreateStoryRequestHandler : IRequestHandler<CreateStoryRequest, Domain.Models.Models.Story>
+    public class CreateStoryRequestHandler : IRequestHandler<CreateStoryRequest, CreateStoryResponseDto>
     {
         private readonly IAccountService _accountService;
         private readonly IStoryService _storyService;
@@ -36,31 +35,39 @@ namespace Disco.ApiServices.Features.Story.RequestHandlers.CreateStory
             _mapper = mapper;
         }
 
-        public async Task<Domain.Models.Models.Story> Handle(CreateStoryRequest request, CancellationToken cancellationToken)
+        public async Task<CreateStoryResponseDto> Handle(CreateStoryRequest request, CancellationToken cancellationToken)
         {
             var user = await _accountService.GetAsync(_contextAccessor.HttpContext.User);
 
             var story = _mapper.Map<Domain.Models.Models.Story>(request.Dto);
+            story.Account = user.Account;
 
             if (request.Dto.StoryImages != null)
                 foreach (var image in request.Dto.StoryImages)
                 {
-                    var storyImage = await _storyImageService.CreateStoryImageAsync(
-                        new Business.Interfaces.Dtos.StoryImages.CreateStoryImageDto { StoryImageFile = image });
+                    var storyImageRequestDto = _mapper.Map<CreateStoryImageRequestDto>(image);
+
+                    var storyImage = await _storyImageService.CreateStoryImageAsync(storyImageRequestDto);
+                    storyImage.Story = story;
+
                     story.StoryImages.Add(storyImage);
                 }
 
             if (request.Dto.StoryVideos != null)
                 foreach (var video in request.Dto.StoryVideos)
                 {
-                    var storyImage = await _storyVideoService.CreateStoryVideoAsync(
-                        new Business.Interfaces.Dtos.StoryVideos.CreateStoryVideoDto { VideoFile = video });
-                    story.StoryVideos.Add(storyImage);
+                    var storyVideoRequestDto = _mapper.Map<CreateStoryVideoRequestDto>(request.Dto);
+
+                    var storyVideo = await _storyVideoService.CreateStoryVideoAsync(storyVideoRequestDto);
+                    
+                    story.StoryVideos.Add(storyVideo);
                 }
 
             await _storyService.CreateStoryAsync(story);
 
-            return story;
+            var createStoryResponseDto = _mapper.Map<CreateStoryResponseDto>(story);
+
+            return createStoryResponseDto;
         }
     }
 }

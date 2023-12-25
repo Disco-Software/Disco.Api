@@ -1,9 +1,4 @@
-﻿using Disco.Domain.Models;
-using Disco.Domain.Models.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Disco.Domain.Models.Models;
 
 namespace Disco.Business.Interfaces.Interfaces
 {
@@ -12,5 +7,7 @@ namespace Disco.Business.Interfaces.Interfaces
         Task AddCommentAsync(Comment comment);
         Task RemoveCommentAsync(Comment comment);
         Task<Comment> GetCommentAsync(int id);
+        Task<List<Comment>> GetAllCommentsAsync(int postId, int pageNumber, int pageSize);
+        Task UpdateCommentAsync(Comment comment);
     }
 }

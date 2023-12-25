@@ -1,15 +1,8 @@
 ﻿using Disco.Domain.EF;
 using Disco.Domain.Interfaces;
-using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using Disco.Domain.Repositories.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories.Repositories
 {
@@ -39,6 +32,28 @@ namespace Disco.Domain.Repositories.Repositories
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+        }
+
+        public IEnumerable<Message> GetAllGroupMessages(int groupId, int pageNumber, int pageSize)
+        {
+            return _context.Messages
+                .Include(x => x.Account)
+                .ThenInclude(x => x.User)
+                .Include(x => x.Group)
+                .OrderByDescending(x => x.CreatedDate)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .AsEnumerable();
+        }
+
+        public override async Task<Message> GetAsync(int id)
+        {
+            return await _context.Messages
+                .Include(x => x.Account)
+                .ThenInclude(x => x.Messages)
+                .Include(x => x.Group)
+                .ThenInclude(x => x.Messages)
+                .FirstOrDefaultAsync() ?? throw new NullReferenceException();
         }
 
         public async Task<Message> GetByIdAsync(int id)

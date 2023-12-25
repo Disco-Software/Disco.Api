@@ -1,29 +1,34 @@
-﻿using Disco.Business.Interfaces.Dtos.Roles;
+﻿using AutoMapper;
+using Disco.Business.Interfaces.Dtos.Roles.Admin.GetRoles;
 using Disco.Business.Interfaces.Interfaces;
-using Disco.Business.Services.Services;
-using Disco.Domain.Models.Models;
 using MediatR;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Role.RequestHandlers.GetRoles
 {
-    public class GetRolesRequestHandler : IRequestHandler<GetRolesRequest, List<Domain.Models.Models.Role>>
+    public class GetRolesRequestHandler : IRequestHandler<GetRolesRequest, IEnumerable<GetRolesResponseDto>>
     {
         private readonly IRoleService _roleService;
+        private readonly IMapper _mapper;
 
-        public GetRolesRequestHandler(IRoleService roleService)
+        public GetRolesRequestHandler(
+            IRoleService roleService,
+            IMapper mapper)
         {
             _roleService = roleService;
+            _mapper = mapper;
         }
 
-        public async Task<List<Domain.Models.Models.Role>> Handle(GetRolesRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<GetRolesResponseDto>> Handle(GetRolesRequest request, CancellationToken cancellationToken)
         {
-            return await _roleService.GetAllRoles(request.Dto);
+            var roles = await _roleService.GetAllRoles(request.Dto);
+
+            var getRolesResponseDto = _mapper.Map<IEnumerable<GetRolesResponseDto>>(roles.AsEnumerable());
+
+            return getRolesResponseDto;
         }
     }
 }

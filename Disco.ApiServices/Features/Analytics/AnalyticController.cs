@@ -3,7 +3,7 @@ using Disco.ApiServices.Features.Analytics.GetAnalytic;
 using Disco.ApiServices.Features.Analytics.RequestHandlers.GetAnalytic;
 using Disco.Business.Constants;
 using Disco.Business.Interfaces;
-using Disco.Business.Interfaces.Dtos.Analytic;
+using Disco.Business.Interfaces.Dtos.Analytic.Admin.GetAnalytics;
 using Disco.Business.Interfaces.Enums;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models;
@@ -32,7 +32,7 @@ namespace Disco.ApiServices.Features.Analytics
         }
 
         [HttpGet]
-        public async Task<ActionResult<AnalyticDto>> GetAnalitycAsync(
+        public async Task<ActionResult<AnalyticResponseDto>> GetAnalitycAsync(
             [FromQuery] string from,
             [FromQuery] string to,
             [FromQuery] string analyticFor) =>

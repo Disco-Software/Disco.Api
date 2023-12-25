@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
-using Disco.Business.Interfaces.Dtos.Songs;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
 using Disco.Domain.Interfaces;
-using Disco.Business.Interfaces.Dtos.Songs;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
+using Disco.Business.Interfaces.Dtos.PostSong.User.CreatePostSong;
 
 namespace Disco.Business.Services.Services
 {
@@ -31,7 +30,7 @@ namespace Disco.Business.Services.Services
             _mapper = mapper;
         }
 
-        public async Task<PostSong> CreatePostSongAsync(CreateSongDto dto)
+        public async Task<PostSong> CreatePostSongAsync(CreatePostSongRequestDto dto)
         {            
             var uniqueSongName = Guid.NewGuid().ToString() + "_" + dto.Song.FileName.Replace(' ', '_');
             var uniqueImageName = Guid.NewGuid().ToString() + "_" + dto.Image.FileName.Replace(' ', '_');

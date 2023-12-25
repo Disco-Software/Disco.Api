@@ -1,30 +1,45 @@
-﻿using Disco.Business.Interfaces.Interfaces;
-using Disco.Domain.Models.Models;
+﻿using AutoMapper;
+using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAllAccounts;
+using Disco.Business.Interfaces.Interfaces;
 using MediatR;
-using System;
 using System.Collections.Generic;
-using System.Drawing.Printing;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAllAccounts
 {
-    public class GetAllAccountsRequestHandler : IRequestHandler<GetAllAccountsRequest, IEnumerable<Domain.Models.Models.Account>>
+    public class GetAllAccountsRequestHandler : IRequestHandler<GetAllAccountsRequest, IEnumerable<GetAllAccountsResponseDto>>
     {
         private readonly IAccountDetailsService _accountDetailsService;
+        private readonly IMapper _mapper;
 
-        public GetAllAccountsRequestHandler(IAccountDetailsService accountDetailsService)
+        public GetAllAccountsRequestHandler(
+            IAccountDetailsService accountDetailsService,
+            IMapper mapper)
         {
             _accountDetailsService = accountDetailsService;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Domain.Models.Models.Account>> Handle(GetAllAccountsRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<GetAllAccountsResponseDto>> Handle(GetAllAccountsRequest request, CancellationToken cancellationToken)
         {
+            var getAllAcountsResponseDtos = new List<GetAllAccountsResponseDto>();
+
             var accounts = await _accountDetailsService.GetAllAsync(request.PageNumber, request.PageSize);
 
-            return accounts;
+            foreach (var account in accounts)
+            {
+                var userDto = _mapper.Map<UserDto>(account.User);
+                var accountDto = _mapper.Map<AccountDto>(account);
+
+                accountDto.User = userDto;
+
+                var getAllAccountsDto = _mapper.Map<GetAllAccountsResponseDto>(accountDto);
+
+                getAllAcountsResponseDtos.Add(getAllAccountsDto);
+            }
+
+            return getAllAcountsResponseDtos;
         }
     }
 }

@@ -1,17 +1,13 @@
 ﻿using AutoMapper;
-using Disco.Business.Interfaces.Dtos.Account;
+using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.CreateAccount;
 using Disco.Business.Interfaces.Interfaces;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.CreateAccount
 {
-    public class CreateAccountRequestHandler : IRequestHandler<CreateAccountRequest, UserResponseDto>
+    public class CreateAccountRequestHandler : IRequestHandler<CreateAccountRequest, CreateAccountResponseDto>
     {
         private readonly IAccountService _accountService;
         private readonly ITokenService _tokenService;
@@ -24,7 +20,7 @@ namespace Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.Create
             _mapper = mapper;
         }
 
-        public async Task<UserResponseDto> Handle(CreateAccountRequest request, CancellationToken cancellationToken)
+        public async Task<CreateAccountResponseDto> Handle(CreateAccountRequest request, CancellationToken cancellationToken)
         {
             var user = _mapper.Map<Domain.Models.Models.User>(request.Dto);
             user.Email = request.Dto.Email;
@@ -42,10 +38,10 @@ namespace Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.Create
 
             await _accountService.SaveRefreshTokenAsync(user, refreshToken);
 
-            var userResponseDto = _mapper.Map<UserResponseDto>(user);
-            userResponseDto.RefreshToken = refreshToken;
-            userResponseDto.AccessToken = accessToken;
-            userResponseDto.User = user;
+            var accountDto = _mapper.Map<AccountDto>(user.Account);
+            var userDto = _mapper.Map<UserDto>(user);
+
+            var userResponseDto = _mapper.Map<CreateAccountResponseDto>(userDto);
 
             return userResponseDto;
         }

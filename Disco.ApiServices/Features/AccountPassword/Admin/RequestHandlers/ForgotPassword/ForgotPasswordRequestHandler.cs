@@ -1,4 +1,5 @@
 ﻿using Disco.Business.Exceptions;
+using Disco.Business.Interfaces.Dtos.EmailNotifications.User.EmailConfirmation;
 using Disco.Business.Interfaces.Interfaces;
 using MediatR;
 using System;
@@ -40,13 +41,6 @@ namespace Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.Forgo
             }
 
             var passwordResetToken = await _accountPasswordService.GetPasswordConfirmationTokenAsync(user);
-
-            await _emailService.EmailConfirmationAsync(new Business.Interfaces.Dtos.EmailNotifications.EmailConfirmationDto
-            {
-                ToEmail = user.Email,
-                IsHtmlTemplate = true,
-                MessageHeader = "Email confirmation"
-            });
 
             return $"Email was sended to your email {user.Email}";
         }

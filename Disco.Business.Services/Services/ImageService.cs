@@ -1,17 +1,13 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
-using Disco.Business.Interfaces;
-using Disco.Domain.Models;
-using System;
-using System.Threading.Tasks;
-using Disco.Domain.Interfaces;
+using Disco.Business.Interfaces.Dtos.PostImage.User.CreateImage;
 using Disco.Business.Interfaces.Interfaces;
-using Disco.Business.Interfaces.Dtos.Images;
+using Disco.Domain.Interfaces;
 using Disco.Domain.Models.Models;
 
 namespace Disco.Business.Services.Services
 {
-    public class ImageService : IImageService
+    public class ImageService : Interfaces.Interfaces.IImageService
     {
         private readonly BlobServiceClient _blobServiceClient;
         private readonly IMapper _mapper;
@@ -28,7 +24,7 @@ namespace Disco.Business.Services.Services
         }
 
 
-        public async Task<PostImage> CreatePostImage(CreateImageDto model)
+        public async Task<PostImage> CreatePostImage(CreatePostImageRequestDto model)
         {
             var uniqueImageName = Guid.NewGuid().ToString() + "_" + model.ImageFile.FileName.Replace(' ', '_');
 

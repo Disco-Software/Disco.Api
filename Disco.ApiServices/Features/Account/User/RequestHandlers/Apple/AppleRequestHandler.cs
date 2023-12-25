@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Disco.Business.Constants;
 using Disco.Business.Interfaces.Dtos.Account;
+using Disco.Business.Interfaces.Dtos.Account.User.Apple;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
 using MediatR;
@@ -14,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Apple
 {
-    public class AppleRequestHandler : IRequestHandler<AppleRequest, UserResponseDto>
+    public class AppleRequestHandler : IRequestHandler<AppleRequest, AppleLogInResponseDto>
     {
         private readonly IAccountService _accountService;
         private readonly ITokenService _tokenService;
@@ -27,7 +29,7 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Apple
             _mapper = mapper;
         }
 
-        public async Task<UserResponseDto> Handle(AppleRequest request, CancellationToken cancellationToken)
+        public async Task<AppleLogInResponseDto> Handle(AppleRequest request, CancellationToken cancellationToken)
         {
             var user = await _accountService.GetByEmailAsync(request.Dto.Email);
             if (user != null)
@@ -38,12 +40,16 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Apple
                 var accessToken = _tokenService.GenerateAccessToken(user);
                 var refreshToken = _tokenService.GenerateRefreshToken();
 
-                var userResponseDto = _mapper.Map<UserResponseDto>(user);
-                userResponseDto.AccessToken = accessToken;
-                userResponseDto.RefreshToken = refreshToken;
-                userResponseDto.User = user;
+                var userDto = _mapper.Map<UserDto>(user);
+                var accountDto = _mapper.Map<AccountDto>(user.Account);
 
-                return userResponseDto;
+                userDto.Account = accountDto;
+
+                var appleLogInResponseDto = _mapper.Map<AppleLogInResponseDto>(userDto);
+                appleLogInResponseDto.AccessToken = accessToken;
+                appleLogInResponseDto.RefreshToken = refreshToken;
+
+                return appleLogInResponseDto;
             }
 
             user = await _accountService.GetByLogInProviderAsync(LogInProvider.Apple, request.Dto.AppleIdCode);
@@ -55,12 +61,16 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Apple
                 var accessToken = _tokenService.GenerateAccessToken(user);
                 var refreshToken = _tokenService.GenerateRefreshToken();
 
-                var userResponseDto = _mapper.Map<UserResponseDto>(user);
-                userResponseDto.AccessToken = accessToken;
-                userResponseDto.RefreshToken = refreshToken;
-                userResponseDto.User = user;
+                var userDto = _mapper.Map<UserDto>(user);
+                var accountDto = _mapper.Map<AccountDto>(user.Account);
 
-                return userResponseDto;
+                userDto.Account = accountDto;
+
+                var appleLogInResponseDto = _mapper.Map<AppleLogInResponseDto>(userDto);
+                appleLogInResponseDto.AccessToken = accessToken;
+                appleLogInResponseDto.RefreshToken = refreshToken;
+
+                return appleLogInResponseDto;
             }
 
             user = new Domain.Models.Models.User
@@ -83,12 +93,17 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Apple
             var userAccessToken = _tokenService.GenerateAccessToken(user);
             var userRefreshToken = _tokenService.GenerateRefreshToken();
 
-            var userRegisterResponseDto = _mapper.Map<UserResponseDto>(user);
-            userRegisterResponseDto.RefreshToken = userRefreshToken;
-            userRegisterResponseDto.User = user;
-            userRegisterResponseDto.AccessToken = userAccessToken;
+            var userRegisterDto = _mapper.Map<UserDto>(user);
+            var accountRegisterDto = _mapper.Map<AccountDto>(user.Account);
 
-            return userRegisterResponseDto;
+            userRegisterDto.Account = accountRegisterDto;
+
+            var appleRegisterResponseDto = _mapper.Map<AppleLogInResponseDto>(userRegisterDto);
+            appleRegisterResponseDto.AccessToken = userAccessToken;
+            appleRegisterResponseDto.RefreshToken = userRefreshToken;
+
+
+            return appleRegisterResponseDto;
         }
     }
 }

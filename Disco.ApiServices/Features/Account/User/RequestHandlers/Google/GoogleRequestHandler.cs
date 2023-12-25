@@ -1,20 +1,20 @@
 ﻿using AutoMapper;
 using Disco.Business.Constants;
-using Disco.Business.Interfaces.Dtos.Account;
+using Disco.Business.Interfaces.Dtos.Account.User.Facebook;
+using Disco.Business.Interfaces.Dtos.Account.User.Google;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
 using MediatR;
-using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using AccountDto = Disco.Business.Interfaces.Dtos.Account.User.Google.AccountDto;
+using UserDto = Disco.Business.Interfaces.Dtos.Account.User.Google.UserDto;
 
 namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Google
 {
-    public class GoogleRequestHandler : IRequestHandler<GoogleRequest, UserResponseDto>
+    public class GoogleRequestHandler : IRequestHandler<GoogleRequest, GoogleResponseDto>
     {
         private readonly IAccountService _accountService;
         private readonly ITokenService _tokenService;
@@ -30,7 +30,7 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Google
             _mapper = mapper;
         }
 
-        public async Task<UserResponseDto> Handle(GoogleRequest request, CancellationToken cancellationToken)
+        public async Task<GoogleResponseDto> Handle(GoogleRequest request, CancellationToken cancellationToken)
         {
             var user = await _accountService.GetByEmailAsync(request.Dto.Email);
             if (user != null)
@@ -44,12 +44,16 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Google
 
                 await _accountService.SaveRefreshTokenAsync(user, refreshToken);
 
-                var userResponseDto = _mapper.Map<UserResponseDto>(user);
-                userResponseDto.AccessToken = accessToken;
-                userResponseDto.RefreshToken = refreshToken;
-                userResponseDto.User = user;
+                var accountDto = _mapper.Map<AccountDto>(user.Account);
+                var userDto = _mapper.Map<UserDto>(user);
 
-                return userResponseDto;
+                userDto.Account = accountDto;
+
+                var googleLogInResponseDto = _mapper.Map<GoogleResponseDto>(userDto);
+                googleLogInResponseDto.AccessToken = accessToken;
+                googleLogInResponseDto.RefreshToken = refreshToken;
+
+                return googleLogInResponseDto;
             }
 
             user = await _accountService.GetByLogInProviderAsync(LogInProvider.Google, request.Dto.IdToken);
@@ -64,12 +68,14 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Google
 
                 await _accountService.SaveRefreshTokenAsync(user, refreshToken);
 
-                var userResponseDto = _mapper.Map<UserResponseDto>(user);
-                userResponseDto.AccessToken = accessToken;
-                userResponseDto.RefreshToken = refreshToken;
-                userResponseDto.User = user;
+                var accountDto = _mapper.Map<AccountDto>(user.Account);
+                var userDto = _mapper.Map<UserDto>(user);
 
-                return userResponseDto;
+                userDto.Account = accountDto;
+
+                var googleLogInResponseDto = _mapper.Map<GoogleResponseDto>(userDto);
+
+                return googleLogInResponseDto;
             }
 
             user = new Domain.Models.Models.User
@@ -94,9 +100,13 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Google
 
             await _accountService.SaveRefreshTokenAsync(user, userRefreshToken);
 
-            var userRegisterResponseDto = _mapper.Map<UserResponseDto>(user);
+            var registeredAccountDto = _mapper.Map<AccountDto>(user.Account);
+            var registeredUserDto = _mapper.Map<UserDto>(user);
+
+            registeredUserDto.Account = registeredAccountDto;
+
+            var userRegisterResponseDto = _mapper.Map<GoogleResponseDto>(user);
             userRegisterResponseDto.RefreshToken = userRefreshToken;
-            userRegisterResponseDto.User = user;
             userRegisterResponseDto.AccessToken = userAccessToken;
 
             return userRegisterResponseDto;

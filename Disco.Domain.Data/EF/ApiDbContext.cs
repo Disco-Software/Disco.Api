@@ -1,4 +1,5 @@
-﻿using Disco.Domain.Models;
+﻿using Disco.Domain.Data.Seeds;
+using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -7,13 +8,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace Disco.Domain.EF
 {
     public class ApiDbContext : IdentityDbContext<User,Role,int>, IDesignTimeDbContextFactory<ApiDbContext>
     {
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<Status> AccountStatuses { get; set; }
+        public DbSet<AccountStatus> AccountStatuses { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<PostSong> PostSongs { get; set; }
@@ -92,13 +94,13 @@ namespace Disco.Domain.EF
                 .HasMany(a => a.AccountGroups)
                 .WithOne(g => g.Account)
                 .HasForeignKey(g => g.AccountId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Group>()
                 .HasMany(g => g.AccountGroups)
                 .WithOne(a => a.Group)
                 .HasForeignKey(a => a.GroupId)
                 .HasPrincipalKey(a => a.Id)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Message>()
                 .HasOne(m => m.Group)
                 .WithMany(g => g.Messages)
@@ -118,13 +120,20 @@ namespace Disco.Domain.EF
                 .HasMany(g => g.AccountGroups)
                 .WithOne(g => g.Group)
                 .HasForeignKey(g => g.GroupId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Group>()
                 .HasMany(m => m.Messages)
                 .WithOne(g => g.Group)
                 .HasForeignKey(g => g.GroupId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
+            AddSeeds(modelBuilder, this);
+        }
+
+        private void AddSeeds(ModelBuilder modelBuilder, ApiDbContext context)
+        {
+            RoleSeed.AddRoleSeed(modelBuilder);
+            StatusSeed.AddStatusSeed(modelBuilder);
         }
 
         public ApiDbContext CreateDbContext(string[] args)

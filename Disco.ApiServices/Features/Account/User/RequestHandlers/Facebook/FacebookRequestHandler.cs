@@ -1,20 +1,19 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Disco.Business.Constants;
-using Disco.Business.Interfaces.Dtos.Account;
+using Disco.Business.Interfaces.Dtos.Account.User.Facebook;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
 using Disco.Integration.Interfaces.Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Facebook
 {
-    public class FacebookRequestHandler : IRequestHandler<FacebookRequest, UserResponseDto>
+    public class FacebookRequestHandler : IRequestHandler<FacebookRequest, FacebookResponseDto>
     {
         private readonly IAccountService _accountService;
         private readonly IFacebookClient _facebookClient;
@@ -33,9 +32,9 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Facebook
             _mapper = mapper;
         }
 
-        public async Task<UserResponseDto> Handle(FacebookRequest request, CancellationToken cancellationToken)
+        public async Task<FacebookResponseDto> Handle(FacebookRequest request, CancellationToken cancellationToken)
         {
-            var userInfo = await _facebookClient.GetInfoAsync(request.Dto.AccessToken);
+            var userInfo = await _facebookClient.GetInfoAsync(request.Dto.FacebookAccessToken);
             userInfo.Name = userInfo.Name.Replace(" ", "_");
 
             var user = await _accountService.GetByLogInProviderAsync(LogInProvider.Facebook, userInfo.Id);
@@ -50,12 +49,14 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Facebook
 
                 await _accountService.SaveRefreshTokenAsync(user, refreshToken);
 
-                var userRsponseDto = _mapper.Map<UserResponseDto>(user);
-                userRsponseDto.AccessToken = accessToken;
-                userRsponseDto.RefreshToken = refreshToken;
-                userRsponseDto.User = user;
+                var accountDto = _mapper.Map<AccountDto>(user.Account);
+                var userDto = _mapper.Map<UserDto>(user);
 
-                return userRsponseDto;
+                var facebookLogInResponseDto = _mapper.Map<FacebookResponseDto>(userDto);
+                facebookLogInResponseDto.AccessToken = accessToken;
+                facebookLogInResponseDto.RefreshToken = refreshToken;
+
+                return facebookLogInResponseDto;
             }
 
             user = await _accountService.GetByEmailAsync(userInfo.Email);
@@ -70,12 +71,14 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Facebook
 
                 await _accountService.SaveRefreshTokenAsync(user, refreshToken);
 
-                var userResponseDto = _mapper.Map<UserResponseDto>(user);
-                userResponseDto.AccessToken = accessToken;
-                userResponseDto.RefreshToken = refreshToken;
-                userResponseDto.User = user;
+                var accountDto = _mapper.Map<AccountDto>(user.Account);
+                var userDto = _mapper.Map<UserDto>(user);
 
-                return userResponseDto;
+                var facebookLogInResponseDto = _mapper.Map<FacebookResponseDto>(userDto);
+                facebookLogInResponseDto.AccessToken = accessToken;
+                facebookLogInResponseDto.RefreshToken = refreshToken;
+
+                return facebookLogInResponseDto;
             }
 
             user = new Domain.Models.Models.User
@@ -99,12 +102,14 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Facebook
 
             await _accountService.SaveRefreshTokenAsync(user, userRefreshToken);
 
-            var userRegisterResponseDto = _mapper.Map<UserResponseDto>(user);
-            userRegisterResponseDto.RefreshToken = userRefreshToken;
-            userRegisterResponseDto.User = user;
-            userRegisterResponseDto.AccessToken = userAccessToken;
+            var accountRegisterDto = _mapper.Map<AccountDto>(user.Account);
+            var userRegisterDto = _mapper.Map<UserDto>(user);
 
-            return userRegisterResponseDto;
+            var facebookRegisterResponseDto = _mapper.Map<FacebookResponseDto>(userRegisterDto);
+            facebookRegisterResponseDto.AccessToken = userAccessToken;
+            facebookRegisterResponseDto.RefreshToken = userRefreshToken;
+
+            return facebookRegisterResponseDto;
         }
     }
 }

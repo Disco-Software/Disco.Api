@@ -1,15 +1,9 @@
-﻿using Disco.Business.Interfaces.Dtos.Chat;
-using Disco.Domain.Models.Models;
+﻿using Disco.Business.Interfaces.Dtos.Group.User.CreateGroup;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Group.RequestHandlers.CreateGroup
 {
-    public class CreateGroupRequest : IRequest<Domain.Models.Models.Group>
+    public class CreateGroupRequest : IRequest<CreateGroupResponseDto>
     {
         public CreateGroupRequest(CreateGroupRequestDto dto)
         {

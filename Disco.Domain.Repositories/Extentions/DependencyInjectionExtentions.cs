@@ -20,7 +20,7 @@ namespace Disco.Domain.Repositories.Extentions
                 .AddTransient<IAccountStatusRepository, AccountStatusRepository>()
                 .AddTransient<IAccountGroupRepository, AccountGroupRepository>()
                 .AddTransient<IConnectionRepository, ConnectionRepository>()
-                .AddTransient<CommentRepository>()
+                .AddTransient<ICommentRepository, CommentRepository>()
                 .AddTransient<IFollowerRepository, FollowerRepository>()
                 .AddTransient<IGroupRepository, GroupRepository>()
                 .AddTransient<IImageRepository, ImageRepository>()

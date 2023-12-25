@@ -1,14 +1,8 @@
 ﻿using Disco.Domain.EF;
 using Disco.Domain.Interfaces.Interfaces;
-using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using Disco.Domain.Repositories.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories.Repositories
 {
@@ -16,16 +10,16 @@ namespace Disco.Domain.Repositories.Repositories
     {
         public CommentRepository(ApiDbContext ctx) : base(ctx) { }
 
-        public override async Task AddAsync(Comment item)
+        public async Task<List<Comment>> GetAllAsync(int postId, int pageNumber, int pageSize)
         {
-            await base.AddAsync(item);
-        }
+            var comments = await _context.Comments
+                .Where(x => x.PostId == postId)
+                .OrderByDescending(x => x.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
-        public async Task Remove(Comment comment)
-        {
-            _context.Comments.Remove(comment);
-
-            await _context.SaveChangesAsync();
+            return comments;
         }
     }
 }

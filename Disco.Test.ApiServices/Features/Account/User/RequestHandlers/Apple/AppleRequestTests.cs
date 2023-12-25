@@ -2,19 +2,19 @@ namespace Disco.Test.Business.Features.Account.User.RequestHandlers.Apple
 {
     using System;
     using Disco.ApiServices.Features.Account.User.RequestHandlers.Apple;
-    using Disco.Business.Interfaces.Dtos.Apple;
+    using Disco.Business.Interfaces.Dtos.Account.User.Apple;
     using NUnit.Framework;
 
     [TestFixture]
     public class AppleRequestTests
     {
         private AppleRequest _testClass;
-        private AppleLogInDto _dto;
+        private AppleLogInRequestDto _dto;
 
         [SetUp]
         public void SetUp()
         {
-            _dto = new AppleLogInDto
+            _dto = new AppleLogInRequestDto
             {
                 Name = "TestValue154704279",
                 Email = "TestValue941852601",

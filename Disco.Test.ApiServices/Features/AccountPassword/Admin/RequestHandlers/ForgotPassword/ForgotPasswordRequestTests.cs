@@ -2,7 +2,7 @@ namespace Disco.Test.ApiServices.Features.AccountPassword.Admin.RequestHandlers.
 {
     using System;
     using Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.ForgotPassword;
-    using Disco.Business.Interfaces.Dtos.Account;
+    using Disco.Business.Interfaces.Dtos.AccountPassword.Admin.ForgotPassword;
     using NUnit.Framework;
 
     [TestFixture]

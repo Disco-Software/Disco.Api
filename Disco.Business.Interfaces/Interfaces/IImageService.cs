@@ -1,13 +1,11 @@
-﻿using Disco.Business.Interfaces.Dtos.Images;
-using Disco.Domain.Models;
+﻿using Disco.Business.Interfaces.Dtos.PostImage.User.CreateImage;
 using Disco.Domain.Models.Models;
-using System.Threading.Tasks;
 
 namespace Disco.Business.Interfaces.Interfaces
 {
     public interface IImageService
     {
-        Task<PostImage> CreatePostImage(CreateImageDto model);
+        Task<PostImage> CreatePostImage(CreatePostImageRequestDto model);
         Task RemoveImageAsync(int id);
     }
 }

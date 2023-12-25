@@ -2,6 +2,7 @@ namespace Disco.Test.Business.Email.Services
 {
     using System;
     using Disco.Business.Interfaces.Dtos.EmailNotifications;
+    using Disco.Business.Interfaces.Dtos.EmailNotifications.User.EmailConfirmation;
     using Disco.Business.Interfaces.Options;
     using Disco.Business.Services.Services;
     using MailKit.Net.Smtp;
@@ -40,14 +41,14 @@ namespace Disco.Test.Business.Email.Services
         public void CanCallEmailConfirmation()
         {
             // Arrange
-            var model = new EmailConfirmationDto
-            {
-                ToEmail = "developer.disco@gmail.com",
-                Name = "Disco",
-                MessageHeader = "TestValue1311457304",
-                MessageBody = "TestValue780352646",
-                IsHtmlTemplate = true
-            };
+            var model = new EmailConfirmationRequestDto(
+                "developer.disco@gmail.com",
+                "Disco",
+                "TestValue1311457304",
+                "TestValue780352646",
+                333333,
+                true
+            );
 
             _emailOptions.Setup(x => x.Value)
                 .Returns(new EmailOptions

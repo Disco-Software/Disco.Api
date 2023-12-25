@@ -1,5 +1,4 @@
-﻿using Disco.Business.Interfaces.Dtos.Account;
-using Disco.Business.Interfaces;
+﻿using Disco.Business.Interfaces;
 using Disco.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +12,8 @@ using Disco.ApiServices.Controllers;
 using MediatR;
 using Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.ForgotPassword;
 using Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.ResetPassword;
+using Disco.Business.Interfaces.Dtos.AccountPassword.Admin.ForgotPassword;
+using Disco.Business.Interfaces.Dtos.AccountPassword.Admin.ResetPassword;
 
 namespace Disco.ApiServices.Features.AccountPassword.User
 {

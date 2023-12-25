@@ -1,12 +1,23 @@
-﻿using Disco.Domain.Models.Models;
+﻿using Disco.Business.Interfaces.Dtos.Followers.User.GetRecomended;
 using MediatR;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Follower.RequestHandlers.GetRecomended
 {
-    public class GetRecomendedRequest : IRequest<List<Domain.Models.Models.Account>> { }
+    public class GetRecomendedRequest : IRequest<IEnumerable<GetRecomendedResponseDto>>
+    {
+        public GetRecomendedRequest(
+            int userId, 
+            int pageNumber, 
+            int pageSize)
+        {
+            UserId = userId;
+            PageNumber = pageNumber;
+            PageSize = pageSize;
+        }
+
+        public int UserId { get;set; }
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
+    }
 }

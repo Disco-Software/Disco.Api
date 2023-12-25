@@ -17,4 +17,9 @@
     <ProjectReference Include="..\Disco.Integration.Interfaces\Disco.Integration.Interfaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dtos\EmailNotifications\Admin\" />
+    <Folder Include="Dtos\Post\Admin\" />
+  </ItemGroup>
+
 </Project>

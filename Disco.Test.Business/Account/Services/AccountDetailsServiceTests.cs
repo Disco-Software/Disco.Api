@@ -101,7 +101,7 @@ namespace Disco.Test.Business.Account.Services
                 }
             };
 
-            _accountRepository.Setup(mock => mock.Update(It.IsAny<Account>())).ReturnsAsync(new Account
+            _accountRepository.Setup(mock => mock.UpdateAsync(It.IsAny<Account>())).ReturnsAsync(new Account
             {
                 AccountStatus = new AccountStatus
                 {
@@ -139,7 +139,7 @@ namespace Disco.Test.Business.Account.Services
             var result = await _testClass.ChengePhotoAsync(user, file);
 
             // Assert
-            _accountRepository.Verify(mock => mock.Update(It.IsAny<Account>()));
+            _accountRepository.Verify(mock => mock.UpdateAsync(It.IsAny<Account>()));
         }
 
         [Test]

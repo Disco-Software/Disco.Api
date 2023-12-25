@@ -1,15 +1,7 @@
 ﻿using AutoMapper;
-using Disco.Business.Interfaces;
 using Disco.Business.Interfaces.Interfaces;
-using Disco.Domain.Interfaces;
 using Disco.Domain.Interfaces.Interfaces;
-using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.Business.Services.Services
 {
@@ -44,9 +36,9 @@ namespace Disco.Business.Services.Services
             return _accountGroupRepository.DeleteAsync(accountGroup);
         }
 
-        public async Task<AccountGroup> GetAsync(int id)
+        public async Task<AccountGroup> GetAsync(int accountId, int groupId)
         {
-            return await _accountGroupRepository.GetAsync(id);
+            return await _accountGroupRepository.GetAsync(groupId, accountId);
         }
     }
 }

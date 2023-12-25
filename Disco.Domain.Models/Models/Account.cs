@@ -1,5 +1,4 @@
 ﻿using Disco.Domain.Models.Base;
-using System.Collections.Generic;
 
 namespace Disco.Domain.Models.Models
 {

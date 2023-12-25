@@ -7,6 +7,7 @@ namespace Disco.Test.ApiServices.Features.Account.Admin.RequestHandlers.LogIn
     using Disco.ApiServices.Features.Account.Admin.RequestHandlers.LogIn;
     using Disco.Business.Exceptions;
     using Disco.Business.Interfaces.Dtos.Account;
+    using Disco.Business.Interfaces.Dtos.Account.Admin.LogIn;
     using Disco.Business.Interfaces.Interfaces;
     using Disco.Business.Services.Mappers;
     using Disco.Business.Utils.Exceptions;
@@ -39,11 +40,7 @@ namespace Disco.Test.ApiServices.Features.Account.Admin.RequestHandlers.LogIn
         public async Task CanCallHandle()
         {
             // Arrange
-            var request = new Disco.ApiServices.Features.Account.Admin.RequestHandlers.LogIn.LogInRequest(new LoginDto()
-            {
-                Email = "TestValue393947024",
-                Password = "TestValue727404845"
-            });
+            var request = new Disco.ApiServices.Features.Account.Admin.RequestHandlers.LogIn.LogInRequest(new LogInRequestDto("TestValue393947024", "TestValue727404845"));
             var account = new Domain.Models.Models.Account()
             {
                 AccountStatus = new AccountStatus
@@ -107,11 +104,10 @@ namespace Disco.Test.ApiServices.Features.Account.Admin.RequestHandlers.LogIn
         {
             Assert.ThrowsAsync<InvalidPasswordException>(async () =>
             {
-                var request = new Disco.ApiServices.Features.Account.Admin.RequestHandlers.LogIn.LogInRequest(new LoginDto()
-                {
-                    Email = "TestValue393947024",
-                    Password = "TestValue727404845"
-                });
+                var request = new Disco.ApiServices.Features.Account.Admin.RequestHandlers.LogIn.LogInRequest(new LogInRequestDto(
+                    "TestValue393947024",
+                    "TestValue727404845"
+                ));
                 var account = new Domain.Models.Models.Account()
                 {
                     AccountStatus = new AccountStatus
@@ -170,11 +166,10 @@ namespace Disco.Test.ApiServices.Features.Account.Admin.RequestHandlers.LogIn
         {
             Assert.ThrowsAsync<InvalidRoleException>(async () =>
             {
-                var request = new Disco.ApiServices.Features.Account.Admin.RequestHandlers.LogIn.LogInRequest(new LoginDto()
-                {
-                    Email = "TestValue393947024",
-                    Password = "TestValue727404845"
-                });
+                var request = new Disco.ApiServices.Features.Account.Admin.RequestHandlers.LogIn.LogInRequest(new LogInRequestDto(
+                    "TestValue393947024",
+                    "TestValue727404845"
+                 ));
                 var account = new Domain.Models.Models.Account()
                 {
                     AccountStatus = new AccountStatus
