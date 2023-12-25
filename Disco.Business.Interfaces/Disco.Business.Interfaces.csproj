@@ -18,7 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Account\User\" />
+    <Folder Include="Dtos\EmailNotifications\Admin\" />
+    <Folder Include="Dtos\Post\Admin\" />
   </ItemGroup>
 
 </Project>

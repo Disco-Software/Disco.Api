@@ -58,7 +58,12 @@ namespace Disco.Business.Services.Services
 
         public async Task<Message> GetByIdAsync(int id)
         {
-            return await _messageRepository.GetByIdAsync(id);
+            return await _messageRepository.GetAsync(id);
+        }
+
+        public IEnumerable<Message> GetGroupMessages(int id, int pageNumber, int pageSize)
+        {
+            return _messageRepository.GetAllGroupMessages(id, pageNumber, pageSize);
         }
 
         public async Task UpdateAsync(Message message)

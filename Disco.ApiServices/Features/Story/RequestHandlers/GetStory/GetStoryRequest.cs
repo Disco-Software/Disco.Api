@@ -1,13 +1,9 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Disco.Business.Interfaces.Dtos.Stories.User.GetStory;
+using MediatR;
 
 namespace Disco.ApiServices.Features.Story.RequestHandlers.GetStory
 {
-    public class GetStoryRequest : IRequest<Domain.Models.Models.Story>
+    public class GetStoryRequest : IRequest<GetStoryResponseDto>
     {
         public GetStoryRequest(int id)
         {

@@ -31,6 +31,16 @@ namespace Disco.Domain.Repositories.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<AccountGroup> GetAsync(int groupId, int accountId)
+        {
+            return await _context.AccountGroups
+                .Include(x => x.Account)
+                .Include(x => x.Group)
+                .Where(a => a.GroupId == groupId)
+                .Where(a => a.AccountId == accountId)
+                .FirstOrDefaultAsync() ?? throw new NullReferenceException();
+        }
+
         public async Task<IEnumerable<AccountGroup>> GetAllAsync(int id)
         {
             return await _context.AccountGroups

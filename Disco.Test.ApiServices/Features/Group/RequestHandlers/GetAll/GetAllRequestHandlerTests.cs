@@ -15,7 +15,7 @@ namespace Disco.Test.ApiServices.Features.Group.RequestHandlers.GetAll
     [TestFixture]
     public class GetAllRequestHandlerTests
     {
-        private GetAllRequestHandler _testClass;
+        private GetAllGroupsRequestHandler _testClass;
         private IAccountService _accountService;
         private IGroupService _groupService;
         private IHttpContextAccessor _contextAccessor;
@@ -26,14 +26,14 @@ namespace Disco.Test.ApiServices.Features.Group.RequestHandlers.GetAll
             _accountService = Substitute.For<IAccountService>();
             _groupService = Substitute.For<IGroupService>();
             _contextAccessor = Substitute.For<IHttpContextAccessor>();
-            _testClass = new GetAllRequestHandler(_accountService, _groupService, _contextAccessor);
+            _testClass = new GetAllGroupsRequestHandler(_accountService, _groupService, _contextAccessor);
         }
 
         [Test]
         public void CanConstruct()
         {
             // Act
-            var instance = new GetAllRequestHandler(_accountService, _groupService, _contextAccessor);
+            var instance = new GetAllGroupsRequestHandler(_accountService, _groupService, _contextAccessor);
 
             // Assert
             Assert.That(instance, Is.Not.Null);
@@ -43,7 +43,7 @@ namespace Disco.Test.ApiServices.Features.Group.RequestHandlers.GetAll
         public async Task CanCallHandle()
         {
             // Arrange
-            var request = new GetAllRequest(1017701661, 1107648813);
+            var request = new GetAllGroupsRequest(1017701661, 1107648813);
             var cancellationToken = CancellationToken.None;
 
             _accountService.GetAsync(Arg.Any<ClaimsPrincipal>()).Returns(new User
@@ -112,7 +112,7 @@ namespace Disco.Test.ApiServices.Features.Group.RequestHandlers.GetAll
         [Test]
         public void CannotCallHandleWithNullRequest()
         {
-            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(GetAllRequest), CancellationToken.None));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Handle(default(GetAllGroupsRequest), CancellationToken.None));
         }
     }
 }

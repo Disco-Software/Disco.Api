@@ -1,15 +1,11 @@
 ﻿using AutoMapper;
 using Disco.Business.Exceptions;
-using Disco.Business.Interfaces.Dtos.Errors;
+using Disco.Business.Interfaces.Dtos.Errors.Admin.Error;
 using Disco.Business.Utils.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Filters

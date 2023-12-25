@@ -1,52 +1,35 @@
 ﻿using AutoMapper;
-using Disco.Business.Interfaces.Dtos.Images;
-using Disco.Business.Interfaces.Dtos.Posts;
-using Disco.Business.Interfaces.Dtos.Songs;
-using Disco.Business.Interfaces.Dtos.Videos;
+using Disco.Business.Interfaces.Dtos.Images.User.CreateImage;
+using Disco.Business.Interfaces.Dtos.PostImage.User.CreateImage;
+using Disco.Business.Interfaces.Dtos.Posts.User.CreatePost;
+using Disco.Business.Interfaces.Dtos.PostSong.User.CreatePostSong;
+using Disco.Business.Interfaces.Dtos.PostVideo.User.CreatePostVideo;
 using Disco.Domain.Events.Dto;
 using Disco.Domain.Events.Events;
-using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using Disco.Integration.Interfaces.Dtos.AudD;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Disco.Business.Services.Mappers
 {
     public class PostMapProfile : Profile
     {
         public PostMapProfile()
-        {
-            CreateMap<CreatePostDto, Post>()
-                .ForMember(source => source.PostImages, opt => opt.Ignore())
-                .ForMember(source => source.PostSongs, opt => opt.Ignore())
-                .ForMember(source => source.PostVideos, opt => opt.Ignore());
-            
-            CreateMap<CreatePostDto, CreateImageDto>()
-                .ForMember(source => source.ImageFile, opt => opt.Ignore());
-            
-            CreateMap<CreatePostDto, CreateSongDto>()
+        {            
+            CreateMap<CreatePostRequestDto, CreatePostSongRequestDto>()
                 .ForMember(source => source.Post, opt => opt.Ignore())
                 .ForMember(source => source.Name, opt => opt.Ignore())
                 .ForMember(source => source.Image, opt => opt.Ignore())
                 .ForMember(source => source.ExecutorName, opt => opt.Ignore());
             
-            CreateMap<CreateVideoDto, PostVideo>()
+            CreateMap<CreatePostVideoRequestDto, PostVideo>()
                 .ForMember(source => source.VideoSource, opt => opt.Ignore())
                 .ForMember(source => source.Post, opt => opt.Ignore())
                 .ForMember(source => source.PostId, opt => opt.Ignore());
-
-            CreateMap<CreateImageDto, PostImage>()
-                .ForMember(source => source.Source, opt => opt.Ignore())
-                .ForMember(source => source.Post, opt => opt.Ignore())
-                .ForMember(source => source.PostId, opt => opt.Ignore())
-                .ForMember(source => source.Id, opt => opt.Ignore());
             
-            CreateMap<CreateSongDto, PostSong>()
+            CreateMap<CreatePostSongRequestDto, PostSong>()
                 .ForMember(source => source.Source, opt => opt.Ignore());
             
-            CreateMap<CreateVideoDto, PostVideo>()
+            CreateMap<CreatePostVideoRequestDto, PostVideo>()
                 .ForMember(source => source.VideoSource, opt => opt.Ignore());
 
             CreateMap<Post, Like>()
@@ -61,7 +44,7 @@ namespace Disco.Business.Services.Mappers
                 .ForMember(p => p.file, o => o.Ignore());
 
             CreateMap<Post, PostCreatedEvent>();
-            CreateMap<Account, AccountDto>()
+            CreateMap<Account, Domain.Events.Dto.AccountDto>()
                 .ForMember(accountDto => accountDto.UserDto, options => options.MapFrom(account => account.User))
                 .ForMember(accountDto => accountDto.UserFollowingDtos, options => options.MapFrom(account => account.Following))
                 .ForMember(accountDto => accountDto.UserFollowerDtos, options => options.MapFrom(account => account.Followers));
@@ -71,7 +54,7 @@ namespace Disco.Business.Services.Mappers
             CreateMap<Like, LikeDto>();
             CreateMap<UserFollower, UserFollowerDto>()
                 .ForMember(userFollowingDto => userFollowingDto.AccountId, options => options.MapFrom(userFollower => userFollower.FollowingAccountId));
-            CreateMap<User, UserDto>();
+            CreateMap<User, Domain.Events.Dto.UserDto>();
 
         }
     }

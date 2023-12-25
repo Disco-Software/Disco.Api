@@ -2,6 +2,7 @@
 {
     public class LogInResponseDto
     {
+        public LogInResponseDto() { }
         public LogInResponseDto(
             UserDto user,
             string accessToken,

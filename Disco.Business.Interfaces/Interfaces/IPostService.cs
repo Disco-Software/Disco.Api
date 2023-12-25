@@ -1,8 +1,5 @@
 ﻿using Disco.Business.Interfaces.Dtos.Posts;
-using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Disco.Business.Interfaces.Interfaces
 {

@@ -3,6 +3,7 @@ using Disco.ApiServices.Features.Account.Admin.RequestHandlers.LogIn;
 using Disco.ApiServices.Features.Account.Admin.RequestHandlers.RefreshToken;
 using Disco.Business.Interfaces.Dtos.Account;
 using Disco.Business.Interfaces.Dtos.Account.Admin.LogIn;
+using Disco.Business.Interfaces.Dtos.Account.Admin.RefreshToken;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +29,7 @@ namespace Disco.ApiServices.Features.Account.Admin
             await _mediator.Send(new LogInRequest(dto));
 
         [HttpPut("refresh")]
-        public async Task<ActionResult<UserResponseDto>> RefreshToken([FromBody] RefreshTokenDto dto) =>
+        public async Task<ActionResult<RefreshTokenResponseDto>> RefreshToken([FromBody] RefreshTokenRequestDto dto) =>
             await _mediator.Send(new RefreshTokenRequest(dto));
     }
 }

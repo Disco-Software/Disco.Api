@@ -1,4 +1,4 @@
-﻿using Disco.Business.Interfaces.Dtos.Analytic;
+﻿using Disco.Business.Interfaces.Dtos.Analytic.Admin.GetAnalytics;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Analytics.RequestHandlers.GetAnalytic
 {
-    public class GetAnalyticRequest : IRequest<AnalyticDto>
+    public class GetAnalyticRequest : IRequest<AnalyticResponseDto>
     {
         public GetAnalyticRequest(
             string from, 

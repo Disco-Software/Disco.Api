@@ -1,41 +1,29 @@
-using System;
-using Disco.Integration.Interfaces;
-using System.Reflection;
 using Azure.Core.Extensions;
 using Azure.Storage.Blobs;
 using Azure.Storage.Queues;
 using Disco.Api.AppSetup;
-using Disco.Business;
+using Disco.ApiServices.Features.Comment;
+using Disco.ApiServices.Features.Message;
+using Disco.ApiServices.Filters;
 using Disco.Business.Interfaces.Options;
-using Disco.Business.Interfaces;
-using Disco.Business.Services.Services;
-using Disco.Domain;
-using Disco.Domain.Models;
+using Disco.Business.Services.Extentions;
+using Disco.Domain.Data.Extentions;
+using Disco.Domain.Repositories.Extentions;
+using Disco.Integration.Clients.Extentions;
+using Disco.Integration.Interfaces.Options;
+using Disco.Intergration.EventPublisher.Extentions;
 using FluentValidation.AspNetCore;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Disco.Business.Constants;
-using Disco.ApiServices.Hubs;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Swagger;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Threading.Tasks;
-using Disco.Domain.Data.Extentions;
-using Disco.Business.Services.Extentions;
-using Disco.Domain.Repositories.Extentions;
-using Disco.Integration.Clients.Extentions;
 using Stripe;
-using Disco.Integration.Interfaces.Options;
-using Disco.Intergration.EventPublisher.Extentions;
-using Disco.ApiServices.Filters;
-using MailKit.Net.Smtp;
+using System;
+using System.Reflection;
 
 namespace Disco.Api
 {
@@ -51,7 +39,7 @@ namespace Disco.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionStrings = Configuration.GetSection("ConnectionStrings")
+            var connectionStrings = Configuration.GetSection(nameof(ConnectionStrings))
                 .Get<ConnectionStrings>();
 
             services.AddApiDbContext(connectionStrings.DevelopmentConnection);
@@ -181,11 +169,6 @@ namespace Disco.Api
             app.UseRouting();
             app.ApplicationServices.CreateScope();
 
-            app.Use(async (context, next) =>
-            {
-                await next();
-            });
-
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -195,8 +178,8 @@ namespace Disco.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<CommentHub>("/hub/comments");
-                endpoints.MapHub<ChatHub>("/hub/chat");
+                endpoints.MapHub<CommentComunicationHub>("/hub/comments");
+                endpoints.MapHub<MessageComunicationHub>("/hub/message");
             });
         }
     }

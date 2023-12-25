@@ -1,7 +1,7 @@
 namespace Disco.Test.Business.Account.DataTransferObjects
 {
     using System;
-    using Disco.Business.Interfaces.Dtos.Account;
+    using Disco.Business.Interfaces.Dtos.AccountPassword.Admin.ResetPassword;
     using NUnit.Framework;
 
     [TestFixture]

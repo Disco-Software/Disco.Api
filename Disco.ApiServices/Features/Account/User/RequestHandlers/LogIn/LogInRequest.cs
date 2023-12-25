@@ -1,20 +1,15 @@
-﻿using Disco.Business.Interfaces.Dtos.Account;
+﻿using Disco.Business.Interfaces.Dtos.Account.User.LogIn;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Account.User.RequestHandlers.LogIn
 {
-    public class LogInRequest : IRequest<UserResponseDto>
+    public class LogInRequest : IRequest<LogInResponseDto>
     {
-        public LogInRequest(LoginDto dto)
+        public LogInRequest(LogInRequestDto dto)
         {
             Dto = dto;
         }
 
-        public LoginDto Dto { get; }
+        public LogInRequestDto Dto { get; }
     }
 }

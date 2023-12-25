@@ -1,21 +1,14 @@
-﻿using Disco.Business.Interfaces;
-using Disco.Business.Interfaces.Interfaces;
-using Disco.Domain.Models;
+﻿using Disco.Business.Interfaces.Interfaces;
+using Disco.Domain.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
-using Disco.Domain.Repositories;
-using Disco.Domain.Repositories.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.Business.Services.Services
 {
     public class CommentService : ICommentService
     {
-        private readonly CommentRepository _commentRepository;
+        private readonly ICommentRepository _commentRepository;
 
-        public CommentService(CommentRepository commentRepository)
+        public CommentService(ICommentRepository commentRepository)
         {
             _commentRepository = commentRepository;
         }
@@ -39,6 +32,16 @@ namespace Disco.Business.Services.Services
         public async Task<Comment> GetCommentAsync(int id)
         {
             return await _commentRepository.GetAsync(id);
+        }
+
+        public async Task UpdateCommentAsync(Comment comment)
+        {
+            await _commentRepository.UpdateAsync(comment);
+        }
+
+        public async Task<List<Comment>> GetAllCommentsAsync(int postId, int pageNumber, int pageSize)
+        {
+            return await _commentRepository.GetAllAsync(postId, pageNumber, pageSize);
         }
     }
 }

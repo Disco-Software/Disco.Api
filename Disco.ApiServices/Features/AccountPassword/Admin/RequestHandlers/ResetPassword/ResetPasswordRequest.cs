@@ -1,4 +1,4 @@
-﻿using Disco.Business.Interfaces.Dtos.Account;
+﻿using Disco.Business.Interfaces.Dtos.AccountPassword.Admin.ResetPassword;
 using MediatR;
 using System;
 using System.Collections.Generic;

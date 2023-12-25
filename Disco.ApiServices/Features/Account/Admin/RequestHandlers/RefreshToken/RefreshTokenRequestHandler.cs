@@ -1,18 +1,17 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Disco.Business.Exceptions;
-using Disco.Business.Interfaces.Dtos.Account;
+using Disco.Business.Interfaces.Dtos.Account.Admin.RefreshToken;
 using Disco.Business.Interfaces.Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Account.Admin.RequestHandlers.RefreshToken
 {
-    public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, UserResponseDto>
+    public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, RefreshTokenResponseDto>
     {
         private readonly IAccountService _accountService;
         private readonly ITokenService _tokenService;
@@ -25,7 +24,7 @@ namespace Disco.ApiServices.Features.Account.Admin.RequestHandlers.RefreshToken
             _mapper = mapper;
         }
 
-        public async Task<UserResponseDto> Handle(RefreshTokenRequest request, CancellationToken cancellationToken)
+        public async Task<RefreshTokenResponseDto> Handle(RefreshTokenRequest request, CancellationToken cancellationToken)
         {
             var user = await _accountService.GetByRefreshTokenAsync(request.Dto.RefreshToken);
 
@@ -39,22 +38,30 @@ namespace Disco.ApiServices.Features.Account.Admin.RequestHandlers.RefreshToken
 
                 await _accountService.SaveRefreshTokenAsync(user, refreshToken);
 
-                var userRefreshedResponseDto = _mapper.Map<UserResponseDto>(user);
-                userRefreshedResponseDto.AccessToken = accessToken;
-                userRefreshedResponseDto.RefreshToken = refreshToken;
-                userRefreshedResponseDto.User = user;
+                var accountDto = _mapper.Map<AccountDto>(user.Account);
+                var userDto = _mapper.Map<UserDto>(user);
 
-                return userRefreshedResponseDto;
+                userDto.Account = accountDto;
+
+                var refreshTokenResponseDto = _mapper.Map<RefreshTokenResponseDto>(userDto);
+                refreshTokenResponseDto.AccessToken = accessToken;
+                refreshTokenResponseDto.RefreshToken = refreshToken;
+
+                return refreshTokenResponseDto;
             }
 
             var accessResponseToken = _tokenService.GenerateAccessToken(user);
 
-            var userResponseDto = _mapper.Map<UserResponseDto>(user);
-            userResponseDto.AccessToken = accessResponseToken;
-            userResponseDto.RefreshToken = user.RefreshToken;
-            userResponseDto.User = user;
+            var accountRefreshDto = _mapper.Map<AccountDto>(user.Account);
+            var userRefreshDto = _mapper.Map<UserDto>(user);
 
-            return userResponseDto;
+            userRefreshDto.Account = accountRefreshDto;
+
+            var refreshTokenDto = _mapper.Map<RefreshTokenResponseDto>(userRefreshDto);
+            refreshTokenDto.AccessToken = accessResponseToken;
+            refreshTokenDto.RefreshToken = user.RefreshToken;
+
+            return refreshTokenDto;
         }
     }
 }

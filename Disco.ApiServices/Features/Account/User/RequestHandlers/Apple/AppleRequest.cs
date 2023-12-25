@@ -1,5 +1,5 @@
 ﻿using Disco.Business.Interfaces.Dtos.Account;
-using Disco.Business.Interfaces.Dtos.Apple;
+using Disco.Business.Interfaces.Dtos.Account.User.Apple;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Apple
 {
-    public class AppleRequest : IRequest<UserResponseDto>
+    public class AppleRequest : IRequest<AppleLogInResponseDto>
     {
-        public AppleRequest(AppleLogInDto dto)
+        public AppleRequest(AppleLogInRequestDto dto)
         {
             Dto = dto;
         }
 
-        public AppleLogInDto Dto { get; }
+        public AppleLogInRequestDto Dto { get; }
     }
 }

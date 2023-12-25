@@ -1,20 +1,16 @@
-﻿using Disco.Business.Interfaces.Dtos.Roles;
+﻿using Disco.Business.Interfaces.Dtos.Roles.Admin.GetRoles;
 using MediatR;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Role.RequestHandlers.GetRoles
 {
-    public class GetRolesRequest : IRequest<List<Domain.Models.Models.Role>>
+    public class GetRolesRequest : IRequest<IEnumerable<GetRolesResponseDto>>
     {
-        public GetRolesRequest(GetAllRolesDto dto)
+        public GetRolesRequest(GetRolesRequestDto dto)
         {
             Dto = dto;
         }
 
-        public GetAllRolesDto Dto { get; }
+        public GetRolesRequestDto Dto { get; }
     }
 }

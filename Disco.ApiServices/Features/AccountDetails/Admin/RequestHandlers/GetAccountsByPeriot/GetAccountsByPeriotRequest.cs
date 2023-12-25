@@ -1,13 +1,10 @@
-﻿using MediatR;
-using System;
+﻿using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAccountsByPeriot;
+using MediatR;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsByPeriot
 {
-    public class GetAccountsByPeriotRequest : IRequest<List<Domain.Models.Models.User>>
+    public class GetAccountsByPeriotRequest : IRequest<List<GetAccountsByPeriotResponseDto>>
     {
         public GetAccountsByPeriotRequest(int periot)
         {

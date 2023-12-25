@@ -1,14 +1,7 @@
 ﻿using AutoMapper;
-using Disco.Business.Interfaces;
-using Disco.Business.Interfaces.Dtos.Friends;
-using Disco.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Disco.Domain.Interfaces;
 using Disco.Business.Interfaces.Dtos.Followers;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Domain.Interfaces;
 using Disco.Domain.Models.Models;
 
 namespace Disco.Business.Services.Services
@@ -29,29 +22,21 @@ namespace Disco.Business.Services.Services
             _accountRepository = accountRepository;
         }
 
-        public async Task<FollowerResponseDto> CreateAsync(User user, User following, CreateFollowerDto dto)
+        public async Task CreateAsync(UserFollower userFollower)
         {
-            var userFollower = _mapper.Map<UserFollower>(user);
-            userFollower.FollowingAccount = following.Account;
-            userFollower.FollowingAccountId = following.AccountId;
-
-            if (user.Account.Following.All(f => f.FollowerAccountId != dto.FollowingAccountId))
+            if (userFollower.FollowerAccount.Following.All(f => f.FollowerAccountId != userFollower.FollowingAccountId))
             {
-                user.Account.Following.Add(userFollower);
+                userFollower.FollowerAccount.Following.Add(userFollower);
             }
 
-            if (following.Account.Followers.All(f => f.FollowingAccountId != user.Account.Id))
+            if (userFollower.FollowingAccount.Followers.All(f => f.FollowingAccountId != userFollower.FollowerAccountId))
             {
-                following.Account.Followers.Add(userFollower);
+                userFollower.FollowingAccount.Followers.Add(userFollower);
             }
 
             userFollower.IsFollowing = true;
 
             await _followerRepository.AddAsync(userFollower);
-
-            var userFollowerResponseDto = _mapper.Map<FollowerResponseDto>(userFollower);
-            
-            return userFollowerResponseDto;
         }
 
         public async Task DeleteAsync(int id)
@@ -80,19 +65,14 @@ namespace Disco.Business.Services.Services
             return followings;
         }
 
-        public async Task<FollowerResponseDto> GetAsync(int id)
+        public async Task<UserFollower> GetAsync(int id)
         {
             var follower = await _followerRepository.GetAsync(id);
 
             if (follower == null)
                 throw new Exception("freind not found");
 
-            var followerDto = _mapper.Map<FollowerResponseDto>(follower);
-            followerDto.FollowerAccount = follower.FollowerAccount;
-            followerDto.FollowingAccount = follower.FollowingAccount;
-            followerDto.IsFollowing = follower.IsFollowing;
-
-            return followerDto;
+            return follower;
         }
 
         public async Task<List<UserFollower>> GetFollowersAsync(int accountId)
@@ -122,7 +102,7 @@ namespace Disco.Business.Services.Services
 
             foreach (var following in sortedFollowings.ToList())
             {
-                if (sortedFollowings.Where(f => f.FollowingAccountId == following.FollowingAccountId).Count() > 1)
+                if (sortedFollowings.Where(f => f.FollowingAccountId == following.FollowerAccountId).Count() > 1)
                 {
                     followings.Remove(following);
                     continue;

@@ -1,12 +1,8 @@
 ﻿using Disco.Domain.EF;
 using Disco.Domain.Interfaces;
-using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using Disco.Domain.Repositories.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories.Repositories
 {
@@ -21,27 +17,27 @@ namespace Disco.Domain.Repositories.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Story>> GetAllAsync(int accountId, int pageNumber, int pageSize)
+        public async Task<IEnumerable<Story>> GetAllAsync(int accountId, int pageNumber, int pageSize)
         {
-            var storyList = new List<Story>();
+            var storyList = new List<Story?>();
 
-            var account = await _context.Accounts.FirstOrDefaultAsync();
+            var currentAccount = await _context.Accounts
+                .Include(x => x.Followers)
+                .Include(x => x.Following)
+                .Where(x => x.Id == accountId)
+                .FirstOrDefaultAsync();
 
-            await _context.Entry(account)
-                .Collection(account => account.Stories)
-                .LoadAsync();
+            var currentUserStories = await _context.Accounts
+                .Include(x => x.Stories)
+                .SelectMany(x => x.Stories)
+                .Include(x => x.StoryVideos)
+                .Include(x => x.StoryImages)
+                .Include(x => x.Account)
+                .ToListAsync();
 
-            await _context.Entry(account)
-                .Collection(account => account.Following)
-                .LoadAsync();
+            storyList.AddRange(currentUserStories);
 
-            await _context.Entry(account)
-                .Reference(account => account.User)
-                .LoadAsync();
-
-            storyList.AddRange(account.Stories);
-
-            foreach (var following in account.Following)
+            foreach (var following in currentAccount!.Following)
             {
                 await _context.Entry(following)
                     .Reference(following => following.FollowingAccount)
@@ -59,13 +55,13 @@ namespace Disco.Domain.Repositories.Repositories
             }
 
             var stories = storyList
-                .Where(story => story.DateOfCreation >= DateTime.UtcNow.AddHours(-12))
+                .Where(story => story.DateOfCreation >= DateTime.UtcNow.AddHours(-24))
                 .OrderByDescending(story => story.DateOfCreation)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
-
-            return stories;
+            
+            return stories.AsEnumerable()!;
         }
 
         public async Task RemoveAsync(Story story)
@@ -78,6 +74,8 @@ namespace Disco.Domain.Repositories.Repositories
         public override async Task<Story> GetAsync(int id)
         {
             return await _context.Stories
+                .Include(a => a.Account)
+                .ThenInclude(a => a.User)
                 .Include(i => i.StoryImages)
                 .Include(v => v.StoryVideos)
                 .Where(s => s.Id == id)

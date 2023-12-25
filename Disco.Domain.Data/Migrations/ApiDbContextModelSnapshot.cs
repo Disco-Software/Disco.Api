@@ -353,6 +353,20 @@ namespace Disco.Domain.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.Models.Status", b =>
@@ -379,6 +393,24 @@ namespace Disco.Domain.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Statuses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            FollowersCount = 0,
+                            LastStatus = "Newbie",
+                            NextStatusId = 2,
+                            UserTarget = 50
+                        },
+                        new
+                        {
+                            Id = 2,
+                            FollowersCount = 50,
+                            LastStatus = "Music lover",
+                            NextStatusId = 3,
+                            UserTarget = 500
+                        });
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.Models.Story", b =>
@@ -680,13 +712,13 @@ namespace Disco.Domain.Data.Migrations
                     b.HasOne("Disco.Domain.Models.Models.Account", "Account")
                         .WithMany("AccountGroups")
                         .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Disco.Domain.Models.Models.Group", "Group")
                         .WithMany("AccountGroups")
                         .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Account");
@@ -761,7 +793,7 @@ namespace Disco.Domain.Data.Migrations
                     b.HasOne("Disco.Domain.Models.Models.Group", "Group")
                         .WithMany("Messages")
                         .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Account");

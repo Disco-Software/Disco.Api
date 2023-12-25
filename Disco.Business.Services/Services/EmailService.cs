@@ -1,6 +1,5 @@
 ﻿using Disco.Business.Interfaces.Options;
 using Disco.Business.Interfaces;
-using Disco.Business.Interfaces.Dtos.EmailNotifications;
 using Microsoft.Extensions.Options;
 using System.Net;
 using Disco.Business.Interfaces.Interfaces;
@@ -8,6 +7,7 @@ using MailKit.Net.Smtp;
 using System.Net.Mail;
 using MimeKit;
 using Microsoft.AspNetCore.Html;
+using Disco.Business.Interfaces.Dtos.EmailNotifications.User.EmailConfirmation;
 
 namespace Disco.Business.Services.Services
 {
@@ -24,7 +24,7 @@ namespace Disco.Business.Services.Services
             _smtpClient = smtpClient;
         }
 
-        public async Task EmailConfirmationAsync(EmailConfirmationDto dto)
+        public async Task EmailConfirmationAsync(EmailConfirmationRequestDto dto)
         {
             MimeMessage mailMessage = new MimeMessage();
             mailMessage.From.Add(new MailboxAddress(_emailOptions.Value.Name, _emailOptions.Value.Mail));

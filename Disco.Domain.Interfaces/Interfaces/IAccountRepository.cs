@@ -10,7 +10,7 @@ namespace Disco.Domain.Interfaces
     {
         Task<Account> GetAsync(int id);
         Task<Account> GetAccountAsync(int accountId);
-        Task<Account> Update(Account newItem);
+        Task<Account> UpdateAsync(Account newItem);
         Task<List<Account>> FindAccountsByUserNameAsync(string search);
         Task RemoveAccountAsync(Account account);
         Task<List<Connection>> GetAllAccountConnectionsAsync(int userId);

@@ -1,14 +1,8 @@
 ﻿using Disco.Domain.EF;
 using Disco.Domain.Interfaces;
-using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using Disco.Domain.Repositories.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories.Repositories
 {

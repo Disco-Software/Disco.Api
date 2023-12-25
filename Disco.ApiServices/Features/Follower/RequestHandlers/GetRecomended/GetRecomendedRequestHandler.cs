@@ -1,4 +1,6 @@
-﻿using Disco.Business.Interfaces.Interfaces;
+﻿using AutoMapper;
+using Disco.Business.Interfaces.Dtos.Followers.User.GetRecomended;
+using Disco.Business.Interfaces.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -10,23 +12,26 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Follower.RequestHandlers.GetRecomended
 {
-    public class GetRecomendedRequestHandler : IRequestHandler<GetRecomendedRequest, List<Domain.Models.Models.Account>>
+    public class GetRecomendedRequestHandler : IRequestHandler<GetRecomendedRequest, IEnumerable<GetRecomendedResponseDto>>
     {
         private readonly IAccountService _accountService;
         private readonly IFollowerService _followerService;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IMapper _mapper;
 
         public GetRecomendedRequestHandler(
             IFollowerService followerService, 
             IAccountService accountService,
-            IHttpContextAccessor contextAccessor)
+            IHttpContextAccessor contextAccessor,
+            IMapper mapper)
         {
             _followerService = followerService;
             _accountService = accountService;
             _contextAccessor = contextAccessor;
+            _mapper = mapper;
         }
 
-        public async Task<List<Domain.Models.Models.Account>> Handle(GetRecomendedRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<GetRecomendedResponseDto>> Handle(GetRecomendedRequest request, CancellationToken cancellationToken)
         {
             var user = await _accountService.GetAsync(_contextAccessor.HttpContext.User);
             var recomended = new List<Domain.Models.Models.Account>();
@@ -46,7 +51,9 @@ namespace Disco.ApiServices.Features.Follower.RequestHandlers.GetRecomended
                 }
             }
 
-            return recomended;
+            var getRecomendedAccounts = _mapper.Map<IEnumerable<GetRecomendedResponseDto>>(recomended.AsEnumerable());
+
+            return getRecomendedAccounts;
         }
     }
 }

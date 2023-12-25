@@ -1,21 +1,16 @@
 ﻿using AutoMapper;
-using Disco.Business.Exceptions;
-using Disco.Business.Interfaces.Dtos.Account;
+using Disco.Business.Interfaces.Dtos.Account.User.LogIn;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Business.Utils.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Identity.Client;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Account.User.RequestHandlers.LogIn
 {
-    public class LogInRequestHandler : IRequestHandler<LogInRequest, UserResponseDto>
+    public class LogInRequestHandler : IRequestHandler<LogInRequest, LogInResponseDto>
     {
         private readonly IAccountService _accountService;
         private readonly IAccountPasswordService _accountPasswordService;
@@ -34,7 +29,7 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.LogIn
             _mapper = mapper;
         }
 
-        public async Task<UserResponseDto> Handle(LogInRequest request, CancellationToken cancellationToken)
+        public async Task<LogInResponseDto> Handle(LogInRequest request, CancellationToken cancellationToken)
         {
             var user = await _accountService.GetByEmailAsync(request.Dto.Email);
 
@@ -52,8 +47,14 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.LogIn
 
             await _accountService.SaveRefreshTokenAsync(user, refreshToken);
 
-            var responseDto = _mapper.Map<UserResponseDto>(user);
+            var accountDto = _mapper.Map<AccountDto>(user.Account);
+            var userDto = _mapper.Map<UserDto>(user);
+
+            userDto.Account = accountDto;
+
+            var responseDto = _mapper.Map<LogInResponseDto>(user);
             responseDto.AccessToken = accessToken;
+            responseDto.RefreshToken = refreshToken;
 
             return responseDto;
         }

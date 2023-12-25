@@ -208,7 +208,7 @@ namespace Disco.Domain.Repositories.Test
             _ctx.SaveChanges();
 
             // Act
-            var result = await _testClass.Update(newItem);
+            var result = await _testClass.UpdateAsync(newItem);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -218,7 +218,7 @@ namespace Disco.Domain.Repositories.Test
         [Test]
         public void CannotCallUpdateWithNullNewItem()
         {
-            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.Update(default(Account)));
+            Assert.ThrowsAsync<NullReferenceException>(() => _testClass.UpdateAsync(default(Account)));
         }
 
         [Test]

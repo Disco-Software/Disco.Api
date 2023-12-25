@@ -99,13 +99,15 @@ namespace Disco.Domain.Repositories.Repositories
                 .Where(account => account.Id == accountId)
                 .FirstOrDefaultAsync() ?? throw new NullReferenceException();
 
-            await _context.Entry(account)
-                .Collection(x => x.Following)
-                .LoadAsync();
+            if(account.Followers.Count != 0)
+                await _context.Entry(account)
+                    .Collection(x => x.Following)
+                    .LoadAsync();
 
-            await _context.Entry(account)
-                .Collection(account => account.Posts)
-                .LoadAsync();
+            if(account.Posts.Count != 0)
+                await _context.Entry(account)
+                    .Collection(account => account.Posts)
+                    .LoadAsync();
 
             foreach (var following in account.Followers)
             {
@@ -153,6 +155,10 @@ namespace Disco.Domain.Repositories.Repositories
                     .Where(account => account.Id == follower.FollowerAccountId)
                     .FirstOrDefaultAsync() ?? throw new NullReferenceException();
 
+                await _context.Entry(follower.FollowerAccount)
+                    .Reference(account => account.User)
+                    .LoadAsync();
+                
                 await _context.Entry(follower.FollowingAccount)
                     .Reference(account => account.User)
                     .LoadAsync();
@@ -169,7 +175,7 @@ namespace Disco.Domain.Repositories.Repositories
 
             followersList.AddRange(account.Followers);
 
-            return followersList.OrderBy(follower => follower.FollowerAccount.User.UserName)
+            return followersList.OrderBy(follower => follower.FollowerAccount.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();

@@ -9,6 +9,6 @@ namespace Disco.Business.Interfaces.Dtos.Search
     public class GlobalSearchResponseDto
     {
         public IEnumerable<Domain.Models.Models.Account> Accounts { get; set; }
-        public IEnumerable<Post> Posts { get; set; }
+        public IEnumerable<Domain.Models.Models.Post> Posts { get; set; }
     }
 }

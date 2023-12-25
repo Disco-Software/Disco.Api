@@ -1,21 +1,19 @@
 ﻿using AutoMapper;
-using Disco.Business.Interfaces.Dtos.Images;
-using Disco.Business.Interfaces.Dtos.Songs;
-using Disco.Business.Interfaces.Dtos.Videos;
+using Disco.Business.Interfaces.Dtos.Images.User.CreateImage;
+using Disco.Business.Interfaces.Dtos.PostImage.User.CreateImage;
+using Disco.Business.Interfaces.Dtos.Posts.User.CreatePost;
+using Disco.Business.Interfaces.Dtos.PostSong.User.CreatePostSong;
+using Disco.Business.Interfaces.Dtos.PostVideo.User.CreatePostVideo;
 using Disco.Business.Interfaces.Interfaces;
-using Disco.Domain.Models.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Post.RequestHandlers.CreatePost
 {
-    public class CreatePostRequestHandler : IRequestHandler<CreatePostRequest, Domain.Models.Models.Post>
+    public class CreatePostRequestHandler : IRequestHandler<CreatePostRequest, Business.Interfaces.Dtos.Posts.User.CreatePost.CreatePostResponseDto>
     {
         private readonly IAccountService _accountService;
         private readonly IPostService _postService;
@@ -43,7 +41,7 @@ namespace Disco.ApiServices.Features.Post.RequestHandlers.CreatePost
             _contextAccessor = contextAccessor;
         }
 
-        public async Task<Domain.Models.Models.Post> Handle(CreatePostRequest request, CancellationToken cancellationToken)
+        public async Task<Business.Interfaces.Dtos.Posts.User.CreatePost.CreatePostResponseDto> Handle(CreatePostRequest request, CancellationToken cancellationToken)
         {
             var user = await _accountService.GetAsync(_contextAccessor.HttpContext.User);
 
@@ -57,7 +55,7 @@ namespace Disco.ApiServices.Features.Post.RequestHandlers.CreatePost
             {
                 foreach (var image in request.Dto.PostImages.ToList())
                 {
-                    var postImageDto = _mapper.Map<CreateImageDto>(request.Dto);
+                    var postImageDto = _mapper.Map<CreatePostImageRequestDto>(request.Dto);
                     postImageDto.ImageFile = image;
 
                     var postImage = await _imageService.CreatePostImage(postImageDto);
@@ -78,7 +76,7 @@ namespace Disco.ApiServices.Features.Post.RequestHandlers.CreatePost
                     var songSource = request.Dto.PostSongs.First();
                     var songImage = request.Dto.PostSongImages.First();
 
-                    var postSongDto = _mapper.Map<CreateSongDto>(request.Dto);
+                    var postSongDto = _mapper.Map<CreatePostSongRequestDto>(request.Dto);
                     postSongDto.Name = name;
                     postSongDto.ExecutorName = artist;
                     postSongDto.Post = post;
@@ -98,7 +96,7 @@ namespace Disco.ApiServices.Features.Post.RequestHandlers.CreatePost
             {
                 foreach (var video in request.Dto.PostVideos.ToList())
                 {
-                    var postVideoDto = _mapper.Map<CreateVideoDto>(request.Dto);
+                    var postVideoDto = _mapper.Map<CreatePostVideoRequestDto>(request.Dto);
                     postVideoDto.VideoFile = video;
 
                     var postVideo = await _videoService.CreateVideoAsync(postVideoDto);
@@ -109,7 +107,9 @@ namespace Disco.ApiServices.Features.Post.RequestHandlers.CreatePost
 
             await _postService.CreatePostAsync(post);
 
-            return post;
+            var createPostResponseDto = _mapper.Map<Business.Interfaces.Dtos.Posts.User.CreatePost.CreatePostResponseDto>(post);
+
+            return createPostResponseDto;
         }
     }
 }

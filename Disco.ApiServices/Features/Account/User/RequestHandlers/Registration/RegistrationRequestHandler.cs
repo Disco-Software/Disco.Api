@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Disco.Business.Interfaces.Dtos.Account;
+using Disco.Business.Interfaces.Dtos.Account.User.Register;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
 using MediatR;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Registration
 {
-    public class RegistrationRequestHandler : IRequestHandler<RegistrationRequest, UserResponseDto>
+    public class RegistrationRequestHandler : IRequestHandler<RegistrationRequest, RegisterResponseDto>
     {
         private readonly IAccountService _accountService;
         private readonly IAccountPasswordService _accountPasswordService;
@@ -27,12 +28,12 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Registration
             _mapper = mapper;
         }
 
-        public async Task<UserResponseDto> Handle(RegistrationRequest request, CancellationToken cancellationToken)
+        public async Task<RegisterResponseDto> Handle(RegistrationRequest request, CancellationToken cancellationToken)
         {
-            var user = _mapper.Map<Domain.Models.Models.User>(request.Registration);
+            var user = _mapper.Map<Domain.Models.Models.User>(request.Dto);
 
-            user.Email = request.Registration.Email;
-            user.UserName = request.Registration.UserName;
+            user.Email = request.Dto.Email;
+            user.UserName = request.Dto.UserName;
             user.Account = new Domain.Models.Models.Account();
             user.Account.User = user;
             user.Account.Id = user.Id;
@@ -43,17 +44,19 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Registration
 
             await _accountService.CreateAsync(user);
 
-            _accountPasswordService.AddPasswod(user, request.Registration.Password);
+            _accountPasswordService.AddPasswod(user, request.Dto.Password);
 
             var accessToken = _tokenService.GenerateAccessToken(user);
             var refreshToken = _tokenService.GenerateRefreshToken();
 
             await _accountService.SaveRefreshTokenAsync(user, refreshToken);
 
-            var userResponseDto = _mapper.Map<UserResponseDto>(user);
+            var accountDto = _mapper.Map<AccountDto>(user.Account);
+            var userDto = _mapper.Map<UserDto>(user);
+
+            var userResponseDto = _mapper.Map<RegisterResponseDto>(userDto);
             userResponseDto.RefreshToken = refreshToken;
             userResponseDto.AccessToken = accessToken;
-            userResponseDto.User = user;
 
             return userResponseDto;
         }

@@ -7,7 +7,7 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.CreatePost
     using System.Threading.Tasks;
     using AutoMapper;
     using Disco.ApiServices.Features.Post.RequestHandlers.CreatePost;
-    using Disco.Business.Interfaces.Dtos.Images;
+    using Disco.Business.Interfaces.Dtos.Images.User.CreateImage;
     using Disco.Business.Interfaces.Dtos.Posts;
     using Disco.Business.Interfaces.Dtos.Songs;
     using Disco.Business.Interfaces.Dtos.Videos;
@@ -104,7 +104,7 @@ namespace Disco.ApiServices.Test.Features.Post.RequestHandlers.CreatePost
                     User = default(User)
                 }
             });
-            _imageService.CreatePostImage(Arg.Any<CreateImageDto>()).Returns(new PostImage
+            _imageService.CreatePostImage(Arg.Any<CreateImageRequestDto>()).Returns(new PostImage
             {
                 Source = "TestValue1057741314",
                 PostId = 1654324447,

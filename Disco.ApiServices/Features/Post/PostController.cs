@@ -1,28 +1,16 @@
-﻿using Disco.Business.Constants;
-using Disco.Business.Interfaces;
-using Disco.Domain.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using Disco.ApiServices.Controllers;
+using Disco.ApiServices.Features.Post.RequestHandlers.CreatePost;
+using Disco.ApiServices.Features.Post.RequestHandlers.DeletePost;
+using Disco.ApiServices.Features.Post.RequestHandlers.GetPosts;
+using Disco.ApiServices.Features.Post.RequestHandlers.GetUserPosts;
+using Disco.Business.Interfaces.Dtos.Post.User.GetCurrentUserPosts;
+using Disco.Business.Interfaces.Dtos.Post.User.GetPosts;
+using Disco.Business.Interfaces.Dtos.Posts;
+using Disco.Business.Interfaces.Dtos.Posts.User.CreatePost;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
-using System.Linq;
-using Disco.Business.Interfaces.Dtos.Songs;
-using Disco.Business.Interfaces.Dtos.Images;
-using Disco.Business.Interfaces.Dtos.Videos;
-using Microsoft.Extensions.Options;
-using Disco.Business.Interfaces.Options;
-using Disco.Business.Interfaces.Dtos.AudD;
-using Disco.Business.Services;
-using Disco.Business.Interfaces.Dtos.Posts;
-using Disco.Business.Interfaces.Interfaces;
-using Disco.Domain.Models.Models;
-using Disco.ApiServices.Controllers;
-using MediatR;
-using Disco.ApiServices.Features.Post.RequestHandlers.CreatePost;
-using Disco.ApiServices.Features.Post.RequestHandlers.DeletePost;
-using Disco.ApiServices.Features.Post.RequestHandlers.GetUserPosts;
-using Disco.ApiServices.Features.Post.RequestHandlers.GetPosts;
 
 namespace Disco.ApiServices.Features.Post
 {
@@ -38,7 +26,7 @@ namespace Disco.ApiServices.Features.Post
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult<Domain.Models.Models.Post>> CreatePostAsync([FromForm] CreatePostDto dto) =>
+        public async Task<ActionResult<CreatePostResponseDto>> CreatePostAsync([FromForm] CreatePostRequestDto dto) =>
             await _mediator.Send(new CreatePostRequest(dto));
 
         [HttpDelete("{postId:int}")]
@@ -46,11 +34,11 @@ namespace Disco.ApiServices.Features.Post
             await _mediator.Send(new DeletePostRequest(postId));
 
         [HttpGet]
-        public async Task<ActionResult<List<Domain.Models.Models.Post>>> GetAllUserPosts([FromQuery] GetAllPostsDto dto) =>
+        public async Task<IEnumerable<GetCurrentUserPostsResponseDto>> GetAllUserPostsAsync([FromQuery] GetAllPostsDto dto) =>
             await _mediator.Send(new GetUserPostsRequest(dto));
 
         [HttpGet("line")]
-        public async Task<ActionResult<List<Domain.Models.Models.Post>>> GetPostsAsync([FromQuery] GetAllPostsDto dto) =>
+        public async Task<IEnumerable<GetPostsResponseDto>> GetPostsAsync([FromQuery] GetAllPostsDto dto) =>
             await _mediator.Send(new GetPostsRequest(dto));
     }
 }

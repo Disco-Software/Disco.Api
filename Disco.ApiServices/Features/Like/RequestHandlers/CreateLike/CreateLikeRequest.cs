@@ -1,13 +1,9 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Disco.Business.Interfaces.Dtos.Like.User.CreateLike;
+using MediatR;
 
 namespace Disco.ApiServices.Features.Like.RequestHandlers.CreateLike
 {
-    public class CreateLikeRequest : IRequest<int>
+    public class CreateLikeRequest : IRequest<CreateLikeResponseDto>
     {
         public CreateLikeRequest(int postId)
         {

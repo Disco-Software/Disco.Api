@@ -1,13 +1,7 @@
 ﻿using Disco.Domain.EF;
 using Disco.Domain.Interfaces;
-using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories.Repositories
 {
@@ -17,7 +11,7 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task<AccountStatus> GetStatusByFollowersCountAsync(int followersCount)
         {
-            return await _context.Statuses
+            var status = await _context.Statuses
                 .Where(x => followersCount < x.UserTarget)
                 .Where(x => followersCount >= x.FollowersCount)
                 .Select(x => new AccountStatus
@@ -28,6 +22,8 @@ namespace Disco.Domain.Repositories.Repositories
                     UserTarget = x.UserTarget,
                 })
                 .FirstOrDefaultAsync();
+
+            return status;
         }
     }
 }

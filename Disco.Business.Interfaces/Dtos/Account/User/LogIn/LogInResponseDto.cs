@@ -1,0 +1,19 @@
+﻿namespace Disco.Business.Interfaces.Dtos.Account.User.LogIn
+{
+    public class LogInResponseDto
+    {
+        public LogInResponseDto(
+            UserDto user,
+            string accessToken,
+            string refreshToken)
+        {
+            User = user;
+            AccessToken = accessToken;
+            RefreshToken = refreshToken;
+        }
+
+        public UserDto User { get; set; }
+        public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
+    }
+}

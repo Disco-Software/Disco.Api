@@ -1,10 +1,4 @@
-﻿using Disco.Domain.Models;
-using Disco.Domain.Models.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Disco.Domain.Models.Models;
 
 namespace Disco.Domain.Interfaces.Interfaces
 {
@@ -14,5 +8,6 @@ namespace Disco.Domain.Interfaces.Interfaces
         Task DeleteAsync(AccountGroup accountGroup);
         Task<AccountGroup> GetAsync(int id);
         Task<IEnumerable<AccountGroup>> GetAllAsync(int id);
+        Task<AccountGroup> GetAsync(int groupId, int accountId);
     }
 }

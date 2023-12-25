@@ -1,4 +1,5 @@
 ﻿using Disco.Business.Interfaces.Dtos.Account;
+using Disco.Business.Interfaces.Dtos.Account.User.Register;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Registration
 {
-    public class RegistrationRequest : IRequest<UserResponseDto>
+    public class RegistrationRequest : IRequest<RegisterResponseDto>
     {
         public RegistrationRequest(
-            RegistrationDto registration)
+            RegisterRequestDto dto)
         {
-            Registration = registration;
+            Dto = dto;
         }
 
-        public RegistrationDto Registration { get; }
+        public RegisterRequestDto Dto { get; }
     }
 }

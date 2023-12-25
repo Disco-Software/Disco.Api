@@ -1,9 +1,9 @@
-﻿using Disco.Business.Interfaces.Dtos.EmailNotifications;
+﻿using Disco.Business.Interfaces.Dtos.EmailNotifications.User.EmailConfirmation;
 
 namespace Disco.Business.Interfaces.Interfaces
 {
     public interface IEmailService
     {
-         Task EmailConfirmationAsync(EmailConfirmationDto model);
+         Task EmailConfirmationAsync(EmailConfirmationRequestDto model);
     }
 }

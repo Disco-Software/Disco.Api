@@ -1,37 +1,25 @@
 ﻿using AutoMapper;
-using Disco.Business.Interfaces.Dtos.Chat;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Interfaces.Interfaces;
-using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Group = Disco.Domain.Models.Models.Group;
 
 namespace Disco.Business.Services.Services
 {
     public class GroupService : IGroupService
     {
-        private readonly UserManager<User> _userManager;
         private readonly IGroupRepository _groupRepository;
         private readonly IAccountGroupRepository _accountGroupRepository;
         private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
 
         public GroupService(
-            UserManager<User> userManager,
             IGroupRepository groupRepository,
             IAccountGroupRepository accountGroupRepository,
             IAccountRepository accountRepository,
             IMapper mapper)
         {
-            _userManager = userManager;
             _groupRepository = groupRepository;
             _accountGroupRepository = accountGroupRepository;
             _accountRepository = accountRepository;
@@ -50,20 +38,9 @@ namespace Disco.Business.Services.Services
             return group;
         }
 
-        public async Task DeleteAsync(Group group, Account account)
+
+        public async Task DeleteAsync(Group group)
         {
-            var accountGroup = group.AccountGroups
-                .Where(group => group.AccountId == account.Id)
-                .FirstOrDefault();
-
-            account.AccountGroups.Remove(accountGroup);
-
-            if(group.AccountGroups.Count < 2)
-            {
-                foreach (var userAccount in group.AccountGroups)
-                    await _accountGroupRepository.DeleteAsync(accountGroup);
-            }
-
             await _groupRepository.DeleteAsync(group);
         }
 

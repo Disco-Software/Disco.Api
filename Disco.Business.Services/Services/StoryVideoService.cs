@@ -1,15 +1,12 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
-using Disco.Business.Interfaces;
 using Disco.Business.Interfaces.Dtos.StoryVideos;
-using Disco.Domain.Models;
+using Disco.Business.Interfaces.Dtos.StoryVideos.User.CreateStoryVideo;
+using Disco.Business.Interfaces.Interfaces;
+using Disco.Domain.Interfaces;
+using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Threading.Tasks;
-using Disco.Domain.Interfaces;
-using Disco.Business.Interfaces.Interfaces;
-using Disco.Domain.Models.Models;
 
 namespace Disco.Business.Services.Services
 {
@@ -38,26 +35,24 @@ namespace Disco.Business.Services.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<StoryVideo> CreateStoryVideoAsync(CreateStoryVideoDto model)
+        public async Task<StoryVideo> CreateStoryVideoAsync(CreateStoryVideoRequestDto dto)
         {
-            var story = await _storyRepository.GetAsync(model.StoryId);
+            var unequeName = Guid.NewGuid().ToString() + "_" + dto.Video.FileName.Replace(' ', '_');
 
-            var unequeName = Guid.NewGuid().ToString() + "_" + model.VideoFile.FileName.Replace(' ', '_');
-
-            if (model.VideoFile == null)
+            if (dto.Video == null)
                 return null;
 
-            if (model.VideoFile.Length == 0)
+            if (dto.Video.Length == 0)
                 return null;
 
             var blobContainerClient = _blobServiceClient.GetBlobContainerClient("videos");
             var blobClient = blobContainerClient.GetBlobClient(unequeName);
 
-            using var videoReader = model.VideoFile.OpenReadStream();
+            using var videoReader = dto.Video.OpenReadStream();
 
             blobClient.Upload(videoReader);
 
-            var storyVideo = _mapper.Map<StoryVideo>(model);
+            var storyVideo = _mapper.Map<StoryVideo>(dto);
             storyVideo.Source = blobClient.Uri.AbsoluteUri;
             storyVideo.DateOfCreation = DateTime.UtcNow;
 

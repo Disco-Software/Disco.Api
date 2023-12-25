@@ -1,5 +1,5 @@
 ﻿using Disco.ApiServices.Features.Analytics.RequestHandlers.GetAnalytic;
-using Disco.Business.Interfaces.Dtos.Analytic;
+using Disco.Business.Interfaces.Dtos.Analytic.Admin.GetAnalytics;
 using Disco.Business.Interfaces.Enums;
 using Disco.Business.Interfaces.Interfaces;
 using MediatR;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Analytics.GetAnalytic
 {
-    public class GetAnalyticRequestHandler : IRequestHandler<GetAnalyticRequest, AnalyticDto>
+    public class GetAnalyticRequestHandler : IRequestHandler<GetAnalyticRequest, AnalyticResponseDto>
     {
         private readonly IAnalyticService _analyticService;
 
@@ -21,7 +21,7 @@ namespace Disco.ApiServices.Features.Analytics.GetAnalytic
             _analyticService = analyticService;
         }
 
-        public async Task<AnalyticDto> Handle(GetAnalyticRequest request, CancellationToken cancellationToken)
+        public async Task<AnalyticResponseDto> Handle(GetAnalyticRequest request, CancellationToken cancellationToken)
         {
             var analyticFor = Enum.Parse<AnalyticFor>(request.AnalyticFor);
 

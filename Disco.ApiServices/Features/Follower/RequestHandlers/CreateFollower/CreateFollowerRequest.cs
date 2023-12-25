@@ -1,21 +1,15 @@
-﻿using Disco.Business.Interfaces.Dtos.Followers;
-using Disco.Business.Interfaces.Dtos.Friends;
+﻿using Disco.Business.Interfaces.Dtos.Followers.User.CreateFollower;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Follower.RequestHandlers.CreateFollower
 {
-    public class CreateFollowerRequest : IRequest<FollowerResponseDto>
+    public class CreateFollowerRequest : IRequest<CreateFollowerResponseDto>
     {
-        public CreateFollowerRequest(CreateFollowerDto dto)
+        public CreateFollowerRequest(CreateFollowerRequestDto dto)
         {
             Dto = dto;
         }
 
-        public CreateFollowerDto Dto { get; }
+        public CreateFollowerRequestDto Dto { get; }
     }
 }

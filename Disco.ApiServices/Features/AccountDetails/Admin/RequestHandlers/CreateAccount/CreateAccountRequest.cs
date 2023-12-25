@@ -1,20 +1,15 @@
-﻿using Disco.Business.Interfaces.Dtos.Account;
+﻿using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.CreateAccount;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.CreateAccount
 {
-    public class CreateAccountRequest : IRequest<UserResponseDto>
+    public class CreateAccountRequest : IRequest<CreateAccountResponseDto>
     {
-        public CreateAccountRequest(RegistrationDto dto)
+        public CreateAccountRequest(CreateAccountRequestDto dto)
         {
             Dto = dto;
         }
         
-        public RegistrationDto Dto { get; }
+        public CreateAccountRequestDto Dto { get; }
     }
 }

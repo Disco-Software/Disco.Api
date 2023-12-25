@@ -6,7 +6,7 @@ namespace Disco.Test.ApiServices.Features.AccountPassword.Admin.RequestHandlers.
     using System.Threading.Tasks;
     using Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.ForgotPassword;
     using Disco.Business.Interfaces.Dtos.Account;
-    using Disco.Business.Interfaces.Dtos.EmailNotifications;
+    using Disco.Business.Interfaces.Dtos.EmailNotifications.User.EmailConfirmation;
     using Disco.Business.Interfaces.Interfaces;
     using Disco.Domain.Models.Models;
     using NSubstitute;
@@ -87,7 +87,7 @@ namespace Disco.Test.ApiServices.Features.AccountPassword.Admin.RequestHandlers.
             // Assert
             await _accountService.Received().GetByEmailAsync(Arg.Any<string>());
             await _accountPasswordService.Received().GetPasswordConfirmationTokenAsync(Arg.Any<User>());
-            await _emailService.Received().EmailConfirmationAsync(Arg.Any<EmailConfirmationDto>());
+            await _emailService.Received().EmailConfirmationAsync(Arg.Any<EmailConfirmationRequestDto>());
         }
 
         [Test]

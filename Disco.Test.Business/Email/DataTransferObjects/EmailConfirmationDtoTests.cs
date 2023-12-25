@@ -1,13 +1,13 @@
 namespace Disco.Test.Business.Email.DataTransferObjects
 {
     using System;
-    using Disco.Business.Interfaces.Dtos.EmailNotifications;
+    using Disco.Business.Interfaces.Dtos.EmailNotifications.User.EmailConfirmation;
     using NUnit.Framework;
 
     [TestFixture]
     public class EmailConfirmationDtoTests
     {
-        private EmailConfirmationDto _testClass;
+        private EmailConfirmationRequestDto _testClass;
 
         [SetUp]
         public void SetUp()

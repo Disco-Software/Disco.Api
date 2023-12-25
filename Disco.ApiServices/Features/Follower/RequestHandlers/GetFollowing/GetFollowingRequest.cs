@@ -1,21 +1,16 @@
-﻿using Disco.Business.Interfaces.Dtos.Friends;
-using Disco.Domain.Models.Models;
+﻿using Disco.Business.Interfaces.Dtos.Followers.User.GetFollowing;
 using MediatR;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Follower.RequestHandlers.GetFollowing
 {
-    public class GetFollowingRequest : IRequest<List<UserFollower>>
+    public class GetFollowingRequest : IRequest<IEnumerable<GetFollowingResponseDto>>
     {
-        public GetFollowingRequest(GetFollowersDto dto)
+        public GetFollowingRequest(Business.Interfaces.Dtos.Followers.User.GetFollowing.GetFollowingRequestDto dto)
         {
             Dto = dto;
         }
 
-        public GetFollowersDto Dto { get; }
+        public Business.Interfaces.Dtos.Followers.User.GetFollowing.GetFollowingRequestDto Dto { get; }
     }
 }

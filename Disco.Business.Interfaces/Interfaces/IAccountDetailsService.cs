@@ -11,7 +11,7 @@ namespace Disco.Business.Interfaces.Interfaces
 {
     public interface IAccountDetailsService
     {
-        Task<UserDetailsResponseDto> GetUserDatailsAsync(User user);
+        Task<User> GetUserDatailsAsync(User user);
         Task<User> ChengePhotoAsync(User user, IFormFile formFile);
         Task<List<Account>> GetAccountsByNameAsync(string search);
         Task RemoveAsync(Account account);

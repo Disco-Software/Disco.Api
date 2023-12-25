@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
-using Disco.Business.Interfaces.Dtos.Videos;
 using Disco.Domain.Models;
 using System;
 using System.Threading.Tasks;
 using Disco.Domain.Interfaces;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
+using Disco.Business.Interfaces.Dtos.PostVideo.User.CreatePostVideo;
 
 namespace Disco.Business.Services.Services
 {
@@ -30,7 +30,7 @@ namespace Disco.Business.Services.Services
             _mapper = mapper;
         }
 
-        public async Task<PostVideo> CreateVideoAsync(CreateVideoDto model)
+        public async Task<PostVideo> CreateVideoAsync(CreatePostVideoRequestDto model)
         {
             var post = await _postRepository.GetAsync(model.PostId);
             var uniqueVideoName = Guid.NewGuid().ToString() + "_" + model.VideoFile.FileName.Replace(' ', '_');

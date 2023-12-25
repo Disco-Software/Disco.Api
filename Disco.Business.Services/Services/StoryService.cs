@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Disco.Business.Interfaces;
-using Disco.Business.Interfaces.Dtos.Stories;
 using Disco.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -8,6 +7,7 @@ using System.Threading.Tasks;
 using Disco.Domain.Interfaces;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
+using Disco.Business.Interfaces.Dtos.Stories.User.GetAllStories;
 
 namespace Disco.Business.Services.Services
 {
@@ -15,7 +15,8 @@ namespace Disco.Business.Services.Services
     {
         private readonly IStoryRepository _storyRepository;
         public StoryService(
-            IStoryRepository storyRepository)        {
+            IStoryRepository storyRepository)
+        {
             _storyRepository = storyRepository;
         }
         
@@ -40,9 +41,10 @@ namespace Disco.Business.Services.Services
            return await _storyRepository.GetAsync(id);
         }
 
-        public async Task<List<Story>> GetAllStoryAsync(User user, GetAllStoriesDto dto)
+        public async Task<IEnumerable<Story>> GetAllStoryAsync(User user, GetAllStoriesRequestDto dto)
         {
-            var stories = await _storyRepository.GetAllAsync(user.Account.Id, dto.PageNumber, dto.PageSize);
+            var stories = await _storyRepository.GetAllAsync(user.Account!.Id, dto.PageNumber, dto.PageSize);
+            
             return stories;
         }
     }

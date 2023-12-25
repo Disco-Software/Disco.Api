@@ -1,21 +1,15 @@
-﻿using Disco.Business.Interfaces.Dtos.Account;
-using Disco.Business.Interfaces.Dtos.Google;
+﻿using Disco.Business.Interfaces.Dtos.Account.User.Google;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Google
 {
-    public class GoogleRequest : IRequest<UserResponseDto>
+    public class GoogleRequest : IRequest<GoogleResponseDto>
     {
-        public GoogleRequest(GoogleLogInDto dto)
+        public GoogleRequest(Business.Interfaces.Dtos.Account.User.Google.GoogleLogInRequestDto dto)
         {
             Dto = dto;
         }
 
-        public GoogleLogInDto Dto { get; }
+        public Business.Interfaces.Dtos.Account.User.Google.GoogleLogInRequestDto Dto { get; }
     }
 }

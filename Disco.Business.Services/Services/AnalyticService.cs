@@ -1,5 +1,4 @@
-﻿using Disco.Business.Interfaces.Dtos.Analytic;
-using Disco.Business.Interfaces;
+﻿using Disco.Business.Interfaces;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
@@ -12,6 +11,7 @@ using AutoMapper;
 using Disco.Business.Interfaces.Enums;
 using Microsoft.Extensions.Hosting;
 using Disco.Integration.Interfaces.Dtos.AudD;
+using Disco.Business.Interfaces.Dtos.Analytic.Admin.GetAnalytics;
 
 namespace Disco.Business.Services.Services
 {
@@ -31,13 +31,13 @@ namespace Disco.Business.Services.Services
             _mapper = mapper;
         }
 
-        public async Task<AnalyticDto> GetAnalyticAsync(DateTime from, DateTime to, AnalyticFor statistics)
+        public async Task<AnalyticResponseDto> GetAnalyticAsync(DateTime from, DateTime to, AnalyticFor statistics)
         {
             var users = await _userRepository.GetAllUsersAsync();
             var posts = await _postRepository.GetAllPostsAsync(from, to);
             var newUsers = await _userRepository.GetAllUsersAsync(from, to);
 
-            var result = new AnalyticDto();
+            var result = new AnalyticResponseDto();
             result.UsersCount = users.Count;
             result.PostsCount = posts.Count;
             result.NewUsersCount = newUsers.Count;
