@@ -16,5 +16,6 @@ namespace Disco.Business.Interfaces.Interfaces
         Task<List<Account>> GetAccountsByNameAsync(string search);
         Task RemoveAsync(Account account);
         Task<IEnumerable<Account>> GetAllAsync(int pageNumber, int pageSize);
+        Task ChangeEmailAsync(User user, string newEmail);
     }
 }
