@@ -3,6 +3,7 @@ using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.CreateAcco
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.DeleteAccount;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsByPeriot;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAllAccounts;
+using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.SearchAccountEmails;
 using Disco.Business.Interfaces.Dtos.Account.User.Register;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.CreateAccount;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAccountsByPeriot;
@@ -43,5 +44,9 @@ namespace Disco.ApiServices.Features.AccountDetails.Admin
         [HttpGet("periot")]
         public async Task<ActionResult<List<GetAccountsByPeriotResponseDto>>> GetAccountsByPeriotAsync(int periot) =>
             await _mediator.Send(new GetAccountsByPeriotRequest(periot));
+
+        [HttpGet("emails/search")]
+        public async Task<IEnumerable<string>> GetEmailsBySearchAsync([FromQuery] string search) =>
+            await _mediator.Send(new SearchAccountEmailsRequest(search));
     }
 }

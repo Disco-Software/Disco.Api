@@ -1,27 +1,22 @@
 ﻿using Disco.Domain.EF;
 using Disco.Domain.Interfaces;
-using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly ApiDbContext _ctx;
+        private readonly ApiDbContext _context;
 
         public UserRepository(ApiDbContext ctx)
         {
-            _ctx = ctx;
+            _context = ctx;
         }
 
         public async Task<User> GetUserByRefreshTokenAsync(string refreshToken)
         {
-            return await _ctx.Users
+            return await _context.Users
                 .Include(p => p.Account)
                 .ThenInclude(p => p.Posts)
                 .Include(p => p.Account)
@@ -33,19 +28,19 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task GetUserAccountAsync(User user)
         {
-            await _ctx.Entry(user)
+            await _context.Entry(user)
                 .Reference(u => u.Account)
                 .LoadAsync();
 
-            await _ctx.Entry(user.Account)
+            await _context.Entry(user.Account)
                 .Collection(p => p.Posts)
                 .LoadAsync();
         }
 
         public string GetUserRole(User user)
         {
-            return _ctx.UserRoles
-                .Join(_ctx.Roles, r => r.RoleId, u => u.Id, (u, r) => new { Role = r, UserRole = u })
+            return _context.UserRoles
+                .Join(_context.Roles, r => r.RoleId, u => u.Id, (u, r) => new { Role = r, UserRole = u })
                 .Where(r => r.UserRole.UserId == user.Id)
                 .FirstOrDefaultAsync().Result.Role.Name;
         }
@@ -56,12 +51,12 @@ namespace Disco.Domain.Repositories.Repositories
             
             user.RefreshTokenExpiress = DateTime.UtcNow.AddDays(7);
 
-            await _ctx.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<User>> GetAllUsers(int pageNumber, int pageSize)
         {
-            return await _ctx.Users
+            return await _context.Users
                 .OrderByDescending(d => d.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -70,7 +65,7 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task<List<User>> GetUsersByPeriotAsync(DateTime date)
         {
-            return await _ctx.Users
+            return await _context.Users
                 .Include(u => u.Account)
                 .Where(u => u.DateOfRegister == date)
                 .OrderBy(u => u.DateOfRegister)
@@ -82,7 +77,7 @@ namespace Disco.Domain.Repositories.Repositories
             var date = DateTime.Now;
             date = date.AddDays(-days);
 
-            return await _ctx.Users
+            return await _context.Users
                 .Include(u => u.Account)
                 .Where(u => u.DateOfRegister >= date)
                 .OrderBy(u => u.DateOfRegister)
@@ -91,13 +86,21 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task<List<User>> GetAllUsersAsync()
         {
-            return await _ctx.Users.ToListAsync();
+            return await _context.Users.ToListAsync();
         }
         public async Task<List<User>> GetAllUsersAsync(DateTime from, DateTime to)
         {
-            return await _ctx.Users
+            return await _context.Users
                 .Where(user => user.DateOfRegister <= to && user.DateOfRegister >= from)
                 .OrderBy(user => user.DateOfRegister)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<string>> GetUsersEmailsAsync(string search)
+        {
+            return await _context.Users
+                .Where (user => user.Email.Contains(search))
+                .Select(user => user.Email)
                 .ToListAsync();
         }
     }

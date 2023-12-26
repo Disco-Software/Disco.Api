@@ -1,16 +1,8 @@
 ﻿using Azure.Storage.Blobs;
-using Disco.Business.Interfaces;
-using Disco.Business.Interfaces.Dtos.Account;
-using System;
-using System.Threading.Tasks;
-using Disco.Domain.Interfaces;
-using Disco.Domain.Models;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using Disco.Business.Interfaces.Dtos.AccountDetails;
-using System.Linq;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Domain.Interfaces;
 using Disco.Domain.Models.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace Disco.Business.Services.Services
 {
@@ -93,6 +85,13 @@ namespace Disco.Business.Services.Services
             var accounts = await _accountRepository.GetAllAsync(pageNumber, pageSize);
 
             return accounts;
+        }
+
+        public async Task<IEnumerable<string>> GetEmailsBySearchAsync(string search)
+        {
+            var emails = await _userRepository.GetUsersEmailsAsync(search);
+
+            return emails;
         }
     }
 }
