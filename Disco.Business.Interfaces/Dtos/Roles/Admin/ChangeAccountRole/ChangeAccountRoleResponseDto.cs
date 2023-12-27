@@ -2,6 +2,7 @@
 {
     public class ChangeAccountRoleResponseDto
     {
+        public ChangeAccountRoleResponseDto() { }
         public ChangeAccountRoleResponseDto(
             AccountDto account)
         {
