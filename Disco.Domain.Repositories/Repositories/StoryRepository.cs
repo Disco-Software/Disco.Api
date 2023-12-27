@@ -84,7 +84,7 @@ namespace Disco.Domain.Repositories.Repositories
 
         public int GetStoryCount(int accountId)
         {
-            return _context.Stories.Count(s => s.AccountId == accountId);
+            return _context.Stories.Count(a => a.AccountId == accountId);
         }
     }
 }

@@ -5,13 +5,13 @@ using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.DeleteAcco
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsByPeriot;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAllAccounts;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.SearchAccounts;
-using Disco.Business.Interfaces.Dtos.Account.User.Register;
-using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.ChangeAccountEmail;
+using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.ChangeAccountPhoto;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.CreateAccount;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAccountsByPeriot;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAllAccounts;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.SearchAccounts;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -54,6 +54,12 @@ namespace Disco.ApiServices.Features.AccountDetails.Admin
            [FromQuery] int pageNumber,
            [FromQuery] int pageSize) =>
             await _mediator.Send(new SearchAccountsRequest(search, pageNumber, pageSize));
+
+        [HttpPut("change/photo")]
+        public async Task<ActionResult<ChangeAccountPhotoResponseDto>> ChangePhotoAsync(
+            [FromForm] int userId,
+            [FromForm] IFormFile photo) =>
+            await _mediator.Send(new ChangeAccountPhotoRequest(photo, userId));
 
         [HttpPut("change/email")]
         public async Task<ActionResult<ChangeAccountEmailResponseDto>> ChangeEmailAsync([FromBody] ChangeAccountEmailRequestDto dto) =>

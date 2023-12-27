@@ -42,11 +42,11 @@ namespace Disco.Business.Services.Services
             return stories;
         }
 
-        public int GetStoryCount(int accountId)
+        public int GetStoriesCount(int accountId)
         {
-            var storyCount = _storyRepository.GetStoryCount(accountId);
+            var storiesCount = _storyRepository.GetStoryCount(accountId);
 
-            return storyCount;
+            return storiesCount;
         }
     }
 }
