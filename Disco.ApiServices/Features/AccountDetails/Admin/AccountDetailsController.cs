@@ -3,6 +3,7 @@ using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.ChangeAcco
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.ChangeAccountPhoto;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.CreateAccount;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.DeleteAccount;
+using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccount;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsByPeriot;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAllAccounts;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.SearchAccounts;
@@ -11,6 +12,7 @@ using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.ChangeAccountPhoto;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.SearchAccountEmails;
 using Disco.Business.Interfaces.Dtos.Account.User.Register;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.CreateAccount;
+using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAccount;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAccountsByPeriot;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAllAccounts;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.SearchAccounts;
@@ -41,6 +43,10 @@ namespace Disco.ApiServices.Features.AccountDetails.Admin
         [HttpDelete("{id:int}")]
         public async Task Remove([FromRoute] int id) =>
             await _mediator.Send(new DeleteAccountRequest(id));
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<GetAccountResponseDto>> GetAccountAsync([FromRoute] int id) => 
+            await _mediator.Send(new GetAccountRequest(id));
 
         [HttpGet]
         public async Task<IEnumerable<GetAllAccountsResponseDto>> GetAllAsync(
