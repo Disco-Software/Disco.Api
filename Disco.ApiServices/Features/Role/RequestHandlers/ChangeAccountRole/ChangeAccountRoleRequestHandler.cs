@@ -40,7 +40,7 @@ namespace Disco.ApiServices.Features.Role.RequestHandlers.ChangeAccountRole
 
             var changeAccountRoleResponseDto = _mapper.Map<ChangeAccountRoleResponseDto>(user.Account);
 
-            changeAccountRoleResponseDto.Account.FollowingCount = _followerService.GetFollowingCount(user.AccountId);
+            changeAccountRoleResponseDto.Account.FollowingCount = _followerService.GetFollowingsCount(user.AccountId);
             changeAccountRoleResponseDto.Account.FollowersCount = _followerService.GetFollowersCount(user.AccountId);
             changeAccountRoleResponseDto.Account.PostsCount = _postService.GetPostsCount(user.AccountId);
             changeAccountRoleResponseDto.Account.StoriesCount = _storyService.GetStoriesCount(user.AccountId);
