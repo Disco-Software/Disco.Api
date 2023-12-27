@@ -142,11 +142,11 @@ namespace Disco.Business.Services.Services
             return followersCount;
         }
 
-        public int GetFollowingCount(int accountId)
+        public int GetFollowingsCount(int accountId)
         {
-            var followingCount = _followerRepository.GetFollowingCount(accountId);
+            var followings = _followerRepository.GetFollowingCount(accountId);
 
-            return followingCount;
+            return followings;
         }
     }
 }

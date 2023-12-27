@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Disco.Business.Interfaces.Dtos.Followers.User.GetFollowers;
 using Disco.Business.Interfaces.Interfaces;
-using Disco.Domain.Models.Models;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
