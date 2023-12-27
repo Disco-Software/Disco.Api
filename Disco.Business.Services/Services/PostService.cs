@@ -111,5 +111,11 @@ namespace Disco.Business.Services.Services
             return await _postRepository.GetUserPostsAsync(user.Account.Id);
         }
 
+        public int GetPostCount(int accountId)
+        {
+            var postsCount = _postRepository.GetPostCount(accountId);
+
+            return postsCount;
+        }
     }
 }

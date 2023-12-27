@@ -1,10 +1,12 @@
 ﻿using Disco.ApiServices.Controllers;
+using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.ChangeAccountEmail;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.CreateAccount;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.DeleteAccount;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsByPeriot;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAllAccounts;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.SearchAccounts;
 using Disco.Business.Interfaces.Dtos.Account.User.Register;
+using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.ChangeAccountEmail;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.CreateAccount;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAccountsByPeriot;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAllAccounts;
@@ -52,5 +54,9 @@ namespace Disco.ApiServices.Features.AccountDetails.Admin
            [FromQuery] int pageNumber,
            [FromQuery] int pageSize) =>
             await _mediator.Send(new SearchAccountsRequest(search, pageNumber, pageSize));
+
+        [HttpPut("change/email")]
+        public async Task<ActionResult<ChangeAccountEmailResponseDto>> ChangeEmailAsync([FromBody] ChangeAccountEmailRequestDto dto) =>
+            await _mediator.Send(new ChangeAccountEmailRequest(dto));
     }
 }
