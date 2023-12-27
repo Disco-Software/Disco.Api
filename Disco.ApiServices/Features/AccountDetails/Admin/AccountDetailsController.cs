@@ -1,5 +1,5 @@
 ﻿using Disco.ApiServices.Controllers;
-using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.ChangeAccountPhoto;
+using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.ChangeAccountEmail;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.CreateAccount;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.DeleteAccount;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsByPeriot;
@@ -60,5 +60,9 @@ namespace Disco.ApiServices.Features.AccountDetails.Admin
             [FromForm] int userId,
             [FromForm] IFormFile photo) =>
             await _mediator.Send(new ChangeAccountPhotoRequest(photo, userId));
+
+        [HttpPut("change/email")]
+        public async Task<ActionResult<ChangeAccountEmailResponseDto>> ChangeEmailAsync([FromBody] ChangeAccountEmailRequestDto dto) =>
+            await _mediator.Send(new ChangeAccountEmailRequest(dto));
     }
 }

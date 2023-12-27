@@ -3,11 +3,26 @@ using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Http;
+using Disco.Domain.Models;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using Disco.Business.Interfaces.Dtos.AccountDetails;
+using System.Linq;
+using Disco.Business.Interfaces.Interfaces;
+using Disco.Domain.Models.Models;
+using Disco.Domain.Models;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using Disco.Business.Interfaces.Dtos.AccountDetails;
+using System.Linq;
+using Disco.Business.Interfaces.Interfaces;
+using Disco.Domain.Models.Models;
 
 namespace Disco.Business.Services.Services
 {
     public class AccountDetailsService : IAccountDetailsService
     {
+        private readonly UserManager<User> _userManager;
         private readonly BlobServiceClient _blobServiceClient;
         private readonly IAccountRepository _accountRepository;
         private readonly IUserRepository _userRepository;
@@ -15,12 +30,14 @@ namespace Disco.Business.Services.Services
         private readonly IFollowerRepository _followerRepository;
 
         public AccountDetailsService(
+            UserManager<User> userManager,
             BlobServiceClient blobServiceClient,
             IAccountRepository accountRepository,
             IAccountStatusRepository accountStatusRepository,
             IUserRepository userRepository,
             IFollowerRepository followerRepository)
         {
+            _userManager = userManager;
             _blobServiceClient = blobServiceClient;
             _accountRepository = accountRepository;
             _accountStatusRepository = accountStatusRepository;
@@ -85,6 +102,17 @@ namespace Disco.Business.Services.Services
             var accounts = await _accountRepository.GetAllAsync(pageNumber, pageSize);
 
             return accounts;
+        }
+
+        public async Task ChangeEmailAsync(User user, string newEmail)
+        {
+            var changeEmailToken = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
+
+            var identityResult = await _userManager.ChangeEmailAsync(user, newEmail, changeEmailToken);
+            if (identityResult.Errors.Count() > 0)
+            {
+                throw new Exception();
+            }
         }
 
         public async Task<IEnumerable<Account>> SearchAsync(string search, int pageNumber, int pageSize)
