@@ -37,7 +37,7 @@ namespace Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAcc
             var getAccountResponseDto = _mapper.Map<GetAccountResponseDto>(user.Account);
 
             getAccountResponseDto.Account.FollowersCount = _followerService.GetFollowersCount(user.AccountId);
-            getAccountResponseDto.Account.FollowingsCount = _followerService.GetFollowingCount(user.AccountId);
+            getAccountResponseDto.Account.FollowingsCount = _followerService.GetFollowingsCount(user.AccountId);
             getAccountResponseDto.Account.PostsCount = _postService.GetPostsCount(user.AccountId);
             getAccountResponseDto.Account.StoriesCount = _storyService.GetStoriesCount(user.AccountId);
 

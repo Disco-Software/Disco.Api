@@ -46,8 +46,8 @@ namespace Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.Change
             
             changeAccountEmailResponseDto.Account.FollowersCount = _followerService.GetFollowersCount(user.Account.Id);
             changeAccountEmailResponseDto.Account.FollowingsCount = _followerService.GetFollowingsCount(user.Account.Id);
-            changeAccountEmailResponseDto.Account.PostsCount = _postService.GetPostCount(user.Account.Id);
-            changeAccountEmailResponseDto.Account.StoriesCount = _storyService.GetStoryCount(user.AccountId);
+            changeAccountEmailResponseDto.Account.PostsCount = _postService.GetPostsCount(user.Account.Id);
+            changeAccountEmailResponseDto.Account.StoriesCount = _storyService.GetStoriesCount(user.AccountId);
 
             return changeAccountEmailResponseDto;
         }
