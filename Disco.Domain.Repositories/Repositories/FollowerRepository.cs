@@ -181,5 +181,14 @@ namespace Disco.Domain.Repositories.Repositories
                 .ToList();
         }
 
+        public int GetFollowersCount(int accountId)
+        {
+            return _context.UserFollowers.Count(follower => follower.FollowingAccountId == accountId);
+        }
+
+        public int GetFollowingCount(int accountId)
+        {
+            return _context.UserFollowers.Count(x => x.FollowerAccountId == accountId);
+        }
     }
 }
