@@ -1,15 +1,8 @@
 ﻿using Disco.Domain.EF;
 using Disco.Domain.Interfaces;
-using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using Disco.Domain.Repositories.Repositories.Base;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories.Repositories
 {
@@ -215,6 +208,11 @@ namespace Disco.Domain.Repositories.Repositories
             }
 
             return postsInHours;
+        }
+
+        public int GetPostCount(int accountId)
+        {
+            return _context.Posts.Count(x => x.AccountId == accountId);
         }
     }
 }

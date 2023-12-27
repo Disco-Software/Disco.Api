@@ -1,11 +1,5 @@
-﻿using Disco.Business.Interfaces.Dtos.Account;
-using Disco.Business.Interfaces.Dtos.AccountDetails;
-using Disco.Domain.Models;
-using Disco.Domain.Models.Models;
+﻿using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Http;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Disco.Business.Interfaces.Interfaces
 {
@@ -17,5 +11,7 @@ namespace Disco.Business.Interfaces.Interfaces
         Task RemoveAsync(Account account);
         Task<IEnumerable<Account>> GetAllAsync(int pageNumber, int pageSize);
         Task<IEnumerable<string>> GetEmailsBySearchAsync(string search);
+        Task<IEnumerable<Account>> SearchAsync(string search, int pageNumber, int pageSize);
+        Task ChangeEmailAsync(User user, string newEmail);
     }
 }

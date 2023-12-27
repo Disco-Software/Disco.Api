@@ -1,13 +1,8 @@
 ﻿using Disco.Domain.EF;
 using Disco.Domain.Interfaces;
-using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using Disco.Domain.Repositories.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories.Repositories
 {
@@ -181,5 +176,14 @@ namespace Disco.Domain.Repositories.Repositories
                 .ToList();
         }
 
+        public int GetFollowersCount(int accountId)
+        {
+            return _context.UserFollowers.Count(account => account.FollowingAccountId == accountId);
+        }
+
+        public int GetFollowingCount(int accountId)
+        {
+            return _context.UserFollowers.Count(account => account.FollowerAccountId == accountId);
+        }
     }
 }

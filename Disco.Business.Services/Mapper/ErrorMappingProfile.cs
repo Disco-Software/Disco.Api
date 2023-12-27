@@ -5,9 +5,9 @@ using Disco.Business.Utils.Exceptions;
 
 namespace Disco.Business.Services.Mapper
 {
-    public class ErrorMapProfile : Profile
+    public class ErrorMappingProfile : Profile
     {
-        public ErrorMapProfile()
+        public ErrorMappingProfile()
         {
             CreateMap<ResourceNotFoundException, ErrorDto>()
                 .ForMember(x => x.ErrorMessages, options => options.MapFrom(ex => ex.Errors.Select(kv => new ErrorMessage(kv.Key, kv.Value)).ToList()));
