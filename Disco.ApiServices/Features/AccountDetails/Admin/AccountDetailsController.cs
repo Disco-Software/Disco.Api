@@ -5,7 +5,6 @@ using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.DeleteAcco
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsByPeriot;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAllAccounts;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.SearchAccounts;
-using Disco.Business.Interfaces.Dtos.Account.User.Register;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.ChangeAccountPhoto;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.CreateAccount;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAccountsByPeriot;
