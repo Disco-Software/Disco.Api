@@ -1,14 +1,7 @@
-﻿using AutoMapper;
-using Disco.Business.Interfaces;
-using Disco.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Disco.Domain.Interfaces;
+﻿using Disco.Business.Interfaces.Dtos.Stories.User.GetAllStories;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Domain.Interfaces;
 using Disco.Domain.Models.Models;
-using Disco.Business.Interfaces.Dtos.Stories.User.GetAllStories;
-using Disco.Domain.Repositories.Repositories;
 
 namespace Disco.Business.Services.Services
 {
@@ -51,10 +44,9 @@ namespace Disco.Business.Services.Services
 
         public int GetStoriesCount(int accountId)
         {
-            var storiesCount = _storyRepository.GetStoriesCount(accountId);
+            var storiesCount = _storyRepository.GetStoryCount(accountId);
 
             return storiesCount;
         }
-
     }
 }

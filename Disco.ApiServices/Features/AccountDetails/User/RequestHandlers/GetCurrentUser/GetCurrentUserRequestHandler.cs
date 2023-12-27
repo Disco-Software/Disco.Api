@@ -1,13 +1,8 @@
 ﻿using AutoMapper;
-using Disco.Business.Interfaces.Dtos.AccountDetails;
 using Disco.Business.Interfaces.Dtos.AccountDetails.User.GetCurrentUser;
 using Disco.Business.Interfaces.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

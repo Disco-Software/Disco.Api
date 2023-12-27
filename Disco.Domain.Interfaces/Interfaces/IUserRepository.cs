@@ -1,8 +1,4 @@
-﻿using Disco.Domain.Models;
-using Disco.Domain.Models.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Disco.Domain.Models.Models;
 
 namespace Disco.Domain.Interfaces
 {
@@ -17,5 +13,6 @@ namespace Disco.Domain.Interfaces
         Task<List<User>> GetUsersByPeriotIntAsync(int days);
         Task<List<User>> GetAllUsersAsync();
         Task<List<User>> GetAllUsersAsync(DateTime from, DateTime to);
+        Task<IEnumerable<string>> GetUsersEmailsAsync(string search);
     }
 }
