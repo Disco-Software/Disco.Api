@@ -8,6 +8,8 @@ using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAllAcco
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.SearchAccounts;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.ChangeAccountEmail;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.ChangeAccountPhoto;
+using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.SearchAccountEmails;
+using Disco.Business.Interfaces.Dtos.Account.User.Register;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.CreateAccount;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAccountsByPeriot;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAllAccounts;
@@ -66,5 +68,9 @@ namespace Disco.ApiServices.Features.AccountDetails.Admin
         [HttpPut("change/email")]
         public async Task<ActionResult<ChangeAccountEmailResponseDto>> ChangeEmailAsync([FromBody] ChangeAccountEmailRequestDto dto) =>
             await _mediator.Send(new ChangeAccountEmailRequest(dto));
+
+        [HttpGet("emails/search")]
+        public async Task<IEnumerable<string>> GetEmailsBySearchAsync([FromQuery] string search) =>
+            await _mediator.Send(new SearchAccountEmailsRequest(search));
     }
 }
