@@ -17,6 +17,7 @@ using Disco.Business.Interfaces.Dtos.AccountDetails;
 using System.Linq;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Disco.Business.Services.Services
 {

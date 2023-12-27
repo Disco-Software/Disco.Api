@@ -1,10 +1,12 @@
 ﻿using Disco.ApiServices.Controllers;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.ChangeAccountEmail;
+using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.ChangeAccountPhoto;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.CreateAccount;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.DeleteAccount;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsByPeriot;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAllAccounts;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.SearchAccounts;
+using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.ChangeAccountEmail;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.ChangeAccountPhoto;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.CreateAccount;
 using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.GetAccountsByPeriot;
