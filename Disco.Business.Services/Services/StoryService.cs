@@ -47,5 +47,12 @@ namespace Disco.Business.Services.Services
             
             return stories;
         }
+
+        public int GetStoriesCount(int accountId)
+        {
+            var storiesCount = _storyRepository.GetStoriesCount(accountId);
+
+            return storiesCount;
+        }
     }
 }

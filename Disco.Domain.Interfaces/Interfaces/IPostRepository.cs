@@ -14,5 +14,6 @@ namespace Disco.Domain.Interfaces
         List<int> GetPostsCountFromYear(DateTime date); 
         Task<List<Post>> GetUserPostsAsync(int accountId);
         Task<List<Post>> GetAllPostsAsync(DateTime from, DateTime to);
+        int GetPostsCount(int accountId);
     }
 }

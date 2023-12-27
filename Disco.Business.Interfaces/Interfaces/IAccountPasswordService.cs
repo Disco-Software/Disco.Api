@@ -14,5 +14,6 @@ namespace Disco.Business.Interfaces.Interfaces
         Task<PasswordVerificationResult> VerifyPasswordAsync(User user, string password);
         Task<string> GetPasswordConfirmationTokenAsync(User user);
         string AddPasswod(User user, string password);
+        Task ChangeSelectedUserPasswordAsynnc(User user, string newPassword);
     }           
 }

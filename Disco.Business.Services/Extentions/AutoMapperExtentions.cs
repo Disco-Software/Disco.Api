@@ -4,6 +4,7 @@ using Disco.Business.Services.Mapper.Account.Admin;
 using Disco.Business.Services.Mapper.Account.User;
 using Disco.Business.Services.Mapper.AccountDetails.Admin;
 using Disco.Business.Services.Mapper.AccountDetails.User;
+using Disco.Business.Services.Mapper.AccountPassword.Admin;
 using Disco.Business.Services.Mapper.Comment.User;
 using Disco.Business.Services.Mapper.Follower;
 using Disco.Business.Services.Mapper.Group;
@@ -34,6 +35,7 @@ namespace Disco.Business.Services.Extentions
                 options.AddProfile(new CreateAccountMappingProfile());
                 options.AddProfile(new GetAccountsByPeriotMappingProfile());
                 options.AddProfile(new GetAllAccountsMappingProfile());
+                options.AddProfile(new ChangeSelectedUserPasswordMappingProfile());
                 #endregion
 
                 #region User
