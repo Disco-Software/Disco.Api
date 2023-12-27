@@ -1,5 +1,7 @@
 ﻿using Disco.ApiServices.Controllers;
+using Disco.ApiServices.Features.Role.RequestHandlers.ChangeAccountRole;
 using Disco.ApiServices.Features.Role.RequestHandlers.GetRoles;
+using Disco.Business.Interfaces.Dtos.Roles.Admin.ChangeAccountRole;
 using Disco.Business.Interfaces.Dtos.Roles.Admin.GetRoles;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -22,5 +24,10 @@ namespace Disco.ApiServices.Features.Role
         [HttpGet]
         public async Task<IEnumerable<GetRolesResponseDto>> GetAllRoles([FromQuery] GetRolesRequestDto dto) =>
             await _mediator.Send(new GetRolesRequest(dto));
+
+        [HttpPut("change/role")]
+        public async Task<ActionResult<ChangeAccountRoleResponseDto>> ChnageAccountRoleAsync(
+            [FromBody] ChangeAccountRoleRequestDto dto) =>
+            await _mediator.Send(new ChangeAccountRoleRequest(dto));
     }
 }
