@@ -212,9 +212,7 @@ namespace Disco.Domain.Repositories.Repositories
 
         public int GetPostCount(int accountId)
         {
-            return _context.Posts
-                .Where (post => post.AccountId == accountId)
-                .Count();
+            return _context.Posts.Count(x => x.AccountId == accountId);
         }
     }
 }

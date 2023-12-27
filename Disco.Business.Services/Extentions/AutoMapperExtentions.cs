@@ -32,6 +32,7 @@ namespace Disco.Business.Services.Extentions
                 options.AddProfile(new CreateAccountMappingProfile());
                 options.AddProfile(new GetAccountsByPeriotMappingProfile());
                 options.AddProfile(new GetAllAccountsMappingProfile());
+                options.AddProfile(new ChangeAccountPhotoMappingProfile());
                 options.AddProfile(new SearchAccountsMappingProfile());
                 options.AddProfile(new ChangeAccountEmailMappingProfile());
                 #endregion
