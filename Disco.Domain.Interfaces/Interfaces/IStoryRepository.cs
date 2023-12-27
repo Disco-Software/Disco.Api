@@ -1,7 +1,4 @@
-﻿using Disco.Domain.Models;
-using Disco.Domain.Models.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Disco.Domain.Models.Models;
 
 namespace Disco.Domain.Interfaces
 {
@@ -11,5 +8,6 @@ namespace Disco.Domain.Interfaces
         Task<IEnumerable<Story>> GetAllAsync(int accountId, int pageNumber, int pageSize);
         Task RemoveAsync(Story story);
         Task<Story> GetAsync(int id);
+        int GetStoriesCount(int accountId);
     }
 }

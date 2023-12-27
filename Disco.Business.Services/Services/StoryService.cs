@@ -8,6 +8,7 @@ using Disco.Domain.Interfaces;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
 using Disco.Business.Interfaces.Dtos.Stories.User.GetAllStories;
+using Disco.Domain.Repositories.Repositories;
 
 namespace Disco.Business.Services.Services
 {
@@ -47,5 +48,13 @@ namespace Disco.Business.Services.Services
             
             return stories;
         }
+
+        public int GetStoriesCount(int accountId)
+        {
+            var storiesCount = _storyRepository.GetStoriesCount(accountId);
+
+            return storiesCount;
+        }
+
     }
 }

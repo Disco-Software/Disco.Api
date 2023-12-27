@@ -12,5 +12,6 @@ namespace Disco.Business.Interfaces.Interfaces
         Task<Post> GetPostAsync(int id);
         Task<List<Post>> GetPostsByDescriptionAsync(string search);
         Task<List<Post>> GetAllPostsAsync(User user, int pageNumber, int pageSize);
+        int GetPostsCount(int accountId);
     }
 }

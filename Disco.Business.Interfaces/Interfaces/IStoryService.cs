@@ -9,5 +9,6 @@ namespace Disco.Business.Interfaces.Interfaces
         Task DeleteStoryAsync(int id);
         Task<Story> GetStoryAsync(int id);
         Task<IEnumerable<Story>> GetAllStoryAsync(User user, GetAllStoriesRequestDto model);
+        int GetStoriesCount(int accountId);
     }
 }
