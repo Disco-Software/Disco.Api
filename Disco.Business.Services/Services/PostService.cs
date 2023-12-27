@@ -1,15 +1,9 @@
 ﻿using AutoMapper;
-using Disco.Business.Interfaces;
-using Disco.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Disco.Domain.Interfaces;
-using Disco.Business.Interfaces.Interfaces;
 using Disco.Business.Interfaces.Dtos.Posts;
-using Disco.Domain.Models.Models;
+using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Events.Events;
+using Disco.Domain.Interfaces;
+using Disco.Domain.Models.Models;
 using Disco.Integration.Interfaces.Interfaces;
 
 namespace Disco.Business.Services.Services

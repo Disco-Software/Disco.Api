@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Disco.Business.Services.Mapper;
-using Disco.Business.Services.Mapper.Account.Admin;
 using Disco.Business.Services.Mapper.Account.User;
 using Disco.Business.Services.Mapper.AccountDetails.Admin;
 using Disco.Business.Services.Mapper.AccountDetails.User;
@@ -18,7 +17,6 @@ using Disco.Business.Services.Mapper.Role.Admin;
 using Disco.Business.Services.Mapper.Story.User;
 using Disco.Business.Services.Mapper.StoryImage;
 using Disco.Business.Services.Mapper.StoryVideo;
-using Disco.Business.Services.Mappers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Disco.Business.Services.Extentions
@@ -36,6 +34,9 @@ namespace Disco.Business.Services.Extentions
                 options.AddProfile(new GetAccountsByPeriotMappingProfile());
                 options.AddProfile(new GetAllAccountsMappingProfile());
                 options.AddProfile(new ChangeSelectedUserPasswordMappingProfile());
+                options.AddProfile(new ChangeAccountPhotoMappingProfile());
+                options.AddProfile(new SearchAccountsMappingProfile());
+                options.AddProfile(new ChangeAccountEmailMappingProfile());
                 #endregion
 
                 #region User
@@ -84,7 +85,7 @@ namespace Disco.Business.Services.Extentions
                 options.AddProfile(new GetStoryMappingProfile());
                 #endregion
 
-                options.AddProfile(new ErrorMapProfile());
+                options.AddProfile(new ErrorMappingProfile());
             }).CreateMapper());
         }
     }
