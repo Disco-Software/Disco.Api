@@ -1,13 +1,8 @@
-﻿
-using Disco.Domain.EF;
+﻿using Disco.Domain.EF;
 using Disco.Domain.Interfaces;
-using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using Disco.Domain.Repositories.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories.Repositories
 {
@@ -45,7 +40,7 @@ namespace Disco.Domain.Repositories.Repositories
             return account;
         }
 
-        public override async Task<Account> UpdateAsync(Account newItem)
+        public async Task<Account> UpdateAsync(Account newItem)
         {
             var account = _context.Accounts.Update(newItem).Entity;
             
@@ -98,6 +93,19 @@ namespace Disco.Domain.Repositories.Repositories
                     .Collection(userAccount => userAccount.Following)
                     .LoadAsync();
             }
+
+            return accounts;
+        }
+
+        public async Task<IEnumerable<Account>> SearchAsync(string search, int pageNumber, int pageSize)
+        {
+            var accounts = await _context.Accounts
+                .Include(x => x.User)
+                .Where(x => x.User.UserName!.Contains(search))
+                .OrderBy(x => x.User.UserName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
             return accounts;
         }

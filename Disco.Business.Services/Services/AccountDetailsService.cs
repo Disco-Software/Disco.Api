@@ -86,5 +86,12 @@ namespace Disco.Business.Services.Services
 
             return accounts;
         }
+
+        public async Task<IEnumerable<Account>> SearchAsync(string search, int pageNumber, int pageSize)
+        {
+            var accounts = await _accountRepository.SearchAsync(search, pageNumber, pageSize);
+
+            return accounts;
+        }
     }
 }

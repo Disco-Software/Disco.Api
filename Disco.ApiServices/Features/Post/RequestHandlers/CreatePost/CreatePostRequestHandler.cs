@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using Disco.Business.Interfaces.Dtos.Images.User.CreateImage;
 using Disco.Business.Interfaces.Dtos.PostImage.User.CreateImage;
-using Disco.Business.Interfaces.Dtos.Posts.User.CreatePost;
 using Disco.Business.Interfaces.Dtos.PostSong.User.CreatePostSong;
 using Disco.Business.Interfaces.Dtos.PostVideo.User.CreatePostVideo;
 using Disco.Business.Interfaces.Interfaces;
