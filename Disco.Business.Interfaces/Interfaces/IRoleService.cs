@@ -7,5 +7,6 @@ namespace Disco.Business.Interfaces.Interfaces
     {
         Task RemoveRoleAsync(string name);
         Task<List<Role>> GetAllRoles(GetRolesRequestDto dto);
+        Task ChangeAccountRoleAsync(User user, string roleName);
     }
 }
