@@ -144,9 +144,9 @@ namespace Disco.Business.Services.Services
 
         public int GetFollowingsCount(int accountId)
         {
-            var followings = _followerRepository.GetFollowingCount(accountId);
+            var followingsCount = _followerRepository.GetFollowingsCount(accountId);
 
-            return followings;
+            return followingsCount;
         }
     }
 }

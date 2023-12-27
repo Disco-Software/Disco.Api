@@ -1,13 +1,7 @@
-﻿using Disco.Business.Interfaces;
-using Disco.Business.Interfaces.Interfaces;
-using Disco.Domain.Models;
+﻿using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Utils.Exceptions;
 using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.Business.Services.Services
 {
@@ -26,6 +20,22 @@ namespace Disco.Business.Services.Services
             if (!response.Succeeded)
             {
                 throw new NullReferenceException();
+            }
+        }
+
+        public async Task ChangeSelectedUserPasswordAsynnc(User user, string newPassword)
+        {
+            var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var identityResult = await _userManager.ResetPasswordAsync(user, passwordResetToken, newPassword);
+            if (identityResult.Errors.Count() > 0)
+            {
+                var errors = new Dictionary<string, string>();
+                
+                foreach (var error in identityResult.Errors)
+                    errors.Add(error.Code, error.Description);
+
+                throw new InvalidPasswordException(errors);
             }
         }
 

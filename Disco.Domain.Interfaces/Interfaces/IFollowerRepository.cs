@@ -12,6 +12,6 @@ namespace Disco.Domain.Interfaces
         Task<List<UserFollower>> GetFollowersAsync(int userId);
         Task<List<UserFollower>> GetFollowersAsync(int userId, int pageNumber, int pageSize);
         int GetFollowersCount(int accountId);
-        int GetFollowingCount(int accountId);
+        int GetFollowingsCount(int accountId);
     }
 }

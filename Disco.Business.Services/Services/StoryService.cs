@@ -44,7 +44,7 @@ namespace Disco.Business.Services.Services
 
         public int GetStoriesCount(int accountId)
         {
-            var storiesCount = _storyRepository.GetStoryCount(accountId);
+            var storiesCount = _storyRepository.GetStoriesCount(accountId);
 
             return storiesCount;
         }

@@ -1,17 +1,12 @@
-﻿using Disco.Business.Constants;
-using Disco.Business.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Disco.Business.Interfaces.Interfaces;
-using MediatR;
+﻿using Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.ChangeSelectedUserPassword;
 using Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.ForgotPassword;
 using Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.ResetPassword;
+using Disco.Business.Interfaces.Dtos.AccountPassword.Admin.ChangeSelectedUserPassword;
 using Disco.Business.Interfaces.Dtos.AccountPassword.Admin.ForgotPassword;
 using Disco.Business.Interfaces.Dtos.AccountPassword.Admin.ResetPassword;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountPassword.Admin
 {
@@ -34,5 +29,9 @@ namespace Disco.ApiServices.Features.AccountPassword.Admin
         public async Task<ActionResult<string>> ResetPassword([FromBody] ResetPasswordDto dto) =>
             await _mediator.Send(new ResetPasswordRequest(dto));
 
+        [HttpPut("change/password")]
+        public async Task<ActionResult<ChangeSelectedUserPasswordResponseDto>> ChangeAccountPasswordAsync(
+            [FromBody] ChangeSelectedUserPasswordRequestDto changeSelectedUserPasswordRequestDto) =>
+            await _mediator.Send(new ChangeSelectedUserPasswordRequest(changeSelectedUserPasswordRequestDto));
     }
 }

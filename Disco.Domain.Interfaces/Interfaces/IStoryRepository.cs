@@ -8,6 +8,6 @@ namespace Disco.Domain.Interfaces
         Task<IEnumerable<Story>> GetAllAsync(int accountId, int pageNumber, int pageSize);
         Task RemoveAsync(Story story);
         Task<Story> GetAsync(int id);
-        int GetStoryCount(int accountId);
+        int GetStoriesCount(int accountId);
     }
 }

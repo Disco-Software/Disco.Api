@@ -82,7 +82,7 @@ namespace Disco.Domain.Repositories.Repositories
                 .FirstOrDefaultAsync() ?? throw new NullReferenceException();
         }
 
-        public int GetStoryCount(int accountId)
+        public int GetStoriesCount(int accountId)
         {
             return _context.Stories.Count(a => a.AccountId == accountId);
         }

@@ -210,9 +210,9 @@ namespace Disco.Domain.Repositories.Repositories
             return postsInHours;
         }
 
-        public int GetPostCount(int accountId)
+        public int GetPostsCount(int accountId)
         {
-            return _context.Posts.Count(x => x.AccountId == accountId);
+            return _context.Posts.Count(post => post.AccountId == accountId);
         }
     }
 }
