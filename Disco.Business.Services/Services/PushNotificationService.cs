@@ -150,30 +150,34 @@ namespace Disco.Business.Services.Services
             return installation;
         }
 
-        public Task<Installation> CreateOrUpdateInstallationAsync(string installationId, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task RequestNotificationAsync(PushNotificationBaseDto dto, IEnumerable<User> users)
         {
-            var pushNotification = "{\"data\":{\"message\":\"Hello!\"}}";
-
             foreach (var user in users)
             {
                 var tags = new List<string> { user.Id.ToString() };
 
                 try
                 {
-                    // Отправляем уведомление с использованием тега (в данном случае, userId)
-                    await _notificationHubClient.SendFcmNativeNotificationAsync(pushNotification, tags);
-                    Console.WriteLine($"Уведомление успешно отправлено пользователю с тегом {user.Id}");
+                    await this.SendNotificationAsync(dto.Title, dto.Body, user.UserName!, tags.FirstOrDefault()!, CancellationToken.None);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Ошибка при отправке уведомления пользователю с тегом {user.Id}: {ex.Message}");
                 }
             }
         }
+
+        private async Task SendNotificationAsync(string title, string body, string userName, string tag,CancellationToken cancellationToken)
+        {
+            var dataPayload = "\"title\":\"Notification Title\",\"body\":\"Hello, world!\"";
+
+            //var iosPayload = $"{{\"aps\":{{\"alert\":{{\"title\":\"Notification Title\",\"body\":\"Hello, world!\"}},\"sound\":\"default\"}},\"data\":{{{dataPayload}}}}}";
+            //var iosTask = _notificationHubClient.SendAppleNativeNotificationAsync(iosPayload, tag, cancellationToken);
+
+            var androidPayload = $"{{\"notification\":{{}},\"data\":{{{dataPayload}}}, \"sound\": \"default\"}}";
+            var androidTask = _notificationHubClient.SendFcmNativeNotificationAsync(androidPayload, tag, cancellationToken);
+
+            await Task.WhenAll(androidTask);
+        }
+
     }
 }
