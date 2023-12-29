@@ -2,6 +2,7 @@
 {
     public class RefreshTokenResponseDto
     {
+        public RefreshTokenResponseDto() { }
         public RefreshTokenResponseDto(
             UserDto user,
             string accessToken,
