@@ -21,5 +21,6 @@ namespace Disco.Business.Interfaces.Interfaces
         Task<IEnumerable<User>> GetUsersByPeriotAsync(int periot);
         Task<bool> IsInRoleAsync(User user, string roleName);
         Task RemoveAsync(User user);
+        Task UpdateAsync(User user);
     }
 }

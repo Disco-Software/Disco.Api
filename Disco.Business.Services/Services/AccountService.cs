@@ -161,5 +161,10 @@ namespace Disco.Business.Services.Services
 
             return account;
         }
+
+        public async Task UpdateAsync(User user)
+        {
+            await _userManager.UpdateAsync(user);
+        }
     }
 }

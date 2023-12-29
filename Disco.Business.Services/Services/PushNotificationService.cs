@@ -10,6 +10,7 @@ using Disco.Domain.Models;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using Disco.Domain.Models.Models;
 
 namespace Disco.Business.Services.Services
 {
@@ -140,6 +141,39 @@ namespace Disco.Business.Services.Services
                 .Replace("$(alertAction)", dto.Body, StringComparison.InvariantCulture);
 
             return payload;
+        }
+
+        public async Task<Installation> GetInstallationAsync(string installationId, CancellationToken token = default)
+        {
+            var installation = await _notificationHubClient.GetInstallationAsync(installationId, token);
+
+            return installation;
+        }
+
+        public Task<Installation> CreateOrUpdateInstallationAsync(string installationId, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task RequestNotificationAsync(PushNotificationBaseDto dto, IEnumerable<User> users)
+        {
+            var pushNotification = "{\"data\":{\"message\":\"Hello!\"}}";
+
+            foreach (var user in users)
+            {
+                var tags = new List<string> { user.Id.ToString() };
+
+                try
+                {
+                    // Отправляем уведомление с использованием тега (в данном случае, userId)
+                    await _notificationHubClient.SendFcmNativeNotificationAsync(pushNotification, tags);
+                    Console.WriteLine($"Уведомление успешно отправлено пользователю с тегом {user.Id}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ошибка при отправке уведомления пользователю с тегом {user.Id}: {ex.Message}");
+                }
+            }
         }
     }
 }
