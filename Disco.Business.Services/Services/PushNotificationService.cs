@@ -30,35 +30,32 @@ namespace Disco.Business.Services.Services
             };
         }
 
-        public async Task<bool> CreateOrUpdateInstallationAsync(DeviceInstallationDto dto, CancellationToken cancellationToken)
+        public async Task<string> CreateOrUpdateInstallationAsync(DeviceInstallationDto dto, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(dto?.InstallationId) ||
-                string.IsNullOrWhiteSpace(dto?.PushChannel) ||
-                string.IsNullOrWhiteSpace(dto?.Platform.Value.ToString()))
-                return false;
-
-            var installation = new Installation()
+            if (!string.IsNullOrWhiteSpace(dto.InstallationId))
             {
-                InstallationId = dto.InstallationId,
-                PushChannel = dto.PushChannel,
-                Tags = dto.Tags
-            };
+                var installation = await this.GetInstallation(dto);
 
-            if (_installationPlatform.TryGetValue(dto.Platform.Value.ToString(), out var platform))
-                installation.Platform = platform;
-            else
-                return false;
+                installation.PushChannel = dto.PlatformDeviceId;
+                installation.PushChannelExpired = false;
 
-            try
-            {
-                await _notificationHubClient.CreateOrUpdateInstallationAsync(installation, cancellationToken);
-            }
-            catch
-            {
-                return false;
+                await _notificationHubClient.CreateOrUpdateInstallationAsync(installation);
+
+                return dto.InstallationId;
             }
 
-            return true;
+            var installationId = Guid.NewGuid().ToString();
+
+            await _notificationHubClient.CreateOrUpdateInstallationAsync(
+                new Installation
+                {
+                    InstallationId = installationId,
+                    Platform = dto.Platform!.Value,
+                    PushChannel = dto.PlatformDeviceId
+                },
+                cancellationToken);
+
+            return installationId;
         }
 
         public async Task<bool> DeleteInstallationByIdAsync(string installationId, CancellationToken token)
@@ -141,5 +138,22 @@ namespace Disco.Business.Services.Services
 
             return payload;
         }
+
+        private async Task<Installation> GetInstallation(DeviceInstallationDto dto)
+        {
+            try
+            {
+                return await _notificationHubClient.GetInstallationAsync(dto.InstallationId);
+            }
+            catch (Exception ex)
+            {
+                return new Installation
+                {
+                    InstallationId = dto.InstallationId,
+                    Platform = dto.Platform!.Value
+                };
+            }
+        }
+
     }
 }

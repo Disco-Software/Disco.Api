@@ -1,11 +1,6 @@
 ﻿using Disco.Business.Interfaces.Interfaces;
-using Disco.Business.Services.Services;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,12 +23,7 @@ namespace Disco.ApiServices.Features.PushNotification.RequestHandlers.CreateInst
         {
             var response = await _notificationService.CreateOrUpdateInstallationAsync(request.Dto, _contextAccessor.HttpContext.RequestAborted);
 
-            if (!response)
-            {
-                return $"Submit status: {response}";
-            }
-
-            return $"Submit status: {response}";
+             return response;
         }
     }
 }
