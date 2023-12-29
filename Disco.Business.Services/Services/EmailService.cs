@@ -1,13 +1,12 @@
-﻿using Disco.Business.Interfaces.Options;
-using Disco.Business.Interfaces;
-using Microsoft.Extensions.Options;
-using System.Net;
-using Disco.Business.Interfaces.Interfaces;
-using MailKit.Net.Smtp;
-using System.Net.Mail;
-using MimeKit;
-using Microsoft.AspNetCore.Html;
+﻿using Disco.Business.Interfaces.Dtos.EmailNotifications.Admin.AdminEmailNotification;
 using Disco.Business.Interfaces.Dtos.EmailNotifications.User.EmailConfirmation;
+using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Interfaces.Options;
+using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Html;
+using Microsoft.Extensions.Options;
+using MimeKit;
+using System.Net.Mail;
 
 namespace Disco.Business.Services.Services
 {
@@ -24,19 +23,29 @@ namespace Disco.Business.Services.Services
             _smtpClient = smtpClient;
         }
 
-        public async Task EmailConfirmationAsync(EmailConfirmationRequestDto dto)
+        public async Task SendManyAsync(MimeMessage message, IEnumerable<string> emails)
         {
-            MimeMessage mailMessage = new MimeMessage();
-            mailMessage.From.Add(new MailboxAddress(_emailOptions.Value.Name, _emailOptions.Value.Mail));
-            mailMessage.To.Add(new MailboxAddress(dto.Name, dto.ToEmail));
-            mailMessage.Subject = dto.MessageHeader;
+            foreach (var email in emails)
+                message.To.Add(new MailboxAddress(_emailOptions.Value.Name, email));
 
-            HtmlContentBuilder builder = new HtmlContentBuilder();
-            builder.Append(dto.MessageBody);
+            await _smtpClient.ConnectAsync(_emailOptions.Value.Host, _emailOptions.Value.Port);
 
             await _smtpClient.AuthenticateAsync(_emailOptions.Value.Name, _emailOptions.Value.Password);
 
-            await _smtpClient.SendAsync(mailMessage);
+            await _smtpClient.SendAsync(message);
+        }
+
+        public async Task SendOneAsync(MimeMessage message)
+        {
+            message.From.Add(new MailboxAddress(_emailOptions.Value.Name, _emailOptions.Value.Mail));
+
+            await _smtpClient.ConnectAsync(_emailOptions.Value.Host, _emailOptions.Value.Port);
+
+            await _smtpClient.AuthenticateAsync(_emailOptions.Value.Name, _emailOptions.Value.Password);
+
+            await _smtpClient.SendAsync(message);
+
+            await _smtpClient.DisconnectAsync(true);
         }
     }
 }
