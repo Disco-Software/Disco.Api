@@ -14,9 +14,9 @@ namespace Disco.ApiServices.Features.AccountPassword.User.RequestHandlers.Forgot
     {
         private readonly IAccountService _accountService;
         private readonly IAccountPasswordService _accountPasswordService;
-        private readonly IEmailService _emailService;
+        private readonly IEmailSenderService _emailService;
 
-        public ForgotPasswordRequestHandler(IAccountService accountService, IAccountPasswordService accountPasswordService, IEmailService emailService)
+        public ForgotPasswordRequestHandler(IAccountService accountService, IAccountPasswordService accountPasswordService, IEmailSenderService emailService)
         {
             _accountService = accountService;
             _accountPasswordService = accountPasswordService;

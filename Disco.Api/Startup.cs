@@ -59,6 +59,7 @@ namespace Disco.Api
             services.Configure<EmailOptions>(Configuration.GetSection("EmailSettings"));
             services.Configure<GoogleOptions>(Configuration.GetSection("Google"));
             services.AddUserAuthentication(Configuration);
+            services.AddSession();
 
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             //    .AddJwtBearer(opt =>
@@ -173,7 +174,7 @@ namespace Disco.Api
             app.UseAuthorization();
 
             app.UseWebSockets();
-
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
