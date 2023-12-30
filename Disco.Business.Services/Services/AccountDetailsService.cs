@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Utils.Exceptions;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Http;
@@ -114,6 +115,23 @@ namespace Disco.Business.Services.Services
             var emails = await _userRepository.GetUsersEmailsAsync(search);
 
             return emails;
+        }
+
+        public async Task ConfirmEmailAsync(User user)
+        {
+            var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            var identityResult = await _userManager.ConfirmEmailAsync(user, emailConfirmationToken);
+            if(identityResult.Errors.Count() > 0)
+            {
+                var errors = new Dictionary<string, string>();
+                foreach (var error in identityResult.Errors)
+                {
+                    errors.Add(error.Code, error.Description);
+                }
+
+                throw new FailedEmailConfirmationException(errors);
+            }
         }
     }
 }

@@ -112,9 +112,10 @@ namespace Disco.Api
             services.AddOptions<StripeOptions>()
                 .Configure(Configuration.GetSection("Stripe").Bind)
                 .ValidateDataAnnotations();
-            //services.AddOptions<ConnectionStrings>()
-            //    .Configure(Configuration.GetSection("ConnectionStrings").Bind)
-            //    .ValidateDataAnnotations();
+
+            services.AddOptions<EmailConfirmationCodeConfigurationOptions>()
+                .Configure(Configuration.GetSection("EmailConfirmationSettings").Bind)
+                .ValidateDataAnnotations();
 
             services.AddAutoMapper();
 
