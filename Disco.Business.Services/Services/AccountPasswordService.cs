@@ -66,5 +66,21 @@ namespace Disco.Business.Services.Services
             user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, password);
             return user.PasswordHash;
         }
+
+        public async Task ChangePasswordAsync(User user, string newPassword)
+        {
+            var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var identityResult = await _userManager.ResetPasswordAsync(user, passwordResetToken, newPassword);
+            if(identityResult.Errors.Count() > 0)
+            {
+                var errors = new Dictionary<string, string>();
+
+                foreach (var error in identityResult.Errors)
+                    errors.Add(error.Code, error.Description);
+
+                throw new PasswordRecoveryException(errors);
+            }
+        }
     }
 }

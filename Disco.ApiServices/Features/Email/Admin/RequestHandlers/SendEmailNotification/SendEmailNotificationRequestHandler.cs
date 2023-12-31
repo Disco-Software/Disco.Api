@@ -9,11 +9,11 @@ namespace Disco.ApiServices.Features.Email.Admin.RequestHandlers.SendEmailNotifi
     public class SendEmailNotificationRequestHandler : IRequestHandler<SendEmailNotificationRequest>
     {
         private readonly IAccountService _accountService;
-        private readonly IEmailService _emailService;
+        private readonly IEmailSenderService _emailService;
 
         public SendEmailNotificationRequestHandler(
             IAccountService accountService,
-            IEmailService emailService)
+            IEmailSenderService emailService)
         {
             _accountService = accountService;
             _emailService = emailService;

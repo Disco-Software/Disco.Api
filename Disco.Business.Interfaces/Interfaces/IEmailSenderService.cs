@@ -4,7 +4,7 @@ using MimeKit;
 
 namespace Disco.Business.Interfaces.Interfaces
 {
-    public interface IEmailService
+    public interface IEmailSenderService
     {
         Task SendOneAsync(MimeMessage message);
         Task SendManyAsync(MimeMessage message, IEnumerable<string> emails);
