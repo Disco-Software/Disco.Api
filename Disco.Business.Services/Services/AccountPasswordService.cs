@@ -14,9 +14,11 @@ namespace Disco.Business.Services.Services
             _userManager = userManager;
         }
 
-        public async Task ChengePasswordAsync(User user, string token, string newPassword)
+        public async Task ChengePasswordAsync(User user, string newPassword)
         {
-            var response = await _userManager.ResetPasswordAsync(user, token, newPassword);
+            var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var response = await _userManager.ResetPasswordAsync(user, passwordResetToken, newPassword);
             if (!response.Succeeded)
             {
                 throw new NullReferenceException();

@@ -40,7 +40,6 @@ namespace Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.Forgo
             _passwordRecoveryOptions = passwordRecoveryOptions;
         }
 
-
         public async Task<string> Handle(ForgotPasswordRequest request, CancellationToken cancellationToken)
         {
             var user = await _accountService.GetByEmailAsync(request.Dto.Email);
@@ -51,8 +50,9 @@ namespace Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.Forgo
 
             var code = PasswordRecoveryGenerationCodeHelper.GenerateRecoveryCode();
 
-            _contextAccessor.HttpContext.Session.SetString("passwordResetCode", code.ToString());
-            _contextAccessor.HttpContext.Session.SetInt32("passwordResetCodeExpired", _passwordRecoveryOptions.Value.LifeTime);
+            _contextAccessor.HttpContext.Session.SetString("passwordRecoveryCode", code.ToString());
+            _contextAccessor.HttpContext.Session.Set("passwordRecoveryCodeExpired", 
+                ByteHepler.ConvertDateTimeToBytes(DateTime.UtcNow.AddMinutes(_passwordRecoveryOptions.Value.LifeTime)));
 
             var html = htmlContent.Replace("[code]", code)
                 .Replace("[email]", user.Email);
