@@ -6,6 +6,7 @@ using Disco.ApiServices.Features.Comment;
 using Disco.ApiServices.Features.Message;
 using Disco.ApiServices.Filters;
 using Disco.Business.Interfaces.Options;
+using Disco.Business.Interfaces.Options.EmailConfirmation;
 using Disco.Business.Services.Extentions;
 using Disco.Domain.Data.Extentions;
 using Disco.Domain.Repositories.Extentions;
@@ -113,9 +114,7 @@ namespace Disco.Api
                 .Configure(Configuration.GetSection("Stripe").Bind)
                 .ValidateDataAnnotations();
 
-            services.AddOptions<EmailConfirmationCodeConfigurationOptions>()
-                .Configure(Configuration.GetSection("EmailConfirmationSettings").Bind)
-                .ValidateDataAnnotations();
+            services.Configure<EmailConfirmationCodeConfigurationOptions>(Configuration.GetSection("EmailConfirmationSettings").Bind);
 
             services.AddAutoMapper();
 

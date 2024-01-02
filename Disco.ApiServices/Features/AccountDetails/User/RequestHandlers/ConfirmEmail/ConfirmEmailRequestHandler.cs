@@ -1,15 +1,11 @@
-﻿using Disco.Business.Interfaces.Dtos.EmailNotifications.User.EmailConfirmation;
-using Disco.Business.Interfaces.Interfaces;
+﻿using Disco.Business.Interfaces.Interfaces;
 using Disco.Business.Interfaces.Options;
+using Disco.Business.Interfaces.Options.EmailConfirmation;
 using Disco.Business.Services.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using MimeKit;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,7 +19,7 @@ namespace Disco.ApiServices.Features.AccountDetails.User.RequestHandlers.Confirm
         private readonly IEmailGeneratorService _emailGeneratorService;
         private readonly IEmailSenderService _emailSenderService;
         private readonly IHttpContextAccessor _contextAccessor;
-        private readonly IOptions<EmailConfirmationCodeConfigurationOptions> _securityOptions;
+        private readonly IOptions<EmailConfirmationCodeConfigurationOptions> _emailConfirmationOptions;
 
         public ConfirmEmailRequestHandler(
             IAccountService accountService,
@@ -31,14 +27,14 @@ namespace Disco.ApiServices.Features.AccountDetails.User.RequestHandlers.Confirm
             IEmailGeneratorService emailGeneratorService,
             IEmailSenderService emailSenderService,
             IHttpContextAccessor contextAccessor,
-            IOptions<EmailConfirmationCodeConfigurationOptions> securityOptions)
+            IOptions<EmailConfirmationCodeConfigurationOptions> emailConfirmationOptions)
         {
             _accountService = accountService;
             _accountDetailsService = accountDetailsService;
             _emailSenderService = emailSenderService;
             _emailGeneratorService = emailGeneratorService;
             _contextAccessor = contextAccessor;
-            _securityOptions = securityOptions;
+            _emailConfirmationOptions = emailConfirmationOptions;
         }
 
         public async Task Handle(ConfirmEmailRequest request, CancellationToken cancellationToken)
@@ -53,8 +49,8 @@ namespace Disco.ApiServices.Features.AccountDetails.User.RequestHandlers.Confirm
             var code = ConfirmationCodeGenerationHelper.GenerateEmailConfirmationCode();
 
             _contextAccessor.HttpContext.Session.SetString("code", code.ToString());
-            _contextAccessor.HttpContext.Session.SetString("codeExpired", DateTime.UtcNow
-                .AddMinutes(_securityOptions.Value.LifeTime).ToString());
+            _contextAccessor.HttpContext.Session.Set("codeExpired", 
+                ByteHelper.ConvertDateTimeToBytes(DateTime.UtcNow.AddMinutes(_emailConfirmationOptions.Value.SecurityOptions.LifeTime)));
 
             var codeExpiredDate = _contextAccessor.HttpContext.Session.GetString("codeExpired");
 
