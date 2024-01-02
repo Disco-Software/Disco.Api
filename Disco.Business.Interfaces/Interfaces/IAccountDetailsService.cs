@@ -13,5 +13,6 @@ namespace Disco.Business.Interfaces.Interfaces
         Task<IEnumerable<string>> GetEmailsBySearchAsync(string search);
         Task<IEnumerable<Account>> SearchAsync(string search, int pageNumber, int pageSize);
         Task ChangeEmailAsync(User user, string newEmail);
+        Task ConfirmEmailAsync(User user);
     }
 }
