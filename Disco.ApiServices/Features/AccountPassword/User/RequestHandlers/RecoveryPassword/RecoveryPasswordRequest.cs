@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountPassword.User.RequestHandlers.ResetPassword
 {
-    public class ResetPasswordRequest : IRequest<string>
+    public class RecoveryPasswordRequest : IRequest<string>
     {
-        public ResetPasswordRequest(ResetPasswordDto dto)
+        public RecoveryPasswordRequest(RecoveryPasswordRequestDto dto)
         {
             Dto = dto;
         }
 
-        public ResetPasswordDto Dto { get; }
+        public RecoveryPasswordRequestDto Dto { get; }
     }
 }

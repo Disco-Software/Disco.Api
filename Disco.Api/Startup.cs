@@ -6,6 +6,7 @@ using Disco.ApiServices.Features.Comment;
 using Disco.ApiServices.Features.Message;
 using Disco.ApiServices.Filters;
 using Disco.Business.Interfaces.Options;
+using Disco.Business.Interfaces.Options.PasswordRecovery;
 using Disco.Business.Services.Extentions;
 using Disco.Domain.Data.Extentions;
 using Disco.Domain.Repositories.Extentions;
@@ -115,8 +116,11 @@ namespace Disco.Api
             //    .Configure(Configuration.GetSection("ConnectionStrings").Bind)
             //    .ValidateDataAnnotations();
 
+            services.Configure<PasswordRecoveryOptions>(Configuration.GetSection("PasswordRecovery"));
+
             services.AddAutoMapper();
 
+            services.AddSession();
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(GlobalExceptionFilter));
@@ -166,6 +170,7 @@ namespace Disco.Api
                  .AllowCredentials();
             });
 
+            app.UseSession();
             app.UseRouting();
             app.ApplicationServices.CreateScope();
 
