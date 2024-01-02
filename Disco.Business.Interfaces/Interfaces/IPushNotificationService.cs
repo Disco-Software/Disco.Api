@@ -10,7 +10,7 @@ namespace Disco.Business.Interfaces.Interfaces
 {
     public interface IPushNotificationService
     {
-        Task<bool> CreateOrUpdateInstallationAsync(DeviceInstallationDto dto, CancellationToken cancellationToken = default);
+        Task<string> CreateOrUpdateInstallationAsync(DeviceInstallationDto dto, CancellationToken cancellationToken = default);
         Task<bool> DeleteInstallationByIdAsync(string installationId, CancellationToken token = default);
         Task<Installation> GetInstallationAsync(string installationId, CancellationToken token = default);
         Task<bool> RequestNotificationAsync(PushNotificationBaseDto dto, CancellationToken token = default);
