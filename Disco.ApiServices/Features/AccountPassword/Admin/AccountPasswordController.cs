@@ -1,6 +1,7 @@
 ﻿using Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.ChangeSelectedUserPassword;
 using Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.ForgotPassword;
-using Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.ResetPassword;
+using Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.RecoveryPasswordCodeChecking;
+using Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.RecoveryPassword;
 using Disco.Business.Interfaces.Dtos.AccountPassword.Admin.ChangeSelectedUserPassword;
 using Disco.Business.Interfaces.Dtos.AccountPassword.Admin.ForgotPassword;
 using Disco.Business.Interfaces.Dtos.AccountPassword.Admin.ResetPassword;
@@ -25,9 +26,15 @@ namespace Disco.ApiServices.Features.AccountPassword.Admin
         public async Task<ActionResult<string>> ForgotPassword([FromBody] ForgotPasswordDto dto) =>
             await _mediator.Send(new ForgotPasswordRequest(dto));
 
-        [HttpPut("reset")]
-        public async Task<ActionResult<string>> ResetPassword([FromBody] ResetPasswordDto dto) =>
-            await _mediator.Send(new ResetPasswordRequest(dto));
+        [HttpPut("recovery")]
+        public async Task<ActionResult<string>> RecoveryPasswordAsync([FromBody] RecoveryPasswordRequestDto dto) =>
+            await _mediator.Send(new RecoveryPasswordRequest(dto));
+
+        [HttpPost("confirm/code")]
+        public async Task<ActionResult<bool>> ConfirmCodeAsync(
+            [FromQuery] string email,
+            [FromQuery] int code) =>
+            await _mediator.Send(new RecoveryPasswordCodeCheckingRequest(email, code));
 
         [HttpPut("change/password")]
         public async Task<ActionResult<ChangeSelectedUserPasswordResponseDto>> ChangeAccountPasswordAsync(
