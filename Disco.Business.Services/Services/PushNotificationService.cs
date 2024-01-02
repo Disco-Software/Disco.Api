@@ -10,6 +10,7 @@ using Disco.Domain.Models;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using Disco.Domain.Models.Models;
 
 namespace Disco.Business.Services.Services
 {
@@ -141,5 +142,42 @@ namespace Disco.Business.Services.Services
 
             return payload;
         }
+
+        public async Task<Installation> GetInstallationAsync(string installationId, CancellationToken token = default)
+        {
+            var installation = await _notificationHubClient.GetInstallationAsync(installationId, token);
+
+            return installation;
+        }
+
+        public async Task RequestNotificationAsync(PushNotificationBaseDto dto, IEnumerable<User> users)
+        {
+            foreach (var user in users)
+            {
+                var tags = new List<string> { user.Id.ToString() };
+
+                try
+                {
+                    await this.SendNotificationAsync(dto.Title, dto.Body, user.UserName!, tags.FirstOrDefault()!, CancellationToken.None);
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+        }
+
+        private async Task SendNotificationAsync(string title, string body, string userName, string tag,CancellationToken cancellationToken)
+        {
+            var dataPayload = "\"title\":\"Notification Title\",\"body\":\"Hello, world!\"";
+
+            //var iosPayload = $"{{\"aps\":{{\"alert\":{{\"title\":\"Notification Title\",\"body\":\"Hello, world!\"}},\"sound\":\"default\"}},\"data\":{{{dataPayload}}}}}";
+            //var iosTask = _notificationHubClient.SendAppleNativeNotificationAsync(iosPayload, tag, cancellationToken);
+
+            var androidPayload = $"{{\"notification\":{{}},\"data\":{{{dataPayload}}}, \"sound\": \"default\"}}";
+            var androidTask = _notificationHubClient.SendFcmNativeNotificationAsync(androidPayload, tag, cancellationToken);
+
+            await Task.WhenAll(androidTask);
+        }
+
     }
 }
