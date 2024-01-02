@@ -57,7 +57,7 @@ namespace Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.Forgo
             var html = htmlContent.Replace("[code]", code)
                 .Replace("[email]", user.Email);
 
-            var message = MimeMessageGenerationHelper.GeneratePasswordRecoveryEmail(user.Email, "Password recovery", html);
+            var message = MimeMessageHelper.GeneratePasswordRecoveryEmail(user.Email, "Password recovery", html);
 
             await _emailService.SendOneAsync(message);
 
