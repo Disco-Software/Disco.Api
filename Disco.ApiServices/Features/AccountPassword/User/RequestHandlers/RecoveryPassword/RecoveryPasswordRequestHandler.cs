@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountPassword.User.RequestHandlers.ResetPassword
 {
-    public class ResetPasswordRequestHandler : IRequestHandler<ResetPasswordRequest, string>
+    public class RecoveryPasswordRequestHandler : IRequestHandler<RecoveryPasswordRequest, string>
     {
         private readonly IAccountService _accountService;
         private readonly IAccountPasswordService _accountPasswordService;
 
-        public ResetPasswordRequestHandler(
+        public RecoveryPasswordRequestHandler(
             IAccountService accountService, 
             IAccountPasswordService accountPasswordService)
         {
@@ -23,17 +23,13 @@ namespace Disco.ApiServices.Features.AccountPassword.User.RequestHandlers.ResetP
             _accountPasswordService = accountPasswordService;
         }
 
-        public async Task<string> Handle(ResetPasswordRequest request, CancellationToken cancellationToken)
+        public async Task<string> Handle(RecoveryPasswordRequest request, CancellationToken cancellationToken)
         {
             var user = await _accountService.GetByEmailAsync(request.Dto.Email);
 
-            if (user == null)
-                throw new ResourceNotFoundException(new Dictionary<string, string> { { "email", "Email is not valid" } });
+            await _accountPasswordService.ChengePasswordAsync(user, request.Dto.Password);
 
-            await _accountPasswordService.ChengePasswordAsync(user, request.Dto.ConfirmationToken, request.Dto.Password);
-
-            return "Password successfuly reset";
-
+            return "";
         }
     }
 }

@@ -10,12 +10,12 @@ using System.Net.Mail;
 
 namespace Disco.Business.Services.Services
 {
-    public class EmailService : IEmailService
+    public class EmailSenderService : IEmailSenderService
     {
         private readonly IOptions<EmailOptions> _emailOptions;
         private readonly ISmtpClient _smtpClient;
 
-        public EmailService(
+        public EmailSenderService(
             IOptions<EmailOptions> emailOptions,
             ISmtpClient smtpClient)
         {

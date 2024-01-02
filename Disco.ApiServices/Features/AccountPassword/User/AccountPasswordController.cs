@@ -1,19 +1,13 @@
-﻿using Disco.Business.Interfaces;
-using Disco.Domain.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Disco.Business.Interfaces.Interfaces;
-using Disco.ApiServices.Controllers;
-using MediatR;
+﻿using Disco.ApiServices.Controllers;
 using Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.ForgotPassword;
-using Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.ResetPassword;
+using Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.RecoveryPassword;
+using Disco.ApiServices.Features.AccountPassword.User.RequestHandlers.RecoveryPasswordCodeChecking;
 using Disco.Business.Interfaces.Dtos.AccountPassword.Admin.ForgotPassword;
 using Disco.Business.Interfaces.Dtos.AccountPassword.Admin.ResetPassword;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.AccountPassword.User
 {
@@ -28,12 +22,18 @@ namespace Disco.ApiServices.Features.AccountPassword.User
             _mediator = mediator;
         }
 
-        [HttpPost("forgot")]
+        [HttpPost("forgot"), AllowAnonymous]
         public async Task<ActionResult<string>> ForgotPassword([FromBody] ForgotPasswordDto dto) =>
             await _mediator.Send(new ForgotPasswordRequest(dto));
 
-        [HttpPut("reset")]
-        public async Task<ActionResult<string>> ResetPassword([FromBody] ResetPasswordDto dto) =>
-            await _mediator.Send(new ResetPasswordRequest(dto));
+        [HttpPost("confirm/code"), AllowAnonymous]
+        public async Task<ActionResult<bool>> ConfirmCodeAsync(
+            [FromQuery] string email,
+            [FromQuery] int code) =>
+            await _mediator.Send(new RecoveryPasswordCodeCheckingRequest(email, code));
+
+        [HttpPut("recovery"), AllowAnonymous]
+        public async Task<ActionResult<string>> ResetPassword([FromBody] RecoveryPasswordRequestDto dto) =>
+            await _mediator.Send(new RecoveryPasswordRequest(dto));
     }
 }
