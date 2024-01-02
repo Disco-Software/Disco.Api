@@ -6,6 +6,7 @@ using Disco.ApiServices.Features.Comment;
 using Disco.ApiServices.Features.Message;
 using Disco.ApiServices.Filters;
 using Disco.Business.Interfaces.Options;
+using Disco.Business.Interfaces.Options.EmailConfirmation;
 using Disco.Business.Interfaces.Options.PasswordRecovery;
 using Disco.Business.Services.Extentions;
 using Disco.Domain.Data.Extentions;
@@ -60,6 +61,7 @@ namespace Disco.Api
             services.Configure<EmailOptions>(Configuration.GetSection("EmailSettings"));
             services.Configure<GoogleOptions>(Configuration.GetSection("Google"));
             services.AddUserAuthentication(Configuration);
+            services.AddSession();
 
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             //    .AddJwtBearer(opt =>
@@ -112,9 +114,8 @@ namespace Disco.Api
             services.AddOptions<StripeOptions>()
                 .Configure(Configuration.GetSection("Stripe").Bind)
                 .ValidateDataAnnotations();
-            //services.AddOptions<ConnectionStrings>()
-            //    .Configure(Configuration.GetSection("ConnectionStrings").Bind)
-            //    .ValidateDataAnnotations();
+
+            services.Configure<EmailConfirmationCodeConfigurationOptions>(Configuration.GetSection("EmailConfirmationSettings").Bind);
 
             services.Configure<PasswordRecoveryOptions>(Configuration.GetSection("PasswordRecovery"));
 
@@ -178,7 +179,7 @@ namespace Disco.Api
             app.UseAuthorization();
 
             app.UseWebSockets();
-
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
