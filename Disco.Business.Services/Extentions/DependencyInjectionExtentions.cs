@@ -29,6 +29,7 @@ namespace Disco.Business.Services.Extentions
                 .AddScoped<IGroupService, GroupService>()
                 .AddScoped<IMessageService, MessageService>()
                 .AddScoped<IEmailSenderService, EmailSenderService>()
+                .AddScoped<IEmailGeneratorService, EmailGeneratorService>()
                 .AddScoped<IPasswordRecoveryGeneratorService, PasswordRecoveryGeneratorService>()
                 .AddScoped<ICommentService, CommentService>()
                 .AddScoped<IFollowerService, FollowerService>()
