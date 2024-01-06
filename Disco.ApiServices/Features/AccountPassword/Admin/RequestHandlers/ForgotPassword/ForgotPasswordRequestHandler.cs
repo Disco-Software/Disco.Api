@@ -22,7 +22,7 @@ namespace Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.Forgo
         private readonly IEmailSenderService _emailService;
         private readonly IPasswordRecoveryGeneratorService _passwordRecoveryGeneratorService;
         private readonly IHttpContextAccessor _contextAccessor;
-        IOptions<PasswordRecoveryOptions> _passwordRecoveryOptions;
+        private readonly IOptions<PasswordRecoveryOptions> _passwordRecoveryOptions;
         
         public ForgotPasswordRequestHandler(
             IAccountService accountService, 
