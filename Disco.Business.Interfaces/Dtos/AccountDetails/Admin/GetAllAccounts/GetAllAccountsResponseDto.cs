@@ -2,6 +2,7 @@
 {
     public class GetAllAccountsResponseDto
     {
+        public GetAllAccountsResponseDto() { }
         public GetAllAccountsResponseDto(
             AccountDto account)
         {

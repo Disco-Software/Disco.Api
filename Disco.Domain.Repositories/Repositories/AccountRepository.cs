@@ -77,7 +77,11 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task<IEnumerable<Account>> GetAllAsync(int pageNumber, int pageSize)
         {
-            var accounts = await _context.Accounts.ToListAsync();
+            var accounts = await _context.Accounts
+                .OrderByDescending(a => a.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
             foreach (var account in accounts)
             {
