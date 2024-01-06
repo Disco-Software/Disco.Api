@@ -133,5 +133,12 @@ namespace Disco.Business.Services.Services
                 throw new FailedEmailConfirmationException(errors);
             }
         }
+
+        public int GetAccountCount()
+        {
+            var accountCount = _accountRepository.GetAccountsCount();
+
+            return accountCount;
+        }
     }
 }
