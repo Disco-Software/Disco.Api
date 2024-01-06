@@ -113,5 +113,10 @@ namespace Disco.Domain.Repositories.Repositories
 
             return accounts;
         }
+
+        public int GetAccountsCount()
+        {
+            return _context.Accounts.Count();
+        }
     }
 }

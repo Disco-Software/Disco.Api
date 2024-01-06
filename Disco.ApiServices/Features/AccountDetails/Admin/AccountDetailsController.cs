@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsCount;
 
 namespace Disco.ApiServices.Features.AccountDetails.Admin
 {
@@ -53,6 +54,10 @@ namespace Disco.ApiServices.Features.AccountDetails.Admin
             [FromQuery] int pageNumber,
             [FromQuery] int pageSize) =>
             await _mediator.Send(new GetAllAccountsRequest(pageNumber, pageSize));
+
+        [HttpGet("count")]
+        public async Task<int> GetAccountsCount() =>
+            await _mediator.Send(new GetAccountsCountRequest());
 
         [HttpGet("periot")]
         public async Task<ActionResult<List<GetAccountsByPeriotResponseDto>>> GetAccountsByPeriotAsync(int periot) =>
