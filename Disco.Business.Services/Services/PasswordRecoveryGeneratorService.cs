@@ -50,7 +50,7 @@ namespace Disco.Business.Services.Services
             }
             else
             {
-                blobClient = containerClient.GetBlobClient("confirmation_email_en.html");
+                blobClient = containerClient.GetBlobClient(_passwordRecoveryOptions.Value.Templates.EnglishTemplate);
             }
 
 
