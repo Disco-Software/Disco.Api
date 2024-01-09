@@ -61,6 +61,7 @@ namespace Disco.Api
             services.Configure<EmailOptions>(Configuration.GetSection("EmailSettings"));
             services.Configure<GoogleOptions>(Configuration.GetSection("Google"));
             services.AddUserAuthentication(Configuration);
+            services.AddMemoryCache();
             services.AddSession();
 
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -121,7 +122,6 @@ namespace Disco.Api
 
             services.AddAutoMapper();
 
-            services.AddSession();
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(GlobalExceptionFilter));
@@ -171,7 +171,6 @@ namespace Disco.Api
                  .AllowCredentials();
             });
 
-            app.UseSession();
             app.UseRouting();
             app.ApplicationServices.CreateScope();
 

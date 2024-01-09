@@ -3,9 +3,12 @@ using Disco.Business.Interfaces.Dtos.EmailNotifications.User.EmailConfirmation;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Business.Interfaces.Options.PasswordRecovery;
 using Disco.Business.Services.Helpers;
+using Disco.Business.Utils.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +24,7 @@ namespace Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.Forgo
         private readonly IAccountPasswordService _accountPasswordService;
         private readonly IEmailSenderService _emailService;
         private readonly IPasswordRecoveryGeneratorService _passwordRecoveryGeneratorService;
+        private readonly IMemoryCache _memoryCache;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IOptions<PasswordRecoveryOptions> _passwordRecoveryOptions;
         
@@ -29,6 +33,7 @@ namespace Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.Forgo
             IAccountPasswordService accountPasswordService,
             IEmailSenderService emailService,
             IPasswordRecoveryGeneratorService passwordRecoveryGeneratorService,
+            IMemoryCache memoryCache,
             IHttpContextAccessor contextAccessor,
             IOptions<PasswordRecoveryOptions> passwordRecoveryOptions)
         {
@@ -37,6 +42,7 @@ namespace Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.Forgo
             _emailService = emailService;
             _passwordRecoveryGeneratorService = passwordRecoveryGeneratorService;
             _contextAccessor = contextAccessor;
+            _memoryCache = memoryCache;
             _passwordRecoveryOptions = passwordRecoveryOptions;
         }
 
@@ -50,11 +56,11 @@ namespace Disco.ApiServices.Features.AccountPassword.Admin.RequestHandlers.Forgo
 
             var code = PasswordRecoveryGenerationCodeHelper.GenerateRecoveryCode();
 
-            _contextAccessor.HttpContext.Session.SetString("passwordRecoveryCode", code.ToString());
-            _contextAccessor.HttpContext.Session.Set("passwordRecoveryCodeExpired", 
-                ByteHepler.ConvertDateTimeToBytes(DateTime.UtcNow.AddMinutes(_passwordRecoveryOptions.Value.LifeTime)));
+            _memoryCache.Set(RecoveryPasswordSessionTypes.RECOVERY_PASSWORD_CODE, code);
+            _memoryCache.Set(RecoveryPasswordSessionTypes.RECOVERY_PASSWORD_CODE_EXPIRED, 
+                JsonConvert.SerializeObject(DateTime.UtcNow.AddMinutes(_passwordRecoveryOptions.Value.LifeTime)));
 
-            var html = htmlContent.Replace("[code]", code)
+            var html = htmlContent.Replace("[code]", code.ToString())
                 .Replace("[email]", user.Email);
 
             var message = MimeMessageHelper.GeneratePasswordRecoveryEmail(user.Email, "Password recovery", html);

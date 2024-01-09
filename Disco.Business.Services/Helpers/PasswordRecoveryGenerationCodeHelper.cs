@@ -8,7 +8,7 @@ namespace Disco.Business.Services.Helpers
 {
     public static class PasswordRecoveryGenerationCodeHelper
     {
-        public static string GenerateRecoveryCode()
+        public static int GenerateRecoveryCode()
         {
             Random random = new Random();
             const int codeLength = 6;
@@ -16,7 +16,9 @@ namespace Disco.Business.Services.Helpers
             string recoveryCode = string.Concat(Enumerable.Range(0, codeLength)
                 .Select(_ => random.Next(10).ToString()));
 
-            return recoveryCode;
+            int code = int.Parse(recoveryCode);
+
+            return code;
         }
     }
 }

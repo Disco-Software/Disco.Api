@@ -50,7 +50,7 @@ namespace Disco.ApiServices.Features.AccountPassword.User.RequestHandlers.Forgot
             _contextAccessor.HttpContext.Session.Set("passwordRecoveryCodeExpired",
                 ByteHepler.ConvertDateTimeToBytes(DateTime.UtcNow.AddMinutes(_passwordRecoveryOptions.Value.LifeTime)));
 
-            var html = htmlContent.Replace("[code]", code)
+            var html = htmlContent.Replace("[code]", code.ToString())
                 .Replace("[email]", user.Email);
 
             var message = MimeMessageHelper.GeneratePasswordRecoveryEmail(user.Email, "Password recovery", html);
