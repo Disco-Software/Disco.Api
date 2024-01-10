@@ -40,6 +40,12 @@ namespace Disco.ApiServices.Filters
 
                 context.Result = new JsonResult(error) { StatusCode = (int)HttpStatusCode.Unauthorized };
             }
+            else if (context.Exception is PasswordRecoveryException)
+            {
+                var error = mapper.Map<ErrorDto>(context.Exception as PasswordRecoveryException);
+
+                context.Result = new JsonResult(error) { StatusCode = (int)HttpStatusCode.Unauthorized };
+            }
 
             return Task.CompletedTask;
         }

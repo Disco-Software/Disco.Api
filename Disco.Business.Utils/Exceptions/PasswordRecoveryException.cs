@@ -9,11 +9,11 @@ namespace Disco.Business.Utils.Exceptions
 {
     public class PasswordRecoveryException : Exception
     {
-        private readonly Dictionary<string, string> _errors;
+        public Dictionary<string, string> Errors { get; }
 
         public PasswordRecoveryException(Dictionary<string, string> errors)
         {
-            _errors = errors;
+            Errors = errors;
         }
     }
 }

@@ -17,6 +17,9 @@ namespace Disco.Business.Services.Mapper
                 .ForMember(x => x.ErrorMessages, options => options.MapFrom(ex => ex.Errors.Select(kv => new ErrorMessage (kv.Key, kv.Value)).ToList()));
             CreateMap<InvalidRoleException, ErrorDto>()
                 .ForMember(x => x.ErrorMessages, options => options.MapFrom(ex => ex.Errors.Select(kv => new ErrorMessage (kv.Key, kv.Value)).ToList()));
+            CreateMap<PasswordRecoveryException, ErrorDto>()
+                .ForMember(x => x.ErrorMessages, options => options.MapFrom(ex => ex.Errors.Select(kv => new ErrorMessage (kv.Key, kv.Value)).ToList()));
+
         }
     }
 }
