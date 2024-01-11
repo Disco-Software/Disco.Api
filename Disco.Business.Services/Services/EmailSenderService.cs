@@ -25,6 +25,8 @@ namespace Disco.Business.Services.Services
 
         public async Task SendManyAsync(MimeMessage message, IEnumerable<string> emails)
         {
+            message.From.Add(new MailboxAddress(_emailOptions.Value.Name, _emailOptions.Value.Mail));
+
             foreach (var email in emails)
                 message.To.Add(new MailboxAddress(_emailOptions.Value.Name, email));
 
