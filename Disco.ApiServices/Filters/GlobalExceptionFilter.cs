@@ -36,15 +36,9 @@ namespace Disco.ApiServices.Filters
             }
             else if (context.Exception is InvalidRoleException)
             {
-                var error = mapper.Map<ErrorDto>(context.Exception as InvalidPasswordException);
-
-                context.Result = new JsonResult(error) { StatusCode = (int)HttpStatusCode.Unauthorized };
-            }
-            else if (context.Exception is PasswordRecoveryException)
-            {
                 var error = mapper.Map<ErrorDto>(context.Exception as PasswordRecoveryException);
 
-                context.Result = new JsonResult(error) { StatusCode = (int)HttpStatusCode.Unauthorized };
+                context.Result = new JsonResult(error) { StatusCode = (int)HttpStatusCode.Gone };
             }
 
             return Task.CompletedTask;
