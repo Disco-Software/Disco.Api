@@ -45,6 +45,13 @@ namespace Disco.ApiServices.Features.Email.Admin.RequestHandlers.SendEmailNotifi
             }
             else
             {
+                string body = request.AdminEmailNotificatioRequestDto.Body;
+
+                BodyBuilder bodyBuilder = new BodyBuilder();
+                bodyBuilder.HtmlBody = body;
+
+                message.Body = bodyBuilder.ToMessageBody();
+
                 await _emailService.SendManyAsync(message, request.AdminEmailNotificatioRequestDto.ToEmails);
             }
 
