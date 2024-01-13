@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsCount;
+using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsSearchResultsCount;
 
 namespace Disco.ApiServices.Features.AccountDetails.Admin
 {
@@ -69,6 +70,11 @@ namespace Disco.ApiServices.Features.AccountDetails.Admin
            [FromQuery] int pageNumber,
            [FromQuery] int pageSize) =>
             await _mediator.Send(new SearchAccountsRequest(search, pageNumber, pageSize));
+
+        [HttpGet("search/count")]
+        public async Task<int> GetAccountsCountAsync(
+            [FromQuery] string search) =>
+            await _mediator.Send(new GetAccountsSearchResultsCountRequest(search));
 
         [HttpPut("change/photo")]
         public async Task<ActionResult<ChangeAccountPhotoResponseDto>> ChangePhotoAsync(

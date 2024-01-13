@@ -140,5 +140,10 @@ namespace Disco.Business.Services.Services
 
             return accountCount;
         }
+
+        public int GetAccountsSearchResultCount(string search)
+        {
+            return _accountRepository.GetAccountsSearchResultCount(search);
+        }
     }
 }
