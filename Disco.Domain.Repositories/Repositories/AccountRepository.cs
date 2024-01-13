@@ -118,5 +118,12 @@ namespace Disco.Domain.Repositories.Repositories
         {
             return _context.Accounts.Count();
         }
+
+        public int GetAccountsSearchResultCount(string search)
+        {
+            return _context.Accounts
+                .Include(x => x.User)
+                .Count(x => x.User.UserName.Contains(search));
+        }
     }
 }

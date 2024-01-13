@@ -15,5 +15,6 @@ namespace Disco.Business.Interfaces.Interfaces
         Task ChangeEmailAsync(User user, string newEmail);
         Task ConfirmEmailAsync(User user);
         int GetAccountCount();
+        int GetAccountsSearchResultCount(string search);
     }
 }
