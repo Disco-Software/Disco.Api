@@ -38,6 +38,8 @@ namespace Disco.ApiServices.Features.Role.RequestHandlers.ChangeAccountRole
 
             await _roleService.ChangeAccountRoleAsync(user, request.ChangeAccountRoleRequestDto.RoleName);
 
+            user = await _accountService.GetByIdAsync(request.ChangeAccountRoleRequestDto.Id);
+
             var changeAccountRoleResponseDto = _mapper.Map<ChangeAccountRoleResponseDto>(user.Account);
 
             changeAccountRoleResponseDto.Account.FollowingCount = _followerService.GetFollowingsCount(user.AccountId);
