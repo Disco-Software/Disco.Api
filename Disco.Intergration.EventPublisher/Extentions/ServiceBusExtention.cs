@@ -25,7 +25,7 @@ namespace Disco.Intergration.EventPublisher.Extentions
                 return new ServiceBusClient(connectionString);
             });
 
-            return services.AddSingleton<IEventPublisher, ServiceBusPublisher>();
+            return services.AddSingleton<IRecommendationServiceBusPublisher, RecommendationServiceBusPublisher>();
         }
     }
 }

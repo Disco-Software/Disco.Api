@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Disco.Integration.Interfaces.Interfaces
 {
-    public interface IEventPublisher
+    public interface IRecommendationServiceBusPublisher
     {
         Task PublishAsync(PostCreatedEvent @event);
     }

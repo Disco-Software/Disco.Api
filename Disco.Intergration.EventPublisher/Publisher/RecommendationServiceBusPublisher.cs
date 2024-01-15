@@ -2,19 +2,14 @@
 using Disco.Domain.Events.Events;
 using Disco.Integration.Interfaces.Interfaces;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.Intergration.EventPublisher.Publisher
 {
-    public class ServiceBusPublisher : IEventPublisher
+    public class RecommendationServiceBusPublisher : IRecommendationServiceBusPublisher
     {
         private readonly ServiceBusClient _serviceBusClient;
 
-        public ServiceBusPublisher(ServiceBusClient serviceBusClient)
+        public RecommendationServiceBusPublisher(ServiceBusClient serviceBusClient)
         {
             _serviceBusClient = serviceBusClient;
         }

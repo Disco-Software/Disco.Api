@@ -1,14 +1,8 @@
 ﻿using Disco.Domain.Data.Seeds;
-using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
 
 namespace Disco.Domain.EF
 {
@@ -31,6 +25,7 @@ namespace Disco.Domain.EF
         public DbSet<Message> Messages { get; set; }
         public DbSet<AccountGroup> AccountGroups { get; set; }
         public DbSet<Connection> Connections { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options) { }
         public ApiDbContext() { }
@@ -126,6 +121,12 @@ namespace Disco.Domain.EF
                 .WithOne(g => g.Group)
                 .HasForeignKey(g => g.GroupId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Account>()
+                .HasMany(a => a.Notifications)
+                .WithOne(m => m.Account)
+                .HasForeignKey(m => m.AccountId) 
+                .OnDelete(DeleteBehavior.Restrict);
 
             AddSeeds(modelBuilder, this);
         }

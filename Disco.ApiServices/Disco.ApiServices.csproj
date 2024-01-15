@@ -17,4 +17,9 @@
       <ProjectReference Include="..\Disco.Integration.Clients\Disco.Integration.Clients.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Liseners\" />
+      <Folder Include="Publishers\" />
+    </ItemGroup>
+
 </Project>

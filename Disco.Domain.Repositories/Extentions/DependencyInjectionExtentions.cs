@@ -26,6 +26,7 @@ namespace Disco.Domain.Repositories.Extentions
                 .AddTransient<IImageRepository, ImageRepository>()
                 .AddTransient<ILikeRepository, LikeRepository>()
                 .AddTransient<IMessageRepository, MessageRepository>()
+                .AddTransient<INotificationRepository, NotificationRepository>()
                 .AddTransient<IPostRepository, PostRepository>()
                 .AddTransient<IRoleRepository, RoleRepository>()
                 .AddTransient<ISongRepository, SongRepository>()

@@ -12,11 +12,11 @@ namespace Disco.Business.Services.Services
     {
 
         private readonly IPostRepository _postRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IRecommendationServiceBusPublisher _eventPublisher;
         private readonly IMapper _mapper;
         public PostService(
             IMapper mapper,
-            IEventPublisher eventPublisher,
+            IRecommendationServiceBusPublisher eventPublisher,
             IPostRepository postRepository)
         {
             _postRepository = postRepository;

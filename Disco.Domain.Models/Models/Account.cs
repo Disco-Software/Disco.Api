@@ -9,6 +9,7 @@ namespace Disco.Domain.Models.Models
         public string Cread { get; set; } = string.Empty;
         public string? Photo { get; set; } = string.Empty;
         public List<AccountGroup> AccountGroups { get; set; }
+        public List<Notification> Notifications { get; set; }
         public List<Connection> Connections { get; set; } = new List<Connection>();
         public List<Message> Messages { get; set; }
         public List<Post> Posts { get; set; } = new List<Post>();
