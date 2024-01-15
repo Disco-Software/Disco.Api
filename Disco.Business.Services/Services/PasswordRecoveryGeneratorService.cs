@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Disco.Business.Interfaces.Options.PasswordRecovery;
+using Disco.Business.Utils.Guards;
 
 namespace Disco.Business.Services.Services
 {
@@ -26,6 +27,10 @@ namespace Disco.Business.Services.Services
             _blobServiceClient = blobServiceClient;
             _contextAccessor = contextAccessor;
             _passwordRecoveryOptions = passwordRecoveryOptions;
+
+            DefaultGuard.ArgumentNull(_blobServiceClient);
+            DefaultGuard.ArgumentNull(_contextAccessor);
+            DefaultGuard.ArgumentNull(_passwordRecoveryOptions);
         }
 
         public async Task<string> GetPasswordRecoveryAsync()

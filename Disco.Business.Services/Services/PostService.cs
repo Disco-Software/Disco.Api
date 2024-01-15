@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Disco.Business.Interfaces.Dtos.Posts;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Utils.Guards;
 using Disco.Domain.Events.Events;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models.Models;
@@ -22,6 +23,10 @@ namespace Disco.Business.Services.Services
             _postRepository = postRepository;
             _eventPublisher = eventPublisher;   
             _mapper = mapper;
+
+            DefaultGuard.ArgumentNull(_postRepository);
+            DefaultGuard.ArgumentNull(_mapper);
+            DefaultGuard.ArgumentNull(_eventPublisher);
         }
 
         public async Task CreatePostAsync(Post post)

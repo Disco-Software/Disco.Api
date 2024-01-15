@@ -11,6 +11,7 @@ using System.Threading;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using Disco.Domain.Models.Models;
+using Disco.Business.Utils.Guards;
 
 namespace Disco.Business.Services.Services
 {
@@ -29,6 +30,10 @@ namespace Disco.Business.Services.Services
                 {nameof(NotificationPlatform.Fcm), NotificationPlatform.Fcm },
                 {nameof(NotificationPlatform.Apns), NotificationPlatform.Apns }
             };
+
+            DefaultGuard.ArgumentNull(_notificationHubClient);
+            DefaultGuard.ArgumentNull(_installationPlatform);
+            DefaultGuard.ArgumentNull(_logger);
         }
 
         public async Task<string> CreateOrUpdateInstallationAsync(DeviceInstallationDto dto, CancellationToken cancellationToken)

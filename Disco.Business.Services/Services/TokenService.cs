@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
+using Disco.Business.Utils.Guards;
 
 namespace Disco.Business.Services.Services
 {
@@ -16,8 +17,12 @@ namespace Disco.Business.Services.Services
     {
         private readonly IOptions<AuthenticationOptions> _authenticationOptions;
 
-        public TokenService(IOptions<AuthenticationOptions> options) =>
+        public TokenService(IOptions<AuthenticationOptions> options)
+        {
             _authenticationOptions = options;
+
+            DefaultGuard.ArgumentNull(_authenticationOptions);
+        }
 
         public string GenerateAccessToken(User user)
         {

@@ -12,6 +12,7 @@ using Disco.Business.Interfaces.Enums;
 using Microsoft.Extensions.Hosting;
 using Disco.Integration.Interfaces.Dtos.AudD;
 using Disco.Business.Interfaces.Dtos.Analytic.Admin.GetAnalytics;
+using Disco.Business.Utils.Guards;
 
 namespace Disco.Business.Services.Services
 {
@@ -29,6 +30,10 @@ namespace Disco.Business.Services.Services
             _userRepository = userRepository;
             _postRepository = postRepository;
             _mapper = mapper;
+
+            DefaultGuard.ArgumentNull(_userRepository);
+            DefaultGuard.ArgumentNull(_postRepository);
+            DefaultGuard.ArgumentNull(_mapper);
         }
 
         public async Task<AnalyticResponseDto> GetAnalyticAsync(DateTime from, DateTime to, AnalyticFor statistics)

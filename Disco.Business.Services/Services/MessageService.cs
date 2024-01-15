@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Disco.Business.Interfaces;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Utils.Guards;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
@@ -23,6 +24,9 @@ namespace Disco.Business.Services.Services
         {
             _messageRepository = messageRepository;
             _mapper = mapper;
+
+            DefaultGuard.ArgumentNull(_messageRepository);
+            DefaultGuard.ArgumentNull(_mapper);
         }
 
         public async Task<Message> CreateAsync(string textMessage, Account account, Group group)

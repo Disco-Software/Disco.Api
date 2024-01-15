@@ -8,6 +8,7 @@ using Disco.Domain.Interfaces;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
 using Disco.Business.Interfaces.Dtos.PostSong.User.CreatePostSong;
+using Disco.Business.Utils.Guards;
 
 namespace Disco.Business.Services.Services
 {
@@ -28,6 +29,11 @@ namespace Disco.Business.Services.Services
             _postRepository = postRepository;
             _blobServiceClient = blobServiceClient;
             _mapper = mapper;
+
+            DefaultGuard.ArgumentNull(_songRepository);
+            DefaultGuard.ArgumentNull(_postRepository);
+            DefaultGuard.ArgumentNull(_blobServiceClient);
+            DefaultGuard.ArgumentNull(_mapper);
         }
 
         public async Task<PostSong> CreatePostSongAsync(CreatePostSongRequestDto dto)

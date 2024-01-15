@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Disco.Business.Utils.Guards;
 using Microsoft.AspNetCore.Http;
 
 namespace Disco.Business.Interfaces.Interfaces
@@ -15,6 +16,9 @@ namespace Disco.Business.Interfaces.Interfaces
         {
             _blobServiceClient = blobServiceClient;
             _contextAccessor = contextAccessor;
+
+            DefaultGuard.ArgumentNull(_blobServiceClient);
+            DefaultGuard.ArgumentNull(_contextAccessor);
         }
 
         public async Task<string> GenerateEmailConfirmationContentAsync()
