@@ -1,6 +1,7 @@
 ﻿using Disco.Business.Constants;
 using Disco.Business.Exceptions;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Utils.Guards;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Identity;
@@ -28,6 +29,12 @@ namespace Disco.Business.Services.Services
             _accountRepository = accountRepository;
             _accountStatusRepository = accountStatusRepository;
             _followerRepository = followerRepository;
+
+            DefaultGuard.ArgumentNull(_userManager);
+            DefaultGuard.ArgumentNull(_userRepository);
+            DefaultGuard.ArgumentNull(_accountRepository);
+            DefaultGuard.ArgumentNull(_accountStatusRepository);
+            DefaultGuard.ArgumentNull(_followerRepository);
         }
 
 

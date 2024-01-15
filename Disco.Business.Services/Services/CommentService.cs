@@ -1,4 +1,5 @@
 ﻿using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Utils.Guards;
 using Disco.Domain.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
 
@@ -11,6 +12,8 @@ namespace Disco.Business.Services.Services
         public CommentService(ICommentRepository commentRepository)
         {
             _commentRepository = commentRepository;
+
+            DefaultGuard.ArgumentNull(_commentRepository);
         }
 
         public async Task AddCommentAsync(Comment comment)

@@ -3,6 +3,7 @@ using Azure.Storage.Blobs;
 using Disco.Business.Interfaces.Dtos.StoryVideos;
 using Disco.Business.Interfaces.Dtos.StoryVideos.User.CreateStoryVideo;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Utils.Guards;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Http;
@@ -33,6 +34,13 @@ namespace Disco.Business.Services.Services
             _blobServiceClient = blobServiceClient;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+
+            DefaultGuard.ArgumentNull(_storyVideoRepository);
+            DefaultGuard.ArgumentNull(_storyRepository);
+            DefaultGuard.ArgumentNull(_userManager);
+            DefaultGuard.ArgumentNull(_blobServiceClient);
+            DefaultGuard.ArgumentNull(_mapper);
+            DefaultGuard.ArgumentNull(_httpContextAccessor);
         }
 
         public async Task<StoryVideo> CreateStoryVideoAsync(CreateStoryVideoRequestDto dto)

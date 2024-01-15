@@ -1,6 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Business.Utils.Exceptions;
+using Disco.Business.Utils.Guards;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Http;
@@ -31,6 +32,13 @@ namespace Disco.Business.Services.Services
             _accountStatusRepository = accountStatusRepository;
             _userRepository = userRepository;
             _followerRepository = followerRepository;
+
+            DefaultGuard.ArgumentNull(_userManager);
+            DefaultGuard.ArgumentNull(_blobServiceClient);
+            DefaultGuard.ArgumentNull(_accountRepository);
+            DefaultGuard.ArgumentNull(_accountStatusRepository);
+            DefaultGuard.ArgumentNull(_userManager);
+            DefaultGuard.ArgumentNull(_followerRepository);
         }
 
         public async Task<User> ChengePhotoAsync(User user, IFormFile formFile)

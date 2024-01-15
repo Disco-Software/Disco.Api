@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
-using Disco.Domain.Models;
-using System;
-using System.Threading.Tasks;
-using Disco.Domain.Interfaces;
-using Disco.Business.Interfaces.Interfaces;
-using Disco.Domain.Models.Models;
 using Disco.Business.Interfaces.Dtos.PostVideo.User.CreatePostVideo;
+using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Utils.Guards;
+using Disco.Domain.Interfaces;
+using Disco.Domain.Models.Models;
 
 namespace Disco.Business.Services.Services
 {
@@ -28,6 +26,11 @@ namespace Disco.Business.Services.Services
             _postRepository = postRepository;
             _blobServiceClient = blobServiceClient;
             _mapper = mapper;
+
+            DefaultGuard.ArgumentNull(_videoRepository);
+            DefaultGuard.ArgumentNull(_postRepository);
+            DefaultGuard.ArgumentNull(_blobServiceClient);
+            DefaultGuard.ArgumentNull(_mapper);
         }
 
         public async Task<PostVideo> CreateVideoAsync(CreatePostVideoRequestDto model)

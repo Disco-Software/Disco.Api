@@ -1,5 +1,6 @@
 ﻿using Disco.Business.Interfaces.Dtos.Stories.User.GetAllStories;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Utils.Guards;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models.Models;
 
@@ -12,6 +13,8 @@ namespace Disco.Business.Services.Services
             IStoryRepository storyRepository)
         {
             _storyRepository = storyRepository;
+
+            DefaultGuard.ArgumentNull(_storyRepository);
         }
         
 
