@@ -123,7 +123,7 @@ namespace Disco.Domain.Repositories.Repositories
         {
             return _context.Accounts
                 .Include(x => x.User)
-                .Count(x => x.User.UserName.Contains(search));
+                .Count(x => x.User.UserName.StartsWith(search));
         }
     }
 }
