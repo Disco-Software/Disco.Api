@@ -1,6 +1,7 @@
 ﻿
 using AutoMapper;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Utils.Guards;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models.Models;
 
@@ -17,6 +18,9 @@ namespace Disco.Business.Services.Services
         {
             _likeRepository = likeRepository;
             _mapper = mapper;
+
+            DefaultGuard.ArgumentNull(_likeRepository);
+            DefaultGuard.ArgumentNull(_mapper);
         }
 
         public async Task CreateLikeAsync(Like like)

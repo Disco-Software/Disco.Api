@@ -1,5 +1,6 @@
 ﻿using Disco.Business.Interfaces.Interfaces;
 using Disco.Business.Utils.Exceptions;
+using Disco.Business.Utils.Guards;
 using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Identity;
 
@@ -12,6 +13,8 @@ namespace Disco.Business.Services.Services
         public AccountPasswordService(UserManager<User> userManager)
         {
             _userManager = userManager;
+
+            DefaultGuard.ArgumentNull(_userManager);
         }
 
         public async Task ChengePasswordAsync(User user, string newPassword)

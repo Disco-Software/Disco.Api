@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Azure.Storage.Blobs;
 using Disco.Business.Interfaces.Dtos.PostImage.User.CreateImage;
-using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Utils.Guards;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models.Models;
 
@@ -21,6 +21,10 @@ namespace Disco.Business.Services.Services
             _imageRepository = imageRepository;
             _blobServiceClient = blobServiceClient;
             _mapper = mapper;
+
+            DefaultGuard.ArgumentNull(_imageRepository);
+            DefaultGuard.ArgumentNull(_blobServiceClient);
+            DefaultGuard.ArgumentNull(_mapper);
         }
 
 

@@ -9,6 +9,7 @@ using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
 using Disco.Business.Interfaces.Dtos.Roles.Admin.GetRoles;
 using Disco.Business.Utils.Exceptions;
+using Disco.Business.Utils.Guards;
 
 namespace Disco.Business.Services.Services
 {
@@ -29,6 +30,11 @@ namespace Disco.Business.Services.Services
             _roleManager = roleManager;
             _roleRepository = roleRepository;
             _mapper = mapper;
+
+            DefaultGuard.ArgumentNull(_userManager);
+            DefaultGuard.ArgumentNull(_roleManager);
+            DefaultGuard.ArgumentNull(_roleRepository);
+            DefaultGuard.ArgumentNull(_mapper);
         }
 
         public async Task RemoveRoleAsync(string name)

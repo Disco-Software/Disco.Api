@@ -2,6 +2,7 @@
 using Azure.Storage.Blobs;
 using Disco.Business.Interfaces.Dtos.StoryImages.User.CreateStoryImage;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Utils.Guards;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models.Models;
 using Microsoft.AspNetCore.Http;
@@ -29,6 +30,12 @@ namespace Disco.Business.Services.Services
             _blobServiceClient = blobServiceClient;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+
+            DefaultGuard.ArgumentNull(_storyImageRepository);
+            DefaultGuard.ArgumentNull(_storyImageRepository);
+            DefaultGuard.ArgumentNull(_storyImageRepository);
+            DefaultGuard.ArgumentNull(_storyImageRepository);
+            DefaultGuard.ArgumentNull(_storyImageRepository);
         }
 
         public async Task<StoryImage> CreateStoryImageAsync(CreateStoryImageRequestDto dto)

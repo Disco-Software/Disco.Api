@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Utils.Guards;
 using Disco.Domain.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
 
@@ -16,6 +17,9 @@ namespace Disco.Business.Services.Services
         {
             _accountGroupRepository = accountGroupRepository;
             _mapper = mapper;
+
+            DefaultGuard.ArgumentNull(_accountGroupRepository);
+            DefaultGuard.ArgumentNull(_mapper);
         }
 
         public async Task<AccountGroup> CreateAsync(Account account, Group group)

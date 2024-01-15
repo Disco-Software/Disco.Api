@@ -1,14 +1,7 @@
-﻿using Disco.Business.Exceptions;
-using Disco.Business.Interfaces;
-using Disco.Business.Interfaces.Interfaces;
+﻿using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Utils.Guards;
 using Disco.Domain.Interfaces;
-using Disco.Domain.Models;
 using Disco.Domain.Models.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.Business.Services.Services
 {
@@ -19,6 +12,8 @@ namespace Disco.Business.Services.Services
         public ConnectionService(IConnectionRepository connectionRepository)
         {
             _connectionRepository = connectionRepository;
+
+            DefaultGuard.ArgumentNull(_connectionRepository);
         }
 
         public async Task CreateAsync(Connection connection, Account account)

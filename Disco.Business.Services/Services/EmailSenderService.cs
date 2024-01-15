@@ -2,6 +2,7 @@
 using Disco.Business.Interfaces.Dtos.EmailNotifications.User.EmailConfirmation;
 using Disco.Business.Interfaces.Interfaces;
 using Disco.Business.Interfaces.Options;
+using Disco.Business.Utils.Guards;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Html;
 using Microsoft.Extensions.Options;
@@ -21,6 +22,9 @@ namespace Disco.Business.Services.Services
         {
             _emailOptions = emailOptions;
             _smtpClient = smtpClient;
+
+            DefaultGuard.ArgumentNull(_emailOptions);
+            DefaultGuard.ArgumentNull(_smtpClient);
         }
 
         public async Task SendManyAsync(MimeMessage message, IEnumerable<string> emails)

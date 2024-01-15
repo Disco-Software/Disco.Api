@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Disco.Business.Interfaces.Dtos.Followers;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Utils.Guards;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models.Models;
 
@@ -20,6 +21,10 @@ namespace Disco.Business.Services.Services
             _followerRepository = friendRepository;
             _mapper = mapper;
             _accountRepository = accountRepository;
+
+            DefaultGuard.ArgumentNull(_followerRepository);
+            DefaultGuard.ArgumentNull(_mapper);
+            DefaultGuard.ArgumentNull(_accountRepository);
         }
 
         public async Task CreateAsync(UserFollower userFollower)
