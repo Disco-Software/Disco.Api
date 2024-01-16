@@ -7,6 +7,14 @@ namespace Disco.Business.Services.Mapper.AccountDetails.Admin
     {
         public CreateAccountMappingProfile()
         {
+            CreateMap<CreateAccountRequestDto, Domain.Models.Models.User>()
+                .ForMember(x => x.UserName, options => options.MapFrom(x => x.UserName))
+                .ForMember(x => x.Email, options => options.MapFrom(x => x.Email))
+                .ForMember(x => x.RoleName, options => options.MapFrom(x => x.RoleName))
+                .ForMember(x => x.UserName, options => options.MapFrom(x => x.UserName))
+                .ForMember(x => x.NormalizedEmail, options => options.MapFrom(x => x.Email.Normalize()))
+                .ForMember(x => x.NormalizedUserName, options => options.MapFrom(x => x.UserName.Normalize()));
+
             CreateMap<Domain.Models.Models.Account, AccountDto>();
             CreateMap<Domain.Models.Models.User, UserDto>();
 
