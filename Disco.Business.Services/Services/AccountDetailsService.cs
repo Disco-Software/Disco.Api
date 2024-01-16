@@ -149,6 +149,13 @@ namespace Disco.Business.Services.Services
             return accountCount;
         }
 
+        public async Task<string> UpdateRoleAsync(User user)
+        {
+            user.RoleName = _userRepository.GetUserRole(user);
+
+            return user.RoleName;
+        }
+
         public int GetAccountsSearchResultCount(string search)
         {
             return _accountRepository.GetAccountsSearchResultCount(search);

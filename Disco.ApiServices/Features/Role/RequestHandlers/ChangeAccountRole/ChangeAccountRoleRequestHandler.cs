@@ -10,6 +10,7 @@ namespace Disco.ApiServices.Features.Role.RequestHandlers.ChangeAccountRole
     public class ChangeAccountRoleRequestHandler : IRequestHandler<ChangeAccountRoleRequest, ChangeAccountRoleResponseDto>
     {
         private readonly IAccountService _accountService;
+        private readonly IAccountDetailsService _accountDetailsService;
         private readonly IRoleService _roleService;
         private readonly IFollowerService _followerService;
         private readonly IPostService _postService;
@@ -18,6 +19,7 @@ namespace Disco.ApiServices.Features.Role.RequestHandlers.ChangeAccountRole
 
         public ChangeAccountRoleRequestHandler(
             IAccountService accountService,
+            IAccountDetailsService accountDetailsService,
             IRoleService roleService,
             IFollowerService followerService,
             IPostService postService,
@@ -25,6 +27,7 @@ namespace Disco.ApiServices.Features.Role.RequestHandlers.ChangeAccountRole
             IMapper mapper) 
         { 
             _accountService = accountService;
+            _accountDetailsService = accountDetailsService;
             _roleService = roleService;
             _followerService = followerService;
             _postService = postService;
@@ -38,7 +41,7 @@ namespace Disco.ApiServices.Features.Role.RequestHandlers.ChangeAccountRole
 
             await _roleService.ChangeAccountRoleAsync(user, request.ChangeAccountRoleRequestDto.RoleName);
 
-            user = await _accountService.GetByIdAsync(request.ChangeAccountRoleRequestDto.Id);
+            user.RoleName = await _accountDetailsService.UpdateRoleAsync(user);
 
             var changeAccountRoleResponseDto = _mapper.Map<ChangeAccountRoleResponseDto>(user.Account);
 
