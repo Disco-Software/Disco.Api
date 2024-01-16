@@ -83,7 +83,7 @@ namespace Disco.Domain.EF
                 .HasOne(account => account.AccountStatus)
                 .WithOne(a => a.Account)
                 .HasForeignKey<AccountStatus>(accountStatus => accountStatus.AccountId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Account>()
                 .HasMany(a => a.AccountGroups)
