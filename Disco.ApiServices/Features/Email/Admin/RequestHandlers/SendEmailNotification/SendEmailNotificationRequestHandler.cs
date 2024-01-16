@@ -33,7 +33,8 @@ namespace Disco.ApiServices.Features.Email.Admin.RequestHandlers.SendEmailNotifi
                     message.To.Add(new MailboxAddress(user.UserName, user.Email));
 
                     string body = request.AdminEmailNotificatioRequestDto.Body
-                        .Replace("{{name}}", user.UserName);
+                        .Replace("{{name}}", user.UserName)
+                        .Replace("{{email}}", user.Email);
 
                     BodyBuilder bodyBuilder = new BodyBuilder();
                     bodyBuilder.HtmlBody = body;
