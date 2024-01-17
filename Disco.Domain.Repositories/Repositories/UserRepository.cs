@@ -103,5 +103,13 @@ namespace Disco.Domain.Repositories.Repositories
                 .Select(user => user.Email)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<string>> GetUsersNamesAsync(string search)
+        {
+            return await _context.Users
+                .Where(x => x.UserName.StartsWith(search))
+                .Select(x => x.UserName)
+                .ToListAsync();
+        }
     }
 }

@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsCount;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsSearchResultsCount;
+using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.SearchAccountNames;
 
 namespace Disco.ApiServices.Features.AccountDetails.Admin
 {
@@ -89,5 +90,10 @@ namespace Disco.ApiServices.Features.AccountDetails.Admin
         [HttpGet("emails/search")]
         public async Task<IEnumerable<string>> GetEmailsBySearchAsync([FromQuery] string search) =>
             await _mediator.Send(new SearchAccountEmailsRequest(search));
+
+        [HttpGet("names/search")]
+        public async Task<IEnumerable<string>> GetNamesBySearchAsync(
+            [FromQuery] string search) => 
+            await _mediator.Send(new SearchAccountNamesRequest(search));
     }
 }

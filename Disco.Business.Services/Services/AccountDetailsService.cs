@@ -160,5 +160,12 @@ namespace Disco.Business.Services.Services
         {
             return _accountRepository.GetAccountsSearchResultCount(search);
         }
+
+        public async Task<IEnumerable<string>> GetAccountsUserNamesSearchResultsAsync(string search)
+        {
+            var result = await _userRepository.GetUsersNamesAsync(search);
+
+            return result;
+        }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Disco.ApiServices.Controllers;
 using Disco.ApiServices.Features.PushNotification.RequestHandlers.CreateInstallation;
 using Disco.ApiServices.Features.PushNotification.RequestHandlers.RemoveInstallation;
-using Disco.ApiServices.Features.PushNotification.RequestHandlers.SubmitNotification;
 using Disco.Business.Interfaces.Dtos.PushNotifications;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

@@ -17,5 +17,6 @@ namespace Disco.Business.Interfaces.Interfaces
         Task<string> UpdateRoleAsync(User user);
         int GetAccountCount();
         int GetAccountsSearchResultCount(string search);
+        Task<IEnumerable<string>> GetAccountsUserNamesSearchResultsAsync(string search);
     }
 }
