@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Disco.ApiServices.Controllers
 {
     [ApiController]
-    [Authorize(AuthenticationSchemes = AuthSchema.UserToken)]
+    [Authorize(AuthenticationSchemes = AuthSchema.DEFAULT_USER_AUTHENTICATION)]
     public class UserController : ControllerBase
     {
     }

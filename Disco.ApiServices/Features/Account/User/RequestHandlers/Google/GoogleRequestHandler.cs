@@ -56,7 +56,7 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Google
                 return googleLogInResponseDto;
             }
 
-            user = await _accountService.GetByLogInProviderAsync(LogInProvider.Google, request.Dto.IdToken);
+            user = await _accountService.GetByLogInProviderAsync(LogInProvider.GOOGLE_PROVIDER, request.Dto.IdToken);
             if (user != null)
             {
                 user.Account.Photo = request.Dto.Photo;

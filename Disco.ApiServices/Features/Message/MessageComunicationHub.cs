@@ -16,7 +16,7 @@ using OnDisconnectRequest = Disco.ApiServices.Features.Message.RequestHandlers.O
 
 namespace Disco.ApiServices.Features.Message
 {
-    [Authorize(AuthenticationSchemes = AuthSchema.UserToken)]
+    [Authorize(AuthenticationSchemes = AuthSchema.DEFAULT_USER_AUTHENTICATION)]
     public class MessageComunicationHub : Hub
     {
         private readonly IMediator _mediator;

@@ -2,8 +2,8 @@
 {
     public class LogInProvider
     {
-        public const string Facebook = "Facebook";
-        public const string Apple = "Apple";
-        public const string Google = "Google";
+        public const string FACEBOOK_PROVIDER = "Facebook";
+        public const string APPLE_PROVIDER = "Apple";
+        public const string GOOGLE_PROVIDER = "Google";
     }
 }

@@ -2,7 +2,7 @@
 {
     public class UserRole
     {
-        public const string Admin = "Admin";
-        public const string User = "User";
+        public const string ADMIN_ROLE = "Admin";
+        public const string USER_ROLE = "User";
     }
 }

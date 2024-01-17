@@ -25,14 +25,7 @@ namespace Disco.ApiServices.Features.PushNotification.RequestHandlers.SubmitNoti
 
         public async Task<string> Handle(SubmitNotificationRequest request, CancellationToken cancellationToken)
         {
-            var response = await _notificationService.RequestNotificationAsync(request.Dto, _contextAccessor.HttpContext.RequestAborted);
-
-            if (!response)
-            {
-                return $"Submit status: {response}";
-            }
-
-            return $"Submit status: {response}";
+            return $"Submit status:";
         }
     }
 }

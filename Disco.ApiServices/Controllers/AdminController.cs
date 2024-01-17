@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Disco.ApiServices.Controllers
 {
     [ApiController]
-    [Authorize(AuthenticationSchemes = AuthSchema.UserToken, Roles = UserRole.Admin)]
+    [Authorize(AuthenticationSchemes = AuthSchema.DEFAULT_USER_AUTHENTICATION, Roles = UserRole.ADMIN_ROLE)]
     public class AdminController : ControllerBase
     {
     }
