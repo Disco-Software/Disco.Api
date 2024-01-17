@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Comment
 {
-    [Authorize(AuthenticationSchemes = AuthSchema.UserToken)]
+    [Authorize(AuthenticationSchemes = AuthSchema.DEFAULT_USER_AUTHENTICATION)]
     public class CommentComunicationHub : Hub
     {
         private readonly IMediator _mediator;

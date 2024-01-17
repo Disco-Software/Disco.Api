@@ -52,7 +52,7 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Apple
                 return appleLogInResponseDto;
             }
 
-            user = await _accountService.GetByLogInProviderAsync(LogInProvider.Apple, request.Dto.AppleIdCode);
+            user = await _accountService.GetByLogInProviderAsync(LogInProvider.APPLE_PROVIDER, request.Dto.AppleIdCode);
             if (user != null)
             {
                 user.Email = request.Dto.Email;

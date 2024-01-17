@@ -111,7 +111,7 @@ namespace Disco.Business.Services.Services
            user.DateOfRegister = DateTime.UtcNow;
            user.AccountId = user.Account.Id;
 
-           await _userManager.AddToRoleAsync(user, UserRole.User);
+           await _userManager.AddToRoleAsync(user, UserRole.USER_ROLE);
            user.RoleName = _userRepository.GetUserRole(user);
          }
 

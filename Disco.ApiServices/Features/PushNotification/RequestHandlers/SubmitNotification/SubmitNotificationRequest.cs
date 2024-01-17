@@ -1,4 +1,5 @@
-﻿using Disco.Business.Interfaces.Dtos.PushNotifications;
+﻿using Disco.Business.Interfaces.Dtos.NewsNotification.Admin.NewsNotificationEvent;
+using Disco.Business.Interfaces.Dtos.PushNotifications;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,11 @@ namespace Disco.ApiServices.Features.PushNotification.RequestHandlers.SubmitNoti
 {
     public class SubmitNotificationRequest : IRequest<string>
     {
-        public SubmitNotificationRequest(PushNotificationBaseDto dto)
+        public SubmitNotificationRequest(NewsNotificationEventDto dto)
         {
             Dto = dto;
         }
 
-        public PushNotificationBaseDto Dto { get; }
+        public NewsNotificationEventDto Dto { get; }
     }
 }

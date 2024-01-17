@@ -2,8 +2,8 @@
 {
     public class NotificationTypes
     {
-        public const string NewFollowerNotification = "follower";
-        public const string AppNotification = "application";
-        public const string LikeNotification = "like";
+        public const string NEW_FOLLOWER_NOTIFICATION = "follower";
+        public const string APP_NOTIFICATION = "application";
+        public const string LIKE_NOTIFICATION = "like";
     }
 }

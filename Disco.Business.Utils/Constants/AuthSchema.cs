@@ -3,6 +3,6 @@
     public static class AuthSchema
 
     {
-        public const string UserToken = "UserToken";
+        public const string DEFAULT_USER_AUTHENTICATION = "UserToken";
     }
 }

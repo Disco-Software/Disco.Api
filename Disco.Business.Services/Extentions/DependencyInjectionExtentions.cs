@@ -36,6 +36,7 @@ namespace Disco.Business.Services.Extentions
                 .AddScoped<IPushNotificationService, PushNotificationService>()
                 .AddScoped<ILikeService, LikeService>()
                 .AddScoped<IAnalyticService, AnalyticService>()
+                .AddScoped<INotificationService, NotificationService>()
                 .AddScoped<IRoleService, RoleService>();
         }
     }

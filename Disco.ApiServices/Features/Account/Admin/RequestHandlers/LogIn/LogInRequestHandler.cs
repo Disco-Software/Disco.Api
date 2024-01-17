@@ -43,7 +43,7 @@ namespace Disco.ApiServices.Features.Account.Admin.RequestHandlers.LogIn
                 });
             }
 
-            var roleResult = await _accountService.IsInRoleAsync(user, UserRole.Admin);
+            var roleResult = await _accountService.IsInRoleAsync(user, UserRole.ADMIN_ROLE);
             if (roleResult == false)
             {
                 throw new InvalidRoleException(new Dictionary<string, string>

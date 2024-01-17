@@ -13,7 +13,7 @@ namespace Disco.Business.Services.Extentions
         {
             serviceDescriptors.AddAuthentication()
            .AddCookie()
-          .AddJwtBearer(AuthSchema.UserToken, options =>
+          .AddJwtBearer(AuthSchema.DEFAULT_USER_AUTHENTICATION, options =>
            {
                options.SaveToken = true;
                options.RequireHttpsMetadata = false;

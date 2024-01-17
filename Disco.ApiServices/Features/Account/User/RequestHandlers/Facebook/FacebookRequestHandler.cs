@@ -37,7 +37,7 @@ namespace Disco.ApiServices.Features.Account.User.RequestHandlers.Facebook
             var userInfo = await _facebookClient.GetInfoAsync(request.Dto.FacebookAccessToken);
             userInfo.Name = userInfo.Name.Replace(" ", "_");
 
-            var user = await _accountService.GetByLogInProviderAsync(LogInProvider.Facebook, userInfo.Id);
+            var user = await _accountService.GetByLogInProviderAsync(LogInProvider.FACEBOOK_PROVIDER, userInfo.Id);
             if (user != null)
             {
                 user.Email = userInfo.Email;

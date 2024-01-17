@@ -26,9 +26,5 @@ namespace Disco.ApiServices.Features.PushNotification
         [HttpDelete("installations/{installationId}")]
         public async Task<ActionResult<string>> RemoveInstallationAsync([FromQuery] string installationId) =>
             await _mediator.Send(new RemoveInstallationRequest(installationId));
-
-        [HttpPost("submit")]
-        public async Task<ActionResult<string>> SubmitNotificationAsync([FromBody] PushNotificationBaseDto dto) =>
-            await _mediator.Send(new SubmitNotificationRequest(dto));
     }
 }

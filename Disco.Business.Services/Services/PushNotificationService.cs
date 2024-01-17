@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using System.Linq;
 using Disco.Domain.Models.Models;
 using Disco.Business.Utils.Guards;
+using Disco.Business.Interfaces.Dtos.NewsNotification.Admin.NewsNotificationEvent;
 
 namespace Disco.Business.Services.Services
 {
@@ -81,39 +82,6 @@ namespace Disco.Business.Services.Services
             return true;
         }
 
-        public async Task<bool> RequestNotificationAsync(PushNotificationBaseDto dto, CancellationToken token)
-        {
-            var androidPushTemplate = dto.Silent ? NotificationTemplates.DataNotification.Android : NotificationTemplates.PayloadNotification.Android;
-            var iOSPushTemplate = dto.Silent ? NotificationTemplates.DataNotification.iOS : NotificationTemplates.PayloadNotification.iOS;
-
-            var androidPayload = PrepareNotificationPayload(androidPushTemplate, dto);
-            var iOSPayload = PrepareNotificationPayload(iOSPushTemplate, dto);
-
-            try
-            {
-                if (dto.Tags.Length == 0)
-                    await SendPlatformNotificationAsync(androidPayload, iOSPayload, token);
-                else if (dto.Tags.Length <= 20)
-                    await SendPlatformNotificationAsync(androidPayload, iOSPayload, dto.Tags, token);
-                else
-                {
-                    var notificationTasks = dto.Tags
-                        .Select((value, index) => (value, index))
-                        .GroupBy(g => g.index / 20, i => i.value)
-                        .Select(tags => SendPlatformNotificationAsync(androidPayload, iOSPayload, dto.Tags, token));
-
-                    await Task.WhenAll(notificationTasks);
-                }
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unexpected error sending notifications");
-                return false;
-            }
-        }
-
         private Task SendPlatformNotificationAsync(string androidPayload, string iOSPayload, CancellationToken token)
         {
             var sendTasks = new Task[]
@@ -152,15 +120,15 @@ namespace Disco.Business.Services.Services
             return installation;
         }
 
-        public async Task RequestNotificationAsync(PushNotificationBaseDto dto, IEnumerable<User> users)
+        public async Task RequestNotificationAsync(NewsNotificationEventDto dto, IEnumerable<User> users)
         {
             foreach (var user in users)
             {
-                var tags = new List<string> { user.Id.ToString() };
+                var tags = new List<string> { user.UserName };
 
                 try
                 {
-                    await this.SendNotificationAsync(dto.Title, dto.Body, user.UserName!, tags.FirstOrDefault()!, CancellationToken.None);
+                    await this.SendNotificationAsync(dto.Title, dto.Body, tags.FirstOrDefault()!, dto.Payload, CancellationToken.None);
                 }
                 catch (Exception ex)
                 {
@@ -168,14 +136,14 @@ namespace Disco.Business.Services.Services
             }
         }
 
-        private async Task SendNotificationAsync(string title, string body, string userName, string tag,CancellationToken cancellationToken)
+        private async Task SendNotificationAsync(string title, string body, string tag, string dataPayload, CancellationToken cancellationToken)
         {
-            var dataPayload = "\"title\":\"Notification Title\",\"body\":\"Hello, world!\"";
+            var notificationPayload = $"\"title\":\"{title}\",\"body\":\"{body}\"";
 
             //var iosPayload = $"{{\"aps\":{{\"alert\":{{\"title\":\"Notification Title\",\"body\":\"Hello, world!\"}},\"sound\":\"default\"}},\"data\":{{{dataPayload}}}}}";
             //var iosTask = _notificationHubClient.SendAppleNativeNotificationAsync(iosPayload, tag, cancellationToken);
 
-            var androidPayload = $"{{\"notification\":{{}},\"data\":{{{dataPayload}}}, \"sound\": \"default\"}}";
+            var androidPayload = $"{{\"notification\":{{{notificationPayload}}},\"data\":{{{dataPayload}}}, \"sound\": \"default\"}}";
             var androidTask = _notificationHubClient.SendFcmNativeNotificationAsync(androidPayload, tag, cancellationToken);
 
             await Task.WhenAll(androidTask);
