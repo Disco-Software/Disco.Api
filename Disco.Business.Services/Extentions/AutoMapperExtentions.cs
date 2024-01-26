@@ -17,6 +17,7 @@ using Disco.Business.Services.Mapper.Role.Admin;
 using Disco.Business.Services.Mapper.Story.User;
 using Disco.Business.Services.Mapper.StoryImage;
 using Disco.Business.Services.Mapper.StoryVideo;
+using Disco.Business.Services.Mapper.Ticket.Admin;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Disco.Business.Services.Extentions
@@ -39,6 +40,7 @@ namespace Disco.Business.Services.Extentions
                 options.AddProfile(new ChangeAccountEmailMappingProfile());
                 options.AddProfile(new ChangeAccountRoleMappingProfile());
                 options.AddProfile(new GetAccountMappingProfile());
+                options.AddProfile(new GetAllTicketsMappingProfile());
                 #endregion
 
                 #region User
