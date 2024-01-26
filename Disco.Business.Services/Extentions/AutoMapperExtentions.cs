@@ -14,6 +14,7 @@ using Disco.Business.Services.Mapper.PostImage;
 using Disco.Business.Services.Mapper.PostSong;
 using Disco.Business.Services.Mapper.PostVideo;
 using Disco.Business.Services.Mapper.Role.Admin;
+using Disco.Business.Services.Mapper.Shared;
 using Disco.Business.Services.Mapper.Story.User;
 using Disco.Business.Services.Mapper.StoryImage;
 using Disco.Business.Services.Mapper.StoryVideo;
@@ -87,6 +88,7 @@ namespace Disco.Business.Services.Extentions
                 options.AddProfile(new GetStoryMappingProfile());
                 #endregion
 
+                options.AddProfile(new CreatedPostEventMappingProfile());
                 options.AddProfile(new ErrorMappingProfile());
             }).CreateMapper());
         }

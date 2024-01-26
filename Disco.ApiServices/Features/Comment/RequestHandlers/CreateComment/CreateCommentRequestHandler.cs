@@ -52,7 +52,7 @@ namespace Disco.ApiServices.Features.Comment.RequestHandlers.CreateComment
             var postDto = _mapper.Map<PostDto>(post);
 
             var createCommentResponseDto = _mapper.Map<CreateCommentResponseDto>(accountDto);
-            createCommentResponseDto.Id = comment.Id;
+            createCommentResponseDto.Id = comment.PostId;
             createCommentResponseDto.Post = postDto;
             createCommentResponseDto.Description = comment.CommentDescription;
 

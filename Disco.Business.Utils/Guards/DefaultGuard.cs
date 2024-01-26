@@ -9,5 +9,21 @@
                 throw new ArgumentNullException();
             }
         }
+
+        public static void ArgumentNull(int item)
+        {
+            if (item == 0)
+            {
+                throw new ArgumentNullException();
+            }
+        }
+
+        public static void ArgumentNull(string item)
+        {
+            if (string.IsNullOrWhiteSpace(item))
+            {
+                throw new ArgumentNullException();
+            }
+        }
     }
 }

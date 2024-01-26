@@ -10,6 +10,8 @@ namespace Disco.Domain.Events.Events
 {
     public class PostCreatedEvent
     {
+        public string SerializedId {  get; set; }
+        public int Id {  get; set; }
         public string Description { get; set; }
 
         public List<PostImageDto> PostImages { get; set; }

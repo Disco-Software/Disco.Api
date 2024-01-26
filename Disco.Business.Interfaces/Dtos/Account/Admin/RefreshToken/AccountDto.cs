@@ -1,4 +1,6 @@
-﻿namespace Disco.Business.Interfaces.Dtos.Account.Admin.RefreshToken
+﻿using Disco.Business.Utils.Guards;
+
+namespace Disco.Business.Interfaces.Dtos.Account.Admin.RefreshToken
 {
     public class AccountDto
     {

@@ -15,7 +15,7 @@ namespace Disco.Business.Services.Mapper.Like.User
                 .ForMember(x => x.AccountId, options => options.MapFrom(x => x.Id))
                 .ForMember(x => x.Post, options => options.Ignore())
                 .ForMember(x => x.PostId, options => options.Ignore())
-                .ForMember(x => x.Id, options => options.Ignore());
+                .ForMember(x => x.PostId, options => options.Ignore());
 
             CreateMap<Domain.Models.Models.Post, PostDto>()
                 .ForMember(x => x.PostId, options => options.MapFrom(x => x.Id));
@@ -23,7 +23,7 @@ namespace Disco.Business.Services.Mapper.Like.User
             CreateMap<Domain.Models.Models.Like, CreateLikeResponseDto>()
                 .ForMember(x => x.Post, options => options.MapFrom(x => x.Post))
                 .ForMember(x => x.Account, options => options.MapFrom(x => x.Account))
-                .ForMember(x => x.Id, options => options.MapFrom(x => x.Id));
+                .ForMember(x => x.Id, options => options.MapFrom(x => x.PostId));
         }
     }
 }

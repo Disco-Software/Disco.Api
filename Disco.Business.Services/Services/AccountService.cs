@@ -65,7 +65,6 @@ namespace Disco.Business.Services.Services
 
         public async Task<User> GetAsync(ClaimsPrincipal claimsPrincipal)
         {
-
             var user = await _userManager.GetUserAsync(claimsPrincipal) ??
                 throw new ResourceNotFoundException(new Dictionary<string, string>
                 {
@@ -164,7 +163,11 @@ namespace Disco.Business.Services.Services
 
         public async Task<Account> GetByAccountIdAsync(int accountId)
         {
-            var account = await _accountRepository.GetAccountAsync(accountId);
+            var account = await _accountRepository.GetAccountAsync(accountId) ?? 
+                throw new ResourceNotFoundException(new Dictionary<string, string>
+                {
+                    {"accountId", "Account id is invalid"}
+                });
 
             return account;
         }
