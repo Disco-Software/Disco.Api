@@ -21,6 +21,14 @@ namespace Disco.Domain.Repositories.Repositories
             return account;
         }
 
+        public async Task<List<Account>> GetAllWithRoleAsync(string roleName)
+        {
+            return await _context.Accounts
+                .Include(x => x.User)
+                .Where(x => x.User.RoleName == roleName)
+                .ToListAsync();
+        }
+
         public async Task<Account> GetAccountAsync(int accountId)
         {
             var account = await _context.Users

@@ -3,6 +3,7 @@ using Disco.Business.Interfaces.Dtos.Ticket.Admin.GetAllTickets;
 using Disco.Business.Interfaces.Interfaces;
 using MediatR;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@ namespace Disco.ApiServices.Features.Ticket.Admin.RequestHandlers.GetAllTickets
         {
             var tickets = await _ticketService.GetAllAsync(request.PageNumber, request.PageSize);
 
-            var ticketDtos = _mapper.Map<IEnumerable<GetAllTicketsResponseDto>>(tickets);
+            var ticketDtos = _mapper.Map<IEnumerable<GetAllTicketsResponseDto>>(tickets.AsEnumerable());
 
             return ticketDtos;
         }

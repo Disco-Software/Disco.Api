@@ -160,7 +160,7 @@ namespace Disco.Domain.EF
                 .WithOne(x => x.Account)
                 .HasForeignKey(x => x.AccountId)
                 .OnDelete(DeleteBehavior.Restrict);
-          
+
             AddSeeds(modelBuilder, this);
         }
 

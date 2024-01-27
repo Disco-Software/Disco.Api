@@ -23,6 +23,7 @@ namespace Disco.Domain.Repositories.Repositories
                 .AsNoTracking()
                 .Select(ticket => new TicketSummary
                 {
+                    Id = ticket.Id,
                     Owner = new OwnerSummary
                     {
                         Photo = ticket.Owner.Photo,
