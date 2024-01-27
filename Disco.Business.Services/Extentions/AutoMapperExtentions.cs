@@ -18,6 +18,7 @@ using Disco.Business.Services.Mapper.Story.User;
 using Disco.Business.Services.Mapper.StoryImage;
 using Disco.Business.Services.Mapper.StoryVideo;
 using Disco.Business.Services.Mapper.Ticket.Admin;
+using Disco.Business.Services.Mapper.Ticket.User;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Disco.Business.Services.Extentions
@@ -87,6 +88,7 @@ namespace Disco.Business.Services.Extentions
                 options.AddProfile(new CreateStoryMappingProfile());
                 options.AddProfile(new GetAllStoriesMappingProfile());
                 options.AddProfile(new GetStoryMappingProfile());
+                options.AddProfile(new CreateTicketMappingProfile());
                 #endregion
 
                 options.AddProfile(new ErrorMappingProfile());

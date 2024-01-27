@@ -37,7 +37,10 @@ namespace Disco.Business.Services.Extentions
                 .AddScoped<ILikeService, LikeService>()
                 .AddScoped<IAnalyticService, AnalyticService>()
                 .AddScoped<INotificationService, NotificationService>()
+                .AddScoped<ITicketAccountService, TicketAccountService>()
                 .AddScoped<ITicketService, TicketService>()
+                .AddScoped<ITicketPriorityService, TicketPriorityService>()
+                .AddScoped<ITicketStatusService, TicketStatusService>()
                 .AddScoped<IRoleService, RoleService>();
         }
     }

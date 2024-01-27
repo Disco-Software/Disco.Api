@@ -11,7 +11,7 @@ namespace Disco.Domain.Models.Models
     {
         public string Description {  get; set; }
 
-        public List<TicketAccount> Administrators { get; set; }
+        public List<UserTicketInfo> Administrators { get; set; }
 
         public int OwnerId {  get; set; }
         public Account Owner { get; set; }

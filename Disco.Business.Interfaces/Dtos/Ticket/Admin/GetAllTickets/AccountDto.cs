@@ -2,15 +2,16 @@
 {
     public class AccountDto
     {
+        public AccountDto() { }
         public AccountDto(
             string photo,
-            UserDto user)
+            string userName)
         {
             Photo = photo;
-            User = user;
+            UserName = userName;
         }
 
         public string Photo {  get; set; }
-        public UserDto User { get; set; }
+        public string UserName { get; set; }
     }
 }

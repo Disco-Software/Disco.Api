@@ -16,6 +16,8 @@ namespace Disco.Business.Services.Services
 
         public async Task CreateAsync(Ticket ticket)
         {
+            ticket.Owner.CreatedTickets.Add(ticket);
+
             await _ticketRepository.AddAsync(ticket);
         }
 

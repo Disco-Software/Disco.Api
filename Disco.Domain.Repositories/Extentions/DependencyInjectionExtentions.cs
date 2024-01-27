@@ -34,6 +34,7 @@ namespace Disco.Domain.Repositories.Extentions
                 .AddTransient<IStoryRepository, StoryRepository>()
                 .AddTransient<IStoryVideoRepository, StoryVideoRepository>()
                 .AddTransient<ITicketRepository, TicketRepository>()
+                .AddTransient<ITicketAccountRepository, TicketAccountRepository>()
                 .AddTransient<ITicketMessageRepository, TicketMessageRepository>()
                 .AddTransient<ITicketPriorityRepository, TicketPriorityRepository>()
                 .AddTransient<ITicketStatusRepository, TicketStatusRepository>()

@@ -2,5 +2,8 @@
 
 namespace Disco.Domain.Interfaces.Interfaces
 {
-    public interface ITicketPriorityRepository : IRepository<TicketPriority, int> { }
+    public interface ITicketPriorityRepository : IRepository<TicketPriority, int>
+    {
+        Task<TicketPriority> GetAsync(string name);
+    }
 }

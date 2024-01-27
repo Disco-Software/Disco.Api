@@ -8,10 +8,7 @@ namespace Disco.Business.Services.Mapper.Ticket.Admin
     {
         public GetAllTicketsMappingProfile()
         {
-            CreateMap<OwnerSummary, UserDto>()
-                .ForMember(x => x.UserName, options => options.MapFrom(x => x.UserName));
-            CreateMap<OwnerSummary, AccountDto>()
-                .ForMember(x => x.Photo, options => options.MapFrom(x => x.Photo));
+            CreateMap<OwnerSummary, AccountDto>().PreserveReferences();
 
             CreateMap<TicketSummary, GetAllTicketsResponseDto>()
                 .ForMember(x => x.CreatedDate, options => options.MapFrom(x => x.CreatedDate))

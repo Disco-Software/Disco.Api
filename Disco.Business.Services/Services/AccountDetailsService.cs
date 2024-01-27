@@ -167,5 +167,12 @@ namespace Disco.Business.Services.Services
 
             return result;
         }
+
+        public async Task<IEnumerable<Account>> GetAllWithRoleAsync(string roleName)
+        {
+            var accounts = await _accountRepository.GetAllWithRoleAsync(roleName);
+
+            return accounts;
+        }
     }
 }
