@@ -1,5 +1,6 @@
 ﻿using Disco.ApiServices.Controllers;
 using Disco.ApiServices.Features.Ticket.Admin.RequestHandlers.GetAllTickets;
+using Disco.ApiServices.Features.Ticket.Admin.RequestHandlers.GetTicketsCount;
 using Disco.Business.Interfaces.Dtos.Ticket.Admin.GetAllTickets;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -23,5 +24,9 @@ namespace Disco.ApiServices.Features.Ticket.Admin
             [FromQuery] int pageNumber,
             [FromQuery] int pageSize) =>
             await _mediator.Send(new GetAllTicketsRequest(pageNumber, pageSize));
+
+        [HttpGet("count")]
+        public async Task<ActionResult<int>> GetTicketsCount() =>
+            await _mediator.Send(new GetTicketsCountRequest());
     }
 }
