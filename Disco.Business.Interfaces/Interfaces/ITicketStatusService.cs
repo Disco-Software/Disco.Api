@@ -10,5 +10,6 @@ namespace Disco.Business.Interfaces.Interfaces
     public interface ITicketStatusService
     {
         Task<TicketStatus> GetAsync(string name);
+        Task<TicketStatus> UpdateAsync(TicketStatus ticketStatus);
     }
 }

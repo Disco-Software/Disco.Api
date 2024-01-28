@@ -1,7 +1,9 @@
 ﻿using Disco.ApiServices.Controllers;
 using Disco.ApiServices.Features.Ticket.Admin.RequestHandlers.GetAllTickets;
 using Disco.ApiServices.Features.Ticket.Admin.RequestHandlers.GetTicketsCount;
+using Disco.ApiServices.Features.Ticket.Admin.RequestHandlers.UpdateStatus;
 using Disco.Business.Interfaces.Dtos.Ticket.Admin.GetAllTickets;
+using Disco.Business.Interfaces.Dtos.Ticket.Admin.UpdateTicketStatus;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -28,5 +30,11 @@ namespace Disco.ApiServices.Features.Ticket.Admin
         [HttpGet("count")]
         public async Task<ActionResult<int>> GetTicketsCount() =>
             await _mediator.Send(new GetTicketsCountRequest());
+
+        [HttpPut("change/status")]
+        public async Task<ActionResult<UpdateTicketStatusResponseDto>> ChangeStatusAsync(
+            [FromQuery] string status,
+            [FromQuery] int id) => 
+            await _mediator.Send(new UpdateStatusRequest(status, id));
     }
 }

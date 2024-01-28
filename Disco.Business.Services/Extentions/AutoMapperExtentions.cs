@@ -43,6 +43,7 @@ namespace Disco.Business.Services.Extentions
                 options.AddProfile(new ChangeAccountRoleMappingProfile());
                 options.AddProfile(new GetAccountMappingProfile());
                 options.AddProfile(new GetAllTicketsMappingProfile());
+                options.AddProfile(new UpdateTicketStatusMappingProfile());
                 #endregion
 
                 #region User

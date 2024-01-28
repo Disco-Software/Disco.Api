@@ -1,11 +1,6 @@
 ﻿using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.Business.Services.Services
 {
@@ -24,6 +19,13 @@ namespace Disco.Business.Services.Services
             var ticketStatus = await _ticketStatusRepository.GetAsync(name);
 
             return ticketStatus;
+        }
+
+        public async Task<TicketStatus> UpdateAsync(TicketStatus ticketStatus)
+        {
+            var status = await _ticketStatusRepository.UpdateAsync(ticketStatus);
+
+            return status;
         }
     }
 }
