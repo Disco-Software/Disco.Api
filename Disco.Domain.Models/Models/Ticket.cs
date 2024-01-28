@@ -11,6 +11,8 @@ namespace Disco.Domain.Models.Models
     {
         public string Description {  get; set; }
 
+        public bool IsArchived {  get; set; }
+
         public List<UserTicketInfo> Administrators { get; set; }
 
         public int OwnerId {  get; set; }

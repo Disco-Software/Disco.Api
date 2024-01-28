@@ -3,11 +3,6 @@ using Disco.Domain.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
 using Disco.Domain.Repositories.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Disco.Domain.Repositories.Repositories
 {
@@ -39,6 +34,11 @@ namespace Disco.Domain.Repositories.Repositories
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+        }
+
+        public int GetTicketsCount()
+        {
+            return _context.Tickets.Count(x => x.IsArchived == false);
         }
     }
 }

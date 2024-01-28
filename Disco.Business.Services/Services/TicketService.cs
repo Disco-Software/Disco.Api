@@ -40,5 +40,10 @@ namespace Disco.Business.Services.Services
         {
             throw new NotImplementedException();
         }
+
+        public int Count()
+        {
+            return _ticketRepository.GetTicketsCount();
+        }
     }
 }
