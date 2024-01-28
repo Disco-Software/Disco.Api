@@ -40,5 +40,28 @@ namespace Disco.Domain.Repositories.Repositories
         {
             return _context.Tickets.Count(x => x.IsArchived == false);
         }
+
+        public async Task<TicketSummary?> GetTicketAsync(int ticketId)
+        {
+            return await _context.Tickets
+                .Include(x => x.Owner)
+                .ThenInclude(x => x.User)
+                .Include(x => x.TicketMessages)
+                .AsNoTracking()
+                .Select(ticket => new TicketSummary
+                {
+                    Id = ticket.Id,
+                    CreatedDate = ticket.CreationDate,
+                    Priority = ticket.Priority.Name,
+                    Status = ticket.Status.Name,
+                    Owner = new OwnerSummary
+                    {
+                        Photo = ticket.Owner.Photo ?? "",
+                        UserName = ticket.Owner.User.UserName!
+                    },
+                    IsArchived=ticket.IsArchived,
+                })
+                .FirstOrDefaultAsync() ?? throw new NullReferenceException();
+        }
     }
 }

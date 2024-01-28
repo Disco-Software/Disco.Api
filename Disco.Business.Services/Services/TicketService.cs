@@ -23,6 +23,8 @@ namespace Disco.Business.Services.Services
 
         public async Task DeleteAsync(Ticket ticket)
         {
+            ticket.Owner.CreatedTickets.Remove(ticket);
+
             await _ticketRepository.RemoveAsync(ticket);
         }
 
@@ -31,14 +33,16 @@ namespace Disco.Business.Services.Services
             return await _ticketRepository.GetAllAsync(pageNumber, pageSize);
         }
 
-        public Task<Ticket> GetAsync(int id)
+        public async Task<TicketSummary> GetAsync(int id)
         {
-            throw new NotImplementedException();
+            var ticket = await _ticketRepository.GetTicketAsync(id);
+
+            return ticket;
         }
 
-        public Task<Ticket> UpdateAsync(Ticket ticket)
+        public async Task UpdateAsync(Ticket ticket)
         {
-            throw new NotImplementedException();
+            await _ticketRepository.UpdateAsync(ticket);
         }
 
         public int Count()
