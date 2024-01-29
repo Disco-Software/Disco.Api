@@ -46,6 +46,7 @@ namespace Disco.Domain.Repositories.Repositories
             return await _context.Tickets
                 .Include(x => x.Owner)
                 .ThenInclude(x => x.User)
+                .Include(x => x.Priority)
                 .Include(x => x.TicketMessages)
                 .AsNoTracking()
                 .Select(ticket => new TicketSummary
@@ -62,6 +63,42 @@ namespace Disco.Domain.Repositories.Repositories
                     IsArchived=ticket.IsArchived,
                 })
                 .FirstOrDefaultAsync() ?? throw new NullReferenceException();
+        }
+
+        public override async Task<Ticket> GetAsync(int id)
+        {
+            return await _context.Tickets
+                .Include(t => t.Status)
+                .Include(t => t.Priority)
+                .Include(t => t.Owner)
+                .ThenInclude(o => o.User)
+                .FirstOrDefaultAsync() ?? throw new NullReferenceException();
+        }
+
+        public async Task<List<TicketSummary>> GetAllArchivedAsync(int pageNumber, int pageSize)
+        {
+            return await _context.Tickets
+                .Include(x => x.Owner)
+                .ThenInclude(x => x.User)
+                .AsNoTracking()
+                .Select(ticket => new TicketSummary
+                {
+                    Id = ticket.Id,
+                    Owner = new OwnerSummary
+                    {
+                        Photo = ticket.Owner.Photo,
+                        UserName = ticket.Owner.User.UserName,
+                    },
+                    CreatedDate = ticket.CreationDate,
+                    Priority = ticket.Priority.Name,
+                    Status = ticket.Status.Name,
+                    IsArchived = ticket.Status.IsArchived,
+                })
+                .Where(x => x.IsArchived == true)
+                .OrderByDescending(x => x.CreatedDate)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
         }
     }
 }

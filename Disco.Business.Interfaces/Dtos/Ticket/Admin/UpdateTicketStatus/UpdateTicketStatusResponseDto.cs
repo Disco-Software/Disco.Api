@@ -2,6 +2,7 @@
 {
     public class UpdateTicketStatusResponseDto
     {
+        public UpdateTicketStatusResponseDto() { }
         public UpdateTicketStatusResponseDto(
             int id,
             AccountDto owner,

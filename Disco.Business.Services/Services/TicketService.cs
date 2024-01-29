@@ -1,4 +1,5 @@
-﻿using Disco.Business.Interfaces.Interfaces;
+﻿using Disco.Business.Interfaces.Enums;
+using Disco.Business.Interfaces.Interfaces;
 using Disco.Domain.Interfaces.Interfaces;
 using Disco.Domain.Models.Models;
 
@@ -28,9 +29,17 @@ namespace Disco.Business.Services.Services
             await _ticketRepository.RemoveAsync(ticket);
         }
 
-        public async Task<IEnumerable<TicketSummary>> GetAllAsync(int pageNumber, int pageSize)
+        public async Task<IEnumerable<TicketSummary>> GetAllAsync(int pageNumber, int pageSize, TicketStatusType statusType)
         {
-            return await _ticketRepository.GetAllAsync(pageNumber, pageSize);
+            switch (statusType)
+            {
+                case TicketStatusType.Active:
+                    return await _ticketRepository.GetAllAsync(pageNumber, pageSize);
+                case TicketStatusType.Archived:
+                    return await _ticketRepository.GetAllArchivedAsync(pageNumber,pageSize);
+                default:
+                    return await _ticketRepository.GetAllAsync(pageNumber, pageSize);
+            }
         }
 
         public async Task<TicketSummary> GetAsync(int id)
@@ -48,6 +57,13 @@ namespace Disco.Business.Services.Services
         public int Count()
         {
             return _ticketRepository.GetTicketsCount();
+        }
+
+        public async Task<Ticket> GetTicketAsync(int id)
+        {
+            var ticket = await _ticketRepository.GetAsync(id);
+
+            return ticket;
         }
     }
 }

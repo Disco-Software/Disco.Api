@@ -30,11 +30,9 @@ namespace Disco.ApiServices.Features.Ticket.Admin.RequestHandlers.UpdateStatus
 
         public async Task<UpdateTicketStatusResponseDto> Handle(UpdateStatusRequest request, CancellationToken cancellationToken)
         {
-            var ticket = await _ticketService.GetAsync(request.Id);
+            var ticket = await _ticketService.GetTicketAsync(request.Id);
 
-            ticket.Status = request.Status;
-
-            var status = await _ticketStatusService.GetAsync(ticket.Status);
+            var status = await _ticketStatusService.GetAsync(request.Status);
             if(status == null)
             {
                 throw new ResourceNotFoundException(new Dictionary<string, string>
@@ -43,9 +41,12 @@ namespace Disco.ApiServices.Features.Ticket.Admin.RequestHandlers.UpdateStatus
                 });
             }
 
-            await _ticketStatusService.UpdateAsync(status);
+            ticket.Status = status;
+
+            await _ticketService.UpdateAsync(ticket);
 
             var updateTicketResponseDto = _mapper.Map<UpdateTicketStatusResponseDto>(ticket);
+            updateTicketResponseDto.Owner.UserName = ticket.Owner.User.UserName;
 
             return updateTicketResponseDto;
         }
