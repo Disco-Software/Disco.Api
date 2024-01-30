@@ -7,5 +7,6 @@ namespace Disco.Domain.Interfaces.Interfaces
         Task<List<TicketSummary>> GetAllAsync(int pageNumber, int pageSize);
         Task<TicketSummary> GetTicketAsync(int id);
         int GetTicketsCount();
+        Task<List<TicketSummary>> SearchAsync(string search, int pageNumber, int pageSize);
     }
 }
