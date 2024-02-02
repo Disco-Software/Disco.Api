@@ -17,17 +17,17 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async Task<IEnumerable<UserTicketInfo>> GetAllWithRoleAsync(string roleName)
         {
-            return await _context.TicketAccounts
-                .Include(x => x.Account)
-                .ThenInclude(x => x.User)
+            return await _context.Accounts
+                .Include(x => x.User)
+                .SelectMany(x => x.TicketAccounts)
                 .Select(x => new UserTicketInfo
                 {
                     User = new TicketUser
                     {
                         Id = x.Id,
-                        UserName = x.Account.User.UserName,
-                        RoleName = x.Account.User.RoleName,
-                        Photo = x.Account.Photo
+                        UserName = x.Account.User.UserName!,
+                        RoleName = x.Account.User.RoleName!,
+                        Photo = x.Account.Photo!
                     },
                     Ticket = new TicketDetails
                     {
@@ -37,6 +37,7 @@ namespace Disco.Domain.Repositories.Repositories
                         Status = x.Ticket.Status.Name,
                     }
                 })
+                .Where(x => x.User!.RoleName == roleName)
                 .ToListAsync();
         }
     }

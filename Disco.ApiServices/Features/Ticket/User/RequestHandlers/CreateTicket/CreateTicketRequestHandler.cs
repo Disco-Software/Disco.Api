@@ -2,6 +2,7 @@
 using Disco.Business.Constants;
 using Disco.Business.Interfaces.Dtos.Ticket.User.CreateTicket;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Domain.Models.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -16,6 +17,7 @@ namespace Disco.ApiServices.Features.Ticket.User.RequestHandlers.CreateTicket
     public class CreateTicketRequestHandler : IRequestHandler<CreateTicketRequest>
     {
         private readonly IAccountService _accountService;
+        private readonly IAccountDetailsService _accountDetailsService;
         private readonly ITicketAccountService _ticketAccountService;
         private readonly ITicketService _ticketService;
         private readonly ITicketStatusService _ticketStatusService;
@@ -25,6 +27,7 @@ namespace Disco.ApiServices.Features.Ticket.User.RequestHandlers.CreateTicket
 
         public CreateTicketRequestHandler(
             IAccountService accountService,
+            IAccountDetailsService accountDetailsService,
             ITicketAccountService ticketAccountService,
             ITicketService ticketService,
             ITicketStatusService ticketStatusService,
@@ -33,6 +36,7 @@ namespace Disco.ApiServices.Features.Ticket.User.RequestHandlers.CreateTicket
             IMapper mapper)
         {
             _accountService = accountService;
+            _accountDetailsService = accountDetailsService;
             _ticketAccountService = ticketAccountService;
             _ticketService = ticketService;
             _ticketStatusService = ticketStatusService;
@@ -54,7 +58,24 @@ namespace Disco.ApiServices.Features.Ticket.User.RequestHandlers.CreateTicket
             ticket.Owner = user.Account;
             ticket.OwnerId = user.Id;
 
-            ticket.Administrators = _ticketAccountService.GetAllWithRoleAsync(UserRole.ADMIN_ROLE).Result.ToList();
+            var admins = await _accountDetailsService.GetAllWithRoleAsync(UserRole.ADMIN_ROLE);
+
+            var ticketUsers = _mapper.Map<IEnumerable<TicketUser>>(admins);
+
+            foreach (var ticketUser in ticketUsers)
+            {
+                var ticketAccount = new UserTicketInfo { Id = ticketUser.Id, Ticket = new TicketDetails 
+                {
+                    Description = ticket.Description, 
+                    Id = ticket.Id, 
+                    Priority = ticket.Priority.Name, 
+                    Status = ticket.Status.Name 
+                }, 
+                    User = ticketUser
+                };
+
+                ticket.Administrators.Add(ticketAccount);
+            }
 
             await _ticketService.CreateAsync(ticket);
         }

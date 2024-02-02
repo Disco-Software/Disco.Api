@@ -63,5 +63,20 @@ namespace Disco.Domain.Repositories.Repositories
                 })
                 .FirstOrDefaultAsync() ?? throw new NullReferenceException();
         }
+
+        public async Task<Ticket> GetTicketAsync(string name)
+        {
+            var ticket = await _context.Tickets
+                .Include(x => x.Owner)
+                    .ThenInclude(x => x.User)
+                .Include(x => x.TicketMessages)
+                .Include(x => x.Administrators) // Предполагаемо, что у Ticket есть навигационное свойство Admins
+                    .ThenInclude(x => x.User)
+                        .Where(x => x.Name == name)
+                .FirstOrDefaultAsync() ?? throw new Exception();
+
+
+            return ticket;
+        }
     }
 }

@@ -19,6 +19,8 @@ using Disco.Business.Services.Mapper.StoryImage;
 using Disco.Business.Services.Mapper.StoryVideo;
 using Disco.Business.Services.Mapper.Ticket.Admin;
 using Disco.Business.Services.Mapper.Ticket.User;
+using Disco.Business.Services.Mapper.TicketMessage;
+using Disco.Business.Services.Resolvers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Disco.Business.Services.Extentions
@@ -44,6 +46,7 @@ namespace Disco.Business.Services.Extentions
                 options.AddProfile(new GetAccountMappingProfile());
                 options.AddProfile(new GetAllTicketsMappingProfile());
                 options.AddProfile(new UpdateTicketStatusMappingProfile());
+                options.AddProfile(new UpdateTicketMessageMappingProfile());
                 #endregion
 
                 #region User
@@ -94,6 +97,8 @@ namespace Disco.Business.Services.Extentions
                 #endregion
 
                 options.AddProfile(new ErrorMappingProfile());
+                options.AddProfile(new CreateTicketMessageMappingProfile());
+                options.AddProfile(new GetAllMessagesMappingProfile());
             }).CreateMapper());
         }
     }

@@ -6,8 +6,9 @@ namespace Disco.Business.Interfaces.Interfaces
     {
         Task CreateAsync(TicketMessage message);
         Task DeleteAsync(TicketMessage message);
-        Task<IEnumerable<TicketMessage>> GetAllAsync(int pageNumber, int pageSize);
-        Task<TicketMessage> GetAsync(TicketMessage message);
-        Task<TicketMessage> UpdateAsync(TicketMessage message);
+        Task DeleteForSenderAsync(TicketMessage message);
+        Task<IEnumerable<TicketMessage>> GetAllAsync(int ticketId, int userId, int pageNumber, int pageSize);
+        Task<TicketMessage> GetAsync(int id);
+        Task UpdateAsync(TicketMessage message);
     }
 }

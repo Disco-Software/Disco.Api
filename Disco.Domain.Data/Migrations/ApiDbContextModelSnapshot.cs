@@ -133,6 +133,7 @@ namespace Disco.Domain.Data.Migrations
             modelBuilder.Entity("Disco.Domain.Models.Models.Connection", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("AccountId")
@@ -535,6 +536,10 @@ namespace Disco.Domain.Data.Migrations
                     b.Property<bool>("IsArchived")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
@@ -614,9 +619,15 @@ namespace Disco.Domain.Data.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("TicketId")
                         .HasColumnType("int");

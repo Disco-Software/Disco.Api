@@ -9,8 +9,8 @@ namespace Disco.Domain.Models.Models
 {
     public class TicketUser : BaseModel<int>
     {
-        public string UserName { get; set; }
-        public string RoleName { get; set; }
-        public string Photo { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public string RoleName { get; set; } = string.Empty;
+        public string Photo { get; set; } = string.Empty;
     }
 }

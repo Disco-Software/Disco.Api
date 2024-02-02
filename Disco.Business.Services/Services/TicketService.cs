@@ -4,7 +4,9 @@ using Disco.Domain.Models.Models;
 
 namespace Disco.Business.Services.Services
 {
-    public class TicketService : ITicketService
+    public class TicketService : 
+        ITicketService, 
+        ITicketSummaryService
     {
         private readonly ITicketRepository _ticketRepository;
 
@@ -33,7 +35,7 @@ namespace Disco.Business.Services.Services
             return await _ticketRepository.GetAllAsync(pageNumber, pageSize);
         }
 
-        public async Task<TicketSummary> GetAsync(int id)
+        async Task<TicketSummary> ITicketSummaryService.GetAsync(int id)
         {
             var ticket = await _ticketRepository.GetTicketAsync(id);
 
@@ -48,6 +50,20 @@ namespace Disco.Business.Services.Services
         public int Count()
         {
             return _ticketRepository.GetTicketsCount();
+        }
+
+        async Task<Ticket> ITicketService.GetAsync(int id)
+        {
+            var ticket = await _ticketRepository.GetAsync(id);
+
+            return ticket;
+        }
+
+        public async Task<Ticket> GetAsync(string name)
+        {
+            var ticket = await _ticketRepository.GetTicketAsync(name);
+
+            return ticket;
         }
     }
 }
