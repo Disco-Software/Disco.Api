@@ -4,6 +4,7 @@ using Disco.ApiServices.Features.Ticket.Admin.RequestHandlers.GetTicketsCount;
 using Disco.ApiServices.Features.Ticket.Admin.RequestHandlers.UpdateStatus;
 using Disco.Business.Interfaces.Dtos.Ticket.Admin.GetAllTickets;
 using Disco.Business.Interfaces.Dtos.Ticket.Admin.UpdateTicketStatus;
+using Disco.Business.Interfaces.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -24,8 +25,9 @@ namespace Disco.ApiServices.Features.Ticket.Admin
         [HttpGet]
         public async Task<IEnumerable<GetAllTicketsResponseDto>> GetAllAsync(
             [FromQuery] int pageNumber,
-            [FromQuery] int pageSize) =>
-            await _mediator.Send(new GetAllTicketsRequest(pageNumber, pageSize));
+            [FromQuery] int pageSize,
+            [FromQuery] string statusType) =>
+            await _mediator.Send(new GetAllTicketsRequest(pageNumber, pageSize, statusType));
 
         [HttpGet("count")]
         public async Task<ActionResult<int>> GetTicketsCount() =>

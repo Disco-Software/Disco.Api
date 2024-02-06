@@ -8,21 +8,16 @@ namespace Disco.Business.Services.Mapper.Ticket.Admin
     {
         public UpdateTicketStatusMappingProfile()
         {
-            CreateMap<OwnerSummary, AccountDto>().PreserveReferences();
+            CreateMap<Domain.Models.Models.Account, AccountDto>().PreserveReferences();
+            CreateMap<Domain.Models.Models.User, AccountDto>()
+                .ForMember(x => x.UserName, options => options.MapFrom(x => x.UserName));
 
             CreateMap<Domain.Models.Models.Ticket, UpdateTicketStatusResponseDto>()
                 .ForMember(x => x.CreatedDate, options => options.MapFrom(x => x.ClosedDate))
-                .ForMember(x => x.Status, options => options.MapFrom(x => x.Status))
-                .ForMember(x => x.Priority, options => options.MapFrom(x => x.Priority))
+                .ForMember(x => x.Status, options => options.MapFrom(x => x.Status.Name))
+                .ForMember(x => x.Priority, options => options.MapFrom(x => x.Priority.Name))
                 .ForMember(x => x.Id, options => options.MapFrom(x => x.Id))
-                .ForMember(x => x.Owner, options => options.MapFrom(x => x.Owner));
-            
-            CreateMap<Domain.Models.Models.TicketSummary, UpdateTicketStatusResponseDto>()
-                .ForMember(x => x.CreatedDate, options => options.MapFrom(x => x.CreatedDate))
-                .ForMember(x => x.Status, options => options.MapFrom(x => x.Status))
-                .ForMember(x => x.Priority, options => options.MapFrom(x => x.Priority))
-                .ForMember(x => x.Id, options => options.MapFrom(x => x.Id))
-                .ForMember(x => x.Owner, options => options.MapFrom(x => x.Owner));
+                .ForMember(x => x.Owner, options => options.MapFrom(x => x.Owner));            
         }
     }
 }
