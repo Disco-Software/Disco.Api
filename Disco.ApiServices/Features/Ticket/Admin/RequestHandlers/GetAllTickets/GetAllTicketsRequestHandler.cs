@@ -2,7 +2,6 @@
 using Disco.Business.Interfaces.Dtos.Ticket.Admin.GetAllTickets;
 using Disco.Business.Interfaces.Enums;
 using Disco.Business.Interfaces.Interfaces;
-using Disco.Domain.Models.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -14,14 +13,16 @@ namespace Disco.ApiServices.Features.Ticket.Admin.RequestHandlers.GetAllTickets
 {
     public class GetAllTicketsRequestHandler : IRequestHandler<GetAllTicketsRequest, IEnumerable<GetAllTicketsResponseDto>>
     {
-        private readonly ITicketSummaryService _ticketService;
+        private readonly ITicketSummaryService _ticketSummaryService;
+        private readonly ITicketService _ticketService;
         private readonly IMapper _mapper;
 
         public GetAllTicketsRequestHandler(
-            ITicketSummaryService ticketService,
+            ITicketSummaryService ticketSummaryService,
+            ITicketService ticketService,
             IMapper mapper)
         {
-            _ticketService = ticketService;
+            _ticketSummaryService = ticketSummaryService;
             _mapper = mapper;
         }
 

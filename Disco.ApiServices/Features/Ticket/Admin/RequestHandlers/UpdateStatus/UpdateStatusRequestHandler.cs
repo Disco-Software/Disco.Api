@@ -14,12 +14,12 @@ namespace Disco.ApiServices.Features.Ticket.Admin.RequestHandlers.UpdateStatus
 {
     public class UpdateStatusRequestHandler : IRequestHandler<UpdateStatusRequest, UpdateTicketStatusResponseDto>
     {
-        private readonly ITicketSummaryService _ticketService;
+        private readonly ITicketService _ticketService;
         private readonly ITicketStatusService _ticketStatusService;
         private readonly IMapper _mapper;
 
         public UpdateStatusRequestHandler(
-            ITicketSummaryService ticketService,
+            ITicketService ticketService,
             ITicketStatusService ticketStatusService,
             IMapper mapper)
         {

@@ -88,5 +88,10 @@ namespace Disco.Business.Services.Services
 
             return ticket;
         }
+
+        public async Task<IEnumerable<TicketSummary>> GetAllAsync(int pageNumber, int pageSize)
+        {
+            return await _ticketRepository.GetAllAsync(pageNumber, pageSize);
+        }
     }
 }
