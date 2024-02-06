@@ -9,6 +9,7 @@ namespace Disco.Domain.Models.Models
 {
     public class Ticket : BaseModel<int>
     {
+        public string Name {  get; set; } = Guid.NewGuid().ToString();
         public string Description {  get; set; }
 
         public bool IsArchived {  get; set; }
@@ -21,7 +22,7 @@ namespace Disco.Domain.Models.Models
         public DateTime CreationDate { get; set; }
         public DateTime? ClosedDate { get; set; }
 
-        public List<TicketMessage> TicketMessages { get; set; }
+        public List<TicketMessage> TicketMessages { get; set; } = new List<TicketMessage>();
 
         public TicketStatus Status { get; set; }
         public TicketPriority Priority { get; set; }

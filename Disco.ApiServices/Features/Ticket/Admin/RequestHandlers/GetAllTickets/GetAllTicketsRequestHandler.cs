@@ -14,11 +14,11 @@ namespace Disco.ApiServices.Features.Ticket.Admin.RequestHandlers.GetAllTickets
 {
     public class GetAllTicketsRequestHandler : IRequestHandler<GetAllTicketsRequest, IEnumerable<GetAllTicketsResponseDto>>
     {
-        private readonly ITicketService _ticketService;
+        private readonly ITicketSummaryService _ticketService;
         private readonly IMapper _mapper;
 
         public GetAllTicketsRequestHandler(
-            ITicketService ticketService,
+            ITicketSummaryService ticketService,
             IMapper mapper)
         {
             _ticketService = ticketService;

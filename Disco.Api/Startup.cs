@@ -4,6 +4,7 @@ using Azure.Storage.Queues;
 using Disco.Api.AppSetup;
 using Disco.ApiServices.Features.Comment;
 using Disco.ApiServices.Features.Message;
+using Disco.ApiServices.Features.TicketMessage;
 using Disco.ApiServices.Filters;
 using Disco.Business.Interfaces.Options;
 using Disco.Business.Interfaces.Options.EmailConfirmation;
@@ -18,6 +19,7 @@ using FluentValidation.AspNetCore;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SignalR.Protocol;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -185,6 +187,7 @@ namespace Disco.Api
                 endpoints.MapControllers();
                 endpoints.MapHub<CommentComunicationHub>("/hub/comments");
                 endpoints.MapHub<MessageComunicationHub>("/hub/message");
+                endpoints.MapHub<TicketMessageCommunicationHub>("/hub/ticket");
             });
         }
     }

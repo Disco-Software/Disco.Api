@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Disco.Business.Interfaces.Dtos.Ticket.User.CreateTicket;
+using Disco.Business.Services.Resolvers;
 using Disco.Domain.Models.Models;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,11 @@ namespace Disco.Business.Services.Mapper.Ticket.User
     {
         public CreateTicketMappingProfile()
         {
+            CreateMap<Domain.Models.Models.Account, TicketUser>()
+                .ConvertUsing<AccountToTicketUserConvertor>();
             CreateMap<CreateTicketRequestDto, Domain.Models.Models.Ticket>()
                 .ForMember(x => x.Status, options => options.Ignore())
-                .ForMember(x => x.TicketMessages, options => options.MapFrom(x => new List<TicketMessage>()))
+                .ForMember(x => x.TicketMessages, options => options.Ignore())
                 .ForMember(x => x.Description, options => options.MapFrom(x => x.Description))
                 .ForMember(x => x.Priority, options => options.Ignore())
                 .ForMember(x => x.Administrators, options => options.MapFrom(x => new List<TicketAccount>()))
