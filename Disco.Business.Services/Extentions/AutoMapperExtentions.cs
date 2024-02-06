@@ -44,6 +44,7 @@ namespace Disco.Business.Services.Extentions
                 options.AddProfile(new GetAccountMappingProfile());
                 options.AddProfile(new GetAllTicketsMappingProfile());
                 options.AddProfile(new UpdateTicketStatusMappingProfile());
+                options.AddProfile(new SearchTicketsMappingProfile());
                 #endregion
 
                 #region User

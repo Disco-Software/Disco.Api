@@ -59,6 +59,13 @@ namespace Disco.Business.Services.Services
             return _ticketRepository.GetTicketsCount();
         }
 
+        public async Task<List<TicketSummary>> SearchAsync(string search, int pageNumber, int pageSize)
+        {
+            var tickets = await _ticketRepository.SearchAsync(search, pageNumber, pageSize);
+
+            return tickets;
+        }
+
         public async Task<Ticket> GetTicketAsync(int id)
         {
             var ticket = await _ticketRepository.GetAsync(id);

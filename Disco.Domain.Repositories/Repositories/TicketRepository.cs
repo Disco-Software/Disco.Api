@@ -60,9 +60,33 @@ namespace Disco.Domain.Repositories.Repositories
                         Photo = ticket.Owner.Photo ?? "",
                         UserName = ticket.Owner.User.UserName!
                     },
-                    IsArchived=ticket.IsArchived,
+                    IsArchived = ticket.IsArchived,
                 })
                 .FirstOrDefaultAsync() ?? throw new NullReferenceException();
+        }
+
+        public async Task<List<TicketSummary>> SearchAsync(string search, int pageNumber, int pageSize)
+        {
+            return await _context.Tickets
+                .AsNoTracking()
+                .OrderByDescending(x => x.Owner.User.UserName)
+                .Where(x => x.Owner.User.UserName.StartsWith(search))
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(ticket => new TicketSummary
+                {
+                    Id = ticket.Id,
+                    CreatedDate = ticket.CreationDate,
+                    Priority = ticket.Priority.Name,
+                    Status = ticket.Status.Name,
+                    IsArchived = ticket.IsArchived,
+                    Owner = new OwnerSummary
+                    {
+                        UserName = ticket.Owner.User.UserName,
+                        Photo = ticket.Owner.Photo
+                    }
+                })
+                .ToListAsync();
         }
 
         public override async Task<Ticket> GetAsync(int id)
