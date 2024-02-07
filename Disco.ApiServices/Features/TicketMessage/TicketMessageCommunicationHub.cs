@@ -7,6 +7,7 @@ using Disco.ApiServices.Features.TicketMessage.RequestHandlers.UpdateTicketMessa
 using Disco.Business.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;

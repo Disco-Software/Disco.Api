@@ -12,6 +12,7 @@ namespace Disco.Business.Services.Mapper.Ticket.Admin
 
             CreateMap<TicketSummary, GetAllTicketsResponseDto>()
                 .ForMember(x => x.CreatedDate, options => options.MapFrom(x => x.CreatedDate))
+                .ForMember(x => x.CreatedDate, options => options.MapFrom(x => x.CreatedDate))
                 .ForMember(x => x.Status, options => options.MapFrom(x => x.Status))
                 .ForMember(x => x.Priority, options => options.MapFrom(x => x.Priority))
                 .ForMember(x => x.Id, options => options.MapFrom(x => x.Id))

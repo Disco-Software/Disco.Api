@@ -19,6 +19,7 @@ namespace Disco.Domain.Repositories.Repositories
                 .Select(ticket => new TicketSummary
                 {
                     Id = ticket.Id,
+                    Name = ticket.Name,
                     Owner = new OwnerSummary
                     {
                         Photo = ticket.Owner.Photo,

@@ -22,6 +22,7 @@ namespace Disco.ApiServices.Features.Ticket.Admin.RequestHandlers.GetAllTickets
             ITicketService ticketService,
             IMapper mapper)
         {
+            _ticketService = ticketService;
             _ticketSummaryService = ticketSummaryService;
             _mapper = mapper;
         }
