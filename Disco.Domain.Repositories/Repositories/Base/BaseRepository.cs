@@ -47,13 +47,11 @@ namespace Disco.Domain.Repositories.Repositories.Base
             await _context.SaveChangesAsync();
         }
 
-        public virtual async Task<T> UpdateAsync(T newItem)
+        public virtual async Task UpdateAsync(T newItem)
         {
             _context.Set<T>().Update(newItem);
-            
+
             await _context.SaveChangesAsync();
-            
-            return newItem;
         }
     }
 }

@@ -4,6 +4,7 @@ using Disco.ApiServices.Features.TicketMessage.RequestHandlers.OnConnect;
 using Disco.ApiServices.Features.TicketMessage.RequestHandlers.OnDisconnect;
 using Disco.ApiServices.Features.TicketMessage.RequestHandlers.SendMessage;
 using Disco.ApiServices.Features.TicketMessage.RequestHandlers.UpdateTicketMessage;
+using Disco.ApiServices.Features.TicketMessage.RequestHandlers.UpdateTicketStatus;
 using Disco.Business.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -66,6 +67,14 @@ namespace Disco.ApiServices.Features.TicketMessage
             var result = await _mediator.Send(new UpdateTicketMessageRequest(id, message));
 
             await Clients.Group(Context.GetHttpContext().Request.Query["ticketName"]).SendAsync("update", arg1: result);
+        }
+
+        [HubMethodName("updateStatus")]
+        public async Task UpdateTicketStatusAsync(int id, string status)
+        {
+            var result = await _mediator.Send(new UpdateTicketStatusRequest(status, id));
+
+            await Clients.Group(Context.GetHttpContext().Request.Query["ticketName"]).SendAsync("changeStatus", arg1: result);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception) =>
