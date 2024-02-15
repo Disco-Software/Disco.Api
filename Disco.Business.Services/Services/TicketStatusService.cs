@@ -23,9 +23,9 @@ namespace Disco.Business.Services.Services
 
         public async Task<TicketStatus> UpdateAsync(TicketStatus ticketStatus)
         {
-            var status = await _ticketStatusRepository.UpdateAsync(ticketStatus);
+             await _ticketStatusRepository.UpdateAsync(ticketStatus);
 
-            return status;
+            return ticketStatus;
         }
     }
 }

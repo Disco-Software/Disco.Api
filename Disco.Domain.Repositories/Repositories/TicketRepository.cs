@@ -140,5 +140,10 @@ namespace Disco.Domain.Repositories.Repositories
                 .Take(pageSize)
                 .ToListAsync();
         }
+
+        public async override Task UpdateAsync(Ticket newItem)
+        {
+           await base.UpdateAsync(newItem);
+        }
     }
 }

@@ -14,5 +14,6 @@ namespace Disco.Business.Interfaces.Interfaces
         Task UpdateAsync(Ticket ticket);
         Task<List<TicketSummary>> SearchAsync(string search, int pageNumber, int pageSize);
         int Count();
+        Task UpdateTicketStatusAsync(Ticket ticket, string status);
     }
 }

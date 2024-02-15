@@ -11,6 +11,6 @@ namespace Disco.Domain.Interfaces
         Task RemoveAsync(T item);
         Task<T> GetAsync(TKey id);
         Task<List<T>> GetAll(Expression<Func<T,bool>> expression);
-        Task<T> UpdateAsync(T newItem);
+        Task UpdateAsync(T newItem);
     }
 }
