@@ -1,5 +1,6 @@
 ﻿using Disco.Business.Interfaces.Interfaces;
 using Disco.Business.Services.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -43,7 +44,8 @@ namespace Disco.Business.Services.Extentions
                 .AddScoped<ITicketSummaryService, TicketService>()
                 .AddScoped<ITicketPriorityService, TicketPriorityService>()
                 .AddScoped<ITicketStatusService, TicketStatusService>()
-                .AddScoped<IRoleService, RoleService>();
+                .AddScoped<IRoleService, RoleService>()
+                .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
     }
 }

@@ -31,6 +31,8 @@ namespace Disco.Domain.EF
         public DbSet<TicketMessage> TicketMessages { get; set; }
         public DbSet<TicketPriority> TicketPriorities { get; set; }
         public DbSet<TicketStatus> TicketStatuses { get; set; }
+        public DbSet<PostReating> PostReatings { get; set; }
+        public DbSet<AccountReating> AccountReatings { get; set; }
 
         public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options) { }
         public ApiDbContext() { }
@@ -160,6 +162,36 @@ namespace Disco.Domain.EF
                 .WithOne(x => x.Account)
                 .HasForeignKey(x => x.AccountId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<PostReating>()
+                .HasOne(x => x.Post)
+                .WithMany(x => x.PostReating)
+                .HasForeignKey(x => x.PostId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<PostReating>()
+                .HasOne(x => x.Account)
+                .WithMany(x => x.PostReatings)
+                .HasForeignKey(x => x.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<AccountReating>()
+                .HasOne(x => x.Account)
+                .WithMany(x => x.AccountReatings)
+                .HasForeignKey(x => x.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<Account>()
+            //    .HasMany(x => x.RecommendedToFollow)
+            //    .WithOne(x => x.Account)
+            //    .HasForeignKey(x => x.AccountId)
+            //    .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<AccountReating>()
+            //    .HasOne(x => x.AccountRecommended)
+            //    .WithMany(x => x.AccountReatings)
+            //    .HasForeignKey(x => x.AccountRecommendedId)
+            //    .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<Account>()
+            //    .HasMany(x => x.AccountReatings)
+            //    .WithOne(x => x.AccountRecommended)
+            //    .HasForeignKey(x => x.AccountRecommendedId)
+            //    .OnDelete(DeleteBehavior.Restrict);
 
             AddSeeds(modelBuilder, this);
         }

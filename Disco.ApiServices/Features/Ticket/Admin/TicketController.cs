@@ -29,7 +29,7 @@ namespace Disco.ApiServices.Features.Ticket.Admin
             [FromQuery] int pageNumber,
             [FromQuery] int pageSize,
             [FromQuery] string statusType) =>
-            await _mediator.Send(new GetAllTicketsRequest(pageNumber, pageSize, statusType));
+         await _mediator.Send(new GetAllTicketsRequest(pageNumber, pageSize, statusType));
 
         [HttpGet("count")]
         public async Task<ActionResult<int>> GetTicketsCount() =>

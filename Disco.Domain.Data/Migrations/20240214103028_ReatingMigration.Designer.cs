@@ -4,6 +4,7 @@ using Disco.Domain.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Disco.Domain.Data.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240214103028_ReatingMigration")]
+    partial class ReatingMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,32 +71,6 @@ namespace Disco.Domain.Data.Migrations
                     b.HasIndex("GroupId");
 
                     b.ToTable("AccountGroups");
-                });
-
-            modelBuilder.Entity("Disco.Domain.Models.Models.AccountReating", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AccountRecommendedId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FollowersCount")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("AccountRecommendedId");
-
-                    b.ToTable("AccountReatings");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.Models.AccountStatus", b =>
@@ -1071,25 +1047,6 @@ namespace Disco.Domain.Data.Migrations
                     b.Navigation("Group");
                 });
 
-            modelBuilder.Entity("Disco.Domain.Models.Models.AccountReating", b =>
-                {
-                    b.HasOne("Disco.Domain.Models.Models.Account", "Account")
-                        .WithMany("AccountReatings")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Disco.Domain.Models.Models.Account", "AccountRecommended")
-                        .WithMany("RecommendedToFollow")
-                        .HasForeignKey("AccountRecommendedId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-
-                    b.Navigation("AccountRecommended");
-                });
-
             modelBuilder.Entity("Disco.Domain.Models.Models.AccountStatus", b =>
                 {
                     b.HasOne("Disco.Domain.Models.Models.Account", "Account")
@@ -1434,8 +1391,6 @@ namespace Disco.Domain.Data.Migrations
                 {
                     b.Navigation("AccountGroups");
 
-                    b.Navigation("AccountReatings");
-
                     b.Navigation("AccountStatus")
                         .IsRequired();
 
@@ -1458,8 +1413,6 @@ namespace Disco.Domain.Data.Migrations
                     b.Navigation("PostReatings");
 
                     b.Navigation("Posts");
-
-                    b.Navigation("RecommendedToFollow");
 
                     b.Navigation("Stories");
 

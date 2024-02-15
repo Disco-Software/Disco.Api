@@ -13,6 +13,7 @@ namespace Disco.Domain.Models.Models
         public List<PostVideo> PostVideos { get; set; } = new List<PostVideo>();
         public List<Like> Likes { get; set; } = new List<Like>();
         public List<Comment> Comments { get; set; } = new List<Comment>();
+        public List<PostReating> PostReating { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime? DateOfCreation { get; set; }

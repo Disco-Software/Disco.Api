@@ -21,6 +21,9 @@ namespace Disco.Domain.Models.Models
         public List<TicketMessage> TicketMessages { get; set; } = new List<TicketMessage>();
         public List<Ticket> CreatedTickets { get; set; } = new List<Ticket>();
         public List<TicketAccount> TicketAccounts { get; set; } = new List<TicketAccount>();
+        public List<PostReating> PostReatings { get; set; } = new List<PostReating>();
+        public List<AccountReating> AccountReatings { get; set; } = new List<AccountReating>();
+        public List<AccountReating> RecommendedToFollow { get; set; } = new List<AccountReating>();
 
         public int UserId { get; set; }
         public User User { get; set; }

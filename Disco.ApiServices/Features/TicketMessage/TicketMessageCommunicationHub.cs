@@ -29,12 +29,17 @@ namespace Disco.ApiServices.Features.TicketMessage
             await _mediator.Send(new OnConnectRequest(
                 Context.GetHttpContext().Request.Query["ticketName"],
                 Context.GetHttpContext().Request.Query["userName"],
-                Context.ConnectionId));
+                Context.ConnectionId,
+                Context.GetHttpContext().Request.Headers["User-Agent"]));
 
         [HubMethodName("send")]
         public async Task SendMessageAsync(string message, string ticketName, int ticketId)
         {
-            var result = await _mediator.Send(new SendMessageRequest(message, ticketId, ticketName));
+            var result = await _mediator.Send(new SendMessageRequest(
+                message, 
+                ticketId, 
+                ticketName,
+                Context.User));
 
             await Clients.Group(ticketName).SendAsync("receive", result);
         }

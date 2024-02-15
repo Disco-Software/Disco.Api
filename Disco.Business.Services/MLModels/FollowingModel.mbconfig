@@ -1,0 +1,266 @@
+﻿{
+  "Scenario": "Recommendation",
+  "DataSource": {
+    "Type": "TabularFile",
+    "Version": 1,
+    "FilePath": "C:\\Users\\Stas\\Downloads\\follower.csv",
+    "Delimiter": ";",
+    "DecimalMarker": ".",
+    "HasHeader": false,
+    "ColumnProperties": [
+      {
+        "ColumnName": "col0",
+        "ColumnPurpose": "Item",
+        "ColumnDataFormat": "Single",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 4
+      },
+      {
+        "ColumnName": "col1",
+        "ColumnPurpose": "Ignore",
+        "ColumnDataFormat": "Single",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 4
+      },
+      {
+        "ColumnName": "col2",
+        "ColumnPurpose": "User",
+        "ColumnDataFormat": "Single",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 4
+      },
+      {
+        "ColumnName": "col3",
+        "ColumnPurpose": "Label",
+        "ColumnDataFormat": "Single",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 4
+      }
+    ]
+  },
+  "Environment": {
+    "Type": "LocalCPU",
+    "Version": 1
+  },
+  "RunHistory": {
+    "Version": 3,
+    "Type": "Result",
+    "Trials": [
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "MatrixFactorization",
+        "Score": 0.99908128506886,
+        "RuntimeInSeconds": 0.213,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e4",
+          "e0": {
+            "OutputColumnName": "col0",
+            "InputColumnName": "col0",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e1": {
+            "OutputColumnName": "col2",
+            "InputColumnName": "col2",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e2": {
+            "LabelColumnName": "col3",
+            "MatrixColumnIndexColumnName": "col2",
+            "MatrixRowIndexColumnName": "col0",
+            "ApproximationRank": 30,
+            "LearningRate": 0.29322239171282743,
+            "NumberOfIterations": 62,
+            "Quiet": true
+          },
+          "e3": {
+            "OutputColumnName": "col2",
+            "InputColumnName": "col2"
+          },
+          "e4": {
+            "OutputColumnName": "col0",
+            "InputColumnName": "col0"
+          }
+        }
+      },
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "MatrixFactorization",
+        "Score": 0.99625019662398628,
+        "RuntimeInSeconds": 0.23,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e4",
+          "e0": {
+            "OutputColumnName": "col0",
+            "InputColumnName": "col0",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e1": {
+            "OutputColumnName": "col2",
+            "InputColumnName": "col2",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e2": {
+            "LabelColumnName": "col3",
+            "MatrixColumnIndexColumnName": "col2",
+            "MatrixRowIndexColumnName": "col0",
+            "ApproximationRank": 30,
+            "LearningRate": 0.2947076419863649,
+            "NumberOfIterations": 63,
+            "Quiet": true
+          },
+          "e3": {
+            "OutputColumnName": "col2",
+            "InputColumnName": "col2"
+          },
+          "e4": {
+            "OutputColumnName": "col0",
+            "InputColumnName": "col0"
+          }
+        }
+      },
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "MatrixFactorization",
+        "Score": 0.99623267986574671,
+        "RuntimeInSeconds": 0.225,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e4",
+          "e0": {
+            "OutputColumnName": "col0",
+            "InputColumnName": "col0",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e1": {
+            "OutputColumnName": "col2",
+            "InputColumnName": "col2",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e2": {
+            "LabelColumnName": "col3",
+            "MatrixColumnIndexColumnName": "col2",
+            "MatrixRowIndexColumnName": "col0",
+            "ApproximationRank": 30,
+            "LearningRate": 0.28783322242239662,
+            "NumberOfIterations": 64,
+            "Quiet": true
+          },
+          "e3": {
+            "OutputColumnName": "col2",
+            "InputColumnName": "col2"
+          },
+          "e4": {
+            "OutputColumnName": "col0",
+            "InputColumnName": "col0"
+          }
+        }
+      },
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "MatrixFactorization",
+        "Score": 0.99622926875803519,
+        "RuntimeInSeconds": 0.212,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e4",
+          "e0": {
+            "OutputColumnName": "col0",
+            "InputColumnName": "col0",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e1": {
+            "OutputColumnName": "col2",
+            "InputColumnName": "col2",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e2": {
+            "LabelColumnName": "col3",
+            "MatrixColumnIndexColumnName": "col2",
+            "MatrixRowIndexColumnName": "col0",
+            "ApproximationRank": 29,
+            "LearningRate": 0.30295761735987037,
+            "NumberOfIterations": 62,
+            "Quiet": true
+          },
+          "e3": {
+            "OutputColumnName": "col2",
+            "InputColumnName": "col2"
+          },
+          "e4": {
+            "OutputColumnName": "col0",
+            "InputColumnName": "col0"
+          }
+        }
+      },
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "MatrixFactorization",
+        "Score": 0.99578644039115982,
+        "RuntimeInSeconds": 0.064,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e4",
+          "e0": {
+            "OutputColumnName": "col0",
+            "InputColumnName": "col0",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e1": {
+            "OutputColumnName": "col2",
+            "InputColumnName": "col2",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e2": {
+            "LabelColumnName": "col3",
+            "MatrixColumnIndexColumnName": "col2",
+            "MatrixRowIndexColumnName": "col0",
+            "ApproximationRank": 41,
+            "LearningRate": 0.38455260699108967,
+            "NumberOfIterations": 17,
+            "Quiet": true
+          },
+          "e3": {
+            "OutputColumnName": "col2",
+            "InputColumnName": "col2"
+          },
+          "e4": {
+            "OutputColumnName": "col0",
+            "InputColumnName": "col0"
+          }
+        }
+      }
+    ],
+    "Estimators": {
+      "e0": "MapValueToKey",
+      "e1": "MapValueToKey",
+      "e2": "MatrixFactorization",
+      "e3": "MapKeyToValue",
+      "e4": "MapKeyToValue"
+    },
+    "Schema": "e0 * e1 * e2 * e3 * e4",
+    "MetricName": "RSquared",
+    "ModelFilePath": "C:\\development\\projects\\Disco\\Disco.Business.Services\\MLModels\\FollowingModel.mlnet"
+  },
+  "Type": "TrainingConfig",
+  "Version": 4,
+  "TrainingOption": {
+    "Version": 2,
+    "Subsampling": false,
+    "Type": "RecommendationTrainingOption",
+    "TrainingTime": 60,
+    "LabelColumn": "col3",
+    "UserIdColumn": "col2",
+    "ItemIdColumn": "col0",
+    "ValidationOption": {
+      "Version": 0,
+      "Type": "FileValidationOption",
+      "FilePath": "C:\\Users\\Stas\\Downloads\\follower.csv"
+    }
+  }
+}

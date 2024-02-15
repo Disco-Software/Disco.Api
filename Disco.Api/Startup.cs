@@ -88,7 +88,7 @@ namespace Disco.Api
             //            }
             //        };
             //    });
-            services.AddHttpContextAccessor();
+            //services.AddHttpContextAccessor();
             services.AddHttpClient();
             services.AddLogging();
 

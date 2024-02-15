@@ -3,7 +3,6 @@ using Disco.Domain.Models.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading;
@@ -50,11 +49,12 @@ namespace Disco.ApiServices.Features.TicketMessage.RequestHandlers.OnConnect
                 throw new ArgumentException();
             }
 
+            var context = _contextAccessor.HttpContext;
             var connection = new Connection
             {
                 Id = Guid.NewGuid().ToString(),
                 IsConnected = true,
-                UserAgent = _contextAccessor.HttpContext.Request.Headers["UserAgent"].ToString(),
+                UserAgent = request.UserAgent,
             };
 
             await _connectionService.CreateAsync(connection, user.Account);

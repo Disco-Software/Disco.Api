@@ -10,6 +10,13 @@ namespace Disco.Domain.Repositories.Repositories
     {
         public TicketMessageRepository(ApiDbContext context) : base(context) { }
 
+        public override async Task AddAsync(TicketMessage item)
+        {
+            await _context.TicketMessages.AddAsync(item);
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<List<TicketMessage>> GetAllAsync(int ticketId, int userId, int pageNumber, int pageSize)
         {
             return await _context.TicketMessages

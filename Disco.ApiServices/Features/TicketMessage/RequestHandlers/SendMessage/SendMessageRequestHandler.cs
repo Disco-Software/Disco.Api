@@ -33,8 +33,8 @@ namespace Disco.ApiServices.Features.TicketMessage.RequestHandlers.SendMessage
 
         public async Task<SendMessageResponseDto> Handle(SendMessageRequest request, CancellationToken cancellationToken)
         {
-            var user = await _accountService.GetAsync(_contextAccessor.HttpContext.User);
-            var ticket = await _ticketService.GetAsync(request.TicketId);
+            var user = await _accountService.GetAsync(request.User);
+            var ticket = await _ticketService.GetAsync(request.TicketName);
 
             var ticketMessage = _mapper.Map<Domain.Models.Models.TicketMessage>(ticket);
             ticketMessage.TicketId = request.TicketId;
