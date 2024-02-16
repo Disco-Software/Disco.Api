@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Microsoft.AspNetCore.Http;
+using System.Text;
 using System.Text.Json;
 
 namespace Disco.Business.Services.Helpers
@@ -19,5 +20,19 @@ namespace Disco.Business.Services.Helpers
             return JsonSerializer.Deserialize<DateTime>(jsonString);
         }
 
+        public static async Task<byte[]> ConvertIFormFileToByteArrayAsync(IFormFile formFile)
+        {
+            if (formFile == null || formFile.Length == 0)
+            {
+                return null;
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(memoryStream);
+
+                return memoryStream.ToArray();
+            }
+        }
     }
 }

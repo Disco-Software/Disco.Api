@@ -55,6 +55,7 @@ namespace Disco.Api
             services.AddAzureServices(Configuration);
             services.AddSignalR(options =>
             {
+                options.MaximumReceiveMessageSize = 100000000;
                 options.EnableDetailedErrors = true;
                 options.HandshakeTimeout = TimeSpan.FromMinutes(2);
                 options.KeepAliveInterval = TimeSpan.FromMinutes(1);

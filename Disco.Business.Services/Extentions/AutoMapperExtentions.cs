@@ -20,7 +20,6 @@ using Disco.Business.Services.Mapper.StoryVideo;
 using Disco.Business.Services.Mapper.Ticket.Admin;
 using Disco.Business.Services.Mapper.Ticket.User;
 using Disco.Business.Services.Mapper.TicketMessage;
-using Disco.Business.Services.Resolvers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Disco.Business.Services.Extentions
@@ -97,9 +96,13 @@ namespace Disco.Business.Services.Extentions
                 options.AddProfile(new CreateTicketMappingProfile());
                 #endregion
 
+                #region Universal
                 options.AddProfile(new ErrorMappingProfile());
                 options.AddProfile(new CreateTicketMessageMappingProfile());
+                options.AddProfile(new CreateImageMessageMappingProfile());
                 options.AddProfile(new GetAllMessagesMappingProfile());
+                #endregion
+
             }).CreateMapper());
         }
     }

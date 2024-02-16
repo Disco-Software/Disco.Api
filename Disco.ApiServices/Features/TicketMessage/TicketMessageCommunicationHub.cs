@@ -2,6 +2,7 @@
 using Disco.ApiServices.Features.TicketMessage.RequestHandlers.DeleteMesssageForSender;
 using Disco.ApiServices.Features.TicketMessage.RequestHandlers.OnConnect;
 using Disco.ApiServices.Features.TicketMessage.RequestHandlers.OnDisconnect;
+using Disco.ApiServices.Features.TicketMessage.RequestHandlers.SendImageMessage;
 using Disco.ApiServices.Features.TicketMessage.RequestHandlers.SendMessage;
 using Disco.ApiServices.Features.TicketMessage.RequestHandlers.UpdateTicketMessage;
 using Disco.ApiServices.Features.TicketMessage.RequestHandlers.UpdateTicketStatus;
@@ -75,6 +76,17 @@ namespace Disco.ApiServices.Features.TicketMessage
             var result = await _mediator.Send(new UpdateTicketStatusRequest(status, id));
 
             await Clients.Group(Context.GetHttpContext().Request.Query["ticketName"]).SendAsync("changeStatus", arg1: result);
+        }
+
+        [HubMethodName("send-with-image")]
+        public async Task SendImageMessageAsync(int id, string[] images, string message)
+        {
+            var result = await _mediator.Send(new SendImageMessageRequest(
+                images, message, id,
+                Context.GetHttpContext().Request.Query["ticketName"],
+                Context.GetHttpContext().User));
+
+            await Clients.Group(Context.GetHttpContext().Request.Query["ticketName"]).SendAsync("send-with-image", arg1: result);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception) =>
