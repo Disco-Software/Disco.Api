@@ -227,5 +227,12 @@ namespace Disco.Domain.Repositories.Repositories
                 .Include(post => post.PostReating)
                 .ToListAsync();
         }
+
+        public int Count(DateTime from, DateTime to)
+        {
+            return _context.Posts
+                .Where(post => post.DateOfCreation >= from && post.DateOfCreation <= to)
+                .Count();
+        }
     }
 }

@@ -38,14 +38,14 @@ namespace Disco.Business.Services.Services
 
         public async Task<AnalyticResponseDto> GetAnalyticAsync(DateTime from, DateTime to, AnalyticFor statistics)
         {
-            var users = await _userRepository.GetAllUsersAsync();
+            var users = _userRepository.Count(to);
+            var newUsers = _userRepository.Count(from, to);
             var posts = await _postRepository.GetAllPostsAsync(from, to);
-            var newUsers = await _userRepository.GetAllUsersAsync(from, to);
 
             var result = new AnalyticResponseDto();
-            result.UsersCount = users.Count;
+            result.UsersCount = users;
             result.PostsCount = posts.Count;
-            result.NewUsersCount = newUsers.Count;
+            result.NewUsersCount = newUsers;
 
             (List<int>, List<int>, List<int>) periodAnalytics;
 
@@ -93,20 +93,34 @@ namespace Disco.Business.Services.Services
             var newUsers = new List<int>();
             var posts = new List<int>();
 
-            var difference = to - from;
             var stepFrom = from;
+            var now = DateTime.UtcNow; // Отримання поточної UTC дати для порівняння
 
             while (stepFrom < to)
             {
                 var nextStep = addStep(stepFrom);
+                if (nextStep > now)
+                {
+                    nextStep = now;
+                }
 
-                var stepUsers = await _userRepository.GetAllUsersAsync(DateTime.MinValue, nextStep);
-                var stepNewUsers = await _userRepository.GetAllUsersAsync(stepFrom, nextStep);
-                var stepPosts = await _postRepository.GetAllPostsAsync(stepFrom, nextStep);
+                if (nextStep > to) // Переконатися, що nextStep не виходить за межі кінцевої дати періоду
+                {
+                    nextStep = to;
+                }
 
-                users.Add(stepUsers.Count);
-                posts.Add(stepPosts.Count);
-                newUsers.Add(stepNewUsers.Count);
+                var stepUsers = _userRepository.Count(nextStep); // Змінено DateTime.MinValue на from
+                var stepNewUsers = _userRepository.Count(stepFrom, nextStep);
+                var stepPosts = _postRepository.Count(stepFrom, nextStep);
+
+                users.Add(stepUsers);
+                posts.Add(stepPosts);
+                newUsers.Add(stepNewUsers);
+
+                if (nextStep == now || nextStep == to) // Якщо досягнуто поточну дату або кінцеву дату періоду, припинити цикл
+                {
+                    break;
+                }
 
                 stepFrom = nextStep;
             }
