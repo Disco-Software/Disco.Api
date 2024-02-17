@@ -119,5 +119,17 @@ namespace Disco.Domain.Repositories.Repositories
                 .Where(x => x.RoleName == roleName)
                 .ToListAsync();
         }
+
+        public int Count(DateTime from, DateTime to)
+        {
+            return _context.Users
+                .Where(user => user.DateOfRegister <= to && user.DateOfRegister >= from)
+                .Count();
+        }
+
+        public int Count(DateTime time)
+        {
+            return _context.Users.Count(x => x.DateOfRegister <= time);
+        }
     }
 }
