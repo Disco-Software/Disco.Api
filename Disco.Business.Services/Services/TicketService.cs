@@ -11,13 +11,16 @@ namespace Disco.Business.Services.Services
     {
         private readonly ITicketRepository _ticketRepository;
         private readonly ITicketStatusRepository _ticketStatusRepository;
+        private readonly ITicketDetailsRepository _ticketDetailsRepository;
 
         public TicketService(
             ITicketRepository ticketRepository, 
-            ITicketStatusRepository ticketStatusRepository)
+            ITicketStatusRepository ticketStatusRepository,
+            ITicketDetailsRepository ticketDetailsRepository)
         {
             _ticketRepository = ticketRepository;
             _ticketStatusRepository = ticketStatusRepository;
+            _ticketDetailsRepository = ticketDetailsRepository;
         }
 
         public async Task CreateAsync(Ticket ticket)
@@ -56,6 +59,8 @@ namespace Disco.Business.Services.Services
 
         public async Task UpdateAsync(Ticket ticket)
         {
+            await _ticketStatusRepository.UpdateAsync(ticket.Status);
+
             await _ticketRepository.UpdateAsync(ticket);
         }
 
@@ -100,6 +105,12 @@ namespace Disco.Business.Services.Services
         public async Task UpdateTicketStatusAsync(Ticket ticket, string status)
         {
             ticket.Status = await _ticketStatusRepository.GetAsync(status);
+            var ticketDetails = await _ticketDetailsRepository.GetAsync(ticket.Id);
+
+            ticketDetails.Status = status;
+
+            await _ticketStatusRepository.UpdateAsync(ticket.Status);
+            await _ticketDetailsRepository.UpdateAsync(ticketDetails);
 
             await _ticketRepository.UpdateAsync(ticket);
         }

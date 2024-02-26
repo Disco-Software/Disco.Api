@@ -112,6 +112,7 @@ namespace Disco.Domain.Repositories.Repositories
                 .Include(t => t.Priority)
                 .Include(t => t.Owner)
                 .ThenInclude(o => o.User)
+                .Where(x => x.Id == id)
                 .FirstOrDefaultAsync() ?? throw new NullReferenceException();
         }
 
@@ -143,7 +144,9 @@ namespace Disco.Domain.Repositories.Repositories
 
         public async override Task UpdateAsync(Ticket newItem)
         {
-           await base.UpdateAsync(newItem);
+            _context.Tickets.Update(newItem);
+
+            await _context.SaveChangesAsync();
         }
     }
 }
