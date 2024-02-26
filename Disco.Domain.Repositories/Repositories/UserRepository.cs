@@ -120,16 +120,10 @@ namespace Disco.Domain.Repositories.Repositories
                 .ToListAsync();
         }
 
-        public int Count(DateTime from, DateTime to)
+        public async Task<int> GetUsersCountAsync(DateTime from, DateTime to)
         {
-            return _context.Users
-                .Where(user => user.DateOfRegister <= to && user.DateOfRegister >= from)
-                .Count();
-        }
-
-        public int Count(DateTime time)
-        {
-            return _context.Users.Count(x => x.DateOfRegister <= time);
+            return await _context.Users
+                .CountAsync(x => x.DateOfRegister >= from && x.DateOfRegister <= to);
         }
     }
 }

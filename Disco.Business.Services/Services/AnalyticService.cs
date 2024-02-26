@@ -38,14 +38,14 @@ namespace Disco.Business.Services.Services
 
         public async Task<AnalyticResponseDto> GetAnalyticAsync(DateTime from, DateTime to, AnalyticFor statistics)
         {
-            var users = _userRepository.Count(to);
-            var newUsers = _userRepository.Count(from, to);
-            var posts = await _postRepository.GetAllPostsAsync(from, to);
+            var usersCount = await _userRepository.GetUsersCountAsync(DateTime.MinValue, to);
+            var postsCount = await _postRepository.GetPostsCountAsync(from, to);
+            var newUsersCount = await _userRepository.GetUsersCountAsync(from, to);
 
             var result = new AnalyticResponseDto();
-            result.UsersCount = users;
-            result.PostsCount = posts.Count;
-            result.NewUsersCount = newUsers;
+            result.UsersCount = usersCount;
+            result.PostsCount = postsCount;
+            result.NewUsersCount = newUsersCount;
 
             (List<int>, List<int>, List<int>) periodAnalytics;
 
@@ -89,43 +89,34 @@ namespace Disco.Business.Services.Services
 
         private async Task<(List<int>, List<int>, List<int>)> GetPeriodAnalyticsAsync(DateTime from, DateTime to, Func<DateTime, DateTime> addStep)
         {
-            var users = new List<int>();
-            var newUsers = new List<int>();
-            var posts = new List<int>();
+            var usersCount = new List<int>();
+            var newUsersCount = new List<int>();
+            var postsCount = new List<int>();
 
+            var difference = to - from;
             var stepFrom = from;
-            var now = DateTime.UtcNow; // Отримання поточної UTC дати для порівняння
 
             while (stepFrom < to)
             {
                 var nextStep = addStep(stepFrom);
-                if (nextStep > now)
-                {
-                    nextStep = now;
-                }
 
-                if (nextStep > to) // Переконатися, що nextStep не виходить за межі кінцевої дати періоду
-                {
-                    nextStep = to;
-                }
-
-                var stepUsers = _userRepository.Count(nextStep); // Змінено DateTime.MinValue на from
-                var stepNewUsers = _userRepository.Count(stepFrom, nextStep);
-                var stepPosts = _postRepository.Count(stepFrom, nextStep);
-
-                users.Add(stepUsers);
-                posts.Add(stepPosts);
-                newUsers.Add(stepNewUsers);
-
-                if (nextStep == now || nextStep == to) // Якщо досягнуто поточну дату або кінцеву дату періоду, припинити цикл
+                if (nextStep > DateTime.UtcNow)
                 {
                     break;
                 }
 
+                var stepUsersCount = await _userRepository.GetUsersCountAsync(DateTime.MinValue, nextStep);
+                var stepNewUsersCount = await _userRepository.GetUsersCountAsync(stepFrom, nextStep);
+                var stepPostsCount = await _postRepository.GetPostsCountAsync(stepFrom, nextStep);
+
+                usersCount.Add(stepUsersCount);
+                postsCount.Add(stepPostsCount);
+                newUsersCount.Add(stepNewUsersCount);
+
                 stepFrom = nextStep;
             }
 
-            return (users, newUsers, posts);
+            return (usersCount, newUsersCount, postsCount);
         }
     }
 }
