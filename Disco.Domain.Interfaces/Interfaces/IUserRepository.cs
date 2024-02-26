@@ -13,6 +13,7 @@ namespace Disco.Domain.Interfaces
         Task<List<User>> GetUsersByPeriotIntAsync(int days);
         Task<List<User>> GetAllUsersAsync();
         Task<List<User>> GetAllUsersAsync(DateTime from, DateTime to);
+        Task<int> GetUsersCountAsync(DateTime from, DateTime to);
         Task<IEnumerable<string>> GetUsersEmailsAsync(string search);
         Task<IEnumerable<string>> GetUsersNamesAsync(string search);
         Task<List<User>> GetAllWithRoleAsync(string roleName);
