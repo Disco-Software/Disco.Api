@@ -1,4 +1,5 @@
 ﻿using Disco.ApiServices.Controllers;
+using Disco.ApiServices.Features.TicketMessage.RequestHandlers.Count;
 using Disco.ApiServices.Features.TicketMessage.RequestHandlers.GetAllMessages;
 using Disco.Business.Interfaces.Dtos.TicketMessage.GetAllMessages;
 using MediatR;
@@ -25,5 +26,9 @@ namespace Disco.ApiServices.Features.TicketMessage
             [FromQuery] int pageNumber,
             [FromQuery] int pageSize) =>
             await _mediator.Send(new GetAllMessagesRequest(groupId, pageNumber, pageSize));
+
+        [HttpGet("count")]
+        public async Task<int> CountAsync([FromQuery] int ticketId) => 
+            await _mediator.Send(new CountRequest(ticketId));
     }
 }

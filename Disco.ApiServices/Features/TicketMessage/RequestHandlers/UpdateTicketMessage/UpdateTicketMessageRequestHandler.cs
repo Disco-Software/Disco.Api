@@ -29,7 +29,7 @@ namespace Disco.ApiServices.Features.TicketMessage.RequestHandlers.UpdateTicketM
 
         public async Task<UpdateTicketMessageResponseDto> Handle(UpdateTicketMessageRequest request, CancellationToken cancellationToken)
         {
-            var user = await _accountService.GetAsync(_contextAccessor.HttpContext.User);
+            var user = await _accountService.GetAsync(request.ClaimsPrincipal);
             var message = await _ticketMessageService.GetAsync(request.Id);
 
             if (message.AccountId != user.AccountId)

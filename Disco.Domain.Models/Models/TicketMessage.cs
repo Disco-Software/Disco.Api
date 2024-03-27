@@ -10,8 +10,6 @@ namespace Disco.Domain.Models.Models
         [Column(TypeName = "datetime")]
         public DateTime CreatedDate { get; set; }
 
-        public bool IsDeleted { get; set; }
-
         public int AccountId {  get; set; }
         public Account Account { get; set; }
 

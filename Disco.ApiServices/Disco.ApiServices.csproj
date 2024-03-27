@@ -6,8 +6,11 @@
 
     <ItemGroup>
       <Compile Remove="Features\Ticket - Копировать\**" />
+      <Compile Remove="Features\TicketMessage\RequestHandlers\DeleteMesssageForSender\**" />
       <EmbeddedResource Remove="Features\Ticket - Копировать\**" />
+      <EmbeddedResource Remove="Features\TicketMessage\RequestHandlers\DeleteMesssageForSender\**" />
       <None Remove="Features\Ticket - Копировать\**" />
+      <None Remove="Features\TicketMessage\RequestHandlers\DeleteMesssageForSender\**" />
     </ItemGroup>
 
     <ItemGroup>

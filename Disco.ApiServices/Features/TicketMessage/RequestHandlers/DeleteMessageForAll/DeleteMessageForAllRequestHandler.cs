@@ -2,9 +2,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,11 +25,8 @@ namespace Disco.ApiServices.Features.TicketMessage.RequestHandlers.DeleteMessage
 
         public async Task Handle(DeleteMessageForAllRequest request, CancellationToken cancellationToken)
         {
-            var user = await _accountService.GetAsync(_contextAccessor.HttpContext.User);
+            var user = await _accountService.GetAsync(request.ClaimsPrincipal);
             var message = await _ticketMessageService.GetAsync(request.Id);
-
-            if (message.AccountId != user.AccountId)
-                throw new Exception("You are not the owner of this message");
 
             await _ticketMessageService.DeleteAsync(message);
         }

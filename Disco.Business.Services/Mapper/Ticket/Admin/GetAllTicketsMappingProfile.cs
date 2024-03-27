@@ -11,6 +11,8 @@ namespace Disco.Business.Services.Mapper.Ticket.Admin
             CreateMap<OwnerSummary, AccountDto>().PreserveReferences();
 
             CreateMap<TicketSummary, GetAllTicketsResponseDto>()
+                .ForMember(x => x.Title, options => options.MapFrom(x => x.Title))
+                .ForMember(x => x.Description, options => options.MapFrom(x => x.Description))
                 .ForMember(x => x.CreatedDate, options => options.MapFrom(x => x.CreatedDate))
                 .ForMember(x => x.CreatedDate, options => options.MapFrom(x => x.CreatedDate))
                 .ForMember(x => x.Status, options => options.MapFrom(x => x.Status))

@@ -25,6 +25,8 @@ namespace Disco.Business.Interfaces.Dtos.Ticket.Admin.GetAllTickets
 
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Title {  get; set; }
+        public string Description { get; set; }
         public AccountDto Owner {  get; set; }
         public DateTime CreatedDate { get; set; }
         public string Priority { get; set; }

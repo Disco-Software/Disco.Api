@@ -10,6 +10,7 @@ namespace Disco.Domain.Models.Models
     public class Ticket : BaseModel<int>
     {
         public string Name {  get; set; } = Guid.NewGuid().ToString();
+        public string Title { get; set; }
         public string Description {  get; set; }
 
         public bool IsArchived {  get; set; }

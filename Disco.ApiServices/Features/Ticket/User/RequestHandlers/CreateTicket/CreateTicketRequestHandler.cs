@@ -50,7 +50,9 @@ namespace Disco.ApiServices.Features.Ticket.User.RequestHandlers.CreateTicket
             var user = await _accountService.GetAsync(_contextAccessor.HttpContext.User);
 
             var ticket = _mapper.Map<Domain.Models.Models.Ticket>(request.Dto);
-            
+
+            ticket.Title = request.Dto.Title;
+            ticket.Description = request.Dto.Description;
             ticket.Status = await _ticketStatusService.GetAsync(request.Dto.Status);
             ticket.Priority = await _ticketPriorityService.GetAsync(request.Dto.Priority);
             

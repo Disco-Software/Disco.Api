@@ -4,6 +4,7 @@ using Disco.Domain.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Disco.Domain.Data.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240319110514_RepliedMessageMigration")]
+    partial class RepliedMessageMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -685,12 +687,17 @@ namespace Disco.Domain.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("RepliedMessageId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TicketId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("RepliedMessageId");
 
                     b.HasIndex("TicketId");
 
@@ -1327,6 +1334,10 @@ namespace Disco.Domain.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Disco.Domain.Models.Models.TicketMessage", "RepliedMessage")
+                        .WithMany()
+                        .HasForeignKey("RepliedMessageId");
+
                     b.HasOne("Disco.Domain.Models.Models.Ticket", "Ticket")
                         .WithMany("TicketMessages")
                         .HasForeignKey("TicketId")
@@ -1334,6 +1345,8 @@ namespace Disco.Domain.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
+
+                    b.Navigation("RepliedMessage");
 
                     b.Navigation("Ticket");
                 });

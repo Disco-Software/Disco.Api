@@ -28,16 +28,16 @@ namespace Disco.Business.Services.Services
             await _ticketMessageRepository.RemoveAsync(message);
         }
 
-        public async Task DeleteForSenderAsync(TicketMessage message)
-        {
-            message.IsDeleted = true;
-
-            await _ticketMessageRepository.UpdateTicketAsync(message);
-        }
-
         public async Task<IEnumerable<TicketMessage>> GetAllAsync(int ticketId, int userId, int pageNumber, int pageSize)
         {
             return await _ticketMessageRepository.GetAllAsync(ticketId, userId, pageNumber, pageSize);
+        }
+
+        public int Count(int ticketId)
+        {
+            var count = _ticketMessageRepository.Count(ticketId);
+
+            return count;
         }
 
         public async Task<TicketMessage> GetAsync(int id)

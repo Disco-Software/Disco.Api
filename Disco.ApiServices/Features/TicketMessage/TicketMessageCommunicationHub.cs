@@ -1,5 +1,4 @@
 ﻿using Disco.ApiServices.Features.TicketMessage.RequestHandlers.DeleteMessageForAll;
-using Disco.ApiServices.Features.TicketMessage.RequestHandlers.DeleteMesssageForSender;
 using Disco.ApiServices.Features.TicketMessage.RequestHandlers.OnConnect;
 using Disco.ApiServices.Features.TicketMessage.RequestHandlers.OnDisconnect;
 using Disco.ApiServices.Features.TicketMessage.RequestHandlers.SendImageMessage;
@@ -9,7 +8,6 @@ using Disco.ApiServices.Features.TicketMessage.RequestHandlers.UpdateTicketStatu
 using Disco.Business.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;
@@ -46,26 +44,20 @@ namespace Disco.ApiServices.Features.TicketMessage
             await Clients.Group(ticketName).SendAsync("receive", result);
         }
 
-        [HubMethodName("delete-for-me")]
-        public async Task DeleteForSenderAsync(int id)
-        {
-            await _mediator.Send(new DeleteForSenderRequest(id));
-
-            await Clients.Caller.SendAsync("removeForSender");
-        }
-
         [HubMethodName("delete-for-all")]
         public async Task DeleteAsync(int id)
         {
-            await _mediator.Send(new DeleteMessageForAllRequest(id));
+            await _mediator.Send(new DeleteMessageForAllRequest(
+                id,
+                Context.User));
 
-            await Clients.Group(Context.GetHttpContext().Request.Query["ticketName"]).SendAsync("remove");
+            await Clients.Group(Context.GetHttpContext().Request.Query["ticketName"]).SendAsync("remove", id);
         }
 
         [HubMethodName("update")]
         public async Task UpdateAsync(int id, string message)
         {
-            var result = await _mediator.Send(new UpdateTicketMessageRequest(id, message));
+            var result = await _mediator.Send(new UpdateTicketMessageRequest(Context.User, id, message));
 
             await Clients.Group(Context.GetHttpContext().Request.Query["ticketName"]).SendAsync("update", arg1: result);
         }
