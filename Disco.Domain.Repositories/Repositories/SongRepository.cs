@@ -29,7 +29,7 @@ namespace Disco.Domain.Repositories.Repositories
         {
             return await _context.PostSongs
                 .Include(p => p.Post)
-                .Where(s => s.Id == id)
+                .Where(s => s.PostId == id)
                 .FirstOrDefaultAsync() ?? throw new NullReferenceException();
 
         }

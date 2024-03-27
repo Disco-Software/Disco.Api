@@ -13,7 +13,7 @@ namespace Disco.Business.Services.Mapper.Comment.User
                 .ForMember(x => x.Post, options => options.Ignore())
                 .ForMember(x => x.Account, options => options.Ignore())
                 .ForMember(x => x.AccountId, options => options.Ignore())
-                .ForMember(x => x.Id, options => options.Ignore());
+                .ForMember(x => x.PostId, options => options.Ignore());
 
             CreateMap<Domain.Models.Models.User, UserDto>();
             CreateMap<Domain.Models.Models.Account, AccountDto>();

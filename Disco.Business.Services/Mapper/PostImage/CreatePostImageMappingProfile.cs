@@ -12,7 +12,7 @@ namespace Disco.Business.Services.Mapper.PostImage
                 .ForMember(source => source.Source, opt => opt.Ignore())
                 .ForMember(source => source.Post, opt => opt.Ignore())
                 .ForMember(source => source.PostId, opt => opt.Ignore())
-                .ForMember(source => source.Id, opt => opt.Ignore());
+                .ForMember(source => source.PostId, opt => opt.Ignore());
 
             CreateMap<Domain.Models.Models.PostImage, CreatePostImageResponseDto>()
                 .ForMember(x => x.Source, options => options.MapFrom(x => x.Source));

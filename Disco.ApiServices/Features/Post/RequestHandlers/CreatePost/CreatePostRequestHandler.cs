@@ -82,6 +82,9 @@ namespace Disco.ApiServices.Features.Post.RequestHandlers.CreatePost
                     postSongDto.Song = songSource;
 
                     var postSong = await _songService.CreatePostSongAsync(postSongDto);
+                    post.PostSongs.Add(postSong);
+
+                    postSong.ExecutorName = artist;
 
                     request.Dto.PostSongNames.Remove(name);
                     request.Dto.ExecutorNames.Remove(artist);

@@ -49,7 +49,7 @@ namespace Disco.ApiServices.Features.Comment.RequestHandlers.UpdateComment
             accountDto.User = userDto;
 
             var updateCommentResponseDto = _mapper.Map<UpdateCommentResponseDto>(accountDto);
-            updateCommentResponseDto.Id = comment.Id;
+            updateCommentResponseDto.Id = comment.PostId;
             updateCommentResponseDto.Post = postDto;
             updateCommentResponseDto.Description = request.Dto.Description;
             updateCommentResponseDto.CreatedDate = DateTime.UtcNow;

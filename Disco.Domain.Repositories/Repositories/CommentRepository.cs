@@ -14,7 +14,7 @@ namespace Disco.Domain.Repositories.Repositories
         {
             var comments = await _context.Comments
                 .Where(x => x.PostId == postId)
-                .OrderByDescending(x => x.Id)
+                .OrderByDescending(x => x.PostId)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
