@@ -19,7 +19,7 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '8.0'
+          dotnet-version: '3.1'
           include-prerelease: true
 
       - name: Build with dotnet
@@ -40,13 +40,22 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
+    permissions:
+      id-token: write #This is required for requesting the JWT
+
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: .net-app
       
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_D1544B1E41D441E2A219F1640747069D }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_FA2DFA0001C6449BB1F08C1BEC6E0B19 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_DBB75664392948519E711C50BE02076B }}
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
@@ -54,4 +63,4 @@ jobs:
           app-name: 'devdiscoapi'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0F2CEA9D0EBC44DDB9C2A69CB7973BA3 }}
+          
