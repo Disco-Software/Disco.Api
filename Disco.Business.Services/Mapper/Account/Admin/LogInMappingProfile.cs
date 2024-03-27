@@ -8,7 +8,8 @@ namespace Disco.Business.Services.Mapper.Account.Admin
         public LogInMappingProfile()
         {
             CreateMap<Domain.Models.Models.Account, AccountDto>();
-            CreateMap<Domain.Models.Models.User, UserDto>();
+            CreateMap<Domain.Models.Models.User, UserDto>()
+                .ForMember(x => x.Created, options => options.MapFrom(x => x.DateOfRegister));
 
             CreateMap<UserDto, LogInResponseDto>()
                 .ForMember(x => x.User, options => options.MapFrom(x => x));

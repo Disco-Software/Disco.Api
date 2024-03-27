@@ -214,5 +214,24 @@ namespace Disco.Domain.Repositories.Repositories
         {
             return _context.Posts.Count(post => post.AccountId == accountId);
         }
+
+        public async Task<List<Post>> GetAllPostsAsync()
+        {
+            return await _context.Posts
+                .Include(post => post.Account)
+                .Include(post => post.PostImages)
+                .Include(post => post.PostSongs)
+                .Include(post => post.PostVideos)
+                .Include(post => post.Comments)
+                .Include(post => post.Likes)
+                .Include(post => post.PostReating)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetPostsCountAsync(DateTime from, DateTime to)
+        {
+            return await _context.Posts
+                .CountAsync(x => x.DateOfCreation >= from && x.DateOfCreation <= to);
+        }
     }
 }

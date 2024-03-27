@@ -71,6 +71,32 @@ namespace Disco.Domain.Data.Migrations
                     b.ToTable("AccountGroups");
                 });
 
+            modelBuilder.Entity("Disco.Domain.Models.Models.AccountReating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccountRecommendedId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FollowersCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("AccountRecommendedId");
+
+                    b.ToTable("AccountReatings");
+                });
+
             modelBuilder.Entity("Disco.Domain.Models.Models.AccountStatus", b =>
                 {
                     b.Property<int>("Id")
@@ -133,6 +159,7 @@ namespace Disco.Domain.Data.Migrations
             modelBuilder.Entity("Disco.Domain.Models.Models.Connection", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("AccountId")
@@ -297,6 +324,35 @@ namespace Disco.Domain.Data.Migrations
                     b.HasIndex("PostId");
 
                     b.ToTable("PostImages");
+                });
+
+            modelBuilder.Entity("Disco.Domain.Models.Models.PostReating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CommentsCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LikesCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("PostReatings");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.Models.PostSong", b =>
@@ -514,6 +570,238 @@ namespace Disco.Domain.Data.Migrations
                     b.ToTable("StoryVideos");
                 });
 
+            modelBuilder.Entity("Disco.Domain.Models.Models.Ticket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime?>("ClosedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PriorityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("PriorityId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("Tickets");
+                });
+
+            modelBuilder.Entity("Disco.Domain.Models.Models.TicketAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TicketId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("TicketAccounts");
+                });
+
+            modelBuilder.Entity("Disco.Domain.Models.Models.TicketDetails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TicketDetails");
+                });
+
+            modelBuilder.Entity("Disco.Domain.Models.Models.TicketMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TicketId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("TicketMessages");
+                });
+
+            modelBuilder.Entity("Disco.Domain.Models.Models.TicketPriority", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TicketPriorities");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "High",
+                            Priority = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Medium",
+                            Priority = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Low",
+                            Priority = 3
+                        });
+                });
+
+            modelBuilder.Entity("Disco.Domain.Models.Models.TicketStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TicketStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsArchived = false,
+                            Name = "Open"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsArchived = false,
+                            Name = "In Progress"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IsArchived = true,
+                            Name = "Closed"
+                        });
+                });
+
+            modelBuilder.Entity("Disco.Domain.Models.Models.TicketUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Photo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TicketUser");
+                });
+
             modelBuilder.Entity("Disco.Domain.Models.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -621,6 +909,34 @@ namespace Disco.Domain.Data.Migrations
                     b.HasIndex("FollowingAccountId");
 
                     b.ToTable("UserFollowers");
+                });
+
+            modelBuilder.Entity("Disco.Domain.Models.Models.UserTicketInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("TicketId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TicketId1")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TicketId");
+
+                    b.HasIndex("TicketId1");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserTicketInfo");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -756,6 +1072,25 @@ namespace Disco.Domain.Data.Migrations
                     b.Navigation("Group");
                 });
 
+            modelBuilder.Entity("Disco.Domain.Models.Models.AccountReating", b =>
+                {
+                    b.HasOne("Disco.Domain.Models.Models.Account", "Account")
+                        .WithMany("AccountReatings")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Disco.Domain.Models.Models.Account", "AccountRecommended")
+                        .WithMany("RecommendedToFollow")
+                        .HasForeignKey("AccountRecommendedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("AccountRecommended");
+                });
+
             modelBuilder.Entity("Disco.Domain.Models.Models.AccountStatus", b =>
                 {
                     b.HasOne("Disco.Domain.Models.Models.Account", "Account")
@@ -864,6 +1199,25 @@ namespace Disco.Domain.Data.Migrations
                     b.Navigation("Post");
                 });
 
+            modelBuilder.Entity("Disco.Domain.Models.Models.PostReating", b =>
+                {
+                    b.HasOne("Disco.Domain.Models.Models.Account", "Account")
+                        .WithMany("PostReatings")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Disco.Domain.Models.Models.Post", "Post")
+                        .WithMany("PostReating")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("Disco.Domain.Models.Models.PostSong", b =>
                 {
                     b.HasOne("Disco.Domain.Models.Models.Post", "Post")
@@ -919,6 +1273,71 @@ namespace Disco.Domain.Data.Migrations
                     b.Navigation("Story");
                 });
 
+            modelBuilder.Entity("Disco.Domain.Models.Models.Ticket", b =>
+                {
+                    b.HasOne("Disco.Domain.Models.Models.Account", "Owner")
+                        .WithMany("CreatedTickets")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Disco.Domain.Models.Models.TicketPriority", "Priority")
+                        .WithMany()
+                        .HasForeignKey("PriorityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Disco.Domain.Models.Models.TicketStatus", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("Priority");
+
+                    b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("Disco.Domain.Models.Models.TicketAccount", b =>
+                {
+                    b.HasOne("Disco.Domain.Models.Models.Account", "Account")
+                        .WithMany("TicketAccounts")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Disco.Domain.Models.Models.Ticket", "Ticket")
+                        .WithMany()
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Ticket");
+                });
+
+            modelBuilder.Entity("Disco.Domain.Models.Models.TicketMessage", b =>
+                {
+                    b.HasOne("Disco.Domain.Models.Models.Account", "Account")
+                        .WithMany("TicketMessages")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Disco.Domain.Models.Models.Ticket", "Ticket")
+                        .WithMany("TicketMessages")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Ticket");
+                });
+
             modelBuilder.Entity("Disco.Domain.Models.Models.UserFollower", b =>
                 {
                     b.HasOne("Disco.Domain.Models.Models.Account", "FollowerAccount")
@@ -936,6 +1355,29 @@ namespace Disco.Domain.Data.Migrations
                     b.Navigation("FollowerAccount");
 
                     b.Navigation("FollowingAccount");
+                });
+
+            modelBuilder.Entity("Disco.Domain.Models.Models.UserTicketInfo", b =>
+                {
+                    b.HasOne("Disco.Domain.Models.Models.Ticket", null)
+                        .WithMany("Administrators")
+                        .HasForeignKey("TicketId");
+
+                    b.HasOne("Disco.Domain.Models.Models.TicketDetails", "Ticket")
+                        .WithMany()
+                        .HasForeignKey("TicketId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Disco.Domain.Models.Models.TicketUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ticket");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -993,12 +1435,16 @@ namespace Disco.Domain.Data.Migrations
                 {
                     b.Navigation("AccountGroups");
 
+                    b.Navigation("AccountReatings");
+
                     b.Navigation("AccountStatus")
                         .IsRequired();
 
                     b.Navigation("Comments");
 
                     b.Navigation("Connections");
+
+                    b.Navigation("CreatedTickets");
 
                     b.Navigation("Followers");
 
@@ -1010,9 +1456,17 @@ namespace Disco.Domain.Data.Migrations
 
                     b.Navigation("Notifications");
 
+                    b.Navigation("PostReatings");
+
                     b.Navigation("Posts");
 
+                    b.Navigation("RecommendedToFollow");
+
                     b.Navigation("Stories");
+
+                    b.Navigation("TicketAccounts");
+
+                    b.Navigation("TicketMessages");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.Models.Group", b =>
@@ -1030,6 +1484,8 @@ namespace Disco.Domain.Data.Migrations
 
                     b.Navigation("PostImages");
 
+                    b.Navigation("PostReating");
+
                     b.Navigation("PostSongs");
 
                     b.Navigation("PostVideos");
@@ -1040,6 +1496,13 @@ namespace Disco.Domain.Data.Migrations
                     b.Navigation("StoryImages");
 
                     b.Navigation("StoryVideos");
+                });
+
+            modelBuilder.Entity("Disco.Domain.Models.Models.Ticket", b =>
+                {
+                    b.Navigation("Administrators");
+
+                    b.Navigation("TicketMessages");
                 });
 
             modelBuilder.Entity("Disco.Domain.Models.Models.User", b =>

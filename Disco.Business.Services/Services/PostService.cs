@@ -6,6 +6,7 @@ using Disco.Domain.Events.Events;
 using Disco.Domain.Interfaces;
 using Disco.Domain.Models.Models;
 using Disco.Integration.Interfaces.Interfaces;
+using Disco_Business_Services;
 
 namespace Disco.Business.Services.Services
 {
@@ -56,6 +57,7 @@ namespace Disco.Business.Services.Services
         public async Task<List<Post>> GetAllPostsAsync(User user, int pageNumber, int pageSize)
         {
             var posts = await _postRepository.GetUserPostsAsync(user.Account.Id);
+            var recommendedPosts = await _postRepository.GetAllPostsAsync();
 
             foreach (var following in user.Account.Following.AsEnumerable().ToList())
             {
@@ -64,6 +66,22 @@ namespace Disco.Business.Services.Services
                 posts.AddRange(followingPosts);
             }
 
+            foreach (var post in recommendedPosts)
+            {
+                foreach (var postReating in post.PostReating)
+                {
+                    var output = PostModel.Predict(new PostModel.ModelInput
+                    {
+                        Col0 = postReating.Id,
+                        Col3 = post.Id,
+                        Col4 = post.AccountId,
+                    });
+
+                    var outputPost = await _postRepository.GetAsync(int.Parse(output.Col3.ToString()));
+
+                    posts.Add(outputPost);
+                }
+            }
 
             return posts
                 .OrderByDescending(p => p.DateOfCreation)
@@ -71,6 +89,7 @@ namespace Disco.Business.Services.Services
                 .Take(pageSize)
                 .ToList();
         }
+
         public async Task<List<Post>> GetAllPostsAsync(User user)
         {
             var posts = await _postRepository.GetUserPostsAsync(user.AccountId);
@@ -89,7 +108,8 @@ namespace Disco.Business.Services.Services
                 posts.AddRange(followingPosts);
             }
 
-            posts.OrderByDescending(p => p.DateOfCreation)
+            posts
+                .OrderByDescending(p => p.DateOfCreation)
                 .ToList();
 
             return posts;

@@ -26,6 +26,13 @@ namespace Disco.Domain.EF
         public DbSet<AccountGroup> AccountGroups { get; set; }
         public DbSet<Connection> Connections { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<TicketAccount> TicketAccounts { get; set; }
+        public DbSet<TicketMessage> TicketMessages { get; set; }
+        public DbSet<TicketPriority> TicketPriorities { get; set; }
+        public DbSet<TicketStatus> TicketStatuses { get; set; }
+        public DbSet<PostReating> PostReatings { get; set; }
+        public DbSet<AccountReating> AccountReatings { get; set; }
 
         public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options) { }
         public ApiDbContext() { }
@@ -128,6 +135,64 @@ namespace Disco.Domain.EF
                 .HasForeignKey(m => m.AccountId) 
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Account>()
+                .HasMany(x => x.CreatedTickets)
+                .WithOne(x => x.Owner)
+                .HasForeignKey(x => x.OwnerId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            modelBuilder.Entity<Account>()
+                .HasMany(x => x.TicketAccounts)
+                .WithOne(x => x.Account)
+                .HasForeignKey(x => x.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TicketAccount>()
+                .HasOne(x => x.Account)
+                .WithMany(x => x.TicketAccounts)
+                .HasForeignKey(x => x.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Ticket>()
+                .HasMany(x => x.TicketMessages)
+                .WithOne(x => x.Ticket)
+                .HasForeignKey(x => x.TicketId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Account>()
+                .HasMany(x => x.TicketMessages)
+                .WithOne(x => x.Account)
+                .HasForeignKey(x => x.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<PostReating>()
+                .HasOne(x => x.Post)
+                .WithMany(x => x.PostReating)
+                .HasForeignKey(x => x.PostId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<PostReating>()
+                .HasOne(x => x.Account)
+                .WithMany(x => x.PostReatings)
+                .HasForeignKey(x => x.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<AccountReating>()
+                .HasOne(x => x.Account)
+                .WithMany(x => x.AccountReatings)
+                .HasForeignKey(x => x.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<Account>()
+            //    .HasMany(x => x.RecommendedToFollow)
+            //    .WithOne(x => x.Account)
+            //    .HasForeignKey(x => x.AccountId)
+            //    .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<AccountReating>()
+            //    .HasOne(x => x.AccountRecommended)
+            //    .WithMany(x => x.AccountReatings)
+            //    .HasForeignKey(x => x.AccountRecommendedId)
+            //    .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<Account>()
+            //    .HasMany(x => x.AccountReatings)
+            //    .WithOne(x => x.AccountRecommended)
+            //    .HasForeignKey(x => x.AccountRecommendedId)
+            //    .OnDelete(DeleteBehavior.Restrict);
+
             AddSeeds(modelBuilder, this);
         }
 
@@ -135,6 +200,8 @@ namespace Disco.Domain.EF
         {
             RoleSeed.AddRoleSeed(modelBuilder);
             StatusSeed.AddStatusSeed(modelBuilder);
+            TicketStatusSeed.AddTicketStatusSeed(modelBuilder);
+            TicketPrioritySeed.AddTicketPrioritySeed(modelBuilder);
         }
 
         public ApiDbContext CreateDbContext(string[] args)

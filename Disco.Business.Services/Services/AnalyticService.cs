@@ -38,14 +38,14 @@ namespace Disco.Business.Services.Services
 
         public async Task<AnalyticResponseDto> GetAnalyticAsync(DateTime from, DateTime to, AnalyticFor statistics)
         {
-            var users = await _userRepository.GetAllUsersAsync();
-            var posts = await _postRepository.GetAllPostsAsync(from, to);
-            var newUsers = await _userRepository.GetAllUsersAsync(from, to);
+            var usersCount = await _userRepository.GetUsersCountAsync(DateTime.MinValue, to);
+            var postsCount = await _postRepository.GetPostsCountAsync(from, to);
+            var newUsersCount = await _userRepository.GetUsersCountAsync(from, to);
 
             var result = new AnalyticResponseDto();
-            result.UsersCount = users.Count;
-            result.PostsCount = posts.Count;
-            result.NewUsersCount = newUsers.Count;
+            result.UsersCount = usersCount;
+            result.PostsCount = postsCount;
+            result.NewUsersCount = newUsersCount;
 
             (List<int>, List<int>, List<int>) periodAnalytics;
 
@@ -89,9 +89,9 @@ namespace Disco.Business.Services.Services
 
         private async Task<(List<int>, List<int>, List<int>)> GetPeriodAnalyticsAsync(DateTime from, DateTime to, Func<DateTime, DateTime> addStep)
         {
-            var users = new List<int>();
-            var newUsers = new List<int>();
-            var posts = new List<int>();
+            var usersCount = new List<int>();
+            var newUsersCount = new List<int>();
+            var postsCount = new List<int>();
 
             var difference = to - from;
             var stepFrom = from;
@@ -100,18 +100,23 @@ namespace Disco.Business.Services.Services
             {
                 var nextStep = addStep(stepFrom);
 
-                var stepUsers = await _userRepository.GetAllUsersAsync(DateTime.MinValue, nextStep);
-                var stepNewUsers = await _userRepository.GetAllUsersAsync(stepFrom, nextStep);
-                var stepPosts = await _postRepository.GetAllPostsAsync(stepFrom, nextStep);
+                if (nextStep > DateTime.UtcNow)
+                {
+                    break;
+                }
 
-                users.Add(stepUsers.Count);
-                posts.Add(stepPosts.Count);
-                newUsers.Add(stepNewUsers.Count);
+                var stepUsersCount = await _userRepository.GetUsersCountAsync(DateTime.MinValue, nextStep);
+                var stepNewUsersCount = await _userRepository.GetUsersCountAsync(stepFrom, nextStep);
+                var stepPostsCount = await _postRepository.GetPostsCountAsync(stepFrom, nextStep);
+
+                usersCount.Add(stepUsersCount);
+                postsCount.Add(stepPostsCount);
+                newUsersCount.Add(stepNewUsersCount);
 
                 stepFrom = nextStep;
             }
 
-            return (users, newUsers, posts);
+            return (usersCount, newUsersCount, postsCount);
         }
     }
 }

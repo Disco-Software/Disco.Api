@@ -111,5 +111,19 @@ namespace Disco.Domain.Repositories.Repositories
                 .Select(x => x.UserName)
                 .ToListAsync();
         }
+
+        public async Task<List<User>> GetAllWithRoleAsync(string roleName)
+        {
+            return await _context.Users
+                .Include(x => x.Account)
+                .Where(x => x.RoleName == roleName)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetUsersCountAsync(DateTime from, DateTime to)
+        {
+            return await _context.Users
+                .CountAsync(x => x.DateOfRegister >= from && x.DateOfRegister <= to);
+        }
     }
 }

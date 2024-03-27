@@ -24,6 +24,7 @@ namespace Disco.Business.Interfaces.Dtos.Account.Admin.RefreshToken
         public int Id { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
+        public DateTime Created { get; set; }
         public AccountDto Account { get; set; }
     }
 }

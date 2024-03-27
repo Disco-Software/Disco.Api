@@ -18,6 +18,9 @@ using Disco.Business.Services.Mapper.Shared;
 using Disco.Business.Services.Mapper.Story.User;
 using Disco.Business.Services.Mapper.StoryImage;
 using Disco.Business.Services.Mapper.StoryVideo;
+using Disco.Business.Services.Mapper.Ticket.Admin;
+using Disco.Business.Services.Mapper.Ticket.User;
+using Disco.Business.Services.Mapper.TicketMessage;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Disco.Business.Services.Extentions
@@ -36,10 +39,15 @@ namespace Disco.Business.Services.Extentions
                 options.AddProfile(new GetAllAccountsMappingProfile());
                 options.AddProfile(new ChangeSelectedUserPasswordMappingProfile());
                 options.AddProfile(new ChangeAccountPhotoMappingProfile());
+                options.AddProfile(new DeleteAccountPhotoMappingProfile());
                 options.AddProfile(new SearchAccountsMappingProfile());
                 options.AddProfile(new ChangeAccountEmailMappingProfile());
                 options.AddProfile(new ChangeAccountRoleMappingProfile());
                 options.AddProfile(new GetAccountMappingProfile());
+                options.AddProfile(new GetAllTicketsMappingProfile());
+                options.AddProfile(new UpdateTicketStatusMappingProfile());
+                options.AddProfile(new UpdateTicketMessageMappingProfile());
+                options.AddProfile(new SearchTicketsMappingProfile());
                 #endregion
 
                 #region User
@@ -86,10 +94,17 @@ namespace Disco.Business.Services.Extentions
                 options.AddProfile(new CreateStoryMappingProfile());
                 options.AddProfile(new GetAllStoriesMappingProfile());
                 options.AddProfile(new GetStoryMappingProfile());
+                options.AddProfile(new CreateTicketMappingProfile());
                 #endregion
 
+                #region Universal
                 options.AddProfile(new CreatedPostEventMappingProfile());
                 options.AddProfile(new ErrorMappingProfile());
+                options.AddProfile(new CreateTicketMessageMappingProfile());
+                options.AddProfile(new CreateImageMessageMappingProfile());
+                options.AddProfile(new GetAllMessagesMappingProfile());
+                #endregion
+
             }).CreateMapper());
         }
     }

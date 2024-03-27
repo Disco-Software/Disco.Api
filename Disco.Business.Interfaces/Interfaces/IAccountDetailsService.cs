@@ -7,6 +7,7 @@ namespace Disco.Business.Interfaces.Interfaces
     {
         Task<User> GetUserDatailsAsync(User user);
         Task<User> ChengePhotoAsync(User user, IFormFile formFile);
+        Task<User> ClearUserPhotoAsync(User user);
         Task<List<Account>> GetAccountsByNameAsync(string search);
         Task RemoveAsync(Account account);
         Task<IEnumerable<Account>> GetAllAsync(int pageNumber, int pageSize);
@@ -18,5 +19,6 @@ namespace Disco.Business.Interfaces.Interfaces
         int GetAccountCount();
         int GetAccountsSearchResultCount(string search);
         Task<IEnumerable<string>> GetAccountsUserNamesSearchResultsAsync(string search);
+        Task<IEnumerable<Account>> GetAllWithRoleAsync(string roleName);
     }
 }

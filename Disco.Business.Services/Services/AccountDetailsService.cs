@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Disco.Business.Interfaces.Interfaces;
+using Disco.Business.Services.Helpers;
 using Disco.Business.Utils.Exceptions;
 using Disco.Business.Utils.Guards;
 using Disco.Domain.Interfaces;
@@ -57,6 +58,24 @@ namespace Disco.Business.Services.Services
 
             return user;
         }
+
+        public async Task<User> ClearUserPhotoAsync(User user)
+        {
+            var photo = user.Account!.Photo;
+            user.Account.Photo = null;
+
+            var fileName = LinkHelper.GetFileNameFromUrl(photo!);
+
+            var container = _blobServiceClient.GetBlobContainerClient("images");
+
+            var blobClient = container.GetBlobClient(fileName);
+
+            await blobClient.DeleteAsync();
+
+            await _accountRepository.UpdateAsync(user.Account);
+
+            return user;
+        } 
 
         public async Task<List<Account>> GetAccountsByNameAsync(string search)
         {
@@ -166,6 +185,13 @@ namespace Disco.Business.Services.Services
             var result = await _userRepository.GetUsersNamesAsync(search);
 
             return result;
+        }
+
+        public async Task<IEnumerable<Account>> GetAllWithRoleAsync(string roleName)
+        {
+            var accounts = await _accountRepository.GetAllWithRoleAsync(roleName);
+
+            return accounts;
         }
     }
 }

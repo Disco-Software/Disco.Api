@@ -24,6 +24,8 @@ using System.Threading.Tasks;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsCount;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.GetAccountsSearchResultsCount;
 using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.SearchAccountNames;
+using Disco.Business.Interfaces.Dtos.AccountDetails.Admin.DeleteAccountPhoto;
+using Disco.ApiServices.Features.AccountDetails.Admin.RequestHandlers.DeleteAccountPhoto;
 
 namespace Disco.ApiServices.Features.AccountDetails.Admin
 {
@@ -82,6 +84,10 @@ namespace Disco.ApiServices.Features.AccountDetails.Admin
             [FromForm] int userId,
             [FromForm] IFormFile photo) =>
             await _mediator.Send(new ChangeAccountPhotoRequest(photo, userId));
+
+        [HttpDelete("delete/photo/{id:int}")]
+        public async Task<ActionResult<DeleteAccountPhotoResponseDto>> DeleteUserPhotoAsync([FromRoute] int id) => 
+            await _mediator.Send(new DeleteAccountPhotoRequest(id));
 
         [HttpPut("change/email")]
         public async Task<ActionResult<ChangeAccountEmailResponseDto>> ChangeEmailAsync([FromBody] ChangeAccountEmailRequestDto dto) =>
