@@ -39,9 +39,9 @@ namespace Disco.Domain.Repositories.Repositories
                 .ToListAsync();
         }
 
-        public int GetTicketsCount()
+        public int GetTicketsCount(bool isArchived)
         {
-            return _context.Tickets.Count(x => x.IsArchived == false);
+            return _context.Tickets.Count(x => x.IsArchived == isArchived);
         }
 
         public async Task<TicketSummary?> GetTicketAsync(int ticketId)

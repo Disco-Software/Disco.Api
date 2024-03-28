@@ -64,9 +64,9 @@ namespace Disco.Business.Services.Services
             await _ticketRepository.UpdateAsync(ticket);
         }
 
-        public int Count()
+        public int Count(bool isArchived)
         {
-            return _ticketRepository.GetTicketsCount();
+            return _ticketRepository.GetTicketsCount(isArchived);
         }
 
         public async Task<List<TicketSummary>> SearchAsync(string search, int pageNumber, int pageSize)

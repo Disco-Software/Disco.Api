@@ -13,7 +13,7 @@ namespace Disco.Business.Interfaces.Interfaces
         Task<Ticket> GetTicketAsync(int id);
         Task UpdateAsync(Ticket ticket);
         Task<List<TicketSummary>> SearchAsync(string search, int pageNumber, int pageSize);
-        int Count();
+        int Count(bool isArchived);
         Task UpdateTicketStatusAsync(Ticket ticket, string status);
     }
 }

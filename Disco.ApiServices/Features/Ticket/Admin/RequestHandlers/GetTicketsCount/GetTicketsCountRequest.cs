@@ -7,5 +7,14 @@ using System.Threading.Tasks;
 
 namespace Disco.ApiServices.Features.Ticket.Admin.RequestHandlers.GetTicketsCount
 {
-    public class GetTicketsCountRequest : IRequest<int> { }
+    public class GetTicketsCountRequest : IRequest<int>
+    {
+        public GetTicketsCountRequest(
+            bool isArchived)
+        {
+            IsArchived = isArchived;
+        }
+
+        public bool IsArchived { get; }
+    }
 }
