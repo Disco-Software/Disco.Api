@@ -21,7 +21,7 @@ namespace Disco.ApiServices.Features.Ticket.Admin.RequestHandlers.GetTicketsCoun
 
         public Task<int> Handle(GetTicketsCountRequest request, CancellationToken cancellationToken)
         {
-            var count = _ticketService.Count();
+            var count = _ticketService.Count(request.IsArchived);
 
             return Task.FromResult(count);
         }

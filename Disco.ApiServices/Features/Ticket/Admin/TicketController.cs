@@ -32,8 +32,8 @@ namespace Disco.ApiServices.Features.Ticket.Admin
          await _mediator.Send(new GetAllTicketsRequest(pageNumber, pageSize, statusType));
 
         [HttpGet("count")]
-        public async Task<ActionResult<int>> GetTicketsCount() =>
-            await _mediator.Send(new GetTicketsCountRequest());
+        public async Task<ActionResult<int>> GetTicketsCount([FromQuery] bool isArchived) =>
+            await _mediator.Send(new GetTicketsCountRequest(isArchived));
 
         [HttpGet("search")]
         public async Task<IEnumerable<SearchTicketsResponseDto>> SearchAsync(
